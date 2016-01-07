@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+	<title>SB Admin 2</title>
+	<script async src="/js/base.js"></script>
+
+	</head>
+	<body style="background-color:#DFDFDF">
+	
+	
+	<script>
+       function init() {
+           google.appengine.samples.hello.init('//' + window.location.host + '/_ah/api');
+       }
+    </script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>   
+	
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
