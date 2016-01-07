@@ -89,6 +89,7 @@ public class Greetings {
         session.setAttribute("Authenticated", true);
         return new APIGeneralResult("OK", "User authenticated successfully.");
       }
+      else return new APIGeneralResult("KO", "Invalid credentials.");
 
     }catch(Exception e)
     {
@@ -96,12 +97,15 @@ public class Greetings {
       throw new InternalServerErrorException("UA08 - Internal error.");
     }
 
-    throw new UnauthorizedException("UA09 - Invalid credentials.");
   }
 
 	private boolean validateLogin(String email, String password) {
+		
+		if (getIdentityService().checkPassword(email, password))
+			return true;
+		
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	private boolean validatePassword(String password) {

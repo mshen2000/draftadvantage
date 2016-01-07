@@ -200,10 +200,11 @@ public class TestEntityUserRole {
 		User usr1 = new User("test1","test1");
 		usr1.setFirstname("Test");
 		usr1.setLastname("One");
+		usr1.setEmail("test1@test.com");
 
 		getIdentityService().saveUser(usr1,usr1.getUsername());
 
-		Assert.assertTrue(getIdentityService().checkPassword("test1", "test1"));
+		Assert.assertTrue(getIdentityService().checkPassword("test1@test.com", "test1"));
 
 	}
 	

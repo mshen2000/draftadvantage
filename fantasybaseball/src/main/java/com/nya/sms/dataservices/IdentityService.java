@@ -1,5 +1,7 @@
 package com.nya.sms.dataservices;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +11,10 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
+import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
+import com.nya.sms.entities.Student;
 import com.nya.sms.entities.StudentGroup;
 import com.nya.sms.entities.User;
 
@@ -29,11 +33,11 @@ public class IdentityService implements Serializable {
 	public static final String ALL_STUDENTS = "2-All Students";
 	
 
-	public boolean checkPassword(String username, String password){
+	public boolean checkPassword(String email, String password){
 		
-		if (isUserPresent(username)){
+		if (isUserEmailPresent(email)){
 			
-			if (getUser(username).getPassword().equals(password)) return true;
+			if (getUserByEmail(email).getPassword().equals(password)) return true;
 			
 		}
 		
@@ -44,6 +48,13 @@ public class IdentityService implements Serializable {
 	public boolean isUserPresent(String username) {
 
 		if (ObjectifyService.ofy().load().type(User.class).filter("username", username).count() > 0) return true;
+
+		return false;
+	}
+	
+	public boolean isUserEmailPresent(String email) {
+
+		if (ObjectifyService.ofy().load().type(User.class).filter("email", email).count() > 0) return true;
 
 		return false;
 	}
@@ -64,6 +75,12 @@ public class IdentityService implements Serializable {
 	public User getUser(String username){
 		
 		return ObjectifyService.ofy().load().type(User.class).filter("username", username).first().get();
+		
+	}
+	
+	public User getUserByEmail(String email){
+		
+		return ObjectifyService.ofy().load().type(User.class).filter("email", email).first().get();
 		
 	}
 	
