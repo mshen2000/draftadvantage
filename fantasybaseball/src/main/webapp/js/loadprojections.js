@@ -95,8 +95,8 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
   var callback = function() {
     if (--apisToLoad == 0) {
       // mssolutions.fbapp.loadprojections.enableButtons();
-    	mssolutions.fbapp.loadprojections.signin(true,
-    			mssolutions.fbapp.loadprojections.userAuthed);
+//    	mssolutions.fbapp.loadprojections.signin(true,
+//    			mssolutions.fbapp.loadprojections.userAuthed);
     	mssolutions.fbapp.loadprojections.loadProjections();
     }
   }
