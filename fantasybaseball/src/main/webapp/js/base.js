@@ -154,6 +154,9 @@ google.appengine.samples.hello.logon = function(
     	  window.location.href = "pages/admin/playerload.html";
         // google.appengine.samples.hello.print(resp);
       }
+      else {
+    	  $('#loginalert').show();
+      }
     });
 };
 
