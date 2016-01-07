@@ -150,7 +150,7 @@ google.appengine.samples.hello.logon = function(
       'email': email,
       'password': password
     }).execute(function(resp) {
-      if (resp.status = "OK") {
+      if (resp.status == "OK") {
     	  window.location.href = "pages/admin/playerload.html";
         // google.appengine.samples.hello.print(resp);
       }
