@@ -127,7 +127,7 @@ public class OfyHelper implements ServletContextListener {
   
   private void createNewKey(){
 	  
-	  
+	  getIdentityService().createWebKey();
 	  
   }
   

@@ -87,7 +87,7 @@ public class Greetings {
         HttpSession session = req.getSession();
         session.setAttribute("UserEmail", email);
         session.setAttribute("Authenticated", true);
-        return new APIGeneralResult("OK", "User authenticated successfully.");
+        return new APIGeneralResult("OK", getIdentityService().generateJWT(email));
       }
       else return new APIGeneralResult("KO", "Invalid credentials.");
 

@@ -151,6 +151,8 @@ google.appengine.samples.hello.logon = function(
       'password': password
     }).execute(function(resp) {
       if (resp.status == "OK") {
+    	  localStorage.setItem("ClientToken", resp.description);
+    	  alert(localStorage.getItem("ClientToken"));
     	  window.location.href = "pages/admin/playerload.html";
         // google.appengine.samples.hello.print(resp);
       }
