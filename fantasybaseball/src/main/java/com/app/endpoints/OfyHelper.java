@@ -24,6 +24,7 @@ import com.nya.sms.entities.BaseFieldSelect;
 import com.nya.sms.entities.BaseFieldString;
 import com.nya.sms.entities.CustomObjectTest;
 import com.nya.sms.entities.HealthRule;
+import com.nya.sms.entities.JKey;
 import com.nya.sms.entities.Note;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.Points;
@@ -62,6 +63,8 @@ public class OfyHelper implements ServletContextListener {
     // request if no warmup request was invoked.
 		log.info("Registering data objects...");
 		
+		ObjectifyService.register(JKey.class);
+		
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(Role.class);
 		ObjectifyService.register(Site.class);
@@ -94,6 +97,8 @@ public class OfyHelper implements ServletContextListener {
 		// deleteAllIfPresent();
 
 		log.info("Creating data objects (if necessary)...");
+		
+		createNewKey();
 		createGroupsIfNotPresent();
 		createAdminUserIfNotPresent();
 		
@@ -118,6 +123,12 @@ public class OfyHelper implements ServletContextListener {
 
   public void contextDestroyed(ServletContextEvent event) {
     // App Engine does not currently invoke this method.
+  }
+  
+  private void createNewKey(){
+	  
+	  
+	  
   }
   
 	private void createAdminUserIfNotPresent() {

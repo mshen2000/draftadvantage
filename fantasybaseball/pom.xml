@@ -52,6 +52,13 @@
 		    <version>4.0b1</version>
 		</dependency>
 
+		<!-- JWT library -->
+	  	<dependency>
+		    <groupId>org.bitbucket.b_c</groupId>
+		    <artifactId>jose4j</artifactId>
+		    <version>0.4.4</version>
+	  	</dependency>
+
         <!-- Test Dependencies -->
         <dependency>
             <groupId>junit</groupId>

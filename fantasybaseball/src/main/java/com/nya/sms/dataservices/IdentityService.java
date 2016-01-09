@@ -3,8 +3,20 @@ package com.nya.sms.dataservices;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.Serializable;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.jose4j.jwk.*;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.lang.JoseException;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
@@ -12,6 +24,7 @@ import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
+import com.nya.sms.entities.JKey;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
 import com.nya.sms.entities.Student;
@@ -31,8 +44,76 @@ public class IdentityService implements Serializable {
 	public static final String MY_STUDENT_GROUP = "1-My Student Group Only";
 	
 	public static final String ALL_STUDENTS = "2-All Students";
-	
 
+	
+	public void createWebKey(){
+
+		// Delete any existing JKeys
+		List<Key<JKey>> keys = ofy().load().type(JKey.class).keys().list();
+		ofy().delete().keys(keys).now();
+		
+		int i = 0;
+		
+		while ((ofy().load().type(JKey.class).keys().list().size()>0)&&(i < 10)){
+			
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			i++;
+			
+		}
+		
+		// Create a new JKey
+	    RsaJsonWebKey rsaJsonWebKey;
+		try {
+			rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
+
+		    // Give the JWK a Key ID (kid), which is just the polite thing to do
+		    rsaJsonWebKey.setKeyId("k1");
+		    
+		    // Keep the following 2 lines, demo code for breaking down RsaJsonWebKey and re-forming
+		    // Map<String,Object> n =  rsaJsonWebKey.toParams(JsonWebKey.OutputControlLevel.INCLUDE_PRIVATE);
+		    // RsaJsonWebKey rsaJsonWebKey2 = new RsaJsonWebKey(n);
+		
+		    JKey jkey = new JKey(rsaJsonWebKey);
+		    
+			Key<JKey> key = ObjectifyService.ofy().save().entity(jkey).now(); 
+			
+			int j = 0;
+			
+			while ((ofy().load().type(JKey.class).keys().list().size()<1)&&(j < 10)){
+				
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				j++;
+				
+			}
+		} catch (JoseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+		    
+		 
+		
+	}
+	
+	public RsaJsonWebKey getStoredWebKey(){
+		
+		return ofy().load().type(JKey.class).list().get(0).getWebkey();
+		
+	}
+	
+	
 	public boolean checkPassword(String email, String password){
 		
 		if (isUserEmailPresent(email)){
@@ -44,6 +125,119 @@ public class IdentityService implements Serializable {
 		return false;
 		
 	}
+	
+	public String generateJWT(String email) {
+		
+		List<Role> roles = getUserRoles(getUserByEmail(email).getUsername());
+		List<String> rolenames = new ArrayList<String>();
+		
+		for (Role r : roles){
+		
+			rolenames.add(r.getName());
+			
+		}
+		
+	    //
+	    // JSON Web Token is a compact URL-safe means of representing claims/attributes to be transferred between two parties.
+	    // This example demonstrates producing and consuming a signed JWT
+	    //
+
+	    // Generate an RSA key pair, which will be used for signing and verification of the JWT, wrapped in a JWK
+	    RsaJsonWebKey rsaJsonWebKey;
+		try {
+			rsaJsonWebKey = getStoredWebKey();
+
+		    System.out.println("Private Key JSON: " + rsaJsonWebKey.getPrivateKey().toString());
+		    
+		    // Create the Claims, which will be the content of the JWT
+		    JwtClaims claims = new JwtClaims();
+		    claims.setIssuer("DraftAdvantage Server");  // who creates the token and signs it
+		    claims.setAudience("DraftAdvantage Client"); // to whom the token is intended to be sent
+		    claims.setExpirationTimeMinutesInTheFuture(1440); // time when the token will expire (24 hours from now)
+		    claims.setGeneratedJwtId(); // a unique identifier for the token
+		    claims.setIssuedAtToNow();  // when the token was issued/created (now)
+		    claims.setNotBeforeMinutesInThePast(2); // time before which the token is not yet valid (2 minutes ago)
+		    claims.setSubject("user"); // the subject/principal is whom the token is about
+		    claims.setClaim("email",email); // additional claims/attributes about the subject can be added
+		    claims.setStringListClaim("roles", rolenames); // multi-valued claims work too and will end up as a JSON array
+	
+		    // A JWT is a JWS and/or a JWE with JSON claims as the payload.
+		    // In this example it is a JWS so we create a JsonWebSignature object.
+		    JsonWebSignature jws = new JsonWebSignature();
+	
+		    System.out.println("Claims JSON: " + claims.toJson());
+		    
+		    // The payload of the JWS is JSON content of the JWT Claims
+		    jws.setPayload(claims.toJson());
+	
+		    // The JWT is signed using the private key
+		    jws.setKey(rsaJsonWebKey.getPrivateKey());
+	
+		    // Set the Key ID (kid) header because it's just the polite thing to do.
+		    // We only have one key in this example but a using a Key ID helps
+		    // facilitate a smooth key rollover process
+		    jws.setKeyIdHeaderValue(rsaJsonWebKey.getKeyId());
+	
+		    // Set the signature algorithm on the JWT/JWS that will integrity protect the claims
+		    jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+	
+		    // Sign the JWS and produce the compact serialization or the complete JWT/JWS
+		    // representation, which is a string consisting of three dot ('.') separated
+		    // base64url-encoded parts in the form Header.Payload.Signature
+		    // If you wanted to encrypt it, you can simply set this jwt as the payload
+		    // of a JsonWebEncryption object and set the cty (Content Type) header to "jwt".
+		    String jwt = jws.getCompactSerialization();
+		    
+		    System.out.println("JWT: " + jwt);
+		    
+		    return jwt;
+	    
+		} catch (JoseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+	
+
+	public boolean validateJWT(String jwt){
+		
+		RsaJsonWebKey rsaJsonWebKey = getStoredWebKey();
+		
+	    // Use JwtConsumerBuilder to construct an appropriate JwtConsumer, which will
+	    // be used to validate and process the JWT.
+	    // The specific validation requirements for a JWT are context dependent, however,
+	    // it typically advisable to require a expiration time, a trusted issuer, and
+	    // and audience that identifies your system as the intended recipient.
+	    // If the JWT is encrypted too, you need only provide a decryption key or
+	    // decryption key resolver to the builder.
+	    JwtConsumer jwtConsumer = new JwtConsumerBuilder()
+	            .setRequireExpirationTime() // the JWT must have an expiration time
+	            .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
+	            .setRequireSubject() // the JWT must have a subject claim
+	            .setExpectedIssuer("DraftAdvantage Server") // whom the JWT needs to have been issued by
+	            .setExpectedAudience("DraftAdvantage Client") // to whom the JWT is intended for
+	            .setVerificationKey(rsaJsonWebKey.getKey()) // verify the signature with the public key
+	            .build(); // create the JwtConsumer instance
+
+	    try
+	    {
+	        //  Validate the JWT and process it to the Claims
+	        JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt);
+	        System.out.println("JWT validation succeeded! " + jwtClaims);
+	        return true;
+	    }
+	    catch (InvalidJwtException e)
+	    {
+	        // InvalidJwtException will be thrown, if the JWT failed processing or validation in anyway.
+	        // Hopefully with meaningful explanations(s) about what went wrong.
+	        System.out.println("Invalid JWT! " + e);
+	        return false;
+	    }		
+		
+	}
+
 	
 	public boolean isUserPresent(String username) {
 

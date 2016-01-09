@@ -3,6 +3,7 @@
  */
 package com.nya.sms.test;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
 import static org.junit.Assert.*;
 
 import java.text.DateFormat;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.jose4j.lang.JoseException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,6 +29,7 @@ import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.SiteService;
 import com.nya.sms.dataservices.StudentService;
+import com.nya.sms.entities.JKey;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
 import com.nya.sms.entities.StudentGroup;
@@ -54,6 +57,7 @@ public class TestEntityUserRole {
 		
 		helper.setUp();
 		
+		ObjectifyService.register(JKey.class);
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(Role.class);
 		ObjectifyService.register(StudentGroup.class);
@@ -101,6 +105,11 @@ public class TestEntityUserRole {
 		
 		getIdentityService().saveUser(usr1,usr1.getUsername());
 		getIdentityService().saveUser(usr2,usr1.getUsername());
+		
+		Assert.assertTrue(getIdentityService().isUserEmailPresent("test2@test.com"));
+		Assert.assertFalse(getIdentityService().isUserEmailPresent("aaaaa"));
+		
+		Assert.assertEquals(getIdentityService().getUserByEmail("test1@test.com").getUsername(), usr1.getUsername());
 		
 		Assert.assertEquals(getIdentityService().getUser("test1").getUsername(), usr1.getUsername());
 		Assert.assertEquals(getIdentityService().getUser("test2").getUsername(), usr2.getUsername());
@@ -193,6 +202,7 @@ public class TestEntityUserRole {
 		Assert.assertEquals(leaderusers.get(0).getUsername(),"test3");
 
 	}
+
 	
 	@Test
 	public void testCheckPassword() {
@@ -205,7 +215,43 @@ public class TestEntityUserRole {
 		getIdentityService().saveUser(usr1,usr1.getUsername());
 
 		Assert.assertTrue(getIdentityService().checkPassword("test1@test.com", "test1"));
+		Assert.assertFalse(getIdentityService().checkPassword("test1@test.com", "aaaa"));
 
+	}
+	
+	@Test 
+	public void testJWT(){
+		
+		// Test create web key
+		getIdentityService().createWebKey();
+		
+		Assert.assertTrue(ofy().load().type(JKey.class).keys().list().size()==1);
+		
+		Assert.assertTrue(getIdentityService().getStoredWebKey() != null);
+		
+		// Create user for JWT test
+		User usr1 = new User("test1","test1");
+		usr1.setFirstname("Test");
+		usr1.setLastname("One");
+		usr1.setEmail("test1@test.com");
+
+		getIdentityService().saveUser(usr1,usr1.getUsername());
+
+		Role r1 = new Role("role1","role1");
+		
+		getIdentityService().saveRole(r1,usr1.getUsername());
+		
+		getIdentityService().createMembership("test1", "role1");
+		
+		// Test JWT Create
+		String jwt = getIdentityService().generateJWT("test1@test.com");
+		Assert.assertTrue(jwt.length() > 1);
+		
+		// Test JWT Consume
+		Assert.assertTrue(getIdentityService().validateJWT(jwt));
+		Assert.assertFalse(getIdentityService().validateJWT(jwt + "aaa"));
+
+		
 	}
 	
 	@Test
