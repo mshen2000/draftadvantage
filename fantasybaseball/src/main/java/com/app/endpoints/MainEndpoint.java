@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
     clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
     audiences = {Constants.ANDROID_AUDIENCE}
 )
-public class Main {
+public class MainEndpoint {
 	
 	 private IdentityService getIdentityService() {
 		 

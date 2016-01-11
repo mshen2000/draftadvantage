@@ -16,13 +16,13 @@ import javax.servlet.http.HttpSession;
  * Defines v1 of a helloworld API, which provides simple "greeting" methods.
  */
 @Api(
-    name = "helloworld",
+    name = "authenticate",
     version = "v1",
     scopes = {Constants.EMAIL_SCOPE},
     clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID},
     audiences = {Constants.ANDROID_AUDIENCE}
 )
-public class Greetings {
+public class LogonEndpoint {
 
   public static ArrayList<HelloGreeting> greetings = new ArrayList<HelloGreeting>();
 
@@ -71,7 +71,7 @@ public class Greetings {
     return response;
   }
   
-  @ApiMethod(name = "greetings.customlogon", httpMethod = "post")
+  @ApiMethod(name = "auth.customlogon", httpMethod = "post")
   public APIGeneralResult CustomLogon(LogonPackage logonPackage, HttpServletRequest req) 
 		  throws InternalServerErrorException, BadRequestException, UnauthorizedException {
     //Validate input
@@ -96,6 +96,18 @@ public class Greetings {
       // Logger.logError("UA08 - Exception while logging user in through Mmarazzu logon. Email: " + email + ". ", e);
       throw new InternalServerErrorException("UA08 - Internal error.");
     }
+
+  }
+  
+  
+  @ApiMethod(name = "auth.authenticateadmin", httpMethod = "post")
+  public APIGeneralResult AuthenticateAdmin(@Named("token") String token)  {
+
+      if(getIdentityService().validateJWT(token)) //Validate credentials
+      {
+        return new APIGeneralResult("OK", "Token is valid");
+      }
+      else return new APIGeneralResult("KO", "Token is invalid");
 
   }
 

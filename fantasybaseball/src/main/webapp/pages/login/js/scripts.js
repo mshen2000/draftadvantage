@@ -70,7 +70,7 @@ jQuery(document).ready(function() {
 	    	});
 		}
 		else {
-		    google.appengine.samples.hello.logon(email, password);
+			mssolutions.fbapp.login.logon(email, password);
 		}
 		
  
