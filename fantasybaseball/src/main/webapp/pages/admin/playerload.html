@@ -7,26 +7,14 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta http-equiv="expires" content="0">    <!-- Force no cache load -->
     <link rel="icon" href="../login/ico/favicon.png">
 
     <title>Fixed Top Navbar Example for Bootstrap</title>
     
+    <!-- Initial scripts to load -->
     <script async src="../../js/loadprojections.js"></script>
     <script async src="../../js/base.js"></script>
-
-    <!-- Bootstrap core CSS -->
-    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- DATA TABLES -->
-    <link href="../../plugins/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-	-->
-	
-    <!-- Custom styles for this template -->
-    <link href="navbar-fixed-top.css" rel="stylesheet">
-    
     <script src="../../plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <script>
        function pageauth() {
@@ -34,6 +22,22 @@
        }
     </script>
     <script src="https://apis.google.com/js/client.js?onload=pageauth"></script> 
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- DATA TABLES -->
+    <link href="../../plugins/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+    
+    <!-- File Input -->
+    <link href="../../plugins/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+	-->
+	
+    <!-- Custom styles for this template -->
+    <link href="navbar-fixed-top.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]
@@ -97,6 +101,11 @@
             </div>
             <div class="panel-body">
               	<div class="form-group"><input type="file" id="files"></div>
+              	
+              	<div class="form-group">
+              		<label class="control-label">Select File</label>
+					<input id="input-1a" type="file" class="file" data-show-preview="false">
+				</div>
 
 				<div class="form-group"><button class="btn btn-primary" id="submit-parse">Parse</button></div>
 
@@ -135,6 +144,9 @@
     
     <script src="../../plugins/papaparse/papaparse.js"></script>
 	<script src="../../plugins/papaparse/player.js"></script>
+	
+	<script src="../../plugins/bootstrap-fileinput/js/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
+	<script src="../../plugins/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript"></script>
     
     <!-- DATA TABES SCRIPT -->
     <script src="../../plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
