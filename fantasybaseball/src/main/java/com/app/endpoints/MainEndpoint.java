@@ -54,6 +54,8 @@ public class MainEndpoint {
     return response;
   }
   
+  
+  
   @ApiMethod(name = "main.getprojections")
   public List<PlayerProjected> GetProjections(User user) throws UnauthorizedException {
     
@@ -85,7 +87,30 @@ public class MainEndpoint {
       throw new InternalServerErrorException("UA08 - Internal error. " + e);
     }
 
-    
+  }
+  
+  @ApiMethod(name = "main.getprojectionattributes", httpMethod = "get")
+  public APIGeneralResult getProjectionAttributes(@Named("token") String token){
+	
+	String attributes = "";
+	
+    if(!getIdentityService().validateJWT(token)) //Validate credentials
+    	return new APIGeneralResult("KO", "Token is invalid");
+
+    try
+    {
+    	attributes = getPlayerProjectedService().getPlayerProjectionAttributes();
+    	if (attributes.length() > 0)
+    		return new APIGeneralResult("OK", attributes);
+    	else
+    		return new APIGeneralResult("KO", "No Player projection attributes returned.");
+
+    }catch(Exception e)
+    {
+    	e.printStackTrace();
+    	return new APIGeneralResult("KO", "No Player projection attributes returned.");
+    }
+
   }
 
 

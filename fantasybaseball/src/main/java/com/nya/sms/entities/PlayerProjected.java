@@ -16,192 +16,195 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1;
 	
 	@Index
-	Integer projected_year;
+	public Integer projected_year;
 	
 	@Index
-	String projection_service;
+	public String projection_service;
 	
 	@Index
-	String projection_period;  // Pre-Season, ROS
+	public String projection_period;  // Pre-Season, ROS
 	
 	@Index
 	Date projection_date;
 	
 	@Index
-	String mlb_id;
+	public String mlb_id;
 	
 	@Index 
-	String other_id_name;
+	public String other_id_name;
 	
 	@Index
-	String other_id;
+	public String other_id;
 	
 	@Index
-	String first_name;
+	public String full_name;
 	
 	@Index
-	String last_name;
+	public String first_name;
+	
+	@Index
+	public String last_name;
 	
 	@Index
 	Integer age;
 	
 	@Index
-	String team;
+	public String team;
 	
 	@Index
-	String al_nl;
+	public String al_nl;
 	
 	@Index
-	String pitcher_hitter;
+	public String pitcher_hitter;
 	
 	@Index 
-	String hitter_bats;
+	public String hitter_bats;
 	
 	@Index 
-	String pitcher_throws;
+	public String pitcher_throws;
 	
 	@Index
-	String hitter_pos_elig_espn;
+	public String hitter_pos_elig_espn;
 	
 	@Index
-	String hitter_pos_elig_yahoo;
+	public String hitter_pos_elig_yahoo;
 	
 	@Index
-	String pitcher_pos;
+	public String pitcher_pos;
 	
 	@Index
-	float hitter_games;
+	public float hitter_games;
 	
 	@Index
-	float hitter_pa;
+	public float hitter_pa;
 	
 	@Index
-	float hitter_ab;
+	public float hitter_ab;
 	
 	@Index
-	float hitter_runs;
+	public float hitter_runs;
 	
 	@Index
-	float hitter_hr;
+	public float hitter_hr;
 	
 	@Index
-	float hitter_rbi;
+	public float hitter_rbi;
 	
 	@Index
-	float hitter_sb;
+	public float hitter_sb;
 	
 	@Index
-	float hitter_hits;
+	public float hitter_hits;
 	
 	@Index
-	float hitter_singles;
+	public float hitter_singles;
 	
 	@Index
-	float hitter_doubles;
+	public float hitter_doubles;
 	
 	@Index
-	float hitter_triples;
+	public float hitter_triples;
 	
 	@Index
-	float hitter_tb;
+	public float hitter_tb;
 	
 	@Index
-	float hitter_so;
+	public float hitter_so;
 	
 	@Index
-	float hitter_bb;
+	public float hitter_bb;
 	
 	@Index
-	float hitter_hbp;
+	public float hitter_hbp;
 	
 	@Index
-	float hitter_sf;
+	public float hitter_sf;
 	
 	@Index
-	float hitter_cs;
+	public float hitter_cs;
 	
 	@Index
-	float hitter_avg;
+	public float hitter_avg;
 	
 	@Index
-	float hitter_obp;
+	public float hitter_obp;
 	
 	@Index
-	float hitter_slg;
+	public float hitter_slg;
 	
 	@Index
-	float hitter_ops;
+	public float hitter_ops;
 	
 	@Index
-	float pitcher_games;
+	public float pitcher_games;
 	
 	@Index
-	float pitcher_gs;
+	public float pitcher_gs;
 	
 	@Index
-	float pitcher_qs;
+	public float pitcher_qs;
 	
 	@Index
-	float pitcher_ip;
+	public float pitcher_ip;
 	
 	@Index
-	float pitcher_w;
+	public float pitcher_w;
 	
 	@Index
-	float pitcher_l;
+	public float pitcher_l;
 	
 	@Index
-	float pitcher_sv;
+	public float pitcher_sv;
 	
 	@Index
-	float pitcher_hld;
+	public float pitcher_hld;
 	
 	@Index
-	float pitcher_era;
+	public float pitcher_era;
 	
 	@Index
-	float pitcher_siera;
+	public float pitcher_siera;
 	
 	@Index
-	float pitcher_k;
+	public float pitcher_k;
 	
 	@Index
-	float pitcher_bb;
+	public float pitcher_bb;
 	
 	@Index
-	float pitcher_hits;
+	public float pitcher_hits;
 	
 	@Index
-	float pitcher_hbp;
+	public float pitcher_hbp;
 	
 	@Index
-	float pitcher_er;
+	public float pitcher_er;
 	
 	@Index
-	float pitcher_r;
+	public float pitcher_r;
 	
 	@Index
-	float pitcher_hr;
+	public float pitcher_hr;
 	
 	@Index
-	float pitcher_gb_pct;
+	public float pitcher_gb_pct;
 	
 	@Index
-	float pitcher_fb_pct;
+	public float pitcher_fb_pct;
 	
 	@Index
-	float pitcher_ld_pct;
+	public float pitcher_ld_pct;
 	
 	@Index
-	float pitcher_babip;
+	public float pitcher_babip;
 
-	private PlayerProjected() {
+	public PlayerProjected() {
 	}
 
-	public PlayerProjected(String mlb_id, String first_name, String last_name, String pitcher_hitter) {
-		this.mlb_id = mlb_id;
-		this.first_name = first_name;
-		this.last_name = last_name;
+	public PlayerProjected(String other_id_name, String other_id, String full_name, String pitcher_hitter) {
+		this.other_id_name = other_id_name;
+		this.other_id = other_id;
+		this.full_name = full_name;
 		this.pitcher_hitter = pitcher_hitter;
 	}
 
@@ -219,6 +222,14 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 
 	public void setOther_id(String other_id) {
 		this.other_id = other_id;
+	}
+
+	public String getFull_name() {
+		return full_name;
+	}
+
+	public void setFull_name(String full_name) {
+		this.full_name = full_name;
 	}
 
 	public String getFirst_name() {

@@ -15,7 +15,7 @@ $(function()
 //		var txt = $('#input').val();
 //		var localChunkSize = $('#localChunkSize').val();
 //		var remoteChunkSize = $('#remoteChunkSize').val();
-		var files = $('#files')[0].files;
+		var files = $('#input-1a')[0].files;
 		var config = buildConfig();
 
 		// NOTE: Chunk size does not get reset if changed and then set back to empty/default value
@@ -41,7 +41,7 @@ $(function()
 
 			start = performance.now();
 			
-			$('#files').parse({
+			$('#input-1a').parse({
 				config: config,
 				before: function(file, inputElem)
 				{

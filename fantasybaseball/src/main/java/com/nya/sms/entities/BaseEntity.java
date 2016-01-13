@@ -19,7 +19,7 @@ public class BaseEntity implements Serializable {
 	Long id;
 
 	@Index
-	public String createdby;
+	String createdby;
 	Date createdon;
 	@Index
 	String modifiedby;

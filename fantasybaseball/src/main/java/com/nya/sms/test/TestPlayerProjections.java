@@ -78,6 +78,21 @@ public class TestPlayerProjections {
 	}	
 	
 	@Test
+	public void testGetPlayerAttributes() {
+		
+		String result = "";
+		
+		try {
+			result = getPlayerProjectedService().getPlayerProjectionAttributes();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Assert.assertTrue(result.length() > 10);
+		
+	}
+	
+	@Test
 	public void testPlayerProjections() {
 		
 		User usr1 = new User("test1","test1");
@@ -87,8 +102,10 @@ public class TestPlayerProjections {
 		getIdentityService().saveUser(usr1,usr1.getUsername());
 		getPlayerProjectedService();
 		
-		PlayerProjected ppHitter1 = new PlayerProjected("1111","Joe","Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
-		PlayerProjected ppPitcher1 = new PlayerProjected("2222","Mike","Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
+		PlayerProjected ppHitter1 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				"1111","Joe Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
+		PlayerProjected ppPitcher1 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				"2222","Mike Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
 		
 		ppHitter1.setAge(21);
 		ppHitter1.setTeam("LAA");
@@ -110,8 +127,10 @@ public class TestPlayerProjections {
 		list1.add(ppHitter1);
 		list1.add(ppPitcher1);
 		
-		PlayerProjected ppHitter2 = new PlayerProjected("1111","Joe","Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
-		PlayerProjected ppPitcher2 = new PlayerProjected("2222","Mike","Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
+		PlayerProjected ppHitter2 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				"1111","Joe Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
+		PlayerProjected ppPitcher2 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				"2222","Mike Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
 		
 		ppHitter2.setAge(21);
 		ppHitter2.setTeam("LAA");
@@ -133,8 +152,10 @@ public class TestPlayerProjections {
 		list2.add(ppHitter2);
 		list2.add(ppPitcher2);
 		
-		PlayerProjected ppHitter3 = new PlayerProjected("1111","Joe","Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
-		PlayerProjected ppPitcher3 = new PlayerProjected("2222","Mike","Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
+		PlayerProjected ppHitter3 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				"1111","Joe Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
+		PlayerProjected ppPitcher3 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				"2222","Mike Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
 		
 		ppHitter3.setAge(21);
 		ppHitter3.setTeam("LAA");
@@ -185,16 +206,16 @@ public class TestPlayerProjections {
 		// Test if a single projection exists
 		// Tests method isPlayerProjectionPresent
 		Assert.assertTrue(getPlayerProjectedService().isPlayerProjectionPresent(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016, "1111"));
+				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, "1111"));
 		
 		PlayerProjected pp_r1 = getPlayerProjectedService().getPlayerProjection(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016, "1111");
+				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, "1111");
 		
 		// Test getting a single projection and validating attributes
 		// Test method getPlayerProjection
 		Assert.assertTrue(pp_r1.getProjection_period() == PlayerProjectedService.PROJECTION_PERIOD_PRESEASON);
 		Assert.assertTrue(pp_r1.getProjected_year() == 2016);
-		Assert.assertTrue(pp_r1.getFirst_name() == "Joe");
+		Assert.assertTrue(pp_r1.getFull_name() == "Joe Smith");
 		Assert.assertTrue(pp_r1.getHitter_bats() == "L");
 		Assert.assertTrue(pp_r1.getHitter_pos_elig_espn() == "1b/3b");
 		Assert.assertTrue(pp_r1.getHitter_games() == (float) 100);

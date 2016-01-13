@@ -25,36 +25,159 @@ mssolutions.fbapp.loadprojections.CLIENT_ID =
 mssolutions.fbapp.loadprojections.SCOPES =
     'https://www.googleapis.com/auth/userinfo.email';
 
+var stepped = 0, chunks = 0, rows = 0;
+var start, end;
+var parser;
+
+$(function()
+{
+	$('#submit-parse').click(function()
+	{
+		stepped = 0;
+		chunks = 0;
+		rows = 0;
+
+		var files = $('#input-1a')[0].files;
+		var config = buildConfig();
+
+		if (files.length > 0)
+		{
+			for (var i = 0; i < files.length; i++)
+			{
+				if (files[i].size > 1024 * 1024 * 10)
+				{
+					alert("A file you've selected is larger than 10 MB; please choose to stream or chunk the input to prevent the browser from crashing.");
+					return;
+				}
+			}
+
+			start = performance.now();
+			
+			$('#input-1a').parse({
+				config: config,
+				before: function(file, inputElem)
+				{
+					console.log("Parsing file:", file);
+				},
+				complete: function(results)
+				{
+					console.log("Done with all files.");
+				}
+			});
+		}
+		else
+		{
+			alert("You have not selected a file to load. Please select a file.");
+			return;
+		}
+	});
+
+});
+
+function buildConfig()
+{
+	return {
+		complete: completeFn,
+		error: errorFn,
+		header: true,
+	};
+
+}
+
+function errorFn(error, file)
+{
+	console.log("ERROR:", error, file);
+}
+
+function completeFn(results)
+{
+	end = performance.now();
+	if (!$('#stream').prop('checked')
+			&& !$('#chunk').prop('checked')
+			&& arguments[0]
+			&& arguments[0].data)
+		rows = arguments[0].data.length;
+	
+	console.log("Finished input (async). Time:", end-start, arguments);
+	console.log("Rows:", rows, "Stepped:", stepped, "Chunks:", chunks);
+	console.log("Results:", results);
+	console.log("Results Data:", results.data);
+	$("#output").val(JSON.stringify(results.data));
+	
+	// Get player attribute map from server
+	var token = localStorage.getItem("ClientToken");
+	mssolutions.fbapp.loadprojections.loadattributemap(token);
+	
+	// Temp property map
+	var hitterpropertymap = {
+			other_id: "playerid",
+			full_name: "Name",
+			team: "Team",
+			hitter_pa: "PA",
+			hitter_ab: "AB",
+			hitter_hits: "H",
+			hitter_doubles: "2B",
+			hitter_triples: "3B",
+			hitter_hr: "HR",
+			hitter_rbi: "RBI",
+			hitter_runs: "R",
+			hitter_so: "SO",
+			hitter_bb: "BB",
+			hitter_hbp: "HBP",
+			hitter_sb: "SB",
+			hitter_cs: "CS",
+			hitter_avg: "AVG",
+			hitter_obp: "OBP",
+			hitter_slg: "SLG",
+			hitter_ops: "OPS"
+	}
+	
+	var csvresults = results.data;
+	var uploadplayerprojections = [];
+	
+	// For each uploaded csv line in the csv file...
+	$.each( csvresults, function( csvresults_key, csvresults_value ) {
+		var csvplayer = csvresults_value;
+		var uploadplayer = [];
+		
+		// For each attribute in the csv player...
+		$.each(csvplayer,function(csvplayer_key,csvplayer_value){
+			var uploadplayerattribute = {};
+			
+			// For each attribute in the property map, check if the attribute is
+			//    in the csvplayer attributes, if so, then add it to a new
+			//    player object.
+			$.each(hitterpropertymap,function(map_key,map_value){
+				if (map_value == csvplayer_key){
+					// console.log("map_key: ", map_key);
+					// console.log("csvplayer_value: ", csvplayer_value);
+					uploadplayerattribute.id = map_key;
+					uploadplayerattribute.value = csvplayer_value;
+					uploadplayer.push(uploadplayerattribute);
+				}
+
+			});
+			
+			// console.log("Updated Player Attribute: ", JSON.stringify(uploadplayerattribute));
+
+		});
+
+		uploadplayerprojections.push(uploadplayer);
+
+	});
+	
+	console.log("Updated PlayerList: ", JSON.stringify(uploadplayerprojections));
+}
+
+
 
 /**
- * Loads the application UI after the user has completed auth.
- */
-mssolutions.fbapp.loadprojections.userAuthed = function() {
-  var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
-    if (!resp.code) {
-      // mssolutions.fbapp.loadprojections.signedIn = true;
-    	gapi.client.draftapp.main.authed().execute(
-	      function(resp) {
-	    	  $("#nav_username").text(resp.description);
-	      });
-
-    } else {
-		window.location.href = "login.html";
-
-    }
-  });
-};
-
-
-/**
- * Lists greetings via the API.
+ * load player projections via the API.
  */
 mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 	gapi.client.draftapp.main.getprojections().execute(
       function(resp) {
         if (!resp.code) { 
-
-        	// console.log(resp.items);
         	
             $('#example1').dataTable( {
             	"bProcessing": true,
@@ -66,21 +189,23 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
                     { "title": "Team", "mData": "team"}
                 ]
             } ); 
-        	
-        	
+
         }
       });
 };
 
 /**
- * Handles the auth flow, with the given value for immediate mode.
- * @param {boolean} mode Whether or not to use immediate mode.
- * @param {Function} callback Callback to call on completion.
+ * load player attribute map via the API.
  */
-mssolutions.fbapp.loadprojections.signin = function(mode, callback) {
-  gapi.auth.authorize({client_id: mssolutions.fbapp.loadprojections.CLIENT_ID,
-      scope: mssolutions.fbapp.loadprojections.SCOPES, immediate: mode},
-      callback);
+mssolutions.fbapp.loadprojections.loadattributemap = function(token) {
+	gapi.client.draftapp.main.getprojectionattributes({'token': token}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	
+        	console.log("Attribute Map: ", resp.description);
+
+        }
+      });
 };
 
 
@@ -94,9 +219,6 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
   var apisToLoad;
   var callback = function() {
     if (--apisToLoad == 0) {
-      // mssolutions.fbapp.loadprojections.enableButtons();
-//    	mssolutions.fbapp.loadprojections.signin(true,
-//    			mssolutions.fbapp.loadprojections.userAuthed);
     	mssolutions.fbapp.loadprojections.loadProjections();
     }
   }

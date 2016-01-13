@@ -3,6 +3,7 @@ package com.nya.sms.dataservices;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,13 +76,14 @@ public class PlayerProjectedService implements Serializable {
 	 * @param year 
 	 * @return Returns a list of PlayerProjected for the given parameters
 	 */
-	public PlayerProjected getPlayerProjection(String proj_service, String proj_period, Integer year, String mlb_id){
+	public PlayerProjected getPlayerProjection(String proj_service, String proj_period, Integer year, String other_id_name, String other_id){
 		
 		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
 		q = q.filter("projection_service", proj_service);
 		q = q.filter("projection_period", proj_period);
 		q = q.filter("projected_year", year);
-		q = q.filter("mlb_id", mlb_id);
+		q = q.filter("other_id_name", other_id_name);
+		q = q.filter("other_id", other_id);
 		List<PlayerProjected> slist = q.list();
 		
 		return slist.get(0);
@@ -95,13 +97,14 @@ public class PlayerProjectedService implements Serializable {
 	 * @param year 
 	 * @return Returns a list of PlayerProjected for the given parameters
 	 */
-	public boolean isPlayerProjectionPresent(String proj_service, String proj_period, Integer year, String mlb_id){
+	public boolean isPlayerProjectionPresent(String proj_service, String proj_period, Integer year, String other_id_name, String other_id){
 		
 		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
 		q = q.filter("projection_service", proj_service);
 		q = q.filter("projection_period", proj_period);
 		q = q.filter("projected_year", year);
-		q = q.filter("mlb_id", mlb_id);
+		q = q.filter("other_id_name", other_id_name);
+		q = q.filter("other_id", other_id);
 		List<PlayerProjected> slist = q.list();
 		
 		if (slist.size() > 0) return true;
@@ -203,6 +206,26 @@ public class PlayerProjectedService implements Serializable {
 //		}
 		
 		return size;
+	}
+	
+	/**
+	 * Description:	Returns all player projection attributes
+	 */
+	public String getPlayerProjectionAttributes() throws Exception{
+		
+		PlayerProjected pp = new PlayerProjected();
+		String result = "";
+		
+	    Class<?> objClass = pp.getClass();
+
+	    Field[] fields = objClass.getFields();
+	    for(Field field : fields) {
+	        String name = field.getName();
+	        result = result + name + ",";
+	        
+	    }
+
+	    return result.substring(0, result.length()-1);
 	}
 
 
