@@ -62,6 +62,7 @@ mssolutions.fbapp.login.authenticate_admin = function(token) {
       if (resp.status != "OK") {
     	  window.location.href = "../../index.html";
       } else {
+    	  console.log("Auth Admin: ", resp.description);
     	  $("body").removeAttr("hidden");
       }
     });

@@ -1,5 +1,6 @@
 package com.app.endpoints;
 
+import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.response.*;
@@ -66,13 +67,14 @@ public class MainEndpoint {
   }
    
 
-
-  @ApiMethod(name = "main.updateprojections", httpMethod = "post")
-  public APIGeneralResult UpdateProjections(APIPlayerProjectionContainer container, @Named("proj_service") String proj_service, 
-		  @Named("proj_period") String proj_period, /* @Named("proj_date") Date proj_date,*/ @Named("year") Integer year, APIToken token) 
+/*
+  @ApiMethod(name = "main.updateplayerprojections", httpMethod = "post")
+  public APIGeneralResult updatePlayerProjections(APIGeneralMessage container) 
 		  throws InternalServerErrorException {
 	  
 	System.out.println("In UpdateProjections endpoint.");
+	
+	APIToken token = new APIToken(container.getToken());
 	  
     if(!getIdentityService().validateAdminJWT(token)) //Validate credentials
     	return new APIGeneralResult("KO", "Token is invalid");
@@ -82,6 +84,7 @@ public class MainEndpoint {
 	Integer count = 0;
 	Date date = new Date();
 
+	
     try
     {
     	count = getPlayerProjectedService().updatePlayerProjections(container.getPlayerlist(), proj_service, 
@@ -98,29 +101,32 @@ public class MainEndpoint {
     {
       throw new InternalServerErrorException("UA08 - Internal error. " + e);
     }
+    
 
+	return new APIGeneralResult("KO", "No Player projections were created.");
   }
+  */
   
-  @ApiMethod(name = "main.getprojectionattributes", httpMethod = "get")
-  public APIGeneralResult getProjectionAttributes(APIToken token){
-	
+  @ApiMethod(name = "map.getattributemap", httpMethod = "post")
+  public ProjectionAttributeMap getAttributeMap(APIToken token){
+	System.out.println("In getprojectionattributes endpoint.");
 	String attributes = "";
 	
-    if(!getIdentityService().validateAdminJWT(token)) //Validate credentials
-    	return new APIGeneralResult("KO", "Token is invalid");
+//    if(!getIdentityService().validateAdminJWT(token)) 
+//    	return new APIGeneralResult("KO", "AttributeMap Token is invalid");
 
     try
     {
     	attributes = getPlayerProjectedService().getPlayerProjectionAttributes();
     	if (attributes.length() > 0)
-    		return new APIGeneralResult("OK", attributes);
+    		return new ProjectionAttributeMap(attributes, "Token: " + token.getToken());
     	else
-    		return new APIGeneralResult("KO", "No Player projection attributes returned.");
+    		return new ProjectionAttributeMap("none", "No Player projection attributes returned.");
 
     }catch(Exception e)
     {
     	e.printStackTrace();
-    	return new APIGeneralResult("KO", "No Player projection attributes returned.");
+    	return new ProjectionAttributeMap("none", "No Player projection attributes returned.");
     }
 
   }

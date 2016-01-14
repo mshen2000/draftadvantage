@@ -105,9 +105,9 @@ public class LogonEndpoint {
 
       if(getIdentityService().validateAdminJWT(token)) //Validate credentials
       {
-        return new APIGeneralResult("OK", "Token is valid");
+        return new APIGeneralResult("OK", "Token is valid: " + token.getToken());
       }
-      else return new APIGeneralResult("KO", "Token is invalid");
+      else return new APIGeneralResult("KO", "Token is invalid: " + token.getToken());
 
   }
 

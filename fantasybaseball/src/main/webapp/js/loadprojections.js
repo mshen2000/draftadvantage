@@ -170,8 +170,7 @@ function completeFn(results)
 	
 	var date = new Date("January 12, 2016 12:01:00");
 	
-	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections, "Steamer", 
-			"Pre-Season", "2016", token);
+	// mssolutions.fbapp.loadprojections.updateprojections(JSON.stringify(uploadplayerprojections), token);
 }
 
 
@@ -201,15 +200,10 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 
 /**
  * load player attribute map via the API.
- */
-mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_service, 
-		  proj_period, year, token) {
+ 
+mssolutions.fbapp.loadprojections.updateprojections = function(container, token) {
 	gapi.client.draftapp.main.updateprojections(
-			{'container': container,
-			'proj_service': proj_service,
-			'proj_period': proj_period,
-			// {'proj_date': proj_date},
-			'year': year,
+			{'message': container,
 			'token': token}).execute(
       function(resp) {
         if (!resp.code) { 
@@ -218,22 +212,27 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_s
 
         }
         else {
-        	console.log("Load Failure: ", resp.description);
+        	console.log("Failed to update projections: ", resp.code + " : " + resp.message);
         }
       });
 };
-
+*/
 
 /**
  * load player attribute map via the API.
  */
 mssolutions.fbapp.loadprojections.loadattributemap = function(token) {
-	gapi.client.draftapp.main.getprojectionattributes({'token': token}).execute(
+	console.log("Pre-Attribute Map Token: ", token);
+//	var token_object = {};
+//	token_object.token = tokenstring;
+	
+	gapi.client.draftapp.map.getattributemap({'token': token}).execute(
       function(resp) {
         if (!resp.code) { 
-        	
-        	console.log("Attribute Map: ", resp.description);
-
+        	console.log("Attribute Map: ", resp.attributes, " : " , resp.note);
+        }
+        else {
+        	console.log("Failed to load Attribute Map: ", resp.code + " : " + resp.message);
         }
       });
 };
