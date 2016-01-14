@@ -167,6 +167,11 @@ function completeFn(results)
 	});
 	
 	console.log("Updated PlayerList: ", JSON.stringify(uploadplayerprojections));
+	
+	var date = new Date("January 12, 2016 12:01:00");
+	
+	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections, "Steamer", 
+			"Pre-Season", "2016", token);
 }
 
 
@@ -197,6 +202,31 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 /**
  * load player attribute map via the API.
  */
+mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_service, 
+		  proj_period, year, token) {
+	gapi.client.draftapp.main.updateprojections(
+			{'container': container,
+			'proj_service': proj_service,
+			'proj_period': proj_period,
+			// {'proj_date': proj_date},
+			'year': year,
+			'token': token}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	
+        	console.log("Load Success: ", resp.description);
+
+        }
+        else {
+        	console.log("Load Failure: ", resp.description);
+        }
+      });
+};
+
+
+/**
+ * load player attribute map via the API.
+ */
 mssolutions.fbapp.loadprojections.loadattributemap = function(token) {
 	gapi.client.draftapp.main.getprojectionattributes({'token': token}).execute(
       function(resp) {
@@ -207,7 +237,6 @@ mssolutions.fbapp.loadprojections.loadattributemap = function(token) {
         }
       });
 };
-
 
 /**
  * Initializes the application.
@@ -223,7 +252,7 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
     }
   }
 
-  apisToLoad = 2; // must match number of calls to gapi.client.load()
+  apisToLoad = 1; // must match number of calls to gapi.client.load()
   gapi.client.load('draftapp', 'v1', callback, apiRoot);
-  gapi.client.load('oauth2', 'v2', callback);
+  // gapi.client.load('oauth2', 'v2', callback);
 };

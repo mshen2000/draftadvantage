@@ -200,9 +200,41 @@ public class IdentityService implements Serializable {
 
 	}
 	
+	public boolean validateUserJWT(String jwt){
+		return validateJWT("user",jwt);
+	}
 
-	public boolean validateJWT(String jwt){
-		
+	public boolean validateAdminJWT(String jwt){
+		return validateJWT("admin",jwt);
+	}
+	
+	private boolean validateJWT(String rolename, String jwt){
+
+	    JwtConsumer jwtConsumer = getJWTConsumer(jwt);
+
+	    try
+	    {
+	        //  Validate the JWT and process it to the Claims
+	        JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt);
+	        List<String> roles = (List<String>) jwtClaims.getClaimValue("roles");
+	        for (String role : roles){
+	        	if (role.equals(rolename)){
+	        		System.out.println("JWT validation succeeded for " + rolename + " role! " + jwtClaims);
+	        		return true;
+	        	}
+	        }
+	        return false;
+	    }
+	    catch (InvalidJwtException e)
+	    {
+	        // InvalidJwtException will be thrown, if the JWT failed processing or validation in anyway.
+	        // Hopefully with meaningful explanations(s) about what went wrong.
+	        System.out.println("Invalid JWT! " + e);
+	        return false;
+	    }	
+	}
+	
+	private JwtConsumer getJWTConsumer(String jwt){
 		RsaJsonWebKey rsaJsonWebKey = getStoredWebKey();
 		
 	    // Use JwtConsumerBuilder to construct an appropriate JwtConsumer, which will
@@ -220,22 +252,23 @@ public class IdentityService implements Serializable {
 	            .setExpectedAudience("DraftAdvantage Client") // to whom the JWT is intended for
 	            .setVerificationKey(rsaJsonWebKey.getKey()) // verify the signature with the public key
 	            .build(); // create the JwtConsumer instance
-
-	    try
-	    {
-	        //  Validate the JWT and process it to the Claims
-	        JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt);
-	        System.out.println("JWT validation succeeded! " + jwtClaims);
-	        return true;
-	    }
-	    catch (InvalidJwtException e)
-	    {
-	        // InvalidJwtException will be thrown, if the JWT failed processing or validation in anyway.
-	        // Hopefully with meaningful explanations(s) about what went wrong.
-	        System.out.println("Invalid JWT! " + e);
-	        return false;
-	    }		
+	    
+	    return jwtConsumer;
+	}
+	
+	public User getUserfromToken(String jwt){
 		
+		JwtConsumer jwtConsumer = getJWTConsumer(jwt);
+		JwtClaims jwtClaims;
+		User user = null;
+		try {
+			jwtClaims = jwtConsumer.processToClaims(jwt);
+		} catch (InvalidJwtException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return user;
+		}
+		return getUserByEmail((String)jwtClaims.getClaimValue("email"));
 	}
 
 	

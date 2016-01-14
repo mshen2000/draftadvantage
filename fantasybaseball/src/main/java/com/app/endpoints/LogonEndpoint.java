@@ -103,7 +103,7 @@ public class LogonEndpoint {
   @ApiMethod(name = "auth.authenticateadmin", httpMethod = "post")
   public APIGeneralResult AuthenticateAdmin(@Named("token") String token)  {
 
-      if(getIdentityService().validateJWT(token)) //Validate credentials
+      if(getIdentityService().validateAdminJWT(token)) //Validate credentials
       {
         return new APIGeneralResult("OK", "Token is valid");
       }

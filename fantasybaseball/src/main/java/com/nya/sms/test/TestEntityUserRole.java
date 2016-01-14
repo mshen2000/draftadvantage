@@ -237,21 +237,38 @@ public class TestEntityUserRole {
 
 		getIdentityService().saveUser(usr1,usr1.getUsername());
 
-		Role r1 = new Role("role1","role1");
+		Role r1 = new Role("user","role1");
+		Role r2 = new Role("admin","role1");
 		
 		getIdentityService().saveRole(r1,usr1.getUsername());
+		getIdentityService().saveRole(r2,usr1.getUsername());
 		
-		getIdentityService().createMembership("test1", "role1");
+		getIdentityService().createMembership("test1", "user");
 		
 		// Test JWT Create
-		String jwt = getIdentityService().generateJWT("test1@test.com");
-		Assert.assertTrue(jwt.length() > 1);
+		String jwt1 = getIdentityService().generateJWT("test1@test.com");
+		Assert.assertTrue(jwt1.length() > 1);
 		
 		// Test JWT Consume
-		Assert.assertTrue(getIdentityService().validateJWT(jwt));
-		Assert.assertFalse(getIdentityService().validateJWT(jwt + "aaa"));
-
+		Assert.assertTrue(getIdentityService().validateUserJWT(jwt1));
+		Assert.assertFalse(getIdentityService().validateUserJWT(jwt1 + "aaa"));
+		Assert.assertFalse(getIdentityService().validateAdminJWT(jwt1));
 		
+		getIdentityService().createMembership("test1", "admin");
+		
+		// Test JWT Create
+		String jwt2 = getIdentityService().generateJWT("test1@test.com");
+		Assert.assertTrue(jwt2.length() > 1);
+		
+		// Test JWT Consume
+		Assert.assertTrue(getIdentityService().validateUserJWT(jwt2));
+		Assert.assertFalse(getIdentityService().validateUserJWT(jwt2 + "aaa"));
+		Assert.assertTrue(getIdentityService().validateAdminJWT(jwt2));
+		
+		// Test get user from token
+		User usrout = getIdentityService().getUserfromToken(jwt2);
+		Assert.assertTrue(usrout.getUsername().equals("test1"));
+		Assert.assertTrue(usrout.getEmail().equals("test1@test.com"));
 	}
 	
 	@Test

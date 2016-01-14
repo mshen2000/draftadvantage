@@ -69,14 +69,26 @@ public class MainEndpoint {
 
   @ApiMethod(name = "main.updateprojections", httpMethod = "post")
   public APIGeneralResult UpdateProjections(APIPlayerProjectionContainer container, @Named("proj_service") String proj_service, 
-		  @Named("proj_period") String proj_period, @Named("proj_date") Date proj_date, @Named("year") Integer year, User user) 
+		  @Named("proj_period") String proj_period, /* @Named("proj_date") Date proj_date,*/ @Named("year") Integer year, @Named("token") String token) 
 		  throws InternalServerErrorException {
-	
+	  
+	System.out.println("In UpdateProjections endpoint.");
+	  
+    if(!getIdentityService().validateAdminJWT(token)) //Validate credentials
+    	return new APIGeneralResult("KO", "Token is invalid");
+    
+    com.nya.sms.entities.User user = getIdentityService().getUserfromToken(token);
+	    
 	Integer count = 0;
+	Date date = new Date();
 
     try
     {
-    	count = getPlayerProjectedService().updatePlayerProjections(container.getPlayerlist(), proj_service, proj_period, proj_date, year, user.getNickname());
+    	count = getPlayerProjectedService().updatePlayerProjections(container.getPlayerlist(), proj_service, 
+    			proj_period, date, year, user.getUsername());
+    	
+    	System.out.println("After update service call, count = " + count);
+    	
     	if (count > 0)
     		return new APIGeneralResult("OK", "Number of player projections updated: " + count);
     	else
@@ -94,7 +106,7 @@ public class MainEndpoint {
 	
 	String attributes = "";
 	
-    if(!getIdentityService().validateJWT(token)) //Validate credentials
+    if(!getIdentityService().validateAdminJWT(token)) //Validate credentials
     	return new APIGeneralResult("KO", "Token is invalid");
 
     try
