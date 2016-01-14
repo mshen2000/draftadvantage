@@ -87,7 +87,7 @@ public class LogonEndpoint {
         HttpSession session = req.getSession();
         session.setAttribute("UserEmail", email);
         session.setAttribute("Authenticated", true);
-        return new APIGeneralResult("OK", getIdentityService().generateJWT(email));
+        return new APIGeneralResult("OK", getIdentityService().generateJWT(email).getToken());
       }
       else return new APIGeneralResult("KO", "Invalid credentials.");
 
@@ -101,7 +101,7 @@ public class LogonEndpoint {
   
   
   @ApiMethod(name = "auth.authenticateadmin", httpMethod = "post")
-  public APIGeneralResult AuthenticateAdmin(@Named("token") String token)  {
+  public APIGeneralResult AuthenticateAdmin(APIToken token)  {
 
       if(getIdentityService().validateAdminJWT(token)) //Validate credentials
       {

@@ -18,6 +18,7 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
 
+import com.app.endpoints.APIToken;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
@@ -126,7 +127,7 @@ public class IdentityService implements Serializable {
 		
 	}
 	
-	public String generateJWT(String email) {
+	public APIToken generateJWT(String email) {
 		
 		List<Role> roles = getUserRoles(getUserByEmail(email).getUsername());
 		List<String> rolenames = new ArrayList<String>();
@@ -190,7 +191,7 @@ public class IdentityService implements Serializable {
 		    
 		    System.out.println("JWT: " + jwt);
 		    
-		    return jwt;
+		    return new APIToken(jwt);
 	    
 		} catch (JoseException e) {
 			// TODO Auto-generated catch block
@@ -200,22 +201,22 @@ public class IdentityService implements Serializable {
 
 	}
 	
-	public boolean validateUserJWT(String jwt){
+	public boolean validateUserJWT(APIToken jwt){
 		return validateJWT("user",jwt);
 	}
 
-	public boolean validateAdminJWT(String jwt){
+	public boolean validateAdminJWT(APIToken jwt){
 		return validateJWT("admin",jwt);
 	}
 	
-	private boolean validateJWT(String rolename, String jwt){
+	private boolean validateJWT(String rolename, APIToken jwt){
 
-	    JwtConsumer jwtConsumer = getJWTConsumer(jwt);
+	    JwtConsumer jwtConsumer = getJWTConsumer();
 
 	    try
 	    {
 	        //  Validate the JWT and process it to the Claims
-	        JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt);
+	        JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt.getToken());
 	        List<String> roles = (List<String>) jwtClaims.getClaimValue("roles");
 	        for (String role : roles){
 	        	if (role.equals(rolename)){
@@ -234,7 +235,7 @@ public class IdentityService implements Serializable {
 	    }	
 	}
 	
-	private JwtConsumer getJWTConsumer(String jwt){
+	private JwtConsumer getJWTConsumer(){
 		RsaJsonWebKey rsaJsonWebKey = getStoredWebKey();
 		
 	    // Use JwtConsumerBuilder to construct an appropriate JwtConsumer, which will
@@ -256,13 +257,13 @@ public class IdentityService implements Serializable {
 	    return jwtConsumer;
 	}
 	
-	public User getUserfromToken(String jwt){
+	public User getUserfromToken(APIToken jwt){
 		
-		JwtConsumer jwtConsumer = getJWTConsumer(jwt);
+		JwtConsumer jwtConsumer = getJWTConsumer();
 		JwtClaims jwtClaims;
 		User user = null;
 		try {
-			jwtClaims = jwtConsumer.processToClaims(jwt);
+			jwtClaims = jwtConsumer.processToClaims(jwt.getToken());
 		} catch (InvalidJwtException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

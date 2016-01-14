@@ -69,7 +69,7 @@ public class MainEndpoint {
 
   @ApiMethod(name = "main.updateprojections", httpMethod = "post")
   public APIGeneralResult UpdateProjections(APIPlayerProjectionContainer container, @Named("proj_service") String proj_service, 
-		  @Named("proj_period") String proj_period, /* @Named("proj_date") Date proj_date,*/ @Named("year") Integer year, @Named("token") String token) 
+		  @Named("proj_period") String proj_period, /* @Named("proj_date") Date proj_date,*/ @Named("year") Integer year, APIToken token) 
 		  throws InternalServerErrorException {
 	  
 	System.out.println("In UpdateProjections endpoint.");
@@ -102,7 +102,7 @@ public class MainEndpoint {
   }
   
   @ApiMethod(name = "main.getprojectionattributes", httpMethod = "get")
-  public APIGeneralResult getProjectionAttributes(@Named("token") String token){
+  public APIGeneralResult getProjectionAttributes(APIToken token){
 	
 	String attributes = "";
 	
