@@ -41,43 +41,32 @@ public class MainEndpoint {
 	 
 	 }
 
-  @ApiMethod(name = "main.authed", path = "draftappmain/authed")
-  public APIGeneralResult authedUser(User user) {
-	  
-	  APIGeneralResult response = new APIGeneralResult("KO", "UNKNOWN");
-	  
-	  if (user != null) {
-		  if (getIdentityService().isUserExtIDPresent(user.getUserId()))
-			  response = new APIGeneralResult("OK", user.getNickname());
-		  else response = new APIGeneralResult("KO", "User Not in DB");
-	  }
-	  
-    return response;
-  }
-  
-  
-  
-  @ApiMethod(name = "main.getprojections")
-  public List<PlayerProjected> GetProjections(User user) throws UnauthorizedException {
-    
-	// if (validateUser(user))
+	@ApiMethod(name = "main.getprojections")
+	public List<PlayerProjected> GetProjections(HttpServletRequest req)
+			throws UnauthorizedException {
+
+		APIToken token = new APIToken(
+				req.getHeader("Authorization").split(" ")[1]);
+
+		if (!getIdentityService().validateAdminJWT(token))
+			throw new UnauthorizedException("Token is invalid");
+
 		return getPlayerProjectedService().getAllPlayerProjected();
-    
-    // throw new UnauthorizedException("UA09 - Invalid credentials.");
-  }
+
+	}
    
 
-
   @ApiMethod(name = "main.updateplayerprojections", httpMethod = "post")
-  public APIGeneralResult updatePlayerProjections(APIGeneralMessage container) 
-		  throws InternalServerErrorException {
+  public APIGeneralResult updatePlayerProjections(APIGeneralMessage container, HttpServletRequest req) 
+		  throws InternalServerErrorException, UnauthorizedException {
 	  
 	System.out.println("In UpdateProjections endpoint.");
 	
-	APIToken token = new APIToken(container.getToken());
-	  
-    if(!getIdentityService().validateAdminJWT(token)) //Validate credentials
-    	return new APIGeneralResult("KO", "Token is invalid");
+	APIToken token = new APIToken(
+			req.getHeader("Authorization").split(" ")[1]);
+
+	if (!getIdentityService().validateAdminJWT(token))
+		throw new UnauthorizedException("Token is invalid");
     
     com.nya.sms.entities.User user = getIdentityService().getUserfromToken(token);
 	    
@@ -107,45 +96,35 @@ public class MainEndpoint {
   }
   
   
-  @ApiMethod(name = "map.getattributemap", httpMethod = "post")
-  public ProjectionAttributeMap getAttributeMap(HttpServletRequest req){
+	@ApiMethod(name = "map.getattributemap", httpMethod = "post")
+	public ProjectionAttributeMap getAttributeMap(HttpServletRequest req)
+			throws UnauthorizedException {
 
-	  APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
-	  
-	String attributes = "";
-	
-    if(!getIdentityService().validateAdminJWT(token)) 
-    	return new ProjectionAttributeMap("none", "Token is invalid");
-
-    try
-    {
-    	attributes = getPlayerProjectedService().getPlayerProjectionAttributes();
-    	if (attributes.length() > 0)
-    		return new ProjectionAttributeMap(attributes, "Attributes available");
-    	else
-    		return new ProjectionAttributeMap("none", "No Player projection attributes returned.");
-
-    }catch(Exception e)
-    {
-    	e.printStackTrace();
-    	return new ProjectionAttributeMap("none", "No Player projection attributes returned.");
-    }
-
-  }
-  
-  
-
-
-	private boolean validateUser(User user) {
-		// TODO Auto-generated method stub
+		String attributes = "";
 		
-		  if (user != null) {
-			  if (getIdentityService().isUserExtIDPresent(user.getUserId()))
-				  return true;
-			  else return false;
-		  }
-		
-		return false;
+		APIToken token = new APIToken(
+				req.getHeader("Authorization").split(" ")[1]);
+
+		if (!getIdentityService().validateAdminJWT(token))
+			throw new UnauthorizedException("Token is invalid");
+
+		try {
+			attributes = getPlayerProjectedService()
+					.getPlayerProjectionAttributes();
+			if (attributes.length() > 0)
+				return new ProjectionAttributeMap(attributes,
+						"Attributes available");
+			else
+				return new ProjectionAttributeMap("none",
+						"No Player projection attributes returned.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ProjectionAttributeMap("none",
+					"No Player projection attributes returned.");
+		}
+
 	}
+
 	
 }

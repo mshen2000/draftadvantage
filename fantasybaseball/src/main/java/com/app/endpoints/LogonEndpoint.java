@@ -88,11 +88,7 @@ public class LogonEndpoint {
       if(validateLogin(email, password)) //Validate credentials
       {
         HttpSession session = req.getSession();
-        
-        
-        System.out.println("Header Names: " + req.getHeaderNames().toString());
-        
-        
+
         session.setAttribute("UserEmail", email);
         session.setAttribute("Authenticated", true);
         return new APIGeneralResult("OK", getIdentityService().generateJWT(email).getToken());

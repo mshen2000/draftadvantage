@@ -105,8 +105,7 @@ function completeFn(results)
 	$("#output").val(JSON.stringify(results.data));
 	
 	// Get player attribute map from server
-	var token = localStorage.getItem("ClientToken");
-	mssolutions.fbapp.loadprojections.loadattributemap(token);
+	mssolutions.fbapp.loadprojections.loadattributemap();
 	
 	// Temp property map
 	var hitterpropertymap = {
@@ -194,6 +193,9 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
                 ]
             } ); 
 
+        }
+        else {
+        	console.log("Failed to load projections: ", resp.code + " : " + resp.message);
         }
       });
 };
