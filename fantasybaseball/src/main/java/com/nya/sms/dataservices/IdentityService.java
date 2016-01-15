@@ -101,11 +101,8 @@ public class IdentityService implements Serializable {
 		} catch (JoseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
 		}
-		    
-		 
-		
+
 	}
 	
 	public RsaJsonWebKey getStoredWebKey(){
@@ -148,8 +145,6 @@ public class IdentityService implements Serializable {
 		try {
 			rsaJsonWebKey = getStoredWebKey();
 
-		    System.out.println("Private Key JSON: " + rsaJsonWebKey.getPrivateKey().toString());
-		    
 		    // Create the Claims, which will be the content of the JWT
 		    JwtClaims claims = new JwtClaims();
 		    claims.setIssuer("DraftAdvantage Server");  // who creates the token and signs it
@@ -165,9 +160,7 @@ public class IdentityService implements Serializable {
 		    // A JWT is a JWS and/or a JWE with JSON claims as the payload.
 		    // In this example it is a JWS so we create a JsonWebSignature object.
 		    JsonWebSignature jws = new JsonWebSignature();
-	
-		    System.out.println("Claims JSON: " + claims.toJson());
-		    
+
 		    // The payload of the JWS is JSON content of the JWT Claims
 		    jws.setPayload(claims.toJson());
 	
@@ -188,8 +181,6 @@ public class IdentityService implements Serializable {
 		    // If you wanted to encrypt it, you can simply set this jwt as the payload
 		    // of a JsonWebEncryption object and set the cty (Content Type) header to "jwt".
 		    String jwt = jws.getCompactSerialization();
-		    
-		    System.out.println("JWT: " + jwt);
 		    
 		    return new APIToken(jwt);
 	    
@@ -220,7 +211,7 @@ public class IdentityService implements Serializable {
 	        List<String> roles = (List<String>) jwtClaims.getClaimValue("roles");
 	        for (String role : roles){
 	        	if (role.equals(rolename)){
-	        		System.out.println("JWT validation succeeded for " + rolename + " role! " + jwtClaims);
+	        		System.out.println("JWT validation succeeded for " + rolename + " role.");
 	        		return true;
 	        	}
 	        }
@@ -230,7 +221,8 @@ public class IdentityService implements Serializable {
 	    {
 	        // InvalidJwtException will be thrown, if the JWT failed processing or validation in anyway.
 	        // Hopefully with meaningful explanations(s) about what went wrong.
-	        System.out.println("Invalid JWT! " + e);
+	        System.out.println("JWT it invalid.");
+	        // e.printStackTrace();
 	        return false;
 	    }	
 	}

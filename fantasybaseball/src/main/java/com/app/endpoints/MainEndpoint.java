@@ -67,7 +67,7 @@ public class MainEndpoint {
   }
    
 
-/*
+
   @ApiMethod(name = "main.updateplayerprojections", httpMethod = "post")
   public APIGeneralResult updatePlayerProjections(APIGeneralMessage container) 
 		  throws InternalServerErrorException {
@@ -84,7 +84,7 @@ public class MainEndpoint {
 	Integer count = 0;
 	Date date = new Date();
 
-	
+	/*
     try
     {
     	count = getPlayerProjectedService().updatePlayerProjections(container.getPlayerlist(), proj_service, 
@@ -101,25 +101,27 @@ public class MainEndpoint {
     {
       throw new InternalServerErrorException("UA08 - Internal error. " + e);
     }
-    
+    */
 
 	return new APIGeneralResult("KO", "No Player projections were created.");
   }
-  */
+  
   
   @ApiMethod(name = "map.getattributemap", httpMethod = "post")
-  public ProjectionAttributeMap getAttributeMap(APIToken token){
-	System.out.println("In getprojectionattributes endpoint.");
+  public ProjectionAttributeMap getAttributeMap(HttpServletRequest req){
+
+	  APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
+	  
 	String attributes = "";
 	
-//    if(!getIdentityService().validateAdminJWT(token)) 
-//    	return new APIGeneralResult("KO", "AttributeMap Token is invalid");
+    if(!getIdentityService().validateAdminJWT(token)) 
+    	return new ProjectionAttributeMap("none", "Token is invalid");
 
     try
     {
     	attributes = getPlayerProjectedService().getPlayerProjectionAttributes();
     	if (attributes.length() > 0)
-    		return new ProjectionAttributeMap(attributes, "Token: " + token.getToken());
+    		return new ProjectionAttributeMap(attributes, "Attributes available");
     	else
     		return new ProjectionAttributeMap("none", "No Player projection attributes returned.");
 
@@ -130,6 +132,8 @@ public class MainEndpoint {
     }
 
   }
+  
+  
 
 
 	private boolean validateUser(User user) {

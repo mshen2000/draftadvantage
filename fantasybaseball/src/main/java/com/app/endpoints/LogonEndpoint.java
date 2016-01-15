@@ -7,6 +7,9 @@ import com.google.appengine.api.users.User;
 import com.nya.sms.dataservices.IdentityService;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -85,6 +88,11 @@ public class LogonEndpoint {
       if(validateLogin(email, password)) //Validate credentials
       {
         HttpSession session = req.getSession();
+        
+        
+        System.out.println("Header Names: " + req.getHeaderNames().toString());
+        
+        
         session.setAttribute("UserEmail", email);
         session.setAttribute("Authenticated", true);
         return new APIGeneralResult("OK", getIdentityService().generateJWT(email).getToken());
@@ -101,8 +109,18 @@ public class LogonEndpoint {
   
   
   @ApiMethod(name = "auth.authenticateadmin", httpMethod = "post")
-  public APIGeneralResult AuthenticateAdmin(APIToken token)  {
+  public APIGeneralResult AuthenticateAdmin(HttpServletRequest req)  {
 
+	  // Debug header authorization value
+//      Enumeration<String> headers = req.getHeaders("Authorization");
+//      System.out.println("Header Name:  Authorization");
+//      while (headers.hasMoreElements()) {
+//          String headerValue = headers.nextElement();
+//          System.out.println("Header Value:  " + req.getHeader("Authorization"));
+//      }
+
+      APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
+	  
       if(getIdentityService().validateAdminJWT(token)) //Validate credentials
       {
         return new APIGeneralResult("OK", "Token is valid: " + token.getToken());

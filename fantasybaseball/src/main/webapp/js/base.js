@@ -44,7 +44,6 @@ mssolutions.fbapp.login.logon = function(email, password) {
     }).execute(function(resp) {
       if (resp.status == "OK") {
     	  localStorage.setItem("ClientToken", resp.description);
-    	  // alert(localStorage.getItem("ClientToken"));
     	  window.location.href = "pages/admin/playerload.html";
       }
       else {
@@ -57,15 +56,17 @@ mssolutions.fbapp.login.logon = function(email, password) {
  * Authenticate for admin access
  * @param {string} token
  */
-mssolutions.fbapp.login.authenticate_admin = function(token) {
-  gapi.client.authenticate.auth.authenticateadmin({'token': token}).execute(function(resp) {
-      if (resp.status != "OK") {
-    	  window.location.href = "../../index.html";
-      } else {
-    	  console.log("Auth Admin: ", resp.description);
-    	  $("body").removeAttr("hidden");
-      }
-    });
+mssolutions.fbapp.login.authenticate_admin = function() {
+
+	gapi.client.authenticate.auth.authenticateadmin().execute(function(resp) {
+		if (resp.status != "OK") {
+			window.location.href = "../../index.html";
+		} else {
+			// console.log("Auth Admin: ", resp.description);
+			$("body").removeAttr("hidden");
+		}
+	});
+
 };
 
 
@@ -74,7 +75,6 @@ mssolutions.fbapp.login.authenticate_admin = function(token) {
  * Enables the button callbacks in the UI.
  */
 mssolutions.fbapp.login.enableButtons = function() {
-	
 
 };
 
@@ -84,19 +84,28 @@ mssolutions.fbapp.login.enableButtons = function() {
  * @param {string} apiRoot Root of the API's path.
  */
 mssolutions.fbapp.login.init_login = function(apiRoot) {
-  // Loads the OAuth and helloworld APIs asynchronously, and triggers login
-  // when they have completed.
-  var apisToLoad;
-  var callback = function() {
-    if (--apisToLoad == 0) {
-    	mssolutions.fbapp.login.enableButtons();
+	
+	//  check if endpoints have been intialized
+	if (typeof gapi.client.authenticate !== 'object') {
+		
+		console.log("Loading gapi.client.authenticate (from init_logon)");
+		
+		// Loads the OAuth and authenticate APIs asynchronously, and
+		// triggers login when they have completed.
+		var apisToLoad;
+		var callback = function() {
+			if (--apisToLoad == 0) {
+				mssolutions.fbapp.login.enableButtons();
+			}
+		}
 
-    }
-  }
-
-  apisToLoad = 2; // must match number of calls to gapi.client.load()
-  gapi.client.load('authenticate', 'v1', callback, apiRoot);
-  gapi.client.load('oauth2', 'v2', callback);
+		apisToLoad = 1; // must match number of calls to gapi.client.load()
+		gapi.client.load('authenticate', 'v1', callback, apiRoot);
+		// gapi.client.load('oauth2', 'v2', callback);
+	}
+	else {
+		mssolutions.fbapp.login.enableButtons();
+	}
 };
 
 
@@ -105,19 +114,37 @@ mssolutions.fbapp.login.init_login = function(apiRoot) {
  * @param {string} apiRoot Root of the API's path.
  */
 mssolutions.fbapp.login.auth_admin = function(apiRoot) {
-  // Loads the OAuth and helloworld APIs asynchronously, and triggers login
-  // when they have completed.
-  var apisToLoad;
-  var callback = function() {
-    if (--apisToLoad == 0) {
- 	    var token = localStorage.getItem("ClientToken");
- 	    // var token = "aasdfasdfaf";
-	    mssolutions.fbapp.login.authenticate_admin(token);
-
-    }
-  }
-
-  apisToLoad = 1; // must match number of calls to gapi.client.load()
-  gapi.client.load('authenticate', 'v1', callback, apiRoot);
+	
+	//  check if endpoints have been intialized
+	if (typeof gapi.client.authenticate !== 'object') {
+	
+		console.log("Loading gapi.client.authenticate (from auth_admin)");
+		
+		// Set the token for this app initialization
+		gapi.auth.setToken({
+		    access_token: localStorage.getItem("ClientToken")
+		});;
+		
+		// Loads the authenticate API asynchronously, and triggers
+		// token authentication when completed.
+		var apisToLoad;
+		var callback = function() {
+			if (--apisToLoad == 0) {
+				mssolutions.fbapp.login.authenticate_admin();
+			}
+		}
+	
+		apisToLoad = 1; // must match number of calls to gapi.client.load()
+		gapi.client.load('authenticate', 'v1', callback, apiRoot);
+		
+	}
+	else {
+		// If app is already initialized, run the callback
+		mssolutions.fbapp.login.authenticate_admin();
+	}
 };
+
+
+
+
 

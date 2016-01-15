@@ -221,12 +221,10 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, token)
 /**
  * load player attribute map via the API.
  */
-mssolutions.fbapp.loadprojections.loadattributemap = function(token) {
-	console.log("Pre-Attribute Map Token: ", token);
-//	var token_object = {};
-//	token_object.token = tokenstring;
-	
-	gapi.client.draftapp.map.getattributemap({'token': token}).execute(
+mssolutions.fbapp.loadprojections.loadattributemap = function() {
+	console.log("Pre-Attribute Map Token: ", gapi.auth.getToken());
+
+	gapi.client.draftapp.map.getattributemap().execute(
       function(resp) {
         if (!resp.code) { 
         	console.log("Attribute Map: ", resp.attributes, " : " , resp.note);
@@ -242,16 +240,31 @@ mssolutions.fbapp.loadprojections.loadattributemap = function(token) {
  * @param {string} apiRoot Root of the API's path.
  */
 mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
-  // Loads the OAuth and helloworld APIs asynchronously, and triggers login
-  // when they have completed.
-  var apisToLoad;
-  var callback = function() {
-    if (--apisToLoad == 0) {
-    	mssolutions.fbapp.loadprojections.loadProjections();
-    }
-  }
+	
+	//  check if endpoints have been intialized
+	if (typeof gapi.client.draftapp !== 'object') {
+		
+		console.log("Loading gapi.client.draftapp");
+		
+		// Set the token for this app initialization
+		gapi.auth.setToken({
+		    access_token: localStorage.getItem("ClientToken")
+		});;
+		
+		// Loads the OAuth and helloworld APIs asynchronously, and triggers
+		// login when they have completed.
+		var apisToLoad;
+		var callback = function() {
+			if (--apisToLoad == 0) {
+				mssolutions.fbapp.loadprojections.loadProjections();
+			}
+		}
 
-  apisToLoad = 1; // must match number of calls to gapi.client.load()
-  gapi.client.load('draftapp', 'v1', callback, apiRoot);
-  // gapi.client.load('oauth2', 'v2', callback);
+		apisToLoad = 1; // must match number of calls to gapi.client.load()
+		gapi.client.load('draftapp', 'v1', callback, apiRoot);
+		// gapi.client.load('oauth2', 'v2', callback);
+	}
+	else {
+		mssolutions.fbapp.loadprojections.loadProjections();
+	}
 };
