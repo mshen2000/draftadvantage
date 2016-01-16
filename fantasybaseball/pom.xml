@@ -52,6 +52,14 @@
 		    <version>4.0b1</version>
 		</dependency>
 
+	    <!--  Gson: Java to Json conversion -->
+	    <dependency>
+	      <groupId>com.google.code.gson</groupId>
+	      <artifactId>gson</artifactId>
+	      <version>2.5</version>
+	      <scope>compile</scope>
+	    </dependency>
+    
 		<!-- JWT library -->
 	  	<dependency>
 		    <groupId>org.bitbucket.b_c</groupId>

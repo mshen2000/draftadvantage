@@ -137,7 +137,7 @@ function completeFn(results)
 	// For each uploaded csv line in the csv file...
 	$.each( csvresults, function( csvresults_key, csvresults_value ) {
 		var csvplayer = csvresults_value;
-		var uploadplayer = [];
+		var uploadplayer = {};
 		
 		// For each attribute in the csv player...
 		$.each(csvplayer,function(csvplayer_key,csvplayer_value){
@@ -150,9 +150,11 @@ function completeFn(results)
 				if (map_value == csvplayer_key){
 					// console.log("map_key: ", map_key);
 					// console.log("csvplayer_value: ", csvplayer_value);
-					uploadplayerattribute.id = map_key;
-					uploadplayerattribute.value = csvplayer_value;
-					uploadplayer.push(uploadplayerattribute);
+					// uploadplayerattribute.id = map_key;
+					// uploadplayerattribute.value = csvplayer_value;
+					uploadplayerattribute[map_key] = csvplayer_value;
+					// uploadplayer.push(uploadplayerattribute);
+					uploadplayer[map_key] = csvplayer_value;
 				}
 
 			});
@@ -160,7 +162,6 @@ function completeFn(results)
 			// console.log("Updated Player Attribute: ", JSON.stringify(uploadplayerattribute));
 
 		});
-
 		uploadplayerprojections.push(uploadplayer);
 
 	});
@@ -169,7 +170,7 @@ function completeFn(results)
 	
 	var date = new Date("January 12, 2016 12:01:00");
 	
-	// mssolutions.fbapp.loadprojections.updateprojections(JSON.stringify(uploadplayerprojections), token);
+	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections);
 }
 
 
@@ -202,11 +203,9 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 
 /**
  * load player attribute map via the API.
- 
-mssolutions.fbapp.loadprojections.updateprojections = function(container, token) {
-	gapi.client.draftapp.main.updateprojections(
-			{'message': container,
-			'token': token}).execute(
+ */
+mssolutions.fbapp.loadprojections.updateprojections = function(container) {
+	gapi.client.draftapp.main.updateplayerprojections({'ObjectJSONString' : JSON.stringify(container)}).execute(
       function(resp) {
         if (!resp.code) { 
         	
@@ -218,7 +217,7 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, token)
         }
       });
 };
-*/
+
 
 /**
  * load player attribute map via the API.

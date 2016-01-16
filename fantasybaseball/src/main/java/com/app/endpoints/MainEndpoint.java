@@ -1,21 +1,20 @@
 package com.app.endpoints;
 
+import com.app.endpoints.entities.ObjectJSONContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.*;
-import com.google.appengine.api.users.User;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.PlayerProjectedService;
 import com.nya.sms.entities.PlayerProjected;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * Defines v1 of a DraftApp API, which provides the application methods.
@@ -57,7 +56,7 @@ public class MainEndpoint {
    
 
   @ApiMethod(name = "main.updateplayerprojections", httpMethod = "post")
-  public APIGeneralResult updatePlayerProjections(APIGeneralMessage container, HttpServletRequest req) 
+  public APIGeneralResult updatePlayerProjections(@Nullable ObjectJSONContainer container, HttpServletRequest req) 
 		  throws InternalServerErrorException, UnauthorizedException {
 	  
 	System.out.println("In UpdateProjections endpoint.");
@@ -69,9 +68,16 @@ public class MainEndpoint {
 		throw new UnauthorizedException("Token is invalid");
     
     com.nya.sms.entities.User user = getIdentityService().getUserfromToken(token);
+    
+    // System.out.println("Object Count: " + container.getObjectsList().size());
+    System.out.println("Container String: " + container.getObjectJSONString());
+    
+    Gson gson = new Gson();
 	    
-	Integer count = 0;
-	Date date = new Date();
+    List<PlayerProjected> p_array = gson.fromJson(container.getObjectJSONString(), new TypeToken<List<PlayerProjected>>(){}.getType()); 
+    
+    System.out.println("Player 0: " + p_array.get(0).getFull_name());
+
 
 	/*
     try
