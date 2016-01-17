@@ -170,7 +170,7 @@ function completeFn(results)
 	
 	var date = new Date("January 12, 2016 12:01:00");
 	
-	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections);
+	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections, "Steamer", "Pre-season",date,"2016");
 }
 
 
@@ -204,8 +204,14 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 /**
  * load player attribute map via the API.
  */
-mssolutions.fbapp.loadprojections.updateprojections = function(container) {
-	gapi.client.draftapp.main.updateplayerprojections({'ObjectJSONString' : JSON.stringify(container)}).execute(
+mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_service, 
+		proj_period, proj_date, proj_year) {
+	gapi.client.draftapp.main.updateplayerprojections({
+		'ObjectJSONString' : JSON.stringify(container),
+		'proj_service' : proj_service,
+		'proj_period' : proj_period,
+		'proj_date' : date,
+		'proj_year' : year}).execute(
       function(resp) {
         if (!resp.code) { 
         	

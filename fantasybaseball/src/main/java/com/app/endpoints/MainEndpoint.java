@@ -1,6 +1,6 @@
 package com.app.endpoints;
 
-import com.app.endpoints.entities.ObjectJSONContainer;
+import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -56,10 +56,8 @@ public class MainEndpoint {
    
 
   @ApiMethod(name = "main.updateplayerprojections", httpMethod = "post")
-  public APIGeneralResult updatePlayerProjections(@Nullable ObjectJSONContainer container, HttpServletRequest req) 
+  public APIGeneralResult updatePlayerProjections(@Nullable ProjectionContainer container, HttpServletRequest req) 
 		  throws InternalServerErrorException, UnauthorizedException {
-	  
-	System.out.println("In UpdateProjections endpoint.");
 	
 	APIToken token = new APIToken(
 			req.getHeader("Authorization").split(" ")[1]);
@@ -68,22 +66,21 @@ public class MainEndpoint {
 		throw new UnauthorizedException("Token is invalid");
     
     com.nya.sms.entities.User user = getIdentityService().getUserfromToken(token);
-    
-    // System.out.println("Object Count: " + container.getObjectsList().size());
-    System.out.println("Container String: " + container.getObjectJSONString());
+
+    System.out.println("Container String: " + container.getProjectionsJSONString());
     
     Gson gson = new Gson();
 	    
-    List<PlayerProjected> p_array = gson.fromJson(container.getObjectJSONString(), new TypeToken<List<PlayerProjected>>(){}.getType()); 
+    List<PlayerProjected> p_array = gson.fromJson(container.getProjectionsJSONString(), new TypeToken<List<PlayerProjected>>(){}.getType()); 
     
     System.out.println("Player 0: " + p_array.get(0).getFull_name());
 
-
-	/*
+    int count = 0;
+	
     try
     {
-    	count = getPlayerProjectedService().updatePlayerProjections(container.getPlayerlist(), proj_service, 
-    			proj_period, date, year, user.getUsername());
+    	count = getPlayerProjectedService().updatePlayerProjections(p_array, container.getProj_service(), 
+    			container.getProj_period(), container.getProj_date(), container.getProj_year(), user.getUsername());
     	
     	System.out.println("After update service call, count = " + count);
     	
@@ -96,9 +93,7 @@ public class MainEndpoint {
     {
       throw new InternalServerErrorException("UA08 - Internal error. " + e);
     }
-    */
 
-	return new APIGeneralResult("KO", "No Player projections were created.");
   }
   
   
