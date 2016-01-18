@@ -29,8 +29,18 @@ var stepped = 0, chunks = 0, rows = 0;
 var start, end;
 var parser;
 
-$(function()
+$(document).ready(function()
 {
+	
+  	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
+		var $total = navigation.find('li').length;
+		var $current = index+1;
+		var $percent = ($current/$total) * 100;
+		console.log("Width: ", $percent);
+		$('#rootwizard').find('.progress-bar').css({width:$percent + '%'});
+	}});
+	
+	
 	$('#submit-parse').click(function()
 	{
 		stepped = 0;
@@ -187,10 +197,13 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
             	"bProcessing": true,
                 "aaData": resp.items,
                 "aoColumns": [
-                    { "title": "First Name", "mData": "first_name" },
-                    { "title": "Last Name", "mData": "last_name" },
-                    { "title": "Age", "mData": "age" },
-                    { "title": "Team", "mData": "team"}
+                    { "title": "Full Name", "mData": "full_name" },
+                    // { "title": "Last Name", "mData": "last_name" },
+                    // { "title": "Age", "mData": "age" },
+                    { "title": "Team", "mData": "team"},
+                    { "title": "Plate Appearances", "mData": "hitter_pa"},
+                    { "title": "Batting Average", "mData": "hitter_avg"},
+                    { "title": "Home Runs", "mData": "hitter_hr"}
                 ]
             } ); 
 
@@ -207,11 +220,11 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_service, 
 		proj_period, proj_date, proj_year) {
 	gapi.client.draftapp.main.updateplayerprojections({
-		'ObjectJSONString' : JSON.stringify(container),
+		'ProjectionsJSONString' : JSON.stringify(container),
 		'proj_service' : proj_service,
 		'proj_period' : proj_period,
-		'proj_date' : date,
-		'proj_year' : year}).execute(
+		'proj_date' : proj_date,
+		'proj_year' : proj_year}).execute(
       function(resp) {
         if (!resp.code) { 
         	

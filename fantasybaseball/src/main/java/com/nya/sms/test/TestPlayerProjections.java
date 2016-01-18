@@ -198,6 +198,14 @@ public class TestPlayerProjections {
 		// System.out.println("Count of all player projections: " + getPlayerProjectedService().getAllPlayerProjected().size());
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 6);
 		
+		// Load list 3 again
+		i3 = getPlayerProjectedService().updatePlayerProjections(list3, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, yesterday, 2016, "test1");
+		
+		// Test there are still a total of 6 projections
+		// Verify that updatePlayerProjections deletes previous set
+		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 6);
+		
 		// Test there are of 2 projections for a particular projection set
 		// Tests method getPlayerProjections
 		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
