@@ -36,8 +36,15 @@ $(document).ready(function()
 		var $total = navigation.find('li').length;
 		var $current = index+1;
 		var $percent = ($current/$total) * 100;
-		console.log("Width: ", $percent);
 		$('#rootwizard').find('.progress-bar').css({width:$percent + '%'});
+		
+		// If it's the first tab then load projection metadata
+		if($current == 1) {
+			mssolutions.fbapp.loadprojections.loadprojectionservices();
+		} else {
+
+		}
+		
 	}});
 	
 	
@@ -112,7 +119,7 @@ function completeFn(results)
 	console.log("Rows:", rows, "Stepped:", stepped, "Chunks:", chunks);
 	console.log("Results:", results);
 	console.log("Results Data:", results.data);
-	$("#output").val(JSON.stringify(results.data));
+	// $("#output").val(JSON.stringify(results.data));
 	
 	// Get player attribute map from server
 	mssolutions.fbapp.loadprojections.loadattributemap();
@@ -254,6 +261,28 @@ mssolutions.fbapp.loadprojections.loadattributemap = function() {
         }
       });
 };
+
+
+/**
+ * load projection services via the API.
+ */
+mssolutions.fbapp.loadprojections.loadprojectionservices = function() {
+	gapi.client.draftapp.map.getprojectionservices().execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("Projection Services: ", resp.items);
+        	var options = $("#projection-service_selector");
+        	$.each(resp.items, function() {
+        	    options.append($("<option />").text(this.projection_service_name));
+        	});
+        }
+        else {
+        	console.log("Failed to load Projection Services: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+
 
 /**
  * Initializes the application.

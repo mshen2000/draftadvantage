@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.app.endpoints.entities.ProjectionPeriod;
+import com.app.endpoints.entities.ProjectionService;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Result;
@@ -27,6 +29,8 @@ public class PlayerProjectedService implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String PROJECTION_SERVICE_STEAMER = "Steamer";
+	
+	public static final String PROJECTION_SERVICE_ZIPS = "Zips";
 	
 	public static final String PROJECTION_PERIOD_PRESEASON = "Pre-Season";
 	
@@ -227,8 +231,36 @@ public class PlayerProjectedService implements Serializable {
 
 	    return result.substring(0, result.length()-1);
 	}
-
-
+	
+	
+	/**
+	 * Description:	Returns a list of all projection services
+	 * @return List of strings of all projections services.
+	 */
+	public List<ProjectionService> getProjectionServices() {
+		
+		List<ProjectionService> services = new ArrayList<ProjectionService>();
+		
+		services.add(new ProjectionService(PROJECTION_SERVICE_STEAMER));
+		services.add(new ProjectionService(PROJECTION_SERVICE_ZIPS));
+		
+		return services;
+	}
+	
+	/**
+	 * Description:	Returns a list of all projection periods
+	 * @return List of strings of all projections periods.
+	 */
+	public List<ProjectionPeriod> getProjectionPeriods() {
+		
+		List<ProjectionPeriod> periods = new ArrayList<ProjectionPeriod>();
+		
+		periods.add(new ProjectionPeriod(PROJECTION_PERIOD_PRESEASON));
+		periods.add(new ProjectionPeriod(PROJECTION_PERIOD_ROS));
+		
+		return periods;
+	}
+	
 	
 	private IdentityService getIdentityService() {
 		 

@@ -2,6 +2,8 @@ package com.app.endpoints;
 
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
+import com.app.endpoints.entities.ProjectionPeriod;
+import com.app.endpoints.entities.ProjectionService;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Nullable;
@@ -12,6 +14,7 @@ import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.PlayerProjectedService;
 import com.nya.sms.entities.PlayerProjected;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -124,6 +127,40 @@ public class MainEndpoint {
 			return new ProjectionAttributeMap("none",
 					"No Player projection attributes returned.");
 		}
+
+	}
+	
+	@ApiMethod(name = "map.getprojectionservices")
+	public List<ProjectionService> getProjectionServices(HttpServletRequest req)
+			throws UnauthorizedException {
+
+		APIToken token = new APIToken(
+				req.getHeader("Authorization").split(" ")[1]);
+
+		if (!getIdentityService().validateAdminJWT(token))
+			throw new UnauthorizedException("Token is invalid");
+
+		List<ProjectionService> services = new ArrayList<ProjectionService>();
+
+		services = getPlayerProjectedService().getProjectionServices();
+		return services;
+
+	}
+	
+	@ApiMethod(name = "map.getprojectionperiods")
+	public List<ProjectionPeriod> getProjectionPeriods(HttpServletRequest req)
+			throws UnauthorizedException {
+
+		APIToken token = new APIToken(
+				req.getHeader("Authorization").split(" ")[1]);
+
+		if (!getIdentityService().validateAdminJWT(token))
+			throw new UnauthorizedException("Token is invalid");
+
+		List<ProjectionPeriod> periods = new ArrayList<ProjectionPeriod>();
+
+		periods = getPlayerProjectedService().getProjectionPeriods();
+		return periods;
 
 	}
 

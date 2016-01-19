@@ -15,6 +15,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.app.endpoints.entities.ProjectionPeriod;
+import com.app.endpoints.entities.ProjectionService;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -89,6 +91,24 @@ public class TestPlayerProjections {
 			e.printStackTrace();
 		}
 		Assert.assertTrue(result.length() > 10);
+		
+	}
+	
+	@Test
+	public void testProjectionMetadata() {
+		
+		List<ProjectionService> services = new ArrayList<ProjectionService>();
+		List<ProjectionPeriod> periods = new ArrayList<ProjectionPeriod>();
+		
+		try {
+			services = getPlayerProjectedService().getProjectionServices();
+			periods = getPlayerProjectedService().getProjectionPeriods();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Assert.assertTrue(services.size() == 2);
+		Assert.assertTrue(periods.size() == 2);
 		
 	}
 	
