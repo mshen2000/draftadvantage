@@ -199,15 +199,15 @@ public class PlayerProjectedService implements Serializable {
 	        }
 	    });
 		
-//		List<PlayerProjected> playerlisttest = this.getAllPlayerProjected();
-//		System.out.println("*********** Update Cycle *********************");
-//		for (PlayerProjected element : playerlisttest) {
-//			System.out.println("MLB_ID: " + element.getMlb_id());
-//			System.out.println("-- ID: " + element.getId());
-//			System.out.println("-- Service: " + element.getProjection_service());
-//			System.out.println("-- Period: " + element.getProjection_period());
-//			System.out.println("-- Year: " + element.getProjected_year());
-//		}
+		List<PlayerProjected> playerlisttest = this.getAllPlayerProjected();
+		System.out.println("*********** Update Cycle *********************");
+		for (PlayerProjected element : playerlisttest) {
+			System.out.println("Name: " + element.getFull_name());
+			System.out.println("-- ID: " + element.getId());
+			System.out.println("-- Service: " + element.getProjection_service());
+			System.out.println("-- Period: " + element.getProjection_period());
+			System.out.println("-- Year: " + element.getProjected_year());
+		}
 		
 		return size;
 	}

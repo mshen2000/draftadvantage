@@ -31,17 +31,17 @@ import javax.servlet.http.HttpServletRequest;
 )
 public class MainEndpoint {
 	
-	 private IdentityService getIdentityService() {
-		 
-		 return new IdentityService();
-	 
-	 }
-	 
-	 private PlayerProjectedService getPlayerProjectedService() {
-		 
-		 return new PlayerProjectedService();
-	 
-	 }
+	private IdentityService getIdentityService() {
+
+		return new IdentityService();
+
+	}
+
+	private PlayerProjectedService getPlayerProjectedService() {
+
+		return new PlayerProjectedService();
+
+	}
 
 	@ApiMethod(name = "main.getprojections")
 	public List<PlayerProjected> GetProjections(HttpServletRequest req)
@@ -54,6 +54,22 @@ public class MainEndpoint {
 			throw new UnauthorizedException("Token is invalid");
 
 		return getPlayerProjectedService().getAllPlayerProjected();
+
+	}
+
+	@ApiMethod(name = "main.deleteallprojections")
+	public APIGeneralResult deleteAllProjections(HttpServletRequest req)
+			throws UnauthorizedException {
+
+		APIToken token = new APIToken(
+				req.getHeader("Authorization").split(" ")[1]);
+
+		if (!getIdentityService().validateAdminJWT(token))
+			throw new UnauthorizedException("Token is invalid");
+
+		getPlayerProjectedService().deleteAllPlayerProjections();
+
+		return new APIGeneralResult("OK", "Delete all projections successful.");
 
 	}
    
