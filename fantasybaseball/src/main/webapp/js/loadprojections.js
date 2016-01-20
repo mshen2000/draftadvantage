@@ -31,6 +31,10 @@ var parser;
 
 $(document).ready(function()
 {
+	$('.input-group.date').datepicker({
+	    autoclose: true,
+	    todayHighlight: true
+	});
 	
   	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
 		var $total = navigation.find('li').length;
@@ -39,14 +43,24 @@ $(document).ready(function()
 		$('#rootwizard').find('.progress-bar').css({width:$percent + '%'});
 		
 		// If it's the first tab then load projection metadata
-		if($current == 1) {
-			mssolutions.fbapp.loadprojections.loadprojectionservices();
+		if($current == 2) {
+			// mssolutions.fbapp.loadprojections.load_projection_services();
+			// mssolutions.fbapp.loadprojections.load_projection_periods();
 		} else {
 
 		}
 		
 	}});
-	
+
+	$('#load-projections').click(function() 
+	{
+		mssolutions.fbapp.loadprojections.load_projection_services();
+		mssolutions.fbapp.loadprojections.load_projection_periods();
+    	var options = $("#projection-year-selector");
+    	options.find('option').remove().end();
+    	options.append($("<option />").text((new Date).getFullYear()));
+    	options.append($("<option />").text((new Date).getFullYear() + 1));
+	});
 	
 	$('#submit-parse').click(function()
 	{
@@ -266,18 +280,37 @@ mssolutions.fbapp.loadprojections.loadattributemap = function() {
 /**
  * load projection services via the API.
  */
-mssolutions.fbapp.loadprojections.loadprojectionservices = function() {
+mssolutions.fbapp.loadprojections.load_projection_services = function() {
 	gapi.client.draftapp.map.getprojectionservices().execute(
       function(resp) {
         if (!resp.code) { 
-        	console.log("Projection Services: ", resp.items);
-        	var options = $("#projection-service_selector");
+        	var options = $("#projection-service-selector");
+        	options.find('option').remove().end();
         	$.each(resp.items, function() {
         	    options.append($("<option />").text(this.projection_service_name));
         	});
         }
         else {
         	console.log("Failed to load Projection Services: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * load projection periods via the API.
+ */
+mssolutions.fbapp.loadprojections.load_projection_periods = function() {
+	gapi.client.draftapp.map.getprojectionperiods().execute(
+      function(resp) {
+        if (!resp.code) { 
+        	var options = $("#projection-period-selector");
+        	options.find('option').remove().end();
+        	$.each(resp.items, function() {
+        	    options.append($("<option />").text(this.projection_period_name));
+        	});
+        }
+        else {
+        	console.log("Failed to load Projection Periods: ", resp.code + " : " + resp.message);
         }
       });
 };

@@ -25,6 +25,10 @@
 <!-- File Input -->
 <link href="../../plugins/bootstrap-fileinput/css/fileinput.min.css"
 	media="all" rel="stylesheet" type="text/css" />
+	
+<!-- Date Picker -->
+<link href="../../plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"
+	media="all" rel="stylesheet" type="text/css" />
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
@@ -101,7 +105,7 @@
 						<button class="btn btn-primary" id="submit-parse">Parse</button>
 						<button class="btn btn-primary" id="delete-projections">Delete
 							All</button>
-						<button class="btn btn-primary" data-toggle="modal"
+						<button class="btn btn-primary" id="load-projections" data-toggle="modal"
 							data-target="#loadprojections-modal">Load Projections</button>
 					</div>
 				</div>
@@ -137,9 +141,8 @@
 								<div class="navbar-inner">
 									<div class="container">
 										<ul>
-											<li><a href="#tab1" data-toggle="tab">Define
-													Projection</a></li>
-											<li><a href="#tab2" data-toggle="tab">Upload Files</a></li>
+											<li><a href="#tab1" data-toggle="tab">Define Projection</a></li>
+											<li><a href="#tab2" data-toggle="tab">Select Files</a></li>
 											<li><a href="#tab3" data-toggle="tab">Additional
 													Data</a></li>
 											<li><a href="#tab4" data-toggle="tab">Preview</a></li>
@@ -147,29 +150,39 @@
 									</div>
 								</div>
 							</div>
+							<div class="progress">
+								<div class="progress-bar progress-bar-striped active"
+									role="progressbar" aria-valuenow="40" aria-valuemin="0"
+									aria-valuemax="100"></div>
+							</div>
 							<div class="tab-content">
+
 								<div class="tab-pane" id="tab1">
 									<div class="form-group">
-										<label for="sel1">Projection Service:</label> <select
-											class="form-control" id="projection-service_selector">
-											<option>Steamer</option>
-											<option>Zips</option>
-											<option>Chone</option>
+										<label for="projection-service_selector">Projection
+											Service:</label> <select class="form-control"
+											id="projection-service-selector">
 										</select>
 									</div>
 									<div class="form-group">
-										<label for="sel2">Period:</label> <select class="form-control"
-											id="sel1">
-											<option>Pre-season</option>
-											<option>ROS</option>
+										<label for="projection-period-selector">Period:</label> <select
+											class="form-control" id="projection-period-selector">
 										</select>
 									</div>
 									<div class="form-group">
-										<label for="sel3">Year:</label> <select class="form-control"
-											id="sel1">
+										<label for="projection-year-selector">Year:</label> <select class="form-control"
+											id="projection-year-selector">
 											<option>2016</option>
 											<option>2017</option>
 										</select>
+									</div>
+									<div class="form-group">
+										<label>Projection Date:</label>
+										<div class="input-group date">
+											<input type="text" class="form-control"><span
+												class="input-group-addon"><i
+												class="glyphicon glyphicon-calendar"></i></span>
+										</div>
 									</div>
 								</div>
 								<div class="tab-pane" id="tab2">
@@ -179,6 +192,8 @@
 											data-show-preview="false">
 									</div>
 								</div>
+
+
 								<div class="tab-pane" id="tab3">Additional Data</div>
 								<div class="tab-pane" id="tab4">
 									<form>
@@ -197,11 +212,7 @@
 									</form>
 
 								</div>
-								<div class="progress">
-									<div class="progress-bar progress-bar-striped active"
-										role="progressbar" aria-valuenow="40" aria-valuemin="0"
-										aria-valuemax="100"></div>
-								</div>
+
 								<ul class="pager wizard">
 									<li class="previous first" style="display: none;"><a
 										href="#">First</a></li>
@@ -247,6 +258,10 @@
 
 	<!-- WIZARD SCRIPT -->
 	<script src="../../plugins/bootstrap-wizard/jquery.bootstrap.wizard.js"
+		type="text/javascript"></script>
+		
+	<!-- DATEPICKER SCRIPT -->
+	<script src="../../plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"
 		type="text/javascript"></script>
 
 	<script async src="../../js/loadprojections.js"></script>
