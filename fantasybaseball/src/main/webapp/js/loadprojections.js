@@ -117,19 +117,14 @@ $(document).ready(function()
 
 	$('#delete-projections').click(function() 
 	{
-		var overlay = start_progress_spinner();
-		mssolutions.fbapp.loadprojections.delete_all_projections(overlay);
+		// var overlay = start_progress_spinner();
+		progressmodal.showPleaseWait();
+		mssolutions.fbapp.loadprojections.delete_all_projections();
 	});
 	
 	$('#rootwizard .finish').click(function()
 	{
 		parseprojections();
-
-	});
-	
-	$('#close-modal').click(function()
-	{
-
 
 	});
 
@@ -479,12 +474,13 @@ mssolutions.fbapp.loadprojections.load_projection_periods = function() {
 /**
  * delete all projections via the API.
  */
-mssolutions.fbapp.loadprojections.delete_all_projections = function(overlay) {
+mssolutions.fbapp.loadprojections.delete_all_projections = function() {
 	gapi.client.draftapp.main.deleteallprojections().execute(
       function(resp) {
         if (!resp.code) { 
         	mssolutions.fbapp.loadprojections.reloadProjections();
-        	finish_progress_spinner(overlay);
+        	// finish_progress_spinner(overlay);
+        	progressmodal.hidePleaseWait();
         }
         else {
         	console.log("Failed to delete Projections: ", resp.code + " : " + resp.message);
