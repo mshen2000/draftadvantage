@@ -144,6 +144,27 @@ public class PlayerProjectedService implements Serializable {
 		
 		if (slist.size() > 0)
 			ObjectifyService.ofy().delete().entities(slist).now();
+		
+		
+		int i = 0;
+		
+		while ((countAllPlayerProjections() != 0)&&(i < 10)){
+			
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			i++;
+			
+		}
+	}
+	
+	private int countAllPlayerProjections(){
+		Query<PlayerProjected> list = ofy().load().type(PlayerProjected.class);
+		return list.list().size();
 	}
 	
 
