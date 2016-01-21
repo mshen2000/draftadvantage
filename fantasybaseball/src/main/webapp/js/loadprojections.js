@@ -56,11 +56,11 @@ $(document).ready(function()
 		// If it's the last tab then hide the last button and show the finish instead
 		if($current >= $total) {
 			$('#rootwizard').find('.pager .next').hide();
-			$('#rootwizard').find('.pager .upload').show();
-			$('#rootwizard').find('.pager .upload').removeClass('disabled');
+			$('#rootwizard').find('.pager .finish').show();
+			$('#rootwizard').find('.pager .finish').removeClass('disabled');
 		} else {
 			$('#rootwizard').find('.pager .next').show();
-			$('#rootwizard').find('.pager .upload').hide();
+			$('#rootwizard').find('.pager .finish').hide();
 		}
 		
 	}});
@@ -81,9 +81,15 @@ $(document).ready(function()
 		mssolutions.fbapp.loadprojections.delete_all_projections();
 	});
 	
-	$('#rootwizard .upload').click(function()
+	$('#rootwizard .finish').click(function()
 	{
 		parseprojections();
+
+	});
+	
+	$('#close-modal').click(function()
+	{
+
 
 	});
 
@@ -162,7 +168,7 @@ function uploadprojections(parse_results)
 	var csvresults = parse_results;
 	var uploadplayerprojections = [];
 	
-	console.log("parse_results: ", JSON.stringify(csvresults));
+	// console.log("parse_results: ", JSON.stringify(csvresults));
 	
 	// For each uploaded csv line in the csv file...
 	$.each( csvresults, function( csvresults_key, csvresults_value ) {
@@ -189,7 +195,7 @@ function uploadprojections(parse_results)
 
 	});
 	
-	console.log("Updated PlayerList: ", JSON.stringify(uploadplayerprojections));
+	// console.log("Updated PlayerList: ", JSON.stringify(uploadplayerprojections));
 	
 	var service = $( "#projection-service-selector option:selected" ).text();
 	var period = $( "#projection-period-selector option:selected" ).text();
@@ -197,7 +203,10 @@ function uploadprojections(parse_results)
 	var date = $("#proj-date-label").datepicker('getDate');
 	
 	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections, service, period, date, year);
-	mssolutions.fbapp.loadprojections.reloadProjections();
+
+	$('#loadprojections-modal').modal('hide');
+	// mssolutions.fbapp.loadprojections.reloadProjections();
+	
 }
 
 
@@ -207,6 +216,7 @@ function buildConfig()
 		complete: completeFn,
 		error: errorFn,
 		header: true,
+		skipEmptyLines: true
 	};
 
 }
@@ -317,7 +327,7 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_s
         if (!resp.code) { 
         	
         	console.log("Load Success: ", resp.description);
-
+        	mssolutions.fbapp.loadprojections.reloadProjections();
         }
         else {
         	console.log("Failed to update projections: ", resp.code + " : " + resp.message);

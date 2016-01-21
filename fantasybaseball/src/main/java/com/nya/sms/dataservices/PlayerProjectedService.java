@@ -181,35 +181,36 @@ public class PlayerProjectedService implements Serializable {
 		
 		final List<PlayerProjected> playerlistdelete = getPlayerProjections(iproj_service, iproj_period, iyear);
 		
-		Integer size = ObjectifyService.ofy().transact(new Work<Integer>() {
-	        public Integer run() {
-	        	
-	        	Map<Key<PlayerProjected>, PlayerProjected> keylist = null;
-	        	
-	        	// deletePlayerProjections(iproj_service, iproj_period, iyear);
-	        	ObjectifyService.ofy().delete().entities(playerlistdelete).now();
-	            
-	        	if (iplayerlist.size() > 0){
-		        	// System.out.println("Updating player projections: " + iproj_service);
-	        		keylist = ObjectifyService.ofy().save().entities(iplayerlist).now();
-	        	} else {
-	        		// System.out.println("Delete cancelled - player list was empty);
-	        	}
-	        	return keylist.size();
-	        }
-	    });
-		
-		List<PlayerProjected> playerlisttest = this.getAllPlayerProjected();
-		System.out.println("*********** Update Cycle *********************");
-		for (PlayerProjected element : playerlisttest) {
-			System.out.println("Name: " + element.getFull_name());
-			System.out.println("-- ID: " + element.getId());
-			System.out.println("-- Service: " + element.getProjection_service());
-			System.out.println("-- Period: " + element.getProjection_period());
-			System.out.println("-- Year: " + element.getProjected_year());
-		}
-		
-		return size;
+		// Previously used transaction to group delete and add
+//		Integer size = ObjectifyService.ofy().transact(new Work<Integer>() {
+//	        public Integer run() {
+//	        	Map<Key<PlayerProjected>, PlayerProjected> keylist = null;
+//	        	ObjectifyService.ofy().delete().entities(playerlistdelete).now();
+//	            
+//	        	if (iplayerlist.size() > 0){
+//		        	// System.out.println("Updating player projections: " + iproj_service);
+//	        		keylist = ObjectifyService.ofy().save().entities(iplayerlist).now();
+//	        	} else {
+//	        		// System.out.println("Delete cancelled - player list was empty);
+//	        	}
+//	        	return keylist.size();
+//	        }
+//	    });
+
+		// Without transaction, delete happens independently
+    	Map<Key<PlayerProjected>, PlayerProjected> keylist = null;
+    	ObjectifyService.ofy().delete().entities(playerlistdelete).now();
+    	
+    	System.out.println("updatePlayerProjections: before update");
+        
+    	if (iplayerlist.size() > 0){
+        	// System.out.println("Updating player projections: " + iproj_service);
+    		keylist = ObjectifyService.ofy().save().entities(iplayerlist).now();
+    	} else {
+    		// System.out.println("Delete cancelled - player list was empty);
+    	}
+    	return keylist.size();
+
 	}
 	
 	/**
