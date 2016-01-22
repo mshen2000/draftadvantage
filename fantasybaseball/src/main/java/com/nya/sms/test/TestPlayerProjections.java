@@ -231,6 +231,14 @@ public class TestPlayerProjections {
 		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
 				PlayerProjectedService.PROJECTION_PERIOD_ROS, 2015).size() == 2);
 		
+		// Test Count all projections
+		Assert.assertTrue(getPlayerProjectedService().countAllPlayerProjections() == 6);
+		
+		// Test Count projections for a projection set
+		// Tests method getPlayerProjections
+		Assert.assertTrue(getPlayerProjectedService().countPlayerProjections(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+				PlayerProjectedService.PROJECTION_PERIOD_ROS, 2015) == 2);
+		
 		// Test if a single projection exists
 		// Tests method isPlayerProjectionPresent
 		Assert.assertTrue(getPlayerProjectedService().isPlayerProjectionPresent(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 

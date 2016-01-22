@@ -132,6 +132,18 @@ public class PlayerProjectedService implements Serializable {
 		
 		if (slist.size() > 0)
 			ObjectifyService.ofy().delete().entities(slist).now();
+		
+		int i = 0;
+		
+		while ((countPlayerProjections(proj_service, proj_period, year) != 0)&&(i < 10)){
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			i++;
+		}
 	}
 	
 	/**
@@ -144,33 +156,39 @@ public class PlayerProjectedService implements Serializable {
 		
 		if (slist.size() > 0)
 			ObjectifyService.ofy().delete().entities(slist).now();
-		
-		
+
 		int i = 0;
 		
 		while ((countAllPlayerProjections() != 0)&&(i < 10)){
-			
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 			i++;
-			
 		}
 	}
 	
-	private int countAllPlayerProjections(){
+	public int countAllPlayerProjections(){
 		Query<PlayerProjected> list = ofy().load().type(PlayerProjected.class);
 		return list.list().size();
+	}
+	
+	public int countPlayerProjections(String proj_service, String proj_period, int year){
+		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
+		q = q.filter("projection_service", proj_service);
+		q = q.filter("projection_period", proj_period);
+		q = q.filter("projected_year", year);
+		
+		return q.list().size();
 	}
 	
 
 	/**
 	 * Description:	Takes a list of player projections for a given service, period (pre-season or ROS), and year, 
 	 * 				deletes the previous set of projections and updates the data with the new set of projections.
+	 * NOTE: Uniqueness of projection sets defined by: Service, Period, and Year
 	 * @param playerlist
 	 * @param proj_service
 	 * @param proj_period
@@ -222,7 +240,6 @@ public class PlayerProjectedService implements Serializable {
     	Map<Key<PlayerProjected>, PlayerProjected> keylist = null;
     	ObjectifyService.ofy().delete().entities(playerlistdelete).now();
     	
-    	System.out.println("updatePlayerProjections: before update");
         
     	if (iplayerlist.size() > 0){
         	// System.out.println("Updating player projections: " + iproj_service);
@@ -230,6 +247,20 @@ public class PlayerProjectedService implements Serializable {
     	} else {
     		// System.out.println("Delete cancelled - player list was empty);
     	}
+
+		int i = 0;
+		
+		// Wait while objectify is still processing the update
+		while ((countPlayerProjections(iproj_service, iproj_period, iyear) < iplayerlist.size())&&(i < 10)){
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			i++;
+		}
+    	
     	return keylist.size();
 
 	}

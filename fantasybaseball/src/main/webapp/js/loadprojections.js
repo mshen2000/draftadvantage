@@ -31,46 +31,6 @@ var parser;
 
 $(document).ready(function()
 {
-	$('#test-spinner').click(function(e)  {
-		var opts = {
-			lines: 13, // The number of lines to draw
-			length: 11, // The length of each line
-			width: 5, // The line thickness
-			radius: 17, // The radius of the inner circle
-			corners: 1, // Corner roundness (0..1)
-			rotate: 0, // The rotation offset
-			color: '#FFF', // #rgb or #rrggbb
-			speed: 1, // Rounds per second
-			trail: 60, // Afterglow percentage
-			shadow: false, // Whether to render a shadow
-			hwaccel: false, // Whether to use hardware acceleration
-			className: 'spinner', // The CSS class to assign to the spinner
-			zIndex: 2e9, // The z-index (defaults to 2000000000)
-			top: 'auto', // Top position relative to parent in px
-			left: 'auto' // Left position relative to parent in px
-		};
-		var target = document.createElement("div");
-		document.body.appendChild(target);
-		var spinner = new Spinner(opts).spin(target);
-		var overlay = iosOverlay({
-			text: "Loading",
-			spinner: spinner
-		});
-
-		window.setTimeout(function() {
-			overlay.update({
-				icon: "../../plugins/jQuery-Overlays-Notifications/img/check.png",
-				text: "Success"
-			});
-		}, 3e3);
-
-		window.setTimeout(function() {
-			overlay.hide();
-		}, 5e3);
-
-		return false;
-	});
-
 	$('.input-group.date').datepicker({
 	    autoclose: true,
 	    todayHighlight: true
@@ -117,62 +77,19 @@ $(document).ready(function()
 
 	$('#delete-projections').click(function() 
 	{
-		// var overlay = start_progress_spinner();
 		progressmodal.showPleaseWait();
 		mssolutions.fbapp.loadprojections.delete_all_projections();
 	});
 	
 	$('#rootwizard .finish').click(function()
 	{
+		progressmodal.showPleaseWait();
+		$('#loadprojections-modal').modal('hide');
 		parseprojections();
 
 	});
 
 });
-
-function start_progress_spinner()
-{
-	var opts = {
-			lines: 13, // The number of lines to draw
-			length: 11, // The length of each line
-			width: 5, // The line thickness
-			radius: 17, // The radius of the inner circle
-			corners: 1, // Corner roundness (0..1)
-			rotate: 0, // The rotation offset
-			color: '#FFF', // #rgb or #rrggbb
-			speed: 1, // Rounds per second
-			trail: 60, // Afterglow percentage
-			shadow: false, // Whether to render a shadow
-			hwaccel: false, // Whether to use hardware acceleration
-			className: 'spinner', // The CSS class to assign to the spinner
-			zIndex: 2e9, // The z-index (defaults to 2000000000)
-			top: 'auto', // Top position relative to parent in px
-			left: 'auto' // Left position relative to parent in px
-		};
-		var target = document.createElement("div");
-		document.body.appendChild(target);
-		var spinner = new Spinner(opts).spin(target);
-		var overlay = iosOverlay({
-			text: "Loading",
-			spinner: spinner
-		});
-		
-		return overlay;
-}
-
-function finish_progress_spinner(overlay)
-{
-	window.setTimeout(function() {
-		overlay.update({
-			icon: "../../plugins/jQuery-Overlays-Notifications/img/check.png",
-			text: "Success"
-		});
-	}, 3e3);
-
-	window.setTimeout(function() {
-		overlay.hide();
-	}, 5e3);
-}
 
 function parseprojections()
 {
@@ -283,9 +200,6 @@ function uploadprojections(parse_results)
 	
 	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections, service, period, date, year);
 
-	$('#loadprojections-modal').modal('hide');
-	// mssolutions.fbapp.loadprojections.reloadProjections();
-	
 }
 
 
@@ -316,8 +230,8 @@ function completeFn(results)
 	
 	console.log("Finished input (async). Time:", end-start, arguments);
 	console.log("Rows:", rows, "Stepped:", stepped, "Chunks:", chunks);
-	console.log("Results:", results);
-	console.log("Results Data:", results.data);
+	// console.log("Results:", results);
+	// console.log("Results Data:", results.data);
 
 	uploadprojections(results.data);
 }
@@ -348,7 +262,7 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 
         	var projection_table = $('#example1').dataTable(config);
         	
-            // $('#example1').dataTable(config); 
+        	progressmodal.hidePleaseWait();
 
         }
         else {
@@ -384,6 +298,7 @@ mssolutions.fbapp.loadprojections.reloadProjections = function(id) {
         	projection_table.destroy();
         	$('#example1').empty();
         	projection_table = $('#example1').dataTable(config);
+        	progressmodal.hidePleaseWait();
         }
         else {
         	console.log("Failed to load projections: ", resp.code + " : " + resp.message);
@@ -404,7 +319,6 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_s
 		'proj_year' : proj_year}).execute(
       function(resp) {
         if (!resp.code) { 
-        	
         	console.log("Load Success: ", resp.description);
         	mssolutions.fbapp.loadprojections.reloadProjections();
         }
@@ -424,7 +338,7 @@ mssolutions.fbapp.loadprojections.loadattributemap = function() {
 	gapi.client.draftapp.map.getattributemap().execute(
       function(resp) {
         if (!resp.code) { 
-        	console.log("Attribute Map: ", resp.attributes, " : " , resp.note);
+        	// console.log("Attribute Map: ", resp.attributes, " : " , resp.note);
         }
         else {
         	console.log("Failed to load Attribute Map: ", resp.code + " : " + resp.message);
@@ -479,8 +393,6 @@ mssolutions.fbapp.loadprojections.delete_all_projections = function() {
       function(resp) {
         if (!resp.code) { 
         	mssolutions.fbapp.loadprojections.reloadProjections();
-        	// finish_progress_spinner(overlay);
-        	progressmodal.hidePleaseWait();
         }
         else {
         	console.log("Failed to delete Projections: ", resp.code + " : " + resp.message);
@@ -511,8 +423,7 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
-				// initialize projectiont table
-				// var projection_table = $('#example1').DataTable();
+				progressmodal.showPleaseWait();
 				mssolutions.fbapp.loadprojections.loadProjections();
 			}
 		}

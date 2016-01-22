@@ -86,13 +86,13 @@ public class MainEndpoint {
     
     com.nya.sms.entities.User user = getIdentityService().getUserfromToken(token);
 
-    System.out.println("Container String: " + container.getProjectionsJSONString());
+    // System.out.println("Container String: " + container.getProjectionsJSONString());
     
     Gson gson = new Gson();
 	    
     List<PlayerProjected> p_array = gson.fromJson(container.getProjectionsJSONString(), new TypeToken<List<PlayerProjected>>(){}.getType()); 
     
-    System.out.println("Player 0: " + p_array.get(0).getFull_name());
+    // System.out.println("Player 0: " + p_array.get(0).getFull_name());
 
     int count = 0;
 	
@@ -101,7 +101,7 @@ public class MainEndpoint {
     	count = getPlayerProjectedService().updatePlayerProjections(p_array, container.getProj_service(), 
     			container.getProj_period(), container.getProj_date(), container.getProj_year(), user.getUsername());
     	
-    	System.out.println("After update service call, count = " + count);
+    	// System.out.println("After update service call, count = " + count);
     	
     	if (count > 0)
     		return new APIGeneralResult("OK", "Number of player projections updated: " + count);
