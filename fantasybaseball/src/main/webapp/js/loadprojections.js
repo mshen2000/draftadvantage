@@ -31,8 +31,6 @@ var parser;
 
 $(document).ready(function()
 {
-	$('#projections-spinner').hide();
-	
 	$('.input-group.date').datepicker({
 	    autoclose: true,
 	    todayHighlight: true
@@ -79,18 +77,19 @@ $(document).ready(function()
 
 	$('#delete-projections').click(function() 
 	{
-		// progressmodal.showPleaseWait();
-		$("#projections-panel").faLoading();
+		progressmodal.showPleaseWait();
+		// $("#projections-panel").faLoading();
 		// $("body").faLoading();
 		mssolutions.fbapp.loadprojections.delete_all_projections();
 	});
 	
 	$('#rootwizard .finish').click(function()
 	{
-		// progressmodal.showPleaseWait();
 		$('#loadprojections-modal').modal('hide');
-		$('#projections-spinner').show();
-		$('#example1').hide();
+		progressmodal.showPleaseWait();
+		// $('#projections-spinner').show();
+		// $('#projections-table-div').hide();
+		// loadspinner.showLoader('#projections-table-div');
 		parseprojections();
 
 	});
@@ -248,6 +247,7 @@ function completeFn(results)
  * load player projections via the API.
  */
 mssolutions.fbapp.loadprojections.loadProjections = function(id) {
+	loadspinner.showLoader('#projections-table-div');
 	gapi.client.draftapp.main.getprojections().execute(
       function(resp) {
         if (!resp.code) { 
@@ -267,8 +267,7 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
                 };
 
         	var projection_table = $('#example1').dataTable(config);
-        	
-        	progressmodal.hidePleaseWait();
+        	loadspinner.hideLoader('#projections-table-div');
 
         }
         else {
@@ -281,6 +280,7 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
  * re-load player projections via the API.
  */
 mssolutions.fbapp.loadprojections.reloadProjections = function(id) {
+	loadspinner.showLoader('#projections-table-div');
 	gapi.client.draftapp.main.getprojections().execute(
       function(resp) {
         if (!resp.code) { 
@@ -306,8 +306,9 @@ mssolutions.fbapp.loadprojections.reloadProjections = function(id) {
         	projection_table = $('#example1').dataTable(config);
         	// progressmodal.hidePleaseWait();
         	// $("#projections-panel").faLoadingStop();
-    		$('#projections-spinner').hide();
-    		$('#example1').show();
+    		// $('#projections-spinner').hide();
+    		// $('#projections-table-div').show();
+    		loadspinner.hideLoader('#projections-table-div');
         }
         else {
         	console.log("Failed to load projections: ", resp.code + " : " + resp.message);
@@ -329,6 +330,7 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_s
       function(resp) {
         if (!resp.code) { 
         	console.log("Load Success: ", resp.description);
+        	progressmodal.hidePleaseWait();
         	mssolutions.fbapp.loadprojections.reloadProjections();
         }
         else {
@@ -401,6 +403,7 @@ mssolutions.fbapp.loadprojections.delete_all_projections = function() {
 	gapi.client.draftapp.main.deleteallprojections().execute(
       function(resp) {
         if (!resp.code) { 
+        	progressmodal.hidePleaseWait();
         	mssolutions.fbapp.loadprojections.reloadProjections();
         }
         else {
@@ -432,7 +435,6 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
-				progressmodal.showPleaseWait();
 				mssolutions.fbapp.loadprojections.loadProjections();
 			}
 		}
