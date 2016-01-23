@@ -77,19 +77,14 @@ $(document).ready(function()
 
 	$('#delete-projections').click(function() 
 	{
-		progressmodal.showPleaseWait();
-		// $("#projections-panel").faLoading();
-		// $("body").faLoading();
+		progressmodal.showPleaseWait("Deleting Projections...");
 		mssolutions.fbapp.loadprojections.delete_all_projections();
 	});
 	
 	$('#rootwizard .finish').click(function()
 	{
 		$('#loadprojections-modal').modal('hide');
-		progressmodal.showPleaseWait();
-		// $('#projections-spinner').show();
-		// $('#projections-table-div').hide();
-		// loadspinner.showLoader('#projections-table-div');
+		progressmodal.showPleaseWait("Updating Projections...");
 		parseprojections();
 
 	});
@@ -304,10 +299,6 @@ mssolutions.fbapp.loadprojections.reloadProjections = function(id) {
         	projection_table.destroy();
         	$('#example1').empty();
         	projection_table = $('#example1').dataTable(config);
-        	// progressmodal.hidePleaseWait();
-        	// $("#projections-panel").faLoadingStop();
-    		// $('#projections-spinner').hide();
-    		// $('#projections-table-div').show();
     		loadspinner.hideLoader('#projections-table-div');
         }
         else {

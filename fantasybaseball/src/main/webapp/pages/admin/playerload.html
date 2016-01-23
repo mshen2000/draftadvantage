@@ -11,9 +11,7 @@
 <!-- Force no cache load -->
 <link rel="icon" href="../login/ico/favicon.png">
 
-<title>Fixed Top Navbar Example for Bootstrap</title>
-
-
+<title>Player Projections Manager</title>
 
 <!-- Bootstrap core CSS -->
 <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -33,12 +31,13 @@
 <link href="../../plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"
 	media="all" rel="stylesheet" type="text/css" />
 	
-<!-- Notification Overlay -->
+<!-- Notification Overlay 
 <link href="../../plugins/jQuery-Overlays-Notifications/css/iosOverlay.css"
 	media="all" rel="stylesheet" type="text/css" />	
 
-<!-- Loading Indicator -->
+<!-- Loading Indicator 
 <link href="../../plugins/faloading-loading-indicator/jquery.faloading.min.css" rel="stylesheet">
+-->
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
@@ -104,7 +103,6 @@
 	</nav>
 
 	<div class="container">
-
 		<div class="row">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -295,44 +293,23 @@
 	<script src="../../plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"
 		type="text/javascript"></script>
 		
-	<!-- NOTIFICATION OVERLAY -->
+	<!-- NOTIFICATION OVERLAY 
 	<script src="../../plugins/jQuery-Overlays-Notifications/js/iosOverlay.js"
 		type="text/javascript"></script>	
 	<script src="../../plugins/jQuery-Overlays-Notifications/js/spin.min.js"
 		type="text/javascript"></script>	
-
+	<!-- LOADING INDICATOR -->
+	<script src="../../plugins/faloading-loading-indicator/jquery.faloading-0.1.min.js"></script>
+	-->
+	
 	<!-- PROGRESS MODAL -->
 	<script src="../../js/progress-modal.js"></script>
 	
 	<!-- PROGRESS SPINNER -->
 	<script src="../../js/progress-spinner.js"></script>
 	
-	<!-- LOADING INDICATOR -->
-	<script src="../../plugins/faloading-loading-indicator/jquery.faloading-0.1.min.js"></script>
-		
 	<script async src="../../js/loadprojections.js"></script>
 	<script async src="../../js/base.js"></script>
-	<script>
-		function pageauth() {
-			// mssolutions.fbapp.login.auth_admin('//' + window.location.host + '/_ah/api');
-		}
-	</script>
-	<script src="https://apis.google.com/js/client.js?onload=pageauth"></script>
-
-	<!-- page script -->
-	<script type="text/javascript">
-		$(function() {
-			//  $("#example1").dataTable();
-			$('#example2').dataTable({
-				"bPaginate" : true,
-				"bLengthChange" : false,
-				"bFilter" : false,
-				"bSort" : true,
-				"bInfo" : true,
-				"bAutoWidth" : false
-			});
-		});
-	</script>
 
 	<script>
 		function init() {
@@ -343,7 +320,6 @@
 		}
 	</script>
 	<script src="https://apis.google.com/js/client.js?onload=init"></script>
-
 
 </body>
 </html>
