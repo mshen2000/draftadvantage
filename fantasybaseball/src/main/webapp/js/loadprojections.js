@@ -31,6 +31,8 @@ var parser;
 
 $(document).ready(function()
 {
+	$('#projections-spinner').hide();
+	
 	$('.input-group.date').datepicker({
 	    autoclose: true,
 	    todayHighlight: true
@@ -77,14 +79,18 @@ $(document).ready(function()
 
 	$('#delete-projections').click(function() 
 	{
-		progressmodal.showPleaseWait();
+		// progressmodal.showPleaseWait();
+		$("#projections-panel").faLoading();
+		// $("body").faLoading();
 		mssolutions.fbapp.loadprojections.delete_all_projections();
 	});
 	
 	$('#rootwizard .finish').click(function()
 	{
-		progressmodal.showPleaseWait();
+		// progressmodal.showPleaseWait();
 		$('#loadprojections-modal').modal('hide');
+		$('#projections-spinner').show();
+		$('#example1').hide();
 		parseprojections();
 
 	});
@@ -298,7 +304,10 @@ mssolutions.fbapp.loadprojections.reloadProjections = function(id) {
         	projection_table.destroy();
         	$('#example1').empty();
         	projection_table = $('#example1').dataTable(config);
-        	progressmodal.hidePleaseWait();
+        	// progressmodal.hidePleaseWait();
+        	// $("#projections-panel").faLoadingStop();
+    		$('#projections-spinner').hide();
+    		$('#example1').show();
         }
         else {
         	console.log("Failed to load projections: ", resp.code + " : " + resp.message);

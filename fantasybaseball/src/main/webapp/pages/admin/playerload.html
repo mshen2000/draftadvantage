@@ -18,6 +18,9 @@
 <!-- Bootstrap core CSS -->
 <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- Font Awesome -->
+<link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
 <!-- DATA TABLES -->
 <link href="../../plugins/datatables/dataTables.bootstrap.css"
 	rel="stylesheet" type="text/css" />
@@ -33,6 +36,9 @@
 <!-- Notification Overlay -->
 <link href="../../plugins/jQuery-Overlays-Notifications/css/iosOverlay.css"
 	media="all" rel="stylesheet" type="text/css" />	
+
+<!-- Loading Indicator -->
+<link href="../../plugins/faloading-loading-indicator/jquery.faloading.min.css" rel="stylesheet">
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
@@ -121,8 +127,8 @@
 					<h3 class="panel-title">Player Projections</h3>
 				</div>
 				<div class="panel-body">
+					<i class="fa fa-refresh fa-spin fa-5x" id="projections-spinner"></i>
 					<table id="example1" class="table table-bordered table-striped">
-
 					</table>
 				</div>
 			</div>
@@ -297,6 +303,9 @@
 
 	<!-- PROGRESS MODAL -->
 	<script src="../../js/progress-modal.js"></script>
+	
+	<!-- LOADING INDICATOR -->
+	<script src="../../plugins/faloading-loading-indicator/jquery.faloading-0.1.min.js"></script>
 		
 	<script async src="../../js/loadprojections.js"></script>
 	<script async src="../../js/base.js"></script>
