@@ -26,10 +26,13 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.SiteService;
 import com.nya.sms.dataservices.StudentService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.JKey;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
@@ -49,6 +52,8 @@ public class TestEntityUserRole {
 	private Date yesterday;
 	private Date tomorrow;
 	private DateFormat dateFormatter;
+	
+	private Closeable closeable;
 
 	/**
 	 * @throws java.lang.Exception
@@ -57,7 +62,7 @@ public class TestEntityUserRole {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
-		
+
 		ObjectifyService.register(JKey.class);
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(Role.class);
@@ -74,6 +79,8 @@ public class TestEntityUserRole {
 		Locale currentlocal = new Locale("en_US");
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
 		
+		closeable = ObjectifyService.begin();
+		
 	}
 
 	/**
@@ -81,7 +88,7 @@ public class TestEntityUserRole {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}

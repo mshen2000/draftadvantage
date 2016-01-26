@@ -25,10 +25,12 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.Authorization;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.SiteService;
 import com.nya.sms.dataservices.StudentService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
 import com.nya.sms.entities.Student;
@@ -54,6 +56,8 @@ public class TestStudentAndGroup {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
+	
+	private Closeable closeable;
 
 	/**
 	 * @throws java.lang.Exception
@@ -62,7 +66,8 @@ public class TestStudentAndGroup {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
-		
+
+		ObjectifyService.register(Role.class);
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(Site.class);
 		ObjectifyService.register(Student.class);
@@ -81,6 +86,7 @@ public class TestStudentAndGroup {
 		Locale currentlocal = new Locale("en_US");
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
 		
+		closeable = ObjectifyService.begin();
 	}
 
 	/**
@@ -88,7 +94,7 @@ public class TestStudentAndGroup {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}

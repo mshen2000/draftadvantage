@@ -2,19 +2,14 @@ package com.nya.sms.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.EntitySubclass;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Load;
-import com.googlecode.objectify.annotation.Serialize;
 
-@EntitySubclass(index = true)
+//@Subclass(index = true)
+@Entity
 public class Site extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1;
@@ -29,6 +24,7 @@ public class Site extends BaseEntity implements Serializable {
 	@Index
 	List<Ref<Role>> roles = new ArrayList<Ref<Role>>();
 
+	@SuppressWarnings("unused")
 	private Site() {
 	}
 

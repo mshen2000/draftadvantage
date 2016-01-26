@@ -10,9 +10,11 @@ import java.util.logging.Logger;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.VoidWork;
 import com.nya.sms.dataservices.CustomTestService;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.SiteService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.BaseFieldAbstract;
 import com.nya.sms.entities.BaseFieldDate;
 import com.nya.sms.entities.BaseFieldFloat;
@@ -28,6 +30,7 @@ import com.nya.sms.entities.JKey;
 import com.nya.sms.entities.Note;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.Points;
+import com.nya.sms.entities.ProgramScore;
 import com.nya.sms.entities.ProgramScoreCaughtYa;
 import com.nya.sms.entities.ProgramScoreEnglish;
 import com.nya.sms.entities.ProgramScoreMath;
@@ -42,6 +45,7 @@ import com.nya.sms.entities.Student;
 import com.nya.sms.entities.StudentGroup;
 import com.nya.sms.entities.StudentGroupLogItem;
 import com.nya.sms.entities.StudentHealth;
+import com.nya.sms.entities.TestScore;
 import com.nya.sms.entities.TestScoreInternal;
 import com.nya.sms.entities.TestScoreStandard;
 import com.nya.sms.entities.User;
@@ -63,6 +67,7 @@ public class OfyHelper implements ServletContextListener {
     // request if no warmup request was invoked.
 		log.info("Registering data objects...");
 		
+		// ObjectifyService.register(BaseEntity.class);
 		ObjectifyService.register(JKey.class);
 		
 		ObjectifyService.register(User.class);
@@ -72,6 +77,7 @@ public class OfyHelper implements ServletContextListener {
 		ObjectifyService.register(StudentGroup.class);
 		ObjectifyService.register(StudentHealth.class);
 		
+		ObjectifyService.register(ProgramScore.class);
 		ObjectifyService.register(ProgramScoreCaughtYa.class);
 		ObjectifyService.register(ProgramScoreEnglish.class);
 		ObjectifyService.register(ProgramScoreMath.class);
@@ -80,6 +86,7 @@ public class OfyHelper implements ServletContextListener {
 		ObjectifyService.register(ProgramScoreSixTraits.class);
 		
 		ObjectifyService.register(StudentGroupLogItem.class);
+		ObjectifyService.register(TestScore.class);
 		ObjectifyService.register(TestScoreInternal.class);
 		ObjectifyService.register(TestScoreStandard.class);
 		ObjectifyService.register(SchoolGrades.class);
@@ -93,32 +100,38 @@ public class OfyHelper implements ServletContextListener {
 		
 		ObjectifyService.register(PlayerProjected.class);
 		
-		log.info("Deleting objects (if necessary)...");
-		// deleteAllIfPresent();
+		
+		ObjectifyService.run(new VoidWork() {
+		    public void vrun() {
+				log.info("Deleting objects (if necessary)...");
+				// deleteAllIfPresent();
 
-		log.info("Creating data objects (if necessary)...");
-		
-		createNewKey();
-		createGroupsIfNotPresent();
-		createAdminUserIfNotPresent();
-		
-		// delete all CustomObjecTest
-//		List<Key<CustomObjectTest>> keys = ObjectifyService.ofy().load().type(CustomObjectTest.class).keys().list();
-//		
-//		for (Key k : keys){
-//			System.out.println("Deleting key: " + k.getId());
-//			ObjectifyService.ofy().delete().key(k).now();
-//			
-//		}
-		
-		deletePrograms();
-		createPrograms();
-		
-		deleteTests();
-		createTests();
-		
-		log.info("Verifying...");
-		checkData();
+				log.info("Creating data objects (if necessary)...");
+				
+				createNewKey();
+				createGroupsIfNotPresent();
+				createAdminUserIfNotPresent();
+				
+				// delete all CustomObjecTest
+//				List<Key<CustomObjectTest>> keys = ObjectifyService.ofy().load().type(CustomObjectTest.class).keys().list();
+//				
+//				for (Key k : keys){
+//					System.out.println("Deleting key: " + k.getId());
+//					ObjectifyService.ofy().delete().key(k).now();
+//					
+//				}
+				
+				deletePrograms();
+				createPrograms();
+				
+				deleteTests();
+				createTests();
+				
+				log.info("Verifying...");
+				checkData();
+		    }
+		});
+
   }
 
   public void contextDestroyed(ServletContextEvent event) {

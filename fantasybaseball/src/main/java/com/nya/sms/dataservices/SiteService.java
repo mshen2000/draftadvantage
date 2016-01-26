@@ -10,7 +10,6 @@ import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
 import com.nya.sms.entities.Student;
 import com.nya.sms.entities.StudentGroup;
-import com.nya.sms.entities.User;
 
 public class SiteService extends AbstractDataServiceImpl<Site>{
 	
@@ -32,7 +31,7 @@ public class SiteService extends AbstractDataServiceImpl<Site>{
 	
 	public Site get(String name){
 		
-		return ObjectifyService.ofy().load().type(Site.class).filter("name", name).first().get();
+		return ObjectifyService.ofy().load().type(Site.class).filter("name", name).first().now();
 		
 	}
 	
@@ -99,7 +98,8 @@ public class SiteService extends AbstractDataServiceImpl<Site>{
 		Role role = getIdentityService().getRole(rolename);
     	Ref<Role> roleref = Ref.create(role);
     	
-    	List<Site> sites = ObjectifyService.ofy().load().type(Site.class).filter("name", sitename).list();
+    	@SuppressWarnings("unused")
+		List<Site> sites = ObjectifyService.ofy().load().type(Site.class).filter("name", sitename).list();
     	
     	// If site is master, then just remove previous role associations from all sites
     	if (sitename != null){

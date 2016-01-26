@@ -25,8 +25,10 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.PlayerProjectedService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.User;
 
@@ -44,6 +46,8 @@ public class TestPlayerProjections {
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
 	
+	private Closeable closeable;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -51,7 +55,7 @@ public class TestPlayerProjections {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
-		
+
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(PlayerProjected.class);
 
@@ -66,7 +70,8 @@ public class TestPlayerProjections {
 		
 		Locale currentlocal = new Locale("en_US");
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
-		
+	
+		closeable = ObjectifyService.begin();
 	}
 
 	/**
@@ -74,7 +79,7 @@ public class TestPlayerProjections {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}	

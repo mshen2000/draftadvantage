@@ -13,7 +13,6 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.nya.sms.entities.BaseFieldAbstract;
 import com.nya.sms.entities.CustomObjectTest;
-import com.nya.sms.entities.Site;
 
 public class CustomTestService extends AbstractDataServiceImpl<CustomObjectTest> implements Serializable {
 	
@@ -34,7 +33,7 @@ public class CustomTestService extends AbstractDataServiceImpl<CustomObjectTest>
 	
 	public CustomObjectTest get(String name){
 		
-		return ObjectifyService.ofy().load().type(CustomObjectTest.class).filter("name", name).first().get();
+		return ObjectifyService.ofy().load().type(CustomObjectTest.class).filter("name", name).first().now();
 		
 	}
 	

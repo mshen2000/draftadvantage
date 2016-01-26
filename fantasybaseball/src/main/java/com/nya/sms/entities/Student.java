@@ -4,17 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.EntitySubclass;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.OnLoad;
-import com.nya.sms.dataservices.SiteService;
 
-@EntitySubclass(index = true)
+//@Subclass(index = true)
+@Entity
 public class Student extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1;
@@ -159,6 +156,7 @@ public class Student extends BaseEntity implements Serializable {
 	String emerg5_phone2_type;
 	String emerg5_phone2;
 
+	@SuppressWarnings("unused")
 	private Student() {
 	}
 
@@ -1122,12 +1120,6 @@ public class Student extends BaseEntity implements Serializable {
 			studentname = this.firstname + " " + this.lastname;
 
 		return studentname;
-
-	}
-
-	private SiteService getSiteService() {
-
-		return new SiteService(Site.class);
 
 	}
 

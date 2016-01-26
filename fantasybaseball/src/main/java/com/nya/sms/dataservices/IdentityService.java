@@ -3,14 +3,8 @@ package com.nya.sms.dataservices;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.Serializable;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.jose4j.jwk.*;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
@@ -24,13 +18,9 @@ import com.app.endpoints.APIToken;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
-import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
-import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.entities.JKey;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
-import com.nya.sms.entities.Student;
 import com.nya.sms.entities.StudentGroup;
 import com.nya.sms.entities.User;
 
@@ -84,6 +74,7 @@ public class IdentityService implements Serializable {
 		
 		    JKey jkey = new JKey(rsaJsonWebKey);
 		    
+			@SuppressWarnings("unused")
 			Key<JKey> key = ObjectifyService.ofy().save().entity(jkey).now(); 
 			
 			int j = 0;
@@ -210,7 +201,8 @@ public class IdentityService implements Serializable {
 	    {
 	        //  Validate the JWT and process it to the Claims
 	        JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt.getToken());
-	        List<String> roles = (List<String>) jwtClaims.getClaimValue("roles");
+	        @SuppressWarnings("unchecked")
+			List<String> roles = (List<String>) jwtClaims.getClaimValue("roles");
 	        for (String role : roles){
 	        	if (role.equals(rolename)){
 	        		System.out.println("JWT validation succeeded for " + rolename + " role.");
@@ -290,25 +282,25 @@ public class IdentityService implements Serializable {
 	
 	public User getUserByExtID(String ext_id){
 		
-		return ObjectifyService.ofy().load().type(User.class).filter("ext_id", ext_id).first().get();
+		return ObjectifyService.ofy().load().type(User.class).filter("ext_id", ext_id).first().now();
 		
 	}
 	
 	public User getUser(String username){
 		
-		return ObjectifyService.ofy().load().type(User.class).filter("username", username).first().get();
+		return ObjectifyService.ofy().load().type(User.class).filter("username", username).first().now();
 		
 	}
 	
 	public User getUserByEmail(String email){
 		
-		return ObjectifyService.ofy().load().type(User.class).filter("email", email).first().get();
+		return ObjectifyService.ofy().load().type(User.class).filter("email", email).first().now();
 		
 	}
 	
 	public User getUser(long id){
 		
-		return ObjectifyService.ofy().load().type(User.class).id(id).get();
+		return ObjectifyService.ofy().load().type(User.class).id(id).now();
 		
 	}
 	
@@ -352,7 +344,7 @@ public class IdentityService implements Serializable {
 	
 	public Role getRole(String rolename){
 		
-		return ObjectifyService.ofy().load().type(Role.class).filter("name", rolename).first().get();
+		return ObjectifyService.ofy().load().type(Role.class).filter("name", rolename).first().now();
 		
 	}
 	
@@ -568,12 +560,6 @@ public class IdentityService implements Serializable {
 		ObjectifyService.ofy().save().entity(group).now(); 
 		
 	}
-	
-	 private StudentService getStudentService() {
-		 
-		 return new StudentService();
-	 
-	 }
 	 
 	 private SiteService getSiteService() {
 		 

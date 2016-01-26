@@ -18,10 +18,12 @@ import org.junit.Test;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.CustomTestService;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.SiteService;
 import com.nya.sms.dataservices.StudentService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.BaseFieldAbstract;
 import com.nya.sms.entities.BaseFieldString;
 import com.nya.sms.entities.CustomObjectTest;
@@ -49,6 +51,8 @@ public class TestProgram implements Serializable {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
+	
+	private Closeable closeable;
 
 	/**
 	 * @throws java.lang.Exception
@@ -57,7 +61,7 @@ public class TestProgram implements Serializable {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
-		
+
 		ObjectifyService.register(Student.class);
 		ObjectifyService.register(StudentGroup.class);
 		ObjectifyService.register(StudentHealth.class);
@@ -78,6 +82,7 @@ public class TestProgram implements Serializable {
 		Locale currentlocal = new Locale("en_US");
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
 		
+		closeable = ObjectifyService.begin();
 	}
 
 	/**
@@ -85,7 +90,7 @@ public class TestProgram implements Serializable {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}

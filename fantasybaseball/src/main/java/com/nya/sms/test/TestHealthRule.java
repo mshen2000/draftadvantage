@@ -25,6 +25,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.AbstractDataServiceImpl;
 import com.nya.sms.dataservices.Authorization;
 import com.nya.sms.dataservices.HealthRuleService;
@@ -39,6 +40,7 @@ import com.nya.sms.dataservices.StudentService;
 import com.nya.sms.dataservices.TestScoreInternalService;
 import com.nya.sms.dataservices.TestScoreService;
 import com.nya.sms.dataservices.TestScoreStandardService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.HealthRule;
 import com.nya.sms.entities.Note;
 import com.nya.sms.entities.Points;
@@ -74,6 +76,8 @@ public class TestHealthRule {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
+	
+	private Closeable closeable;
 	
 	User usr1;
 	User usr2;
@@ -111,7 +115,7 @@ public class TestHealthRule {
 		System.out.println("Running setup");
 		
 		helper.setUp();
-		
+
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(HealthRule.class);
 
@@ -144,7 +148,7 @@ public class TestHealthRule {
 		
 		usr1_r = getIdentityService().getUser(usr1.getUsername());
 
-		
+		closeable = ObjectifyService.begin();
 	}
 
 	/**
@@ -152,7 +156,7 @@ public class TestHealthRule {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}

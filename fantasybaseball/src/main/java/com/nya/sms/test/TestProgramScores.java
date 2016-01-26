@@ -25,6 +25,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.AbstractDataServiceImpl;
 import com.nya.sms.dataservices.Authorization;
 import com.nya.sms.dataservices.IdentityService;
@@ -32,7 +33,9 @@ import com.nya.sms.dataservices.PointsService;
 import com.nya.sms.dataservices.ProgramScoreService;
 import com.nya.sms.dataservices.SiteService;
 import com.nya.sms.dataservices.StudentService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.Points;
+import com.nya.sms.entities.ProgramScore;
 import com.nya.sms.entities.ProgramScoreCaughtYa;
 import com.nya.sms.entities.ProgramScoreEnglish;
 import com.nya.sms.entities.ProgramScoreMath;
@@ -60,6 +63,8 @@ public class TestProgramScores {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
+	
+	private Closeable closeable;
 
 	/**
 	 * @throws java.lang.Exception
@@ -68,11 +73,11 @@ public class TestProgramScores {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
-		
+
 		ObjectifyService.register(Student.class);
 		ObjectifyService.register(StudentGroup.class);
 		ObjectifyService.register(StudentHealth.class);
-		
+		ObjectifyService.register(ProgramScore.class);
 		ObjectifyService.register(ProgramScoreCaughtYa.class);
 		ObjectifyService.register(ProgramScoreEnglish.class);
 		ObjectifyService.register(ProgramScoreMath.class);
@@ -94,6 +99,7 @@ public class TestProgramScores {
 		Locale currentlocal = new Locale("en_US");
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
 		
+		closeable = ObjectifyService.begin();
 	}
 
 	/**
@@ -101,7 +107,7 @@ public class TestProgramScores {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}

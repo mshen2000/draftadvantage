@@ -2,17 +2,14 @@ package com.nya.sms.dataservices;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.cmd.Query;
-import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
 import com.nya.sms.entities.Student;
 import com.nya.sms.entities.StudentGroup;
@@ -38,7 +35,8 @@ public class StudentService implements Serializable {
 		
 		List<Student> students = new ArrayList<Student>();
 		
-		if (site.equals(getSiteService().MASTER_SITE))
+		getSiteService();
+		if (site.equals(SiteService.MASTER_SITE))
 			students = ObjectifyService.ofy().load().type(Student.class).list();
 		else {
 			// Query for a list of students with the site
@@ -66,7 +64,7 @@ public class StudentService implements Serializable {
 		
 		// For each student Ref, get the Student object and add to the List
 		for (Ref<Student> rs : reflist){
-			students.add(ObjectifyService.ofy().load().ref(rs).get());
+			students.add(ObjectifyService.ofy().load().ref(rs).now());
 		}
 		
 		return students;
@@ -79,15 +77,16 @@ public class StudentService implements Serializable {
 		
 		List<Student> students = new ArrayList<Student>();
 		
+		getIdentityService();
 		// Check if authorized to query student data
-		if (!auth.getAccess_students().equals(getIdentityService().NO_ACCESS)){
+		if (!auth.getAccess_students().equals(IdentityService.NO_ACCESS)){
 
 			// If student access scope is for all students, then get all the students
-			if (auth.getStudentdata_access_scope().equals(getIdentityService().ALL_STUDENTS))
+			if (auth.getStudentdata_access_scope().equals(IdentityService.ALL_STUDENTS))
 				students = getAllStudents(auth.getSite());
-			
+
 			// If student access scope is my group only, then get only students from that group
-			if (auth.getStudentdata_access_scope().equals(getIdentityService().MY_STUDENT_GROUP)){
+			if (auth.getStudentdata_access_scope().equals(IdentityService.MY_STUDENT_GROUP)){
 				
 				// Get the student group that the current user is a leader of
 				List<StudentGroup> groups = getLeaderGroups(auth.getAuthuser().getUsername());
@@ -107,14 +106,16 @@ public class StudentService implements Serializable {
 	// Check if authorization can access all student data
 	public boolean isStudentQueryAccessAllData(Authorization auth){
 		
+		getIdentityService();
+		getSiteService();
 		// Check if authorized to query student data AND
-		if ((!auth.getAccess_students().equals(getIdentityService().NO_ACCESS)) &&
+		if ((!auth.getAccess_students().equals(IdentityService.NO_ACCESS)) &&
 
 			// If student access scope is for all students AND
-			(auth.getStudentdata_access_scope().equals(getIdentityService().ALL_STUDENTS)) &&
+			(auth.getStudentdata_access_scope().equals(IdentityService.ALL_STUDENTS)) &&
 			
 			//  If site access is master site
-			(auth.getSite().equals(getSiteService().MASTER_SITE)))
+			(auth.getSite().equals(SiteService.MASTER_SITE)))
 			
 			return true;
 		
@@ -158,11 +159,13 @@ public class StudentService implements Serializable {
 	
 	public boolean isStudentPresent(Long studentid) {
 
-		Query<Student> q = ofy().load().type(Student.class);
-		q = q.filter("id", studentid);
-		List<Student> slist = q.list();
+//		Query<Student> q = ofy().load().type(Student.class);
+//		q = q.filter("id", studentid);
+//		List<Student> slist = q.list();
+		
+		Student s =  ofy().load().type(Student.class).id(studentid).now();
 
-		if (slist.isEmpty()) return false;
+		if (s == null) return false;
 
 		return true;
 	}
@@ -222,7 +225,8 @@ public class StudentService implements Serializable {
 		}
 		
 		ObjectifyService.ofy().transact(new VoidWork() {
-	        public void vrun() {
+	        @SuppressWarnings("unused")
+			public void vrun() {
 	            
 	        	if (student != null){
 		        	// System.out.println("Deleting student: " + sid);
@@ -244,7 +248,7 @@ public class StudentService implements Serializable {
 	
 	public Student getStudent(Long studentid){
 		
-		return ObjectifyService.ofy().load().type(Student.class).id(studentid).get();
+		return ObjectifyService.ofy().load().type(Student.class).id(studentid).now();
 		
 	}
 	
@@ -263,7 +267,7 @@ public class StudentService implements Serializable {
 	
 	public User getCreatedByUser(Student student){
 		
-		User u = ObjectifyService.ofy().load().type(User.class).filter("username", student.getCreatedby()).first().get();
+		User u = ObjectifyService.ofy().load().type(User.class).filter("username", student.getCreatedby()).first().now();
 		
 		return u;
 		
@@ -347,7 +351,7 @@ public class StudentService implements Serializable {
 	
 	public StudentGroup getGroup(String groupname){
 		
-		return ObjectifyService.ofy().load().type(StudentGroup.class).filter("name", groupname).first().get();
+		return ObjectifyService.ofy().load().type(StudentGroup.class).filter("name", groupname).first().now();
 		
 	}
 	

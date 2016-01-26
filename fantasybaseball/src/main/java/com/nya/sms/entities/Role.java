@@ -2,23 +2,17 @@ package com.nya.sms.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.EntitySubclass;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.OnLoad;
-import com.googlecode.objectify.annotation.OnSave;
-import com.googlecode.objectify.annotation.Serialize;
 import com.nya.sms.dataservices.SiteService;
 
-@EntitySubclass(index = true)
+//@Subclass(index = true)
+@Entity
 public class Role extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1;
@@ -51,6 +45,7 @@ public class Role extends BaseEntity implements Serializable {
 	Boolean access_app_schedule;
 	Boolean access_app_notes;
 
+	@SuppressWarnings("unused")
 	private Role() {
 	}
 

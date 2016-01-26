@@ -4,12 +4,11 @@ import java.io.Serializable;
 
 import org.jose4j.jwk.RsaJsonWebKey;
 
-import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.EntitySubclass;
-import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Serialize;
 
-@EntitySubclass(index = true)
+// @Subclass(index = true)
+@Entity
 public class JKey extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1;
@@ -17,6 +16,7 @@ public class JKey extends BaseEntity implements Serializable {
 	@Serialize
 	RsaJsonWebKey webkey;
 
+	@SuppressWarnings("unused")
 	private JKey() {
 	}
 

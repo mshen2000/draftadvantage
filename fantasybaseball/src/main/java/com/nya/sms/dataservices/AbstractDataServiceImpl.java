@@ -49,7 +49,8 @@ public class AbstractDataServiceImpl<T extends BaseEntity> implements Serializab
 
 	public void delete(Long id) {
 
-		Key<T> key = ObjectifyService.ofy().load().type(valueType).id(id).key();
+		// Key<T> key = ObjectifyService.ofy().load().type(valueType).id(id).key();
+		Key<T> key = Key.create(valueType,id);
 		
 		if (key != null)
 			ObjectifyService.ofy().delete().key(key).now();
@@ -64,7 +65,7 @@ public class AbstractDataServiceImpl<T extends BaseEntity> implements Serializab
 
 	public T get(Long id) {
 		
-		return ObjectifyService.ofy().load().type(valueType).id(id).get();
+		return ObjectifyService.ofy().load().type(valueType).id(id).now();
 	}
 	
 	

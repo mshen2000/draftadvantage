@@ -25,6 +25,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.AbstractDataServiceImpl;
 import com.nya.sms.dataservices.Authorization;
 import com.nya.sms.dataservices.IdentityService;
@@ -38,6 +39,7 @@ import com.nya.sms.dataservices.StudentService;
 import com.nya.sms.dataservices.TestScoreInternalService;
 import com.nya.sms.dataservices.TestScoreService;
 import com.nya.sms.dataservices.TestScoreStandardService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.Note;
 import com.nya.sms.entities.Points;
 import com.nya.sms.entities.ProgramScore;
@@ -54,6 +56,7 @@ import com.nya.sms.entities.Site;
 import com.nya.sms.entities.Student;
 import com.nya.sms.entities.StudentGroup;
 import com.nya.sms.entities.StudentHealth;
+import com.nya.sms.entities.TestScore;
 import com.nya.sms.entities.TestScoreInternal;
 import com.nya.sms.entities.TestScoreStandard;
 import com.nya.sms.entities.User;
@@ -72,6 +75,8 @@ public class TestOtherStudentData {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
+	
+	private Closeable closeable;
 	
 	User usr1;
 	User usr2;
@@ -109,7 +114,7 @@ public class TestOtherStudentData {
 		System.out.println("Running setup");
 		
 		helper.setUp();
-		
+
 		ObjectifyService.register(Student.class);
 		ObjectifyService.register(StudentGroup.class);
 		ObjectifyService.register(StudentHealth.class);
@@ -118,6 +123,7 @@ public class TestOtherStudentData {
 		ObjectifyService.register(Points.class);
 		ObjectifyService.register(SchoolGrades.class);
 		ObjectifyService.register(SchoolSchedule.class);
+		ObjectifyService.register(TestScore.class);
 		ObjectifyService.register(TestScoreInternal.class);
 		ObjectifyService.register(TestScoreStandard.class);
 		ObjectifyService.register(ProgramScoreCaughtYa.class);
@@ -134,6 +140,7 @@ public class TestOtherStudentData {
 		Locale currentlocal = new Locale("en_US");
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
 		
+		closeable = ObjectifyService.begin();
 		
 		List<String> levels = getIdentityService().getAccessLevels();
 		
@@ -241,6 +248,7 @@ public class TestOtherStudentData {
 		// Add one student to group
 		getStudentService().createMembership(student1_id, sg1.getName());
 		
+		
 	}
 
 	/**
@@ -248,7 +256,7 @@ public class TestOtherStudentData {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}

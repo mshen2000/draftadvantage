@@ -15,9 +15,11 @@ import org.junit.Test;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.SiteService;
 import com.nya.sms.dataservices.StudentService;
+import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.Note;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
@@ -39,6 +41,8 @@ public class TestSite {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
+	
+	private Closeable closeable;
 
 	/**
 	 * @throws java.lang.Exception
@@ -47,7 +51,7 @@ public class TestSite {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
-		
+
 		ObjectifyService.register(Student.class);
 		ObjectifyService.register(StudentGroup.class);
 		ObjectifyService.register(StudentHealth.class);
@@ -67,6 +71,7 @@ public class TestSite {
 		Locale currentlocal = new Locale("en_US");
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
 		
+		closeable = ObjectifyService.begin();
 	}
 
 	/**
@@ -74,7 +79,7 @@ public class TestSite {
 	 */
 	@After
 	public void tearDown() throws Exception {
-		
+		closeable.close();
 		helper.tearDown();
 		
 	}

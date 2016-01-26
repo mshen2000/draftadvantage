@@ -2,6 +2,10 @@ package com.nya.sms.entities;
 
 public class BaseFieldNote extends BaseFieldAbstract {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int lines;
 
 	public BaseFieldNote(String name) {

@@ -13,12 +13,8 @@ import com.app.endpoints.entities.ProjectionPeriod;
 import com.app.endpoints.entities.ProjectionService;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Result;
-import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.entities.PlayerProjected;
-import com.nya.sms.entities.Student;
 
 /**
  * @author Michael
@@ -313,12 +309,6 @@ public class PlayerProjectedService implements Serializable {
 		
 		return periods;
 	}
-	
-	
-	private IdentityService getIdentityService() {
-		 
-		return new IdentityService();
-	 
-	}
+
 	
 }

@@ -2,16 +2,12 @@ package com.nya.sms.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.EntitySubclass;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
-@EntitySubclass(index = true)
+//@Subclass(index = true)
+@Entity
 public class StudentHealth extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1;

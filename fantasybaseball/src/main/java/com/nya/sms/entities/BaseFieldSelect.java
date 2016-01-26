@@ -5,6 +5,10 @@ import java.util.List;
 
 public class BaseFieldSelect extends BaseFieldAbstract {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	boolean addNewValues;
 	List<String> values;
 
