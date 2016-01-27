@@ -246,12 +246,15 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
         if (!resp.code) { 
         	
         	var config = {
-                	"bProcessing": true,
-                    "aaData": resp.items,
-                    select: 'single',
-                    "searching": false,
-                    "paging": false,
-                    "aoColumns": [
+                	// "bProcessing": true,
+                	// "processing": true,
+                    // "aaData": resp.items,
+                    "data": resp.items,
+                    select: true,
+                    // "searching": false,
+                    // "paging": false,
+                    // "aoColumns": [
+                    "columns": [
                         { "title": "Service", "mData": "projection_service" },
                         { "title": "Period", "mData": "projection_period"},
                         { "title": "Year", "mData": "projected_year"},
@@ -260,6 +263,25 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                 };
 
         	var profile_table = $('#profile_table').dataTable(config);
+        	
+        	profile_table
+	            .on( 'select', function ( e, dt, type, indexes ) {
+	                var rowData = profile_table.rows( indexes ).data().toArray();
+	                console.log("Table Select :", JSON.stringify( rowData ));
+	                $('#btn-delete-profile').prop('disabled', false);
+	                $('#btn-load-profile').prop('disabled', false);
+	                $('#btn-update-profile').prop('disabled', false);
+	                // events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
+	            } )
+	            .on( 'deselect', function ( e, dt, type, indexes ) {
+	                var rowData = profile_table.rows( indexes ).data().toArray();
+	                console.log("Table Deselect :", JSON.stringify( rowData ));
+	                $('#btn-delete-profile').prop('disabled', true);
+	                $('#btn-load-profile').prop('disabled', true);
+	                $('#btn-update-profile').prop('disabled', true);
+	                // events.prepend( '<div><b>'+type+' <i>de</i>selection</b> - '+JSON.stringify( rowData )+'</div>' );
+	            } );
+        	
         	// loadspinner.hideLoader('#projections-table-div');
 
         }
@@ -457,6 +479,9 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
+                $('#btn-delete-profile').prop('disabled', true);
+                $('#btn-load-profile').prop('disabled', true);
+                $('#btn-update-profile').prop('disabled', true);
 				mssolutions.fbapp.loadprojections.loadProfiles();
 				mssolutions.fbapp.loadprojections.loadProjections();
 			}
@@ -467,6 +492,9 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		// gapi.client.load('oauth2', 'v2', callback);
 	}
 	else {
+        $('#btn-delete-profile').prop('disabled', true);
+        $('#btn-load-profile').prop('disabled', true);
+        $('#btn-update-profile').prop('disabled', true);
 		mssolutions.fbapp.loadprojections.loadProfiles();
 		mssolutions.fbapp.loadprojections.loadProjections();
 	}
