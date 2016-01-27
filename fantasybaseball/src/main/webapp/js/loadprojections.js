@@ -248,6 +248,9 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
         	var config = {
                 	"bProcessing": true,
                     "aaData": resp.items,
+                    select: 'single',
+                    "searching": false,
+                    "paging": false,
                     "aoColumns": [
                         { "title": "Service", "mData": "projection_service" },
                         { "title": "Period", "mData": "projection_period"},
@@ -256,7 +259,7 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                     ]
                 };
 
-        	var projection_table = $('#profile_table').dataTable(config);
+        	var profile_table = $('#profile_table').dataTable(config);
         	// loadspinner.hideLoader('#projections-table-div');
 
         }
