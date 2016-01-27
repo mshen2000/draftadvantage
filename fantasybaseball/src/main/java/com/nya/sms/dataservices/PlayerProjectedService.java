@@ -4,17 +4,15 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.app.endpoints.entities.ProjectionPeriod;
-import com.app.endpoints.entities.ProjectionService;
+import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.entities.PlayerProjected;
+import com.nya.sms.entities.ProjectionProfile;
 
 /**
  * @author Michael
@@ -24,18 +22,9 @@ public class PlayerProjectedService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final String PROJECTION_SERVICE_STEAMER = "Steamer";
-	
-	public static final String PROJECTION_SERVICE_ZIPS = "Zips";
-	
-	public static final String PROJECTION_PERIOD_PRESEASON = "Pre-Season";
-	
-	public static final String PROJECTION_PERIOD_ROS = "ROS";
-	
 	public static final String PITCHER_HITTER_PITCHER = "P";
 	
 	public static final String PITCHER_HITTER_HITTER = "H";
-	
 	
 	
 	/**
@@ -50,38 +39,50 @@ public class PlayerProjectedService implements Serializable {
 	
 
 	/**
-	 * Description:	Retrieves player projections for a given service, period (pre-season or ROS) and year
-	 * @param proj_service
-	 * @param proj_period
-	 * @param year 
+	 * Description:	Retrieves player projections for a projection profile
+	 * @param profile
 	 * @return Returns a list of PlayerProjected for the given parameters
 	 */
-	public List<PlayerProjected> getPlayerProjections(String proj_service, String proj_period, Integer year){
+	public List<PlayerProjected> getPlayerProjections(ProjectionProfile profile){
 		
-		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
-		q = q.filter("projection_service", proj_service);
-		q = q.filter("projection_period", proj_period);
-		q = q.filter("projected_year", year);
-		List<PlayerProjected> slist = q.list();
+//		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
+//		q = q.filter("projection_service", proj_service);
+//		q = q.filter("projection_period", proj_period);
+//		q = q.filter("projected_year", year);
+//		List<PlayerProjected> slist = q.list();
 		
-		return slist;
+		if (profile.getId() == null){
+			profile = getProjectionProfileService().get(profile.getProjection_service(), profile.getProjection_period(), profile.getProjected_year());
+		}
+		
+		Iterable<PlayerProjected> players = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
+		
+		return Lists.newArrayList(players);
 	}
 	
 	
 	/**
-	 * Description:	Retrieves a single player projection for a given mlb_id, service, period (pre-season or ROS) and year
-	 * @param mlb_id
-	 * @param proj_service
-	 * @param proj_period
-	 * @param year 
+	 * Description:	Retrieves a single player projection for a projection profile and id
+	 * @param profile
+	 * @param other_id_name
+	 * @param other_id
 	 * @return Returns a list of PlayerProjected for the given parameters
 	 */
-	public PlayerProjected getPlayerProjection(String proj_service, String proj_period, Integer year, String other_id_name, String other_id){
+	public PlayerProjected getPlayerProjection(ProjectionProfile profile, String other_id_name, String other_id){
 		
-		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
-		q = q.filter("projection_service", proj_service);
-		q = q.filter("projection_period", proj_period);
-		q = q.filter("projected_year", year);
+//		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
+//		q = q.filter("projection_service", proj_service);
+//		q = q.filter("projection_period", proj_period);
+//		q = q.filter("projected_year", year);
+//		q = q.filter("other_id_name", other_id_name);
+//		q = q.filter("other_id", other_id);
+//		List<PlayerProjected> slist = q.list();
+		
+		if (profile.getId() == null){
+			profile = getProjectionProfileService().get(profile.getProjection_service(), profile.getProjection_period(), profile.getProjected_year());
+		}
+		
+		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
 		q = q.filter("other_id_name", other_id_name);
 		q = q.filter("other_id", other_id);
 		List<PlayerProjected> slist = q.list();
@@ -90,19 +91,27 @@ public class PlayerProjectedService implements Serializable {
 	}
 	
 	/**
-	 * Description:	Determines if a single player projection exists for a given mlb_id, service, period (pre-season or ROS) and year
-	 * @param mlb_id
-	 * @param proj_service
-	 * @param proj_period
-	 * @param year 
+	 * Description:	Determines if a single player projection exists for a given projection profile and id
+	 * @param profile
+	 * @param other_id_name
+	 * @param other_id
 	 * @return Returns a list of PlayerProjected for the given parameters
 	 */
-	public boolean isPlayerProjectionPresent(String proj_service, String proj_period, Integer year, String other_id_name, String other_id){
+	public boolean isPlayerProjectionPresent(ProjectionProfile profile, String other_id_name, String other_id){
 		
-		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
-		q = q.filter("projection_service", proj_service);
-		q = q.filter("projection_period", proj_period);
-		q = q.filter("projected_year", year);
+//		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
+//		q = q.filter("projection_service", proj_service);
+//		q = q.filter("projection_period", proj_period);
+//		q = q.filter("projected_year", year);
+//		q = q.filter("other_id_name", other_id_name);
+//		q = q.filter("other_id", other_id);
+//		List<PlayerProjected> slist = q.list();
+		
+		if (profile.getId() == null){
+			profile = getProjectionProfileService().get(profile.getProjection_service(), profile.getProjection_period(), profile.getProjected_year());
+		}
+		
+		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
 		q = q.filter("other_id_name", other_id_name);
 		q = q.filter("other_id", other_id);
 		List<PlayerProjected> slist = q.list();
@@ -113,17 +122,22 @@ public class PlayerProjectedService implements Serializable {
 	
 	
 	/**
-	 * Description:	Deletes player projections for a given service, period (pre-season or ROS) and year
-	 * @param proj_service
-	 * @param proj_period
-	 * @param year 
+	 * Description:	Deletes all player projections for a given projection profile
+	 * @param profile
 	 */
-	public void deletePlayerProjections(String proj_service, String proj_period, Integer year){
+	public void deletePlayerProjections(ProjectionProfile profile){
 		
-		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
-		q = q.filter("projection_service", proj_service);
-		q = q.filter("projection_period", proj_period);
-		q = q.filter("projected_year", year);
+//		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
+//		q = q.filter("projection_service", proj_service);
+//		q = q.filter("projection_period", proj_period);
+//		q = q.filter("projected_year", year);
+//		List<PlayerProjected> slist = q.list();
+		
+		if (profile.getId() == null){
+			profile = getProjectionProfileService().get(profile.getProjection_service(), profile.getProjection_period(), profile.getProjected_year());
+		}
+		
+		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
 		List<PlayerProjected> slist = q.list();
 		
 		if (slist.size() > 0)
@@ -131,7 +145,7 @@ public class PlayerProjectedService implements Serializable {
 		
 		int i = 0;
 		
-		while ((countPlayerProjections(proj_service, proj_period, year) != 0)&&(i < 10)){
+		while ((countPlayerProjections(profile) != 0)&&(i < 10)){
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -171,11 +185,17 @@ public class PlayerProjectedService implements Serializable {
 		return list.list().size();
 	}
 	
-	public int countPlayerProjections(String proj_service, String proj_period, int year){
-		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
-		q = q.filter("projection_service", proj_service);
-		q = q.filter("projection_period", proj_period);
-		q = q.filter("projected_year", year);
+	public int countPlayerProjections(ProjectionProfile profile){
+//		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
+//		q = q.filter("projection_service", proj_service);
+//		q = q.filter("projection_period", proj_period);
+//		q = q.filter("projected_year", year);
+		
+		if (profile.getId() == null){
+			profile = getProjectionProfileService().get(profile.getProjection_service(), profile.getProjection_period(), profile.getProjected_year());
+		}
+		
+		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
 		
 		return q.list().size();
 	}
@@ -193,28 +213,29 @@ public class PlayerProjectedService implements Serializable {
 	 * @param uname
 	 * @return Integer representing the number of saved elements
 	 */
-	public Integer updatePlayerProjections(List<PlayerProjected> playerlist, String proj_service, String proj_period, Date proj_date, Integer year, String uname){
+	public Integer updatePlayerProjections(List<PlayerProjected> playerlist, ProjectionProfile profile, String uname){
 		
-		final String iproj_service = proj_service;
-		final String iproj_period = proj_period;
-		final Date iproj_date = proj_date;
-		final Integer iyear = year;
+//		final String iproj_service = proj_service;
+//		final String iproj_period = proj_period;
+//		final Date iproj_date = proj_date;
+//		final Integer iyear = year;
 		
 		final String iuname = uname;
 		
 		// Update playerlist with proj_service, proj_period, proj_date, year, and created/modified by uname
 		for (PlayerProjected element : playerlist) {
-			element.setProjection_service(iproj_service);
-			element.setProjection_period(iproj_period);
-			element.setProjection_date(iproj_date);
-			element.setProjected_year(iyear);
+//			element.setProjection_service(iproj_service);
+//			element.setProjection_period(iproj_period);
+//			element.setProjection_date(iproj_date);
+//			element.setProjected_year(iyear);
+			element.setProjection_profile(profile);
 			element.setCreatedby(iuname);
 			element.setModifiedby(iuname);
 		}
 
 		final List<PlayerProjected> iplayerlist = playerlist;
 		
-		final List<PlayerProjected> playerlistdelete = getPlayerProjections(iproj_service, iproj_period, iyear);
+		final List<PlayerProjected> playerlistdelete = getPlayerProjections(profile);
 		
 		// Previously used transaction to group delete and add
 //		Integer size = ObjectifyService.ofy().transact(new Work<Integer>() {
@@ -247,7 +268,7 @@ public class PlayerProjectedService implements Serializable {
 		int i = 0;
 		
 		// Wait while objectify is still processing the update
-		while ((countPlayerProjections(iproj_service, iproj_period, iyear) < iplayerlist.size())&&(i < 10)){
+		while ((countPlayerProjections(profile) < iplayerlist.size())&&(i < 10)){
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -280,35 +301,10 @@ public class PlayerProjectedService implements Serializable {
 
 	    return result.substring(0, result.length()-1);
 	}
-	
-	
-	/**
-	 * Description:	Returns a list of all projection services
-	 * @return List of strings of all projections services.
-	 */
-	public List<ProjectionService> getProjectionServices() {
-		
-		List<ProjectionService> services = new ArrayList<ProjectionService>();
-		
-		services.add(new ProjectionService(PROJECTION_SERVICE_STEAMER));
-		services.add(new ProjectionService(PROJECTION_SERVICE_ZIPS));
-		
-		return services;
-	}
-	
-	/**
-	 * Description:	Returns a list of all projection periods
-	 * @return List of strings of all projections periods.
-	 */
-	public List<ProjectionPeriod> getProjectionPeriods() {
-		
-		List<ProjectionPeriod> periods = new ArrayList<ProjectionPeriod>();
-		
-		periods.add(new ProjectionPeriod(PROJECTION_PERIOD_PRESEASON));
-		periods.add(new ProjectionPeriod(PROJECTION_PERIOD_ROS));
-		
-		return periods;
-	}
 
-	
+	private ProjectionProfileService getProjectionProfileService() {
+
+		return new ProjectionProfileService(ProjectionProfile.class);
+
+	}
 }

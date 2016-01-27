@@ -236,7 +236,35 @@ function completeFn(results)
 	uploadprojections(results.data);
 }
 
+/**
+ * load projection profiles via the API.
+ */
+mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
+	// loadspinner.showLoader('#projections-table-div');
+	gapi.client.draftapp.projectionprofile.getall().execute(
+      function(resp) {
+        if (!resp.code) { 
+        	
+        	var config = {
+                	"bProcessing": true,
+                    "aaData": resp.items,
+                    "aoColumns": [
+                        { "title": "Service", "mData": "projection_service" },
+                        { "title": "Period", "mData": "projection_period"},
+                        { "title": "Year", "mData": "projected_year"},
+                        { "title": "Date of Update", "mData": "projection_date"},
+                    ]
+                };
 
+        	var projection_table = $('#profile_table').dataTable(config);
+        	// loadspinner.hideLoader('#projections-table-div');
+
+        }
+        else {
+        	console.log("Failed to load profiles: ", resp.code + " : " + resp.message);
+        }
+      });
+};
 
 /**
  * load player projections via the API.
@@ -426,6 +454,7 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
+				mssolutions.fbapp.loadprojections.loadProfiles();
 				mssolutions.fbapp.loadprojections.loadProjections();
 			}
 		}
@@ -435,6 +464,7 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		// gapi.client.load('oauth2', 'v2', callback);
 	}
 	else {
+		mssolutions.fbapp.loadprojections.loadProfiles();
 		mssolutions.fbapp.loadprojections.loadProjections();
 	}
 };

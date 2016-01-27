@@ -12,7 +12,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.PlayerProjectedService;
+import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.entities.PlayerProjected;
+import com.nya.sms.entities.ProjectionProfile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,20 @@ public class MainEndpoint {
 		return new PlayerProjectedService();
 
 	}
+	
+	private ProjectionProfileService getProjectionProfileService() {
+
+		return new ProjectionProfileService(ProjectionProfile.class);
+
+	}
+	
+	private void validateToken(HttpServletRequest req) throws UnauthorizedException{
+		APIToken token = new APIToken(
+				req.getHeader("Authorization").split(" ")[1]);
+
+		if (!getIdentityService().validateAdminJWT(token))
+			throw new UnauthorizedException("Token is invalid");
+	}
 
 	@ApiMethod(name = "main.getprojections")
 	public List<PlayerProjected> GetProjections(HttpServletRequest req)
@@ -55,6 +71,16 @@ public class MainEndpoint {
 
 		return getPlayerProjectedService().getAllPlayerProjected();
 
+	}
+	
+	@ApiMethod(name = "projectionprofile.getall")
+	public List<ProjectionProfile> getAllProjectionProfiles(HttpServletRequest req)
+			throws UnauthorizedException {
+		
+		validateToken(req);
+		
+		return getProjectionProfileService().getAll();
+		
 	}
 
 	@ApiMethod(name = "main.deleteallprojections")
@@ -95,11 +121,15 @@ public class MainEndpoint {
     // System.out.println("Player 0: " + p_array.get(0).getFull_name());
 
     int count = 0;
+    
+    ProjectionProfile profile = new ProjectionProfile();
+    profile.setProjected_year(container.getProj_year());
+    profile.setProjection_period(container.getProj_period());
+    profile.setProjection_service(container.getProj_service());
 	
     try
     {
-    	count = getPlayerProjectedService().updatePlayerProjections(p_array, container.getProj_service(), 
-    			container.getProj_period(), container.getProj_date(), container.getProj_year(), user.getUsername());
+    	count = getPlayerProjectedService().updatePlayerProjections(p_array, profile, user.getUsername());
     	
     	// System.out.println("After update service call, count = " + count);
     	
@@ -158,7 +188,7 @@ public class MainEndpoint {
 
 		List<ProjectionService> services = new ArrayList<ProjectionService>();
 
-		services = getPlayerProjectedService().getProjectionServices();
+		services = getProjectionProfileService().getProjectionServices();
 		return services;
 
 	}
@@ -175,7 +205,7 @@ public class MainEndpoint {
 
 		List<ProjectionPeriod> periods = new ArrayList<ProjectionPeriod>();
 
-		periods = getPlayerProjectedService().getProjectionPeriods();
+		periods = getProjectionProfileService().getProjectionPeriods();
 		return periods;
 
 	}

@@ -3,6 +3,7 @@ package com.nya.sms.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 
@@ -13,16 +14,7 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1;
 	
 	@Index
-	public Integer projected_year;
-	
-	@Index
-	public String projection_service;
-	
-	@Index
-	public String projection_period;  // Pre-Season, ROS
-	
-	@Index
-	Date projection_date;
+	Ref<ProjectionProfile> projection_profile;
 	
 	@Index
 	public String mlb_id;
@@ -203,6 +195,15 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 		this.other_id = other_id;
 		this.full_name = full_name;
 		this.pitcher_hitter = pitcher_hitter;
+	}
+	
+	// This getter-setter is custom updated to convert Ref to a ProjectionProfile
+	public ProjectionProfile getProjection_profile() {
+		return projection_profile.get();
+	}
+
+	public void setProjection_profile(ProjectionProfile projection_profile) {
+		this.projection_profile = Ref.create(projection_profile);
 	}
 
 	public String getMlb_id() {
@@ -653,37 +654,6 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 		this.pitcher_babip = pitcher_babip;
 	}
 
-	public Integer getProjected_year() {
-		return projected_year;
-	}
-
-	public void setProjected_year(Integer projected_year) {
-		this.projected_year = projected_year;
-	}
-
-	public String getProjection_service() {
-		return projection_service;
-	}
-
-	public void setProjection_service(String projection_service) {
-		this.projection_service = projection_service;
-	}
-
-	public String getProjection_period() {
-		return projection_period;
-	}
-
-	public void setProjection_period(String projection_period) {
-		this.projection_period = projection_period;
-	}
-
-	public Date getProjection_date() {
-		return projection_date;
-	}
-
-	public void setProjection_date(Date projection_date) {
-		this.projection_date = projection_date;
-	}
 
 	public String getOther_id_name() {
 		return other_id_name;

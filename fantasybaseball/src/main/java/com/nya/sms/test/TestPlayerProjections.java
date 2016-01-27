@@ -1,8 +1,5 @@
 package com.nya.sms.test;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-import static org.junit.Assert.*;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,21 +12,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.app.endpoints.entities.ProjectionPeriod;
-import com.app.endpoints.entities.ProjectionService;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Ref;
-import com.googlecode.objectify.cmd.Query;
 import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.PlayerProjectedService;
-import com.nya.sms.entities.BaseEntity;
+import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.entities.PlayerProjected;
+import com.nya.sms.entities.ProjectionProfile;
 import com.nya.sms.entities.User;
 
 public class TestPlayerProjections {
@@ -58,6 +49,7 @@ public class TestPlayerProjections {
 
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(PlayerProjected.class);
+		ObjectifyService.register(ProjectionProfile.class);
 
 		c= Calendar.getInstance();
 		c.setTime(new Date(java.lang.System.currentTimeMillis()));
@@ -100,24 +92,6 @@ public class TestPlayerProjections {
 	}
 	
 	@Test
-	public void testProjectionMetadata() {
-		
-		List<ProjectionService> services = new ArrayList<ProjectionService>();
-		List<ProjectionPeriod> periods = new ArrayList<ProjectionPeriod>();
-		
-		try {
-			services = getPlayerProjectedService().getProjectionServices();
-			periods = getPlayerProjectedService().getProjectionPeriods();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Assert.assertTrue(services.size() == 2);
-		Assert.assertTrue(periods.size() == 2);
-		
-	}
-	
-	@Test
 	public void testPlayerProjections() {
 		
 		User usr1 = new User("test1","test1");
@@ -125,11 +99,37 @@ public class TestPlayerProjections {
 		usr1.setLastname("One");
 		
 		getIdentityService().saveUser(usr1,usr1.getUsername());
-		getPlayerProjectedService();
 		
-		PlayerProjected ppHitter1 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+		ProjectionProfile p1 = new ProjectionProfile();
+		p1.setProjected_year(2016);
+		p1.setProjection_date(yesterday);
+		p1.setProjection_period(ProjectionProfileService.PROJECTION_PERIOD_PRESEASON);
+		p1.setProjection_service(ProjectionProfileService.PROJECTION_SERVICE_STEAMER);
+
+		Long p1_id = getProjectionProfileService().save(p1, usr1.getUsername());
+		ProjectionProfile p1_out = getProjectionProfileService().get(p1_id);
+		
+		ProjectionProfile p2 = new ProjectionProfile();
+		p2.setProjected_year(2015);
+		p2.setProjection_date(tomorrow);
+		p2.setProjection_period(ProjectionProfileService.PROJECTION_PERIOD_ROS);
+		p2.setProjection_service(ProjectionProfileService.PROJECTION_SERVICE_STEAMER);
+
+		Long p2_id = getProjectionProfileService().save(p2, usr1.getUsername());
+		ProjectionProfile p2_out = getProjectionProfileService().get(p2_id);
+		
+		ProjectionProfile p3 = new ProjectionProfile();
+		p3.setProjected_year(2015);
+		p3.setProjection_date(tomorrow);
+		p3.setProjection_period(ProjectionProfileService.PROJECTION_PERIOD_PRESEASON);
+		p3.setProjection_service(ProjectionProfileService.PROJECTION_SERVICE_STEAMER);
+
+		Long p3_id = getProjectionProfileService().save(p3, usr1.getUsername());
+		ProjectionProfile p3_out = getProjectionProfileService().get(p3_id);
+		
+		PlayerProjected ppHitter1 = new PlayerProjected(ProjectionProfileService.PROJECTION_SERVICE_STEAMER, 
 				"1111","Joe Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
-		PlayerProjected ppPitcher1 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+		PlayerProjected ppPitcher1 = new PlayerProjected(ProjectionProfileService.PROJECTION_SERVICE_STEAMER, 
 				"2222","Mike Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
 		
 		ppHitter1.setAge(21);
@@ -152,9 +152,9 @@ public class TestPlayerProjections {
 		list1.add(ppHitter1);
 		list1.add(ppPitcher1);
 		
-		PlayerProjected ppHitter2 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+		PlayerProjected ppHitter2 = new PlayerProjected(ProjectionProfileService.PROJECTION_SERVICE_STEAMER, 
 				"1111","Joe Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
-		PlayerProjected ppPitcher2 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+		PlayerProjected ppPitcher2 = new PlayerProjected(ProjectionProfileService.PROJECTION_SERVICE_STEAMER, 
 				"2222","Mike Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
 		
 		ppHitter2.setAge(21);
@@ -177,9 +177,9 @@ public class TestPlayerProjections {
 		list2.add(ppHitter2);
 		list2.add(ppPitcher2);
 		
-		PlayerProjected ppHitter3 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+		PlayerProjected ppHitter3 = new PlayerProjected(ProjectionProfileService.PROJECTION_SERVICE_STEAMER, 
 				"1111","Joe Smith",PlayerProjectedService.PITCHER_HITTER_HITTER);
-		PlayerProjected ppPitcher3 = new PlayerProjected(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
+		PlayerProjected ppPitcher3 = new PlayerProjected(ProjectionProfileService.PROJECTION_SERVICE_STEAMER, 
 				"2222","Mike Evans",PlayerProjectedService.PITCHER_HITTER_PITCHER);
 		
 		ppHitter3.setAge(21);
@@ -202,16 +202,13 @@ public class TestPlayerProjections {
 		list3.add(ppHitter3);
 		list3.add(ppPitcher3);
 		
-		Integer i1 = getPlayerProjectedService().updatePlayerProjections(list1, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, yesterday, 2015, "test1");
+		Integer i1 = getPlayerProjectedService().updatePlayerProjections(list1, p1, "test1");
 		
 		// Save with different period
-		Integer i2 = getPlayerProjectedService().updatePlayerProjections(list2, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_ROS, yesterday, 2015, "test1");
+		Integer i2 = getPlayerProjectedService().updatePlayerProjections(list2, p2, "test1");
 		
 		// Save with different year
-		Integer i3 = getPlayerProjectedService().updatePlayerProjections(list3, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, yesterday, 2016, "test1");
+		Integer i3 = getPlayerProjectedService().updatePlayerProjections(list3, p3, "test1");
 		
 		// Test return statements for updatePlayerProjections
 		Assert.assertTrue(i1 == 2);
@@ -224,8 +221,7 @@ public class TestPlayerProjections {
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 6);
 		
 		// Load list 3 again
-		i3 = getPlayerProjectedService().updatePlayerProjections(list3, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, yesterday, 2016, "test1");
+		i3 = getPlayerProjectedService().updatePlayerProjections(list3, p3, "test1");
 		
 		// Test there are still a total of 6 projections
 		// Verify that updatePlayerProjections deletes previous set
@@ -233,29 +229,25 @@ public class TestPlayerProjections {
 		
 		// Test there are of 2 projections for a particular projection set
 		// Tests method getPlayerProjections
-		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_ROS, 2015).size() == 2);
+		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1).size() == 2);
 		
 		// Test Count all projections
 		Assert.assertTrue(getPlayerProjectedService().countAllPlayerProjections() == 6);
 		
 		// Test Count projections for a projection set
 		// Tests method getPlayerProjections
-		Assert.assertTrue(getPlayerProjectedService().countPlayerProjections(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_ROS, 2015) == 2);
+		Assert.assertTrue(getPlayerProjectedService().countPlayerProjections(p2) == 2);
 		
 		// Test if a single projection exists
 		// Tests method isPlayerProjectionPresent
-		Assert.assertTrue(getPlayerProjectedService().isPlayerProjectionPresent(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, "1111"));
+		Assert.assertTrue(getPlayerProjectedService().isPlayerProjectionPresent(p1, ProjectionProfileService.PROJECTION_SERVICE_STEAMER, "1111"));
 		
-		PlayerProjected pp_r1 = getPlayerProjectedService().getPlayerProjection(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016, PlayerProjectedService.PROJECTION_SERVICE_STEAMER, "1111");
+		PlayerProjected pp_r1 = getPlayerProjectedService().getPlayerProjection(p1, ProjectionProfileService.PROJECTION_SERVICE_STEAMER, "1111");
 		
 		// Test getting a single projection and validating attributes
 		// Test method getPlayerProjection
-		Assert.assertTrue(pp_r1.getProjection_period() == PlayerProjectedService.PROJECTION_PERIOD_PRESEASON);
-		Assert.assertTrue(pp_r1.getProjected_year() == 2016);
+		Assert.assertTrue(pp_r1.getProjection_profile().getProjection_period() == ProjectionProfileService.PROJECTION_PERIOD_PRESEASON);
+		Assert.assertTrue(pp_r1.getProjection_profile().getProjected_year() == 2016);
 		Assert.assertTrue(pp_r1.getFull_name() == "Joe Smith");
 		Assert.assertTrue(pp_r1.getHitter_bats() == "L");
 		Assert.assertTrue(pp_r1.getHitter_pos_elig_espn() == "1b/3b");
@@ -263,11 +255,9 @@ public class TestPlayerProjections {
 		Assert.assertTrue(pp_r1.getHitter_avg() == (float) 0.310);
 		
 		// Test deleting player projections
-		getPlayerProjectedService().deletePlayerProjections(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016);
+		getPlayerProjectedService().deletePlayerProjections(p1);
 		
-		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(PlayerProjectedService.PROJECTION_SERVICE_STEAMER, 
-				PlayerProjectedService.PROJECTION_PERIOD_PRESEASON, 2016).size() == 0);
+		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1).size() == 0);
 		
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 4);
 		
@@ -278,16 +268,22 @@ public class TestPlayerProjections {
 	}
 	
 	
-	 private IdentityService getIdentityService() {
-		 
-		 return new IdentityService();
-	 
-	 }
-	 
-	 private PlayerProjectedService getPlayerProjectedService() {
-		 
-		 return new PlayerProjectedService();
-	 
-	 }
+	private IdentityService getIdentityService() {
+
+		return new IdentityService();
+
+	}
+
+	private PlayerProjectedService getPlayerProjectedService() {
+
+		return new PlayerProjectedService();
+
+	}
+
+	private ProjectionProfileService getProjectionProfileService() {
+
+		return new ProjectionProfileService(ProjectionProfile.class);
+
+	}
 	
 }
