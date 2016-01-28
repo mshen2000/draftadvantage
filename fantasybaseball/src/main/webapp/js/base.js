@@ -43,6 +43,7 @@ mssolutions.fbapp.login.logon = function(email, password) {
       'password': password
     }).execute(function(resp) {
       if (resp.status == "OK") {
+    	  localStorage.setItem("email", email);
     	  localStorage.setItem("ClientToken", resp.description);
     	  window.location.href = "pages/admin/playerload.html";
       }

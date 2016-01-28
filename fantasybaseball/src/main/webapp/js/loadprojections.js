@@ -74,6 +74,28 @@ $(document).ready(function()
     	options.append($("<option />").text((new Date).getFullYear() + 1));
 	});
 	
+	$('#btn-save-profile').click(function() 
+	{
+		$(this).find($(".fa")).removeClass('fa-floppy-o').addClass('fa-refresh fa-spin');
+		
+		var service = $("#projection-service-selector").find("option:selected").text();
+		var period = $("#projection-period-selector").find("option:selected").text();
+		var year = $("#projection-year-selector").find("option:selected").text();
+		
+    	mssolutions.fbapp.loadprojections.saveProfile(service, period, year);
+    	
+	});
+	
+	$('#btn-add-profile').click(function() 
+	{
+		mssolutions.fbapp.loadprojections.load_projection_services();
+		mssolutions.fbapp.loadprojections.load_projection_periods();
+    	var options = $("#projection-year-selector");
+    	options.find('option').remove().end();
+    	options.append($("<option />").text((new Date).getFullYear()));
+    	options.append($("<option />").text((new Date).getFullYear() + 1));
+	});
+	
 
 	$('#delete-projections').click(function() 
 	{
@@ -92,6 +114,8 @@ $(document).ready(function()
     var profile_table = $('#profile_table').DataTable( {
         data: null,
         select: true,
+        "searching": false,
+        "paging": false,
         "columns": [
             { "title": "Service", "mData": "projection_service" },
             { "title": "Period", "mData": "projection_period"},
@@ -118,22 +142,6 @@ $(document).ready(function()
         $('#btn-delete-profile').prop('disabled', true);
         $('#btn-load-profile').prop('disabled', true);
         $('#btn-update-profile').prop('disabled', true);
-    } );
-	
-    var table = $('#demo_table').DataTable( {
-        select: true
-    } );
- 
-    table
-    .on( 'select', function ( e, dt, type, indexes ) {
-        var rowData = table.rows( indexes ).data().toArray();
-        console.log("Table Select :", JSON.stringify( rowData ));
-        // events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
-    } )
-    .on( 'deselect', function ( e, dt, type, indexes ) {
-        var rowData = table.rows( indexes ).data().toArray();
-        console.log("Table Deselect :", JSON.stringify( rowData ));
-        // events.prepend( '<div><b>'+type+' <i>de</i>selection</b> - '+JSON.stringify( rowData )+'</div>' );
     } );
 
 });
@@ -283,6 +291,29 @@ function completeFn(results)
 	uploadprojections(results.data);
 }
 
+
+/**
+ * Save a new projection profile via the API.
+ */
+mssolutions.fbapp.loadprojections.saveProfile = function(service, period, year) {
+	gapi.client.draftapp.projectionprofile.save({
+		'projection_service' : service,
+		'projection_period' : period,
+		'projected_year' : year}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	mssolutions.fbapp.loadprojections.loadProfiles();
+        	$('#addprofile-modal').modal('hide');
+        	$('#btn-save-profile').find($(".fa")).removeClass('fa-refresh fa-spin').addClass('fa-floppy-o');
+
+        }
+        else {
+        	console.log("Failed to load profiles: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+
 /**
  * load projection profiles via the API.
  */
@@ -295,19 +326,22 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
         	var profile_table = $('#profile_table').DataTable();
         	
         	var config = {
-                	// "bProcessing": true,
-                	// "processing": true,
-                    // "aaData": resp.items,
                     "data": resp.items,
                     select: true,
-                    // "searching": false,
-                    // "paging": false,
-                    // "aoColumns": [
+                    "searching": false,
+                    "paging": false,
                     "columns": [
                         { "title": "Service", "mData": "projection_service" },
                         { "title": "Period", "mData": "projection_period"},
                         { "title": "Year", "mData": "projected_year"},
-                        { "title": "Date of Update", "mData": "projection_date"},
+                        { "title": "Date of Update", "mData": "projection_date", "type": "date", "sDefaultContent": "<i>None</i>",
+                            "render": function (data) {
+                            	console.log(data);
+                            	if (! data){return data};
+                                var date = new Date(data);
+                                var month = date.getMonth() + 1;
+                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                            }},
                     ]
                 };
 

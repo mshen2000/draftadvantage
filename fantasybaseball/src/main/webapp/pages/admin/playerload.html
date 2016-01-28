@@ -121,7 +121,8 @@
 				<div class="panel-heading">
 					<div class="panel-title">Projection Profiles
 					<div class="panel-right">
-					<button class="btn btn-sm btn-success" id="btn-add-profile"><i class="fa fa-plus"></i> Add</button>
+					<button class="btn btn-sm btn-success" id="btn-add-profile" data-toggle="modal"
+							data-target="#addprofile-modal"><i class="fa fa-plus"></i> Add</button>
 					<button class="btn btn-sm btn-danger" id="btn-delete-profile"><i class="fa fa-trash"></i> Delete</button>
 					<button class="btn btn-sm btn-primary" id="btn-load-profile"><i class="fa fa-list"></i> Load</button>
 					<button class="btn btn-sm btn-primary" id="btn-update-profile"><i class="fa fa-cloud-upload"></i> Update</button>
@@ -157,7 +158,56 @@
 			</div>
 		</div>
 
-		<!-- Modal -->
+		<!-- Add Profile Modal -->
+		<div id="addprofile-modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Add a Projection Profile</h4>
+					</div>
+					<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="projection-service_selector">Projection
+								Service:</label> 
+							<div class="col-sm-9">
+							<select class="form-control" id="projection-service-selector">
+							</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="projection-period-selector">Period:</label> 
+							<div class="col-sm-9">
+							<select
+								class="form-control" id="projection-period-selector">
+							</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="projection-year-selector">Year:</label> 
+							<div class="col-sm-9">
+							<select
+								class="form-control" id="projection-year-selector">
+								<option>2016</option>
+								<option>2017</option>
+							</select>
+							</div>
+						</div>
+					</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="btn-save-profile"><i class="fa fa-floppy-o"></i> Save</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Projection Wizard Modal -->
 		<div id="loadprojections-modal" class="modal fade" role="dialog">
 			<div class="modal-dialog modal-lg">
 
@@ -190,24 +240,7 @@
 							<div class="tab-content">
 
 								<div class="tab-pane" id="tab1">
-									<div class="form-group">
-										<label for="projection-service_selector">Projection
-											Service:</label> <select class="form-control"
-											id="projection-service-selector">
-										</select>
-									</div>
-									<div class="form-group">
-										<label for="projection-period-selector">Period:</label> <select
-											class="form-control" id="projection-period-selector">
-										</select>
-									</div>
-									<div class="form-group">
-										<label for="projection-year-selector">Year:</label> <select class="form-control"
-											id="projection-year-selector">
-											<option>2016</option>
-											<option>2017</option>
-										</select>
-									</div>
+
 									<div class="form-group">
 										<label>Projection Date:</label>
 										<div class="input-group date" id="projection-date-selector1">

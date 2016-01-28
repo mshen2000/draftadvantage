@@ -1,5 +1,7 @@
 package com.app.endpoints;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.dataservices.CustomTestService;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.ProjectionProfileService;
@@ -140,6 +143,13 @@ public class OfyHelper implements ServletContextListener {
 	}
 
 	protected void createInitialProjectionProfile() {
+		
+		// Delete all profiles
+//		Query<ProjectionProfile> q = ofy().load().type(ProjectionProfile.class);
+//		List<ProjectionProfile> slist = q.list();
+//		
+//		if (slist.size() > 0)
+//			ObjectifyService.ofy().delete().entities(slist).now();
 		
 		ProjectionProfile profile = new ProjectionProfile();
 		profile.setProjected_year(2016);

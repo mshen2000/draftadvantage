@@ -51,12 +51,14 @@ public class MainEndpoint {
 
 	}
 	
-	private void validateToken(HttpServletRequest req) throws UnauthorizedException{
+	private com.nya.sms.entities.User validateToken(HttpServletRequest req) throws UnauthorizedException{
 		APIToken token = new APIToken(
 				req.getHeader("Authorization").split(" ")[1]);
 
 		if (!getIdentityService().validateAdminJWT(token))
 			throw new UnauthorizedException("Token is invalid");
+		
+		return getIdentityService().getUserfromToken(token);
 	}
 
 	@ApiMethod(name = "main.getprojections")
@@ -80,6 +82,20 @@ public class MainEndpoint {
 		validateToken(req);
 		
 		return getProjectionProfileService().getAll();
+		
+	}
+	
+	@ApiMethod(name = "projectionprofile.save")
+	public APIGeneralResult saveProjectionProfile(ProjectionProfile profile, HttpServletRequest req)
+			throws UnauthorizedException {
+		
+		System.out.println("Endpoint Profile Service: " + profile.getProjection_service());
+		System.out.println("Endpoint Profile Period: " + profile.getProjection_period());
+		System.out.println("Endpoint Profile Year: " + profile.getProjected_year());
+		
+		getProjectionProfileService().save(profile, validateToken(req).getUsername());
+		
+		return new APIGeneralResult("OK", "Save profile successful.");
 		
 	}
 
