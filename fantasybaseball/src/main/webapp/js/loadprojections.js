@@ -88,6 +88,53 @@ $(document).ready(function()
 		parseprojections();
 
 	});
+	
+    var profile_table = $('#profile_table').DataTable( {
+        data: null,
+        select: true,
+        "columns": [
+            { "title": "Service", "mData": "projection_service" },
+            { "title": "Period", "mData": "projection_period"},
+            { "title": "Year", "mData": "projected_year"},
+            { "title": "Date of Update", "mData": "projection_date"},
+            ]
+    } );
+	
+    profile_table
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	var profile_table_b = $('#profile_table').DataTable();
+        var rowData = profile_table_b.rows( indexes ).data().toArray();
+        console.log("Table Select :", JSON.stringify( rowData ));
+        console.log("--Indexes :", indexes);
+        var rows = profile_table_b.rows( 0 ).data();
+        console.log("--row 0 :", rows[0]);
+        $('#btn-delete-profile').prop('disabled', false);
+        $('#btn-load-profile').prop('disabled', false);
+        $('#btn-update-profile').prop('disabled', false);
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+        var rowData = profile_table.rows( indexes ).data().toArray();
+        console.log("Table Deselect :", JSON.stringify( rowData ));
+        $('#btn-delete-profile').prop('disabled', true);
+        $('#btn-load-profile').prop('disabled', true);
+        $('#btn-update-profile').prop('disabled', true);
+    } );
+	
+    var table = $('#demo_table').DataTable( {
+        select: true
+    } );
+ 
+    table
+    .on( 'select', function ( e, dt, type, indexes ) {
+        var rowData = table.rows( indexes ).data().toArray();
+        console.log("Table Select :", JSON.stringify( rowData ));
+        // events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+        var rowData = table.rows( indexes ).data().toArray();
+        console.log("Table Deselect :", JSON.stringify( rowData ));
+        // events.prepend( '<div><b>'+type+' <i>de</i>selection</b> - '+JSON.stringify( rowData )+'</div>' );
+    } );
 
 });
 
@@ -245,6 +292,8 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
       function(resp) {
         if (!resp.code) { 
         	
+        	var profile_table = $('#profile_table').DataTable();
+        	
         	var config = {
                 	// "bProcessing": true,
                 	// "processing": true,
@@ -262,26 +311,10 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                     ]
                 };
 
-        	var profile_table = $('#profile_table').dataTable(config);
-        	
-        	profile_table
-	            .on( 'select', function ( e, dt, type, indexes ) {
-	                var rowData = profile_table.rows( indexes ).data().toArray();
-	                console.log("Table Select :", JSON.stringify( rowData ));
-	                $('#btn-delete-profile').prop('disabled', false);
-	                $('#btn-load-profile').prop('disabled', false);
-	                $('#btn-update-profile').prop('disabled', false);
-	                // events.prepend( '<div><b>'+type+' selection</b> - '+JSON.stringify( rowData )+'</div>' );
-	            } )
-	            .on( 'deselect', function ( e, dt, type, indexes ) {
-	                var rowData = profile_table.rows( indexes ).data().toArray();
-	                console.log("Table Deselect :", JSON.stringify( rowData ));
-	                $('#btn-delete-profile').prop('disabled', true);
-	                $('#btn-load-profile').prop('disabled', true);
-	                $('#btn-update-profile').prop('disabled', true);
-	                // events.prepend( '<div><b>'+type+' <i>de</i>selection</b> - '+JSON.stringify( rowData )+'</div>' );
-	            } );
-        	
+        	// var profile_table = $('#profile_table').dataTable(config);
+        	profile_table.destroy();
+        	$('#profile_table').empty();
+        	profile_table = $('#profile_table').dataTable(config);
         	// loadspinner.hideLoader('#projections-table-div');
 
         }
