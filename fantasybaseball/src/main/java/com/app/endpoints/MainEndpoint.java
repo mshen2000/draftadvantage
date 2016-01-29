@@ -19,6 +19,7 @@ import com.nya.sms.entities.ProjectionProfile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -94,6 +95,18 @@ public class MainEndpoint {
 		System.out.println("Endpoint Profile Year: " + profile.getProjected_year());
 		
 		getProjectionProfileService().save(profile, validateToken(req).getUsername());
+		
+		return new APIGeneralResult("OK", "Save profile successful.");
+		
+	}
+	
+	@ApiMethod(name = "projectionprofile.remove")
+	public APIGeneralResult deleteProjectionProfile(@Named("profile_id") long id, HttpServletRequest req)
+			throws UnauthorizedException {
+		System.out.println("Profile ID: " + id);
+		validateToken(req);
+		
+		getProjectionProfileService().delete(id);
 		
 		return new APIGeneralResult("OK", "Save profile successful.");
 		

@@ -23,6 +23,10 @@ public class ProjectionProfile extends BaseEntity implements Serializable {
 	
 	@Index
 	Date projection_date;
+	
+	long pitchers;
+	
+	long hitters;
 
 	public ProjectionProfile() {
 	}
@@ -64,6 +68,22 @@ public class ProjectionProfile extends BaseEntity implements Serializable {
 
 	public void setProjection_date(Date projection_date) {
 		this.projection_date = projection_date;
+	}
+
+	public long getPitchers() {
+		return pitchers;
+	}
+
+	public void setPitchers(long pitchers) {
+		this.pitchers = pitchers;
+	}
+
+	public long getHitters() {
+		return hitters;
+	}
+
+	public void setHitters(long hitters) {
+		this.hitters = hitters;
 	}
 
 

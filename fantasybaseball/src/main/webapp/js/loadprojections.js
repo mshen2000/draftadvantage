@@ -86,6 +86,37 @@ $(document).ready(function()
     	
 	});
 	
+	$('#btn-delete-profile').click(function() 
+	{
+        BootstrapDialog.show({
+        	type: 'type-default',
+            title: 'Confirm Delete Projection Profile',
+            message: 'Are you sure you want to delete this Profile?  Deleting a profile will delete all associated player projections.',
+            spinicon: 'fa fa-refresh',
+            buttons: [{
+                id: 'btn-confirm-delete-profile',   
+                icon: 'fa fa-trash',       
+                cssClass: 'btn-danger', 
+                autospin: true,
+                label: 'Delete',
+                action: function(dialog) {
+                	var profile_table = $('#profile_table').DataTable();
+                	var d = profile_table.rows('.selected').data();
+                    console.log("Delete row array: ", d);
+                    console.log("Delete row 0: ", d[0]);
+                    console.log("Delete ID 0: ", d[0].id);
+                	mssolutions.fbapp.loadprojections.deleteProfile(d[0].id);
+                }
+            }, {
+                label: 'Cancel',
+                action: function(dialog) {
+                	dialog.close();
+                }
+            }]
+        });
+    	
+	});
+	
 	$('#btn-add-profile').click(function() 
 	{
 		mssolutions.fbapp.loadprojections.load_projection_services();
@@ -313,6 +344,23 @@ mssolutions.fbapp.loadprojections.saveProfile = function(service, period, year) 
       });
 };
 
+/**
+ * Delete a new projection profile via the API.
+ */
+mssolutions.fbapp.loadprojections.deleteProfile = function(profile_id) {
+	gapi.client.draftapp.projectionprofile.remove({
+		'profile_id' : profile_id}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	mssolutions.fbapp.loadprojections.loadProfiles();
+        	BootstrapDialog.closeAll()
+        }
+        else {
+        	console.log("Failed to load profiles: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
 
 /**
  * load projection profiles via the API.
@@ -327,7 +375,7 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
         	
         	var config = {
                     "data": resp.items,
-                    select: true,
+                    select: 'single',
                     "searching": false,
                     "paging": false,
                     "columns": [
@@ -342,6 +390,8 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                                 var month = date.getMonth() + 1;
                                 return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
                             }},
+                        { "title": "Pitchers", "mData": "pitchers", "sDefaultContent": "0"},
+                        { "title": "Hitters", "mData": "hitters", "sDefaultContent": "0"},
                     ]
                 };
 
