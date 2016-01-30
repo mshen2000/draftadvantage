@@ -64,14 +64,9 @@ $(document).ready(function()
 		
 	}});
 
-	$('#load-projections').click(function() 
+	$('#btn-update-profile').click(function() 
 	{
-		mssolutions.fbapp.loadprojections.load_projection_services();
-		mssolutions.fbapp.loadprojections.load_projection_periods();
-    	var options = $("#projection-year-selector");
-    	options.find('option').remove().end();
-    	options.append($("<option />").text((new Date).getFullYear()));
-    	options.append($("<option />").text((new Date).getFullYear() + 1));
+
 	});
 	
 	$('#btn-save-profile').click(function() 
@@ -158,18 +153,14 @@ $(document).ready(function()
     profile_table
     .on( 'select', function ( e, dt, type, indexes ) {
     	var profile_table_b = $('#profile_table').DataTable();
-        var rowData = profile_table_b.rows( indexes ).data().toArray();
-        console.log("Table Select :", JSON.stringify( rowData ));
-        console.log("--Indexes :", indexes);
-        var rows = profile_table_b.rows( 0 ).data();
-        console.log("--row 0 :", rows[0]);
+        var rows = profile_table_b.rows( indexes ).data();
+        console.log("Table Select :", rows[0]);
         $('#btn-delete-profile').prop('disabled', false);
         $('#btn-load-profile').prop('disabled', false);
         $('#btn-update-profile').prop('disabled', false);
+        $("#proj-profile-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
-        var rowData = profile_table.rows( indexes ).data().toArray();
-        console.log("Table Deselect :", JSON.stringify( rowData ));
         $('#btn-delete-profile').prop('disabled', true);
         $('#btn-load-profile').prop('disabled', true);
         $('#btn-update-profile').prop('disabled', true);
@@ -384,7 +375,7 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                         { "title": "Year", "mData": "projected_year"},
                         { "title": "Date of Update", "mData": "projection_date", "type": "date", "sDefaultContent": "<i>None</i>",
                             "render": function (data) {
-                            	console.log(data);
+                            	// console.log(data);
                             	if (! data){return data};
                                 var date = new Date(data);
                                 var month = date.getMonth() + 1;

@@ -227,12 +227,21 @@ public class TestPlayerProjections {
 		// Verify that updatePlayerProjections deletes previous set
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 6);
 		
+		// Load list 3 again with one list member
+		list3.remove(0);
+		i3 = getPlayerProjectedService().updatePlayerProjections(list3, p3, "test1");
+		
+		// Test there are now a total of 5 projections
+		// Verify that updatePlayerProjections deletes projection not in new list3
+		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 5);
+		
+		
 		// Test there are of 2 projections for a particular projection set
 		// Tests method getPlayerProjections
 		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1).size() == 2);
 		
 		// Test Count all projections
-		Assert.assertTrue(getPlayerProjectedService().countAllPlayerProjections() == 6);
+		Assert.assertTrue(getPlayerProjectedService().countAllPlayerProjections() == 5);
 		
 		// Test Count projections for a projection set
 		// Tests method getPlayerProjections
@@ -259,7 +268,7 @@ public class TestPlayerProjections {
 		
 		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1).size() == 0);
 		
-		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 4);
+		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 3);
 		
 		// Test deleting all player projections
 		getPlayerProjectedService().deleteAllPlayerProjections();
