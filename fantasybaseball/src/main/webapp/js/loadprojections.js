@@ -391,7 +391,13 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                                   text: '<i class="fa fa-plus"></i> Add',
                                   className: 'btn-success',
                                   action: function ( e, dt, node, config ) {
-                                      alert( 'Button activated' );
+                              		mssolutions.fbapp.loadprojections.load_projection_services();
+                            		mssolutions.fbapp.loadprojections.load_projection_periods();
+                                	var options = $("#projection-year-selector");
+                                	options.find('option').remove().end();
+                                	options.append($("<option />").text((new Date).getFullYear()));
+                                	options.append($("<option />").text((new Date).getFullYear() + 1));
+                                	$("#addprofile-modal").modal("show");
                                   }
                               },
                               {
@@ -399,7 +405,32 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                                   className: 'btn-danger',
                                   enabled: false,
                                   action: function ( e, dt, node, config ) {
-                                      alert( 'Button activated' );
+                                      BootstrapDialog.show({
+                                      	type: 'type-default',
+                                          title: 'Confirm Delete Projection Profile',
+                                          message: 'Are you sure you want to delete this Profile?  Deleting a profile will delete all associated player projections.',
+                                          spinicon: 'fa fa-refresh',
+                                          buttons: [{
+                                              id: 'btn-confirm-delete-profile',   
+                                              icon: 'fa fa-trash',       
+                                              cssClass: 'btn-danger', 
+                                              autospin: true,
+                                              label: 'Delete',
+                                              action: function(dialog) {
+                                              	var profile_table = $('#profile_table').DataTable();
+                                              	var d = profile_table.rows('.selected').data();
+                                                  console.log("Delete row array: ", d);
+                                                  console.log("Delete row 0: ", d[0]);
+                                                  console.log("Delete ID 0: ", d[0].id);
+                                              	mssolutions.fbapp.loadprojections.deleteProfile(d[0].id);
+                                              }
+                                          }, {
+                                              label: 'Cancel',
+                                              action: function(dialog) {
+                                              	dialog.close();
+                                              }
+                                          }]
+                                      });
                                   }
                               },
                               {
@@ -415,7 +446,7 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
                                   className: 'btn-primary',
                                   enabled: false,
                                   action: function ( e, dt, node, config ) {
-                                      alert( 'Button activated' );
+                                	  $("#loadprojections-modal").modal("show");
                                   }
                               }
                           ],
