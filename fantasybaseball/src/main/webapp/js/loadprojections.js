@@ -139,7 +139,8 @@ $(document).ready(function()
 	
     var profile_table = $('#profile_table').DataTable( {
         data: null,
-        select: true,
+        select: 'single',
+        responsive: true,
         "searching": false,
         "paging": false,
         "columns": [
@@ -155,12 +156,26 @@ $(document).ready(function()
     	var profile_table_b = $('#profile_table').DataTable();
         var rows = profile_table_b.rows( indexes ).data();
         console.log("Table Select :", rows[0]);
+        
+        var selectedRows = profile_table.rows( { selected: true } ).count();
+        
+        profile_table_b.button( 1 ).enable();
+        profile_table_b.button( 2 ).enable();
+        profile_table_b.button( 3 ).enable();
+        
         $('#btn-delete-profile').prop('disabled', false);
         $('#btn-load-profile').prop('disabled', false);
         $('#btn-update-profile').prop('disabled', false);
         $("#proj-profile-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
+    	var profile_table_b = $('#profile_table').DataTable();
+    	var selectedRows = profile_table.rows( { selected: true } ).count();
+    	
+    	profile_table_b.button( 1 ).disable();
+    	profile_table_b.button( 2 ).disable();
+    	profile_table_b.button( 3 ).disable();
+    	
         $('#btn-delete-profile').prop('disabled', true);
         $('#btn-load-profile').prop('disabled', true);
         $('#btn-update-profile').prop('disabled', true);
@@ -367,8 +382,43 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
         	var config = {
                     "data": resp.items,
                     select: 'single',
+                    responsive: true,
                     "searching": false,
                     "paging": false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                              {
+                                  text: '<i class="fa fa-plus"></i> Add',
+                                  className: 'btn-success',
+                                  action: function ( e, dt, node, config ) {
+                                      alert( 'Button activated' );
+                                  }
+                              },
+                              {
+                                  text: '<i class="fa fa-trash"></i> Delete',
+                                  className: 'btn-danger',
+                                  enabled: false,
+                                  action: function ( e, dt, node, config ) {
+                                      alert( 'Button activated' );
+                                  }
+                              },
+                              {
+                                  text: '<i class="fa fa-list"></i> Load',
+                                  className: 'btn-primary',
+                                  enabled: false,
+                                  action: function ( e, dt, node, config ) {
+                                      alert( 'Button activated' );
+                                  }
+                              },
+                              {
+                                  text: '<i class="fa fa-cloud-upload"></i> Update',
+                                  className: 'btn-primary',
+                                  enabled: false,
+                                  action: function ( e, dt, node, config ) {
+                                      alert( 'Button activated' );
+                                  }
+                              }
+                          ],
                     "columns": [
                         { "title": "Service", "mData": "projection_service" },
                         { "title": "Period", "mData": "projection_period"},
