@@ -144,6 +144,9 @@ public class MainEndpoint {
 		// Get the profile from data store
 		ProjectionProfile profile = getProjectionProfileService().get(container.getProj_service(),
 				container.getProj_period(), container.getProj_year());
+		
+		// Set the profile date
+		profile.setProjection_date(container.getProj_date());
 
 		try {
 			count = getPlayerProjectedService().updatePlayerProjections(p_array, profile, user.getUsername());

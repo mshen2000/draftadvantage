@@ -44,9 +44,6 @@ $(document).ready(function()
 		
 		// If it's the preview tab then load projection selections
 		if($current == 4) {
-			$("#proj-service-label").text($( "#projection-service-selector option:selected" ).text());
-			$("#proj-period-label").text($( "#projection-period-selector option:selected" ).text());
-			$("#proj-year-label").text($( "#projection-year-selector option:selected" ).text());
 			$("#proj-date-label").text($( "#projection-date-selector2" ).val());
 			var hitterfile = $( "#hitter-proj-file" ).val().toString().split("\\");
 			$("#proj-hitterfile-label").text(hitterfile[hitterfile.length - 1]);
@@ -167,6 +164,7 @@ $(document).ready(function()
         $('#btn-load-profile').prop('disabled', false);
         $('#btn-update-profile').prop('disabled', false);
         $("#proj-profile-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
+        $("#proj-profile-label2").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
     	var profile_table_b = $('#profile_table').DataTable();
@@ -284,11 +282,19 @@ function uploadprojections(parse_results)
 	});
 	
 	// console.log("Updated PlayerList: ", JSON.stringify(uploadplayerprojections));
+
 	
-	var service = $( "#projection-service-selector option:selected" ).text();
-	var period = $( "#projection-period-selector option:selected" ).text();
-	var year = $( "#projection-year-selector option:selected" ).text();
+	var profile_table_b = $('#profile_table').DataTable();
+    var rows = profile_table_b.rows( { selected: true } ).data();
+
+	var service = rows[0].projection_service;
+	var period = rows[0].projection_period;
+	var year = rows[0].projected_year;
 	var date = $("#proj-date-label").datepicker('getDate');
+	
+	console.log("Profile service: ", service);
+	console.log("Profile period: ", period);
+	console.log("Profile year: ", year);
 	
 	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections, service, period, date, year);
 
