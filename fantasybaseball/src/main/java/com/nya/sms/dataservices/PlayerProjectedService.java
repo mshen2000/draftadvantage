@@ -256,11 +256,14 @@ public class PlayerProjectedService implements Serializable {
 		// Get list of players on the source list but not on update list
 		for (PlayerProjected p : sourceplayerlist) {
 
+			// System.out.println("Source list other_id_name, other_id: " +
+			// p.getOther_id_name() + ", " + p.getOther_id());
+
 			boolean inupdatelist = false;
 
 			for (PlayerProjected p2 : updateplayerlist) {
 
-				if ((p2.getOther_id_name() == p.getOther_id_name()) && (p2.getOther_id() == p.getOther_id())) {
+				if (p2.getOther_id_name().equals(p.getOther_id_name()) && p2.getOther_id().equals(p.getOther_id())) {
 					inupdatelist = true;
 				}
 
@@ -276,8 +279,11 @@ public class PlayerProjectedService implements Serializable {
 		int j = 0;
 		for (PlayerProjected p : updateplayerlist) {
 
+			// System.out.println("Update list other_id_name, other_id: " +
+			// p.getOther_id_name() + ", " + p.getOther_id());
+
 			for (PlayerProjected p2 : sourceplayerlist) {
-				if ((p2.getOther_id_name() == p.getOther_id_name()) && (p2.getOther_id() == p.getOther_id())) {
+				if (p2.getOther_id_name().equals(p.getOther_id_name()) && p2.getOther_id().equals(p.getOther_id())) {
 					p.setId(p2.getId());
 					j++;
 				}

@@ -265,10 +265,14 @@ public class TestPlayerProjections {
 		
 		// Test deleting player projections
 		getPlayerProjectedService().deletePlayerProjections(p1);
-		
 		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1).size() == 0);
-		
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 3);
+		
+		// Test deleting a profile (and all it's projections)
+		getProjectionProfileService().delete(p2_id);
+		Assert.assertNull(getProjectionProfileService().get(p2_id));
+		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p2).size() == 0);
+		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 1);
 		
 		// Test deleting all player projections
 		getPlayerProjectedService().deleteAllPlayerProjections();

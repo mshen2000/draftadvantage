@@ -20,6 +20,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.ProjectionProfileService;
+import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
 import com.nya.sms.entities.User;
 
@@ -47,6 +48,7 @@ public class TestProjectionProfiles {
 
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(ProjectionProfile.class);
+		ObjectifyService.register(PlayerProjected.class);
 
 		c = Calendar.getInstance();
 		c.setTime(new Date(java.lang.System.currentTimeMillis()));

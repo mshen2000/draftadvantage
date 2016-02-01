@@ -4,14 +4,22 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.app.endpoints.entities.ProjectionPeriod;
 import com.app.endpoints.entities.ProjectionService;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
+import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
 
+/**
+ * @author Michael
+ *
+ */
 public class ProjectionProfileService extends AbstractDataServiceImpl<ProjectionProfile>{
 	
 	private static final long serialVersionUID = 1L;
@@ -50,6 +58,33 @@ public class ProjectionProfileService extends AbstractDataServiceImpl<Projection
 		
 		return q.first().now();
 		
+	}
+	
+	
+	@Override
+	public void delete (Long id){
+		
+		final ProjectionProfile p = this.get(id);
+		
+		if (getPlayerProjectedService().countPlayerProjections(p) > 0) {
+			
+			// Get player projections associated with the profile
+			final List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(p);
+			
+			// Transaction to delete both the profile and the projections associated with the profile
+			ObjectifyService.ofy().transact(new VoidWork() {
+				public void vrun() {
+					ObjectifyService.ofy().delete().entities(projections).now();
+					ObjectifyService.ofy().delete().entity(p).now();
+
+				}
+			});
+
+		} else {
+			// If there are no projections associated with this profile, then just delete the profile.
+			super.delete(id);
+		}
+
 	}
 	
 	@Override
@@ -115,6 +150,12 @@ public class ProjectionProfileService extends AbstractDataServiceImpl<Projection
 		periods.add(new ProjectionPeriod(PROJECTION_PERIOD_ROS));
 		
 		return periods;
+	}
+	
+	private PlayerProjectedService getPlayerProjectedService() {
+
+		return new PlayerProjectedService();
+
 	}
 
 

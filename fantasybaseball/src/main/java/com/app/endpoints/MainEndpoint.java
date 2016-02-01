@@ -47,7 +47,7 @@ public class MainEndpoint {
 
 	}
 
-	private com.nya.sms.entities.User validateToken(HttpServletRequest req) throws UnauthorizedException {
+	private com.nya.sms.entities.User validateAdminToken(HttpServletRequest req) throws UnauthorizedException {
 		APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
 
 		if (!getIdentityService().validateAdminJWT(token))
@@ -71,7 +71,7 @@ public class MainEndpoint {
 	@ApiMethod(name = "projectionprofile.getall")
 	public List<ProjectionProfile> getAllProjectionProfiles(HttpServletRequest req) throws UnauthorizedException {
 
-		validateToken(req);
+		validateAdminToken(req);
 
 		return getProjectionProfileService().getAll();
 
@@ -85,21 +85,21 @@ public class MainEndpoint {
 		System.out.println("Endpoint Profile Period: " + profile.getProjection_period());
 		System.out.println("Endpoint Profile Year: " + profile.getProjected_year());
 
-		getProjectionProfileService().save(profile, validateToken(req).getUsername());
+		getProjectionProfileService().save(profile, validateAdminToken(req).getUsername());
 
 		return new APIGeneralResult("OK", "Save profile successful.");
 
 	}
 
 	@ApiMethod(name = "projectionprofile.remove")
-	public APIGeneralResult deleteProjectionProfile(@Named("profile_id") long id, HttpServletRequest req)
+	public APIGeneralResult deleteProjectionProfile(APIGeneralMessage m, HttpServletRequest req)
 			throws UnauthorizedException {
-		System.out.println("Profile ID: " + id);
-		validateToken(req);
+		System.out.println("Profile ID to Delete: " + m.getMessage());
+		validateAdminToken(req);
 
-		getProjectionProfileService().delete(id);
+		getProjectionProfileService().delete(Long.parseLong(m.getMessage().trim()));
 
-		return new APIGeneralResult("OK", "Save profile successful.");
+		return new APIGeneralResult("OK", "Delete profile successful.");
 
 	}
 
@@ -121,7 +121,7 @@ public class MainEndpoint {
 	public APIGeneralResult updatePlayerProjections(@Nullable ProjectionContainer container, HttpServletRequest req)
 			throws InternalServerErrorException, UnauthorizedException {
 
-		com.nya.sms.entities.User user = validateToken(req);
+		com.nya.sms.entities.User user = validateAdminToken(req);
 
 		// System.out.println("Container String: " +
 		// container.getProjectionsJSONString());
@@ -140,13 +140,19 @@ public class MainEndpoint {
 		// profile.setProjected_year(container.getProj_year());
 		// profile.setProjection_period(container.getProj_period());
 		// profile.setProjection_service(container.getProj_service());
+		
+		System.out.println("Profile service: " + container.getProj_service());
+		System.out.println("Profile period: " + container.getProj_period());
+		System.out.println("Profile year: " + container.getProj_year());
+		System.out.println("Profile date: " + container.getProj_date());
 
 		// Get the profile from data store
 		ProjectionProfile profile = getProjectionProfileService().get(container.getProj_service(),
 				container.getProj_period(), container.getProj_year());
 		
-		// Set the profile date
+		// Set the profile date and save it
 		profile.setProjection_date(container.getProj_date());
+		getProjectionProfileService().save(profile, user.getUsername());
 
 		try {
 			count = getPlayerProjectedService().updatePlayerProjections(p_array, profile, user.getUsername());

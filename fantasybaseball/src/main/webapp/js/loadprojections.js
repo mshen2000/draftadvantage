@@ -256,6 +256,14 @@ function uploadprojections(parse_results)
 	
 	// console.log("parse_results: ", JSON.stringify(csvresults));
 	
+	// Get the selected projection profile service name
+	var profile_table_b = $('#profile_table').DataTable();
+    var rows = profile_table_b.rows( { selected: true } ).data();
+
+	var service = rows[0].projection_service;
+	var period = rows[0].projection_period;
+	var year = rows[0].projected_year;
+	
 	// For each uploaded csv line in the csv file...
 	$.each( csvresults, function( csvresults_key, csvresults_value ) {
 		var csvplayer = csvresults_value;
@@ -275,6 +283,11 @@ function uploadprojections(parse_results)
 				}
 
 			});
+			
+			// Set the other_id_name for the player to the projection profile service name.
+			// The other_id and other_id_name will be used to uniquely identify a player 
+			// during the projection update.
+			uploadplayer["other_id_name"] = service;
 
 		});
 		uploadplayerprojections.push(uploadplayer);
@@ -283,18 +296,12 @@ function uploadprojections(parse_results)
 	
 	// console.log("Updated PlayerList: ", JSON.stringify(uploadplayerprojections));
 
-	
-	var profile_table_b = $('#profile_table').DataTable();
-    var rows = profile_table_b.rows( { selected: true } ).data();
-
-	var service = rows[0].projection_service;
-	var period = rows[0].projection_period;
-	var year = rows[0].projected_year;
-	var date = $("#proj-date-label").datepicker('getDate');
+	var date = $("#projection-date-selector1").datepicker('getDate');
 	
 	console.log("Profile service: ", service);
 	console.log("Profile period: ", period);
 	console.log("Profile year: ", year);
+	console.log("Profile date: ", date);
 	
 	mssolutions.fbapp.loadprojections.updateprojections(uploadplayerprojections, service, period, date, year);
 
@@ -361,14 +368,14 @@ mssolutions.fbapp.loadprojections.saveProfile = function(service, period, year) 
  */
 mssolutions.fbapp.loadprojections.deleteProfile = function(profile_id) {
 	gapi.client.draftapp.projectionprofile.remove({
-		'profile_id' : profile_id}).execute(
+		'message' : profile_id}).execute(
       function(resp) {
         if (!resp.code) { 
         	mssolutions.fbapp.loadprojections.loadProfiles();
         	BootstrapDialog.closeAll()
         }
         else {
-        	console.log("Failed to load profiles: ", resp.code + " : " + resp.message);
+        	console.log("Failed to delete profile: ", resp.code + " : " + resp.message);
         }
       });
 };
@@ -570,6 +577,7 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_s
         if (!resp.code) { 
         	console.log("Load Success: ", resp.description);
         	progressmodal.hidePleaseWait();
+        	mssolutions.fbapp.loadprojections.loadProfiles();
         	mssolutions.fbapp.loadprojections.reloadProjections();
         }
         else {
