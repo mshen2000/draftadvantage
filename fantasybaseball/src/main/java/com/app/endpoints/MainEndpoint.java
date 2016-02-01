@@ -56,15 +56,14 @@ public class MainEndpoint {
 		return getIdentityService().getUserfromToken(token);
 	}
 
-	@ApiMethod(name = "main.getprojections")
-	public List<PlayerProjected> GetProjections(HttpServletRequest req) throws UnauthorizedException {
+	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
+	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req) throws UnauthorizedException {
+		System.out.println("Profile id: " + m.getMsg());
+		validateAdminToken(req);
+		
+		Long profile_id = Long.parseLong(m.getMsg().trim());
 
-		APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
-
-		if (!getIdentityService().validateAdminJWT(token))
-			throw new UnauthorizedException("Token is invalid");
-
-		return getPlayerProjectedService().getAllPlayerProjected();
+		return getPlayerProjectedService().getPlayerProjections(getProjectionProfileService().get(profile_id));
 
 	}
 
@@ -91,13 +90,13 @@ public class MainEndpoint {
 
 	}
 
-	@ApiMethod(name = "projectionprofile.remove")
-	public APIGeneralResult deleteProjectionProfile(APIGeneralMessage m, HttpServletRequest req)
+	@ApiMethod(name = "projectionprofile.remove", httpMethod = "put")
+	public APIGeneralResult removeProjectionProfile(APIGeneralMessage m, HttpServletRequest req)
 			throws UnauthorizedException {
-		System.out.println("Profile ID to Delete: " + m.getMessage());
+		System.out.println("Profile ID to Delete: " + m.getMsg());
 		validateAdminToken(req);
 
-		getProjectionProfileService().delete(Long.parseLong(m.getMessage().trim()));
+		getProjectionProfileService().delete(Long.parseLong(m.getMsg().trim()));
 
 		return new APIGeneralResult("OK", "Delete profile successful.");
 

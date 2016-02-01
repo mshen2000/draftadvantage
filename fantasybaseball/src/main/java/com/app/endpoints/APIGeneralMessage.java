@@ -7,22 +7,22 @@ package com.app.endpoints;
  */
 public class APIGeneralMessage {
 	
-	public String message;
+	public String msg;
 	
-	private String token;
+	public String token;
 	
 	public APIGeneralMessage(){}
 
-	public APIGeneralMessage(String message) {
-		this.message = message;
+	public APIGeneralMessage(String msg) {
+		this.msg = msg;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getMsg() {
+		return msg;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 	public String getToken() {

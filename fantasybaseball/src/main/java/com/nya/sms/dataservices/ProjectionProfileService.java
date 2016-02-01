@@ -61,29 +61,22 @@ public class ProjectionProfileService extends AbstractDataServiceImpl<Projection
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.nya.sms.dataservices.AbstractDataServiceImpl#delete(java.lang.Long)
+	 * If the profile has any associated player projections, then it delete those too.
+	 */
 	@Override
 	public void delete (Long id){
 		
-		final ProjectionProfile p = this.get(id);
+		ProjectionProfile p = this.get(id);
 		
 		if (getPlayerProjectedService().countPlayerProjections(p) > 0) {
-			
-			// Get player projections associated with the profile
-			final List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(p);
-			
-			// Transaction to delete both the profile and the projections associated with the profile
-			ObjectifyService.ofy().transact(new VoidWork() {
-				public void vrun() {
-					ObjectifyService.ofy().delete().entities(projections).now();
-					ObjectifyService.ofy().delete().entity(p).now();
 
-				}
-			});
+			getPlayerProjectedService().deletePlayerProjections(p);
 
-		} else {
-			// If there are no projections associated with this profile, then just delete the profile.
-			super.delete(id);
-		}
+		} 
+		
+		super.delete(id);
 
 	}
 	
