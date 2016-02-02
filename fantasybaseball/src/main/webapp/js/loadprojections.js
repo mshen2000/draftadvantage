@@ -61,8 +61,11 @@ $(document).ready(function()
 		
 	}});
 
-	$('#btn-update-profile').click(function() 
+	$('#rootwizard .finish').click(function()
 	{
+		$('#loadprojections-modal').modal('hide');
+		progressmodal.showPleaseWait("Updating Projections...");
+		parseprojections();
 
 	});
 	
@@ -78,87 +81,12 @@ $(document).ready(function()
     	
 	});
 	
-	$('#btn-delete-profile').click(function() 
-	{
-        BootstrapDialog.show({
-        	type: 'type-default',
-            title: 'Confirm Delete Projection Profile',
-            message: 'Are you sure you want to delete this Profile?  Deleting a profile will delete all associated player projections.',
-            spinicon: 'fa fa-refresh',
-            buttons: [{
-                id: 'btn-confirm-delete-profile',   
-                icon: 'fa fa-trash',       
-                cssClass: 'btn-danger', 
-                autospin: true,
-                label: 'Delete',
-                action: function(dialog) {
-                	var profile_table = $('#profile_table').DataTable();
-                	var d = profile_table.rows('.selected').data();
-                    console.log("Delete row array: ", d);
-                    console.log("Delete row 0: ", d[0]);
-                    console.log("Delete ID 0: ", d[0].id);
-                	mssolutions.fbapp.loadprojections.deleteProfile(d[0].id);
-                }
-            }, {
-                label: 'Cancel',
-                action: function(dialog) {
-                	dialog.close();
-                }
-            }]
-        });
-    	
-	});
-	
-	$('#btn-add-profile').click(function() 
-	{
-		mssolutions.fbapp.loadprojections.load_projection_services();
-		mssolutions.fbapp.loadprojections.load_projection_periods();
-    	var options = $("#projection-year-selector");
-    	options.find('option').remove().end();
-    	options.append($("<option />").text((new Date).getFullYear()));
-    	options.append($("<option />").text((new Date).getFullYear() + 1));
-	});
-	
-
-	$('#delete-projections').click(function() 
-	{
-		progressmodal.showPleaseWait("Deleting Projections...");
-		mssolutions.fbapp.loadprojections.delete_all_projections();
-	});
-	
-	$('#rootwizard .finish').click(function()
-	{
-		$('#loadprojections-modal').modal('hide');
-		progressmodal.showPleaseWait("Updating Projections...");
-		parseprojections();
-
-	});
-
-	var projection_table = $('#example1').dataTable( {
-    	"processing": true,
-        data: null,
-        "columns": [
-            { "title": "Full Name", "mData": "full_name" },
-            { "title": "Team", "mData": "team"},
-            { "title": "Plate Appearances", "mData": "hitter_pa"},
-            { "title": "Batting Average", "mData": "hitter_avg"},
-            { "title": "Home Runs", "mData": "hitter_hr"}
-        ]
-    });
-	
-    var profile_table = $('#profile_table').DataTable( {
-        data: null,
-        select: 'single',
-        responsive: true,
-        "searching": false,
-        "paging": false,
-        "columns": [
-            { "title": "Service", "mData": "projection_service" },
-            { "title": "Period", "mData": "projection_period"},
-            { "title": "Year", "mData": "projected_year"},
-            { "title": "Date of Update", "mData": "projection_date"},
-            ]
-    } );
+	// Creates initial load of projection and profile table
+	loadProjectionTable(null, true);
+    loadProfileTable(null, true);
+    
+    // Define select events for profile table
+    var profile_table = $('#profile_table').DataTable();
 	
     profile_table
     .on( 'select', function ( e, dt, type, indexes ) {
@@ -171,10 +99,7 @@ $(document).ready(function()
         profile_table_b.button( 1 ).enable();
         profile_table_b.button( 2 ).enable();
         profile_table_b.button( 3 ).enable();
-        
-//        $('#btn-delete-profile').prop('disabled', false);
-//        $('#btn-load-profile').prop('disabled', false);
-//        $('#btn-update-profile').prop('disabled', false);
+
         $("#proj-profile-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
         $("#proj-profile-label2").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
     } )
@@ -185,10 +110,7 @@ $(document).ready(function()
     	profile_table_b.button( 1 ).disable();
     	profile_table_b.button( 2 ).disable();
     	profile_table_b.button( 3 ).disable();
-    	
-//        $('#btn-delete-profile').prop('disabled', true);
-//        $('#btn-load-profile').prop('disabled', true);
-//        $('#btn-update-profile').prop('disabled', true);
+
     } );
 
 });
@@ -353,6 +275,148 @@ function completeFn(results)
 	uploadprojections(results.data);
 }
 
+function loadProjectionTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#example1');
+	var config = {
+			responsive: true,
+        	"processing": true,
+            data: data,
+            "columns": [
+                { "title": "Name", "mData": "full_name" },
+                { "title": "Team", "mData": "team"},
+                { "title": "PA", "mData": "hitter_pa"},
+                { "title": "BA", "mData": "hitter_avg"},
+                { "title": "HR", "mData": "hitter_hr"}
+            ]
+        };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+	}
+	
+	if (! data){
+		$('#proj-profile-header-label').text("No Profile");
+	} else {
+    	var profile_table_b = $('#profile_table').DataTable();
+        var rows = profile_table_b.rows( { selected: true } ).data();
+        $("#proj-profile-header-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
+	}
+
+}
+
+function loadProfileTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#profile_table');
+	var config = {
+        "data": data,
+        select: 'single',
+        responsive: true,
+        "searching": false,
+        "paging": false,
+        dom: 'Bfrtip',
+        buttons: [
+          {
+              text: '<i class="fa fa-plus"></i> Add',
+              className: 'btn-success',
+              action: function ( e, dt, node, config ) {
+          		mssolutions.fbapp.loadprojections.load_projection_services();
+        		mssolutions.fbapp.loadprojections.load_projection_periods();
+            	var options = $("#projection-year-selector");
+            	options.find('option').remove().end();
+            	options.append($("<option />").text((new Date).getFullYear()));
+            	options.append($("<option />").text((new Date).getFullYear() + 1));
+            	$("#addprofile-modal").modal("show");
+              }
+          },
+          {
+              text: '<i class="fa fa-trash"></i> Delete',
+              className: 'btn-danger',
+              enabled: false,
+              action: function ( e, dt, node, config ) {
+                  BootstrapDialog.show({
+                  	type: 'type-default',
+                      title: 'Confirm Delete Projection Profile',
+                      message: 'Are you sure you want to delete this Profile?  Deleting a profile will delete all associated player projections.',
+                      spinicon: 'fa fa-refresh',
+                      buttons: [{
+                          id: 'btn-confirm-delete-profile',   
+                          icon: 'fa fa-trash',       
+                          cssClass: 'btn-danger', 
+                          autospin: true,
+                          label: 'Delete',
+                          action: function(dialog) {
+                          	var profile_table = $('#profile_table').DataTable();
+                          	var d = profile_table.rows('.selected').data();
+                              console.log("Delete row 0: ", d[0]);
+                              console.log("Delete ID 0: ", d[0].id);
+                          	mssolutions.fbapp.loadprojections.deleteProfile(d[0].id);
+                          }
+                      }, {
+                          label: 'Cancel',
+                          action: function(dialog) {
+                          	dialog.close();
+                          }
+                      }]
+                  });
+              }
+          },
+          {
+              text: '<i class="fa fa-list"></i> Load',
+              className: 'btn-primary',
+              enabled: false,
+              action: function ( e, dt, node, config ) {
+                	var profile_table = $('#profile_table').DataTable();
+                  	var d = profile_table.rows('.selected').data();
+                      console.log("Delete row 0: ", d[0]);
+                      console.log("Delete ID 0: ", d[0].id);
+            	  mssolutions.fbapp.loadprojections.loadProjections(d[0].id);
+              }
+          },
+          {
+              text: '<i class="fa fa-cloud-upload"></i> Update',
+              className: 'btn-primary',
+              enabled: false,
+              action: function ( e, dt, node, config ) {
+            	  $("#loadprojections-modal").modal("show");
+              }
+          }
+          ],
+        "columns": [
+            { "title": "Service", "mData": "projection_service" },
+            { "title": "Period", "mData": "projection_period"},
+            { "title": "Year", "mData": "projected_year"},
+            { "title": "Date of Update", "mData": "projection_date", "type": "date", "sDefaultContent": "<i>None</i>",
+                "render": function (data) {
+                	// console.log(data);
+                	if (! data){return data};
+                    var date = new Date(data);
+                    var month = date.getMonth() + 1;
+                    return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                }},
+            { "title": "Pitchers", "mData": "pitchers", "sDefaultContent": "0"},
+            { "title": "Hitters", "mData": "hitters", "sDefaultContent": "0"},
+        ]
+    };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+	}
+
+}
+
 
 /**
  * Save a new projection profile via the API.
@@ -384,6 +448,7 @@ mssolutions.fbapp.loadprojections.deleteProfile = function(id) {
       function(resp) {
         if (!resp.code) { 
         	mssolutions.fbapp.loadprojections.loadProfiles();
+        	loadProjectionTable(null, false);
         	BootstrapDialog.closeAll()
         }
         else {
@@ -402,103 +467,7 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
       function(resp) {
         if (!resp.code) { 
         	
-        	var profile_table = $('#profile_table').DataTable();
-        	
-        	var config = {
-                    "data": resp.items,
-                    select: 'single',
-                    responsive: true,
-                    "searching": false,
-                    "paging": false,
-                    dom: 'Bfrtip',
-                    buttons: [
-                              {
-                                  text: '<i class="fa fa-plus"></i> Add',
-                                  className: 'btn-success',
-                                  action: function ( e, dt, node, config ) {
-                              		mssolutions.fbapp.loadprojections.load_projection_services();
-                            		mssolutions.fbapp.loadprojections.load_projection_periods();
-                                	var options = $("#projection-year-selector");
-                                	options.find('option').remove().end();
-                                	options.append($("<option />").text((new Date).getFullYear()));
-                                	options.append($("<option />").text((new Date).getFullYear() + 1));
-                                	$("#addprofile-modal").modal("show");
-                                  }
-                              },
-                              {
-                                  text: '<i class="fa fa-trash"></i> Delete',
-                                  className: 'btn-danger',
-                                  enabled: false,
-                                  action: function ( e, dt, node, config ) {
-                                      BootstrapDialog.show({
-                                      	type: 'type-default',
-                                          title: 'Confirm Delete Projection Profile',
-                                          message: 'Are you sure you want to delete this Profile?  Deleting a profile will delete all associated player projections.',
-                                          spinicon: 'fa fa-refresh',
-                                          buttons: [{
-                                              id: 'btn-confirm-delete-profile',   
-                                              icon: 'fa fa-trash',       
-                                              cssClass: 'btn-danger', 
-                                              autospin: true,
-                                              label: 'Delete',
-                                              action: function(dialog) {
-                                              	var profile_table = $('#profile_table').DataTable();
-                                              	var d = profile_table.rows('.selected').data();
-                                                  console.log("Delete row 0: ", d[0]);
-                                                  console.log("Delete ID 0: ", d[0].id);
-                                              	mssolutions.fbapp.loadprojections.deleteProfile(d[0].id);
-                                              }
-                                          }, {
-                                              label: 'Cancel',
-                                              action: function(dialog) {
-                                              	dialog.close();
-                                              }
-                                          }]
-                                      });
-                                  }
-                              },
-                              {
-                                  text: '<i class="fa fa-list"></i> Load',
-                                  className: 'btn-primary',
-                                  enabled: false,
-                                  action: function ( e, dt, node, config ) {
-                                    	var profile_table = $('#profile_table').DataTable();
-                                      	var d = profile_table.rows('.selected').data();
-                                          console.log("Delete row 0: ", d[0]);
-                                          console.log("Delete ID 0: ", d[0].id);
-                                	  mssolutions.fbapp.loadprojections.loadProjections(d[0].id);
-                                  }
-                              },
-                              {
-                                  text: '<i class="fa fa-cloud-upload"></i> Update',
-                                  className: 'btn-primary',
-                                  enabled: false,
-                                  action: function ( e, dt, node, config ) {
-                                	  $("#loadprojections-modal").modal("show");
-                                  }
-                              }
-                          ],
-                    "columns": [
-                        { "title": "Service", "mData": "projection_service" },
-                        { "title": "Period", "mData": "projection_period"},
-                        { "title": "Year", "mData": "projected_year"},
-                        { "title": "Date of Update", "mData": "projection_date", "type": "date", "sDefaultContent": "<i>None</i>",
-                            "render": function (data) {
-                            	// console.log(data);
-                            	if (! data){return data};
-                                var date = new Date(data);
-                                var month = date.getMonth() + 1;
-                                return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
-                            }},
-                        { "title": "Pitchers", "mData": "pitchers", "sDefaultContent": "0"},
-                        { "title": "Hitters", "mData": "hitters", "sDefaultContent": "0"},
-                    ]
-                };
-
-        	// var profile_table = $('#profile_table').dataTable(config);
-        	profile_table.destroy();
-        	$('#profile_table').empty();
-        	profile_table = $('#profile_table').dataTable(config);
+        	loadProfileTable(resp.items, false);
         	// loadspinner.hideLoader('#projections-table-div');
 
         }
@@ -520,23 +489,8 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
       function(resp) {
         if (!resp.code) { 
         	
-        	var projection_table = $('#example1').DataTable();
+        	loadProjectionTable(resp.items, false);
         	
-        	var config = {
-                	"processing": true,
-                    data: resp.items,
-                    "columns": [
-                        { "title": "Full Name", "mData": "full_name" },
-                        { "title": "Team", "mData": "team"},
-                        { "title": "Plate Appearances", "mData": "hitter_pa"},
-                        { "title": "Batting Average", "mData": "hitter_avg"},
-                        { "title": "Home Runs", "mData": "hitter_hr"}
-                    ]
-                };
-        	
-        	projection_table.destroy();
-        	$('#example1').empty();
-        	projection_table = $('#example1').dataTable(config);
     		loadspinner.hideLoader('#projections-table-div');
     		profile_table_b.button( 2 ).enable();
         }
@@ -545,42 +499,6 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
         }
       });
 };
-
-/**
- * re-load player projections via the API.
- */
-//mssolutions.fbapp.loadprojections.reloadProjections = function(id) {
-//	loadspinner.showLoader('#projections-table-div');
-//	gapi.client.draftapp.main.getprojections().execute(
-//      function(resp) {
-//        if (!resp.code) { 
-//        	
-//        	var projection_table = $('#example1').DataTable();
-//        	
-//        	var config = {
-//                	"bProcessing": true,
-//                    "aaData": resp.items,
-//                    "aoColumns": [
-//                        { "title": "Full Name", "mData": "full_name" },
-//                        // { "title": "Last Name", "mData": "last_name" },
-//                        // { "title": "Age", "mData": "age" },
-//                        { "title": "Team", "mData": "team"},
-//                        { "title": "Plate Appearances", "mData": "hitter_pa"},
-//                        { "title": "Batting Average", "mData": "hitter_avg"},
-//                        { "title": "Home Runs", "mData": "hitter_hr"}
-//                    ]
-//                };
-//        	
-//        	projection_table.destroy();
-//        	$('#example1').empty();
-//        	projection_table = $('#example1').dataTable(config);
-//    		loadspinner.hideLoader('#projections-table-div');
-//        }
-//        else {
-//        	console.log("Failed to load projections: ", resp.code + " : " + resp.message);
-//        }
-//      });
-//};
 
 /**
  * load player attribute map via the API.
@@ -598,7 +516,7 @@ mssolutions.fbapp.loadprojections.updateprojections = function(container, proj_s
         	console.log("Load Success: ", resp.description);
         	progressmodal.hidePleaseWait();
         	mssolutions.fbapp.loadprojections.loadProfiles();
-        	// mssolutions.fbapp.loadprojections.reloadProjections();
+        	loadProjectionTable(null, false);
         }
         else {
         	console.log("Failed to update projections: ", resp.code + " : " + resp.message);
@@ -702,11 +620,7 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
-//                $('#btn-delete-profile').prop('disabled', true);
-//                $('#btn-load-profile').prop('disabled', true);
-//                $('#btn-update-profile').prop('disabled', true);
 				mssolutions.fbapp.loadprojections.loadProfiles();
-				// mssolutions.fbapp.loadprojections.loadProjections();
 			}
 		}
 
@@ -715,10 +629,6 @@ mssolutions.fbapp.loadprojections.init_nav = function(apiRoot) {
 		// gapi.client.load('oauth2', 'v2', callback);
 	}
 	else {
-//        $('#btn-delete-profile').prop('disabled', true);
-//        $('#btn-load-profile').prop('disabled', true);
-//        $('#btn-update-profile').prop('disabled', true);
 		mssolutions.fbapp.loadprojections.loadProfiles();
-		// mssolutions.fbapp.loadprojections.loadProjections();
 	}
 };
