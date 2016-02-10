@@ -4,11 +4,13 @@ import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.app.endpoints.entities.ProjectionPeriod;
 import com.app.endpoints.entities.ProjectionService;
+import com.app.endpoints.utilities.FloatTypeAdapter;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.PlayerProjectedService;
@@ -122,10 +124,15 @@ public class MainEndpoint {
 
 		com.nya.sms.entities.User user = validateAdminToken(req);
 
-		// System.out.println("Container String: " +
-		// container.getProjectionsJSONString());
+		// System.out.println("Container String: " + container.getProjectionsJSONString());
 
-		Gson gson = new Gson();
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(float.class, new FloatTypeAdapter());
+		// if Adapter didn't check for nulls in its read/write methods, you
+		// should instead use
+		// builder.registerTypeAdapter(Point.class, new
+		// PointAdapter().nullSafe());
+		Gson gson = builder.create();
 
 		List<PlayerProjected> p_array = gson.fromJson(container.getProjectionsJSONString(),
 				new TypeToken<List<PlayerProjected>>() {

@@ -35,6 +35,9 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	public String last_name;
 	
 	@Index
+	String dc_status;
+	
+	@Index
 	Integer age;
 	
 	@Index
@@ -244,6 +247,14 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 
 	public void setLast_name(String last_name) {
 		this.last_name = last_name;
+	}
+
+	public String getDc_status() {
+		return dc_status;
+	}
+
+	public void setDc_status(String dc_status) {
+		this.dc_status = dc_status;
 	}
 
 	public Integer getAge() {

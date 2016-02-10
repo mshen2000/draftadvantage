@@ -163,26 +163,60 @@ function uploadprojections(parse_results)
 	
 	// Temp property map
 	var hitterpropertymap = {
-			other_id: "playerid",
+			other_id: "id",
+			age: "age",
+			pitcher_hitter: "P-H",
+			dc_status: "dc-status",
+			al_nl: "League",
 			full_name: "Name",
 			team: "Team",
-			hitter_pa: "PA",
-			hitter_ab: "AB",
-			hitter_hits: "H",
-			hitter_doubles: "2B",
-			hitter_triples: "3B",
-			hitter_hr: "HR",
-			hitter_rbi: "RBI",
-			hitter_runs: "R",
-			hitter_so: "SO",
-			hitter_bb: "BB",
-			hitter_hbp: "HBP",
-			hitter_sb: "SB",
-			hitter_cs: "CS",
-			hitter_avg: "AVG",
-			hitter_obp: "OBP",
-			hitter_slg: "SLG",
-			hitter_ops: "OPS"
+			hitter_bats: "Bats",
+			hitter_pos_elig_espn: "H_ESPN",
+			hitter_pos_elig_yahoo: "H_YAHOO",
+			hitter_games: "H_G",
+			hitter_pa: "H_PA",
+			hitter_ab: "H_AB",
+			hitter_hits: "H_H",
+			hitter_singles: "H_1B",
+			hitter_doubles: "H_2B",
+			hitter_triples: "H_3B",
+			hitter_tb: "H_TB",
+			hitter_hr: "H_HR",
+			hitter_rbi: "H_RBI",
+			hitter_runs: "H_R",
+			hitter_so: "H_SO",
+			hitter_bb: "H_BB",
+			hitter_hbp: "H_HBP",
+			hitter_sb: "H_SB",
+			hitter_cs: "H_CS",
+			hitter_avg: "H_AVG",
+			hitter_obp: "H_OBP",
+			hitter_slg: "H_SLG",
+			hitter_ops: "H_OPS",
+			
+			pitcher_pos: "P_POS",
+			pitcher_babip: "P_BABIP",
+			pitcher_bb: "P_BB",
+			pitcher_er: "P_ER",
+			pitcher_era: "P_ERA",
+			pitcher_fb_pct: "P_FB%",
+			pitcher_games: "P_G",
+			pitcher_gb_pct: "P_GB%",
+			pitcher_gs: "P_GS",
+			pitcher_hbp: "P_HBP",
+			pitcher_hits: "P_H",
+			pitcher_hld: "P_HLD",
+			pitcher_hr: "P_HR",
+			pitcher_ip: "P_IP",
+			pitcher_k: "P_K",
+			pitcher_l: "P_L",
+			pitcher_ld_pct: "P_LD%",
+			pitcher_qs: "P_QS",
+			pitcher_r: "P_R",
+			pitcher_siera: "P_SIERA",
+			pitcher_sv: "P_SV",
+			pitcher_w: "P_W"
+
 	}
 	
 	var csvresults = parse_results;
@@ -277,18 +311,44 @@ function completeFn(results)
 
 function loadProjectionTable(data, isInitialLoad)
 {
+	loadHitterProjectionTable(data, isInitialLoad);
+	loadPitcherProjectionTable(data, isInitialLoad);
+	
+	if (! data){
+		$('#proj-profile-header-label').text("No Profile");
+	} else {
+    	var profile_table_b = $('#profile_table').DataTable();
+        var rows = profile_table_b.rows( { selected: true } ).data();
+        $("#proj-profile-header-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
+	}
+
+}
+
+function loadHitterProjectionTable(data, isInitialLoad)
+{
 	var data_table;
-	var table_element = $('#example1');
+	var table_element = $('#hitter-projection-table');
 	var config = {
 			responsive: true,
         	"processing": true,
             data: data,
             "columns": [
+                { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
                 { "title": "Name", "mData": "full_name" },
+                { "title": "Age", "mData": "age" },
                 { "title": "Team", "mData": "team"},
+                { "title": "Position", "mData": "hitter_pos_elig_espn", "sDefaultContent": ""},
                 { "title": "PA", "mData": "hitter_pa"},
-                { "title": "BA", "mData": "hitter_avg"},
-                { "title": "HR", "mData": "hitter_hr"}
+                { "title": "Avg", "mData": "hitter_avg"},
+                { "title": "HR", "mData": "hitter_hr"},
+                { "title": "SB", "mData": "hitter_sb"},
+                { "title": "Runs", "mData": "hitter_runs"},
+                { "title": "RBI", "mData": "hitter_rbi"},
+            ],
+            "searchCols": [
+               { "search": "H" },
+               null,null,null,null,null,
+               null,null,null,null,null
             ]
         };
 	
@@ -300,13 +360,47 @@ function loadProjectionTable(data, isInitialLoad)
 		table_element.empty();
 		data_table = table_element.dataTable(config);
 	}
+
+}
+
+function loadPitcherProjectionTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#pitcher-projection-table');
+	var config = {
+			responsive: true,
+        	"processing": true,
+            data: data,
+            "columns": [
+                { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
+                { "title": "Name", "mData": "full_name" },
+                { "title": "Age", "mData": "age" },
+                { "title": "Team", "mData": "team"},
+                { "title": "Position", "mData": "pitcher_pos", "sDefaultContent": ""},
+                { "title": "G", "mData": "pitcher_games"},
+                { "title": "GS", "mData": "pitcher_gs"},
+                { "title": "IP", "mData": "pitcher_ip"},
+                { "title": "W", "mData": "pitcher_w"},
+                { "title": "SV", "mData": "pitcher_sv"},
+                { "title": "ERA", "mData": "pitcher_era"},
+                { "title": "SO", "mData": "pitcher_k"},
+                { "title": "BB", "mData": "pitcher_bb"},
+            ],
+            "searchCols": [
+               { "search": "P" },
+               null,null,null,null,null,
+               null,null,null,null,null,
+               null,null
+            ]
+        };
 	
-	if (! data){
-		$('#proj-profile-header-label').text("No Profile");
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
 	} else {
-    	var profile_table_b = $('#profile_table').DataTable();
-        var rows = profile_table_b.rows( { selected: true } ).data();
-        $("#proj-profile-header-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
 	}
 
 }
@@ -483,7 +577,7 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
 mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 	var profile_table_b = $('#profile_table').DataTable();
     profile_table_b.button( 2 ).disable();
-	loadspinner.showLoader('#projections-table-div');
+	loadspinner.showLoader('#hitter-projections-table-div');
 	gapi.client.draftapp.playerprojections.get({
 		'msg' : id}).execute(
       function(resp) {
@@ -491,7 +585,7 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
         	
         	loadProjectionTable(resp.items, false);
         	
-    		loadspinner.hideLoader('#projections-table-div');
+    		loadspinner.hideLoader('#hitter-projections-table-div');
     		profile_table_b.button( 2 ).enable();
         }
         else {

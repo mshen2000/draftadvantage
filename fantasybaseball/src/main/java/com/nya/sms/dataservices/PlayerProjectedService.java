@@ -208,9 +208,53 @@ public class PlayerProjectedService implements Serializable {
 					profile.getProjection_period(), profile.getProjected_year());
 		}
 
-		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
+		// Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
+		
+		Iterable<Key<PlayerProjected>> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile).keys();
+		
+		int size = 0;
+		for(Key<PlayerProjected> value : q) {
+		   size++;
+		}
 
-		return q.list().size();
+		// return q.list().size();
+		return size;
+	}
+	
+	public int countPitcherProjections(ProjectionProfile profile) {
+
+		if (profile.getId() == null) {
+			profile = getProjectionProfileService().get(profile.getProjection_service(),
+					profile.getProjection_period(), profile.getProjected_year());
+		}
+
+		Iterable<Key<PlayerProjected>> q = ofy().load().type(PlayerProjected.class)
+				.filter("projection_profile", profile).filter("pitcher_hitter", "P").keys();
+
+		int size = 0;
+		for (Key<PlayerProjected> value : q) {
+			size++;
+		}
+
+		return size;
+	}
+	
+	public int countHitterProjections(ProjectionProfile profile) {
+
+		if (profile.getId() == null) {
+			profile = getProjectionProfileService().get(profile.getProjection_service(),
+					profile.getProjection_period(), profile.getProjected_year());
+		}
+
+		Iterable<Key<PlayerProjected>> q = ofy().load().type(PlayerProjected.class)
+				.filter("projection_profile", profile).filter("pitcher_hitter", "H").keys();
+
+		int size = 0;
+		for (Key<PlayerProjected> value : q) {
+			size++;
+		}
+
+		return size;
 	}
 
 	/**
@@ -339,6 +383,14 @@ public class PlayerProjectedService implements Serializable {
 
 		System.out.println("Number of players saved: " + keylist.size());
 
+		// Set pitcher and hitter count
+		profile.setHitters(countHitterProjections(profile));
+		profile.setPitchers(countPitcherProjections(profile));
+		getProjectionProfileService().save(profile, uname);
+		
+		System.out.println("--Hitters: " + profile.getHitters());
+		System.out.println("--Pitchers: " + profile.getPitchers());
+		
 		return keylist.size();
 
 	}

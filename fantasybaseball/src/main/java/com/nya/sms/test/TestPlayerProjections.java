@@ -220,6 +220,10 @@ public class TestPlayerProjections {
 		// System.out.println("Count of all player projections: " + getPlayerProjectedService().getAllPlayerProjected().size());
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 6);
 		
+		// Count pitchers and hitters
+		Assert.assertTrue(getPlayerProjectedService().countHitterProjections(p1_out) == 1);
+		Assert.assertTrue(getPlayerProjectedService().countPitcherProjections(p2_out) == 1);
+		
 		// Load list 3 again
 		i3 = getPlayerProjectedService().updatePlayerProjections(list3, p3, "test1");
 		
