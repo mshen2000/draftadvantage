@@ -29,6 +29,21 @@ var stepped = 0, chunks = 0, rows = 0;
 var start, end;
 var parser;
 
+$(function() {
+
+	  $('#select-profile').on('change', function(){
+	    var selected = $(this).find("option:selected").val();
+		if(selected == "1") {
+			$('#btn-load-proj').prop("disabled",true);
+		} else {
+			$('#btn-load-proj').prop("disabled",false);
+		}
+	  });
+	  
+});
+
+
+
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
       .columns.adjust()
@@ -95,6 +110,15 @@ $(document).ready(function()
     	
 	});
 	
+	$('#btn-load-proj').click(function() 
+	{
+		$(this).prop("disabled",true);
+		var profile_id = $("#select-profile").find("option:selected").val();
+		
+		mssolutions.fbapp.loadprojections.loadProjections(profile_id);
+		    	
+	});
+	
 	// Creates initial load of projection and profile table
 	loadProjectionTable(null, true);
     loadProfileTable(null, true);
@@ -112,7 +136,7 @@ $(document).ready(function()
         
         profile_table_b.button( 1 ).enable();
         profile_table_b.button( 2 ).enable();
-        profile_table_b.button( 3 ).enable();
+        // profile_table_b.button( 3 ).enable();
 
         $("#proj-profile-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
         $("#proj-profile-label2").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
@@ -123,7 +147,7 @@ $(document).ready(function()
     	
     	profile_table_b.button( 1 ).disable();
     	profile_table_b.button( 2 ).disable();
-    	profile_table_b.button( 3 ).disable();
+    	// profile_table_b.button( 3 ).disable();
 
     } );
 
@@ -328,13 +352,13 @@ function loadProjectionTable(data, isInitialLoad)
 	loadHitterProjectionTable(data, isInitialLoad);
 	loadPitcherProjectionTable(data, isInitialLoad);
 	
-	if (! data){
-		$('#proj-profile-header-label').text("No Profile");
-	} else {
-    	var profile_table_b = $('#profile_table').DataTable();
-        var rows = profile_table_b.rows( { selected: true } ).data();
-        $("#proj-profile-header-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
-	}
+//	if (! data){
+//		$('#proj-profile-header-label').text("No Profile");
+//	} else {
+//    	var profile_table_b = $('#profile_table').DataTable();
+//        var rows = profile_table_b.rows( { selected: true } ).data();
+//        $("#proj-profile-header-label").text(rows[0].projection_service + " - " + rows[0].projection_period + " - " + rows[0].projected_year);
+//	}
 
 }
 
@@ -476,18 +500,18 @@ function loadProfileTable(data, isInitialLoad)
                   });
               }
           },
-          {
-              text: '<i class="fa fa-list"></i> Load',
-              className: 'btn-primary',
-              enabled: false,
-              action: function ( e, dt, node, config ) {
-                	var profile_table = $('#profile_table').DataTable();
-                  	var d = profile_table.rows('.selected').data();
-                      console.log("Delete row 0: ", d[0]);
-                      console.log("Delete ID 0: ", d[0].id);
-            	  mssolutions.fbapp.loadprojections.loadProjections(d[0].id);
-              }
-          },
+//          {
+//              text: '<i class="fa fa-list"></i> Load',
+//              className: 'btn-primary',
+//              enabled: false,
+//              action: function ( e, dt, node, config ) {
+//                	var profile_table = $('#profile_table').DataTable();
+//                  	var d = profile_table.rows('.selected').data();
+//                      console.log("Delete row 0: ", d[0]);
+//                      console.log("Delete ID 0: ", d[0].id);
+//            	  mssolutions.fbapp.loadprojections.loadProjections(d[0].id);
+//              }
+//          },
           {
               text: '<i class="fa fa-cloud-upload"></i> Update',
               className: 'btn-primary',
@@ -523,6 +547,17 @@ function loadProfileTable(data, isInitialLoad)
 		data_table = table_element.dataTable(config);
 	}
 
+}
+
+function loadProfileSelector(data){
+	var options = $("#select-profile");
+	options.find('option').remove().end();
+	options.append($("<option value='1'/>").text("Select Profile"));
+	$.each(data, function() {
+		options.append($("<option value='"+ this.id +"'/>").text(this.projection_service + " - " 
+				+ this.projection_period + " - " + this.projected_year));
+	});
+	
 }
 
 
@@ -576,6 +611,7 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
         if (!resp.code) { 
         	
         	loadProfileTable(resp.items, false);
+        	loadProfileSelector(resp.items);
         	// loadspinner.hideLoader('#projections-table-div');
 
         }
@@ -601,6 +637,7 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
         	
     		loadspinner.hideLoader('#hitter-projections-table-div');
     		profile_table_b.button( 2 ).enable();
+    		$('#btn-load-proj').prop("disabled",false);
         }
         else {
         	console.log("Failed to load projections: ", resp.code + " : " + resp.message);

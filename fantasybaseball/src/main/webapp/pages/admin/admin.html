@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<meta http-equiv="expires" content="0">
+<!-- Force no cache load -->
+<link rel="icon" href="../login/ico/favicon.png">
+
+<title>Player Projections Manager</title>
+
+<!-- Bootstrap core CSS -->
+<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- DATA TABLES -->
+<link
+	href="../../plugins/datatables/datatables.min.css"
+	rel="stylesheet" type="text/css" />
+
+<!-- File Input -->
+<link href="../../plugins/bootstrap-fileinput/css/fileinput.min.css"
+	media="all" rel="stylesheet" type="text/css" />
+	
+<!-- Date Picker -->
+<link href="../../plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"
+	media="all" rel="stylesheet" type="text/css" />
+	
+<!-- Bootstrap Modal Dialog -->
+<link href="../../plugins/bootstrap-dialog/css/bootstrap-dialog.min.css"
+	media="all" rel="stylesheet" type="text/css" />	
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+	-->
+
+<!-- Custom styles for this template -->
+<link href="navbar-fixed-top.css" rel="stylesheet">
+
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+    -->
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body hidden>
+
+	<!-- Fixed navbar -->
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">DraftAdvantage</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="#">About</a></li>
+					<li><a href="#">Draft Manager</a></li>
+					<li class="active"><a href="#">Admin</a></li>
+					<li><a href="admin2.html">Admin2</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#" id="login-name">Login Name</a></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Projection Profiles</h3>
+				</div>
+				<div class="panel-body">
+					<div id="profile-table-div">
+					<table id="profile_table" class="table table-bordered" width="100%"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Player Projections   <span class="label label-default"
+							id="proj-profile-header-label">This is a Test</span>
+					</h3>
+				</div>
+				<div class="panel-body">
+
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#tab-hitters">Hitters</a></li>
+						<li><a data-toggle="tab" href="#tab-pitchers">Pitchers</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="tab-hitters" class="tab-pane fade in active">
+							<div id="hitter-projections-table-div" style="margin-top:10px">
+								<table id="hitter-projection-table" class="table table-bordered table-striped"
+									width="100%" cellspacing="0"></table>
+							</div>
+						</div>
+						<div id="tab-pitchers" class="tab-pane fade">
+							<div id="pitcher-projections-table-div" style="margin-top:10px">
+								<table id="pitcher-projection-table" class="table table-bordered table-striped"
+									width="100%" cellspacing="0"></table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Add Profile Modal -->
+		<div id="addprofile-modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Add a Projection Profile</h4>
+					</div>
+					<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="projection-service_selector">Projection
+								Service:</label> 
+							<div class="col-sm-9">
+							<select class="form-control" id="projection-service-selector">
+							</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="projection-period-selector">Period:</label> 
+							<div class="col-sm-9">
+							<select
+								class="form-control" id="projection-period-selector">
+							</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="projection-year-selector">Year:</label> 
+							<div class="col-sm-9">
+							<select
+								class="form-control" id="projection-year-selector">
+								<option>2016</option>
+								<option>2017</option>
+							</select>
+							</div>
+						</div>
+					</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="btn-save-profile"><i class="fa fa-floppy-o"></i> Save</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Projection Wizard Modal -->
+		<div id="loadprojections-modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Projection Loader</h4>
+					</div>
+					<div class="modal-body">
+						<div id="rootwizard">
+							<div class="navbar">
+								<div class="navbar-inner">
+									<div class="container">
+										<ul>
+											<li><a href="#tab1" data-toggle="tab">Define Projection</a></li>
+											<li><a href="#tab2" data-toggle="tab">Select Files</a></li>
+											<li><a href="#tab3" data-toggle="tab">Additional
+													Data</a></li>
+											<li><a href="#tab4" data-toggle="tab">Preview</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="progress">
+								<div class="progress-bar progress-bar-striped active"
+									role="progressbar" aria-valuenow="40" aria-valuemin="0"
+									aria-valuemax="100"></div>
+							</div>
+							<div class="tab-content">
+
+								<div class="tab-pane" id="tab1">
+									<form class="form-horizontal" role="form">
+										<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-sm-3">Projection
+												Profile:</label>
+											<div class="col-sm-9">
+												<p class="form-control-static" id="proj-profile-label">Example</p>
+											</div>
+										</div>
+									<div class="form-group">
+										<label class="control-label col-sm-3">Projection Date:</label>
+										<div class="col-sm-9 date">
+										<div class="input-group date" id="projection-date-selector1">
+											<input type="text" class="form-control" id="projection-date-selector2"><span
+												class="input-group-addon"><i
+												class="glyphicon glyphicon-calendar"></i></span>
+										</div>
+										</div>
+									</div>
+									</form>
+								</div>
+								<div class="tab-pane" id="tab2">
+									<div class="form-group">
+										<label class="control-label">Select Hitter Projection
+											File</label> <input id="hitter-proj-file" type="file" class="file"
+											data-show-preview="false">
+									</div>
+								</div>
+								<div class="tab-pane" id="tab3">Additional Data</div>
+								<div class="tab-pane" id="tab4">
+									<form class="form-horizontal">
+										<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-xs-3">Projection
+												Profile:</label>
+											<div class="col-xs-9">
+												<p class="form-control-static" id="proj-profile-label2">Example</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="proj-date-label" class="control-label col-xs-3">Projection
+												Date:</label>
+											<div class="col-xs-9">
+												<p class="form-control-static" id="proj-date-label">Example</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="proj-hitterfile-label" class="control-label col-xs-3">Projection
+												Hitter File:</label>
+											<div class="col-xs-9">
+												<p class="form-control-static" id="proj-hitterfile-label">Example</p>
+											</div>
+										</div>
+									</form>
+
+								</div>
+
+								<ul class="pager wizard">
+									<li class="previous first" style="display: none;"><a
+										href="#">First</a></li>
+									<li class="previous"><a href="#">Previous</a></li>
+									<li class="next last" style="display: none;"><a href="#">Last</a></li>
+									<li class="next"><a href="#">Next</a></li>
+									<li class="next finish" style="display:none;"><a href="javascript:;">Finish</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- /container -->
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="../../plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<script src="../../bootstrap/js/bootstrap.min.js"></script>
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug 
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    -->
+
+	<script src="../../plugins/papaparse/papaparse.js"></script>
+	<!-- <script src="../../plugins/papaparse/player.js"></script> -->
+
+	<script
+		src="../../plugins/bootstrap-fileinput/js/plugins/canvas-to-blob.min.js"
+		type="text/javascript"></script>
+	<script src="../../plugins/bootstrap-fileinput/js/fileinput.min.js"
+		type="text/javascript"></script>
+
+	<!-- DATA TABES SCRIPT -->
+	<script src="../../plugins/datatables/datatables.min.js"
+		type="text/javascript"></script> 
+
+	<!-- WIZARD SCRIPT -->
+	<script src="../../plugins/bootstrap-wizard/jquery.bootstrap.wizard.js"
+		type="text/javascript"></script>
+		
+	<!-- DATEPICKER SCRIPT -->
+	<script src="../../plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"
+		type="text/javascript"></script>
+	
+	<!-- BOOTSTRAP DIALOG MODAL -->
+	<script src="../../plugins/bootstrap-dialog/js/bootstrap-dialog.min.js"
+		type="text/javascript"></script>
+	
+	<!-- PROGRESS MODAL -->
+	<script src="../../js/progress-modal.js"></script>
+	
+	<!-- PROGRESS SPINNER -->
+	<script src="../../js/progress-spinner.js"></script>
+	
+	<script async src="../../js/loadprojections.js"></script>
+	<script async src="../../js/base.js"></script>
+
+	<script>
+		function init() {
+			mssolutions.fbapp.login.auth_admin('//' + window.location.host
+					+ '/_ah/api');
+			mssolutions.fbapp.loadprojections.init_nav('//'
+					+ window.location.host + '/_ah/api');
+		}
+	</script>
+	<script src="https://apis.google.com/js/client.js?onload=init"></script>
+
+</body>
+</html>
