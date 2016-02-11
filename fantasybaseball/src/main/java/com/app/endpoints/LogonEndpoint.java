@@ -91,7 +91,8 @@ public class LogonEndpoint {
 
         session.setAttribute("UserEmail", email);
         session.setAttribute("Authenticated", true);
-        return new APIGeneralResult("OK", getIdentityService().generateJWT(email).getToken());
+        return new APIGeneralResult("OK", getIdentityService().generateJWT(email).getToken(),
+        		getIdentityService().getUserByEmail(email).getFirstname());
       }
       else return new APIGeneralResult("KO", "Invalid credentials.");
 

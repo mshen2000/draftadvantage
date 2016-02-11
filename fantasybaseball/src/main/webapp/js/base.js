@@ -33,7 +33,8 @@ mssolutions.fbapp.login.signedIn = false;
 
 
 /**
- * Custom logon not using Google auth
+ * Authentication for initial login page
+ * Returns a valid client token
  * @param {string} email userid/email 
  * @param {string} password 
  */
@@ -44,6 +45,7 @@ mssolutions.fbapp.login.logon = function(email, password) {
     }).execute(function(resp) {
       if (resp.status == "OK") {
     	  localStorage.setItem("email", email);
+    	  localStorage.setItem("firstname", resp.description2);
     	  localStorage.setItem("ClientToken", resp.description);
     	  window.location.href = "pages/admin/playerload.html";
       }
@@ -65,6 +67,8 @@ mssolutions.fbapp.login.authenticate_admin = function() {
 		} else {
 			// console.log("Auth Admin: ", resp.description);
 			$("body").removeAttr("hidden");
+			$('#login-name').html("<i class='fa fa-user fa-lg'></i> Signed in as " + localStorage.getItem("firstname"));
+			//$('#login-name').text("UPDATE");
 		}
 	});
 

@@ -117,7 +117,7 @@ public class OfyHelper implements ServletContextListener {
 				createNewKey();
 				createGroupsIfNotPresent();
 				createAdminUserIfNotPresent();
-				createInitialProjectionProfile();
+				// createInitialProjectionProfile();
 
 				// delete all CustomObjecTest
 				// List<Key<CustomObjectTest>> keys =
@@ -130,10 +130,10 @@ public class OfyHelper implements ServletContextListener {
 				// }
 
 				deletePrograms();
-				createPrograms();
+				//createPrograms();
 
 				deleteTests();
-				createTests();
+				//createTests();
 
 				log.info("Verifying...");
 				checkData();

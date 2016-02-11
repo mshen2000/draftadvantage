@@ -29,8 +29,22 @@ var stepped = 0, chunks = 0, rows = 0;
 var start, end;
 var parser;
 
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $($.fn.dataTable.tables(true)).DataTable()
+      .columns.adjust()
+      .responsive.recalc();
+	});
+
+$(window).resize(function() {
+    console.log( 'window resize' );
+    $($.fn.dataTable.tables(true)).DataTable()
+    .columns.adjust()
+    .responsive.recalc();
+	});
+
 $(document).ready(function()
 {
+
 	$('.input-group.date').datepicker({
 	    autoclose: true,
 	    todayHighlight: true
