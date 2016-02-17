@@ -625,6 +625,12 @@ mssolutions.fbapp.loadprojections.loadProfiles = function(id) {
  * load player projections via the API.
  */
 mssolutions.fbapp.loadprojections.loadProjections = function(id) {
+	
+	var t0 = performance.now();
+
+
+	
+	
 	var profile_table_b = $('#profile_table').DataTable();
     profile_table_b.button( 2 ).disable();
 	loadspinner.showLoader('#hitter-projections-table-div');
@@ -632,12 +638,18 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 		'msg' : id}).execute(
       function(resp) {
         if (!resp.code) { 
+        	var t01 = performance.now();
         	
         	loadProjectionTable(resp.items, false);
         	
     		loadspinner.hideLoader('#hitter-projections-table-div');
     		profile_table_b.button( 2 ).enable();
     		$('#btn-load-proj').prop("disabled",false);
+    		
+    		var t1 = performance.now();
+    		console.log("LoadProjections took " + (t01 - t0)/1000 + " seconds.")
+    		console.log("LoadTables took " + (t1 - t01)/1000 + " seconds.")
+    		
         }
         else {
         	console.log("Failed to load projections: ", resp.code + " : " + resp.message);

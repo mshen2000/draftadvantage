@@ -1,11 +1,12 @@
 package com.nya.sms.entities;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.googlecode.objectify.Ref;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 
 //@Subclass(index = true)
 @Entity
@@ -14,6 +15,7 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1;
 	
 	@Index
+	@Load
 	Ref<ProjectionProfile> projection_profile;
 	
 	@Index

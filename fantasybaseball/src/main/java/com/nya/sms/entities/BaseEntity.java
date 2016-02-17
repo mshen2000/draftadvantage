@@ -13,7 +13,7 @@ public class BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1;
 
 	@Id
-	Long id;
+	public Long id;
 
 	@Index
 	String createdby;

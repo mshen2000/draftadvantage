@@ -19,7 +19,7 @@ public class LeagueTeam extends BaseEntity implements Serializable {
 	@Index
 	boolean isuserowner; 
 	
-	float salary_adjustment;
+	double salary_adjustment;
 
 	public LeagueTeam() {
 		this.isuserowner = false;
@@ -55,11 +55,11 @@ public class LeagueTeam extends BaseEntity implements Serializable {
 		this.isuserowner = isuserowner;
 	}
 
-	public float getSalary_adjustment() {
+	public double getSalary_adjustment() {
 		return salary_adjustment;
 	}
 
-	public void setSalary_adjustment(float salary_adjustment) {
+	public void setSalary_adjustment(double salary_adjustment) {
 		this.salary_adjustment = salary_adjustment;
 	}
 

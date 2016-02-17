@@ -18,10 +18,13 @@ import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -30,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 @Api(name = "draftapp", version = "v1", scopes = { Constants.EMAIL_SCOPE }, clientIds = { Constants.WEB_CLIENT_ID,
 		Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID, Constants.API_EXPLORER_CLIENT_ID }, audiences = { Constants.ANDROID_AUDIENCE })
 public class MainEndpoint {
+	
+	private static final Logger log =Logger.getLogger(MainEndpoint.class.getName());
 
 	private IdentityService getIdentityService() {
 
@@ -63,9 +68,22 @@ public class MainEndpoint {
 		System.out.println("Profile id: " + m.getMsg());
 		validateAdminToken(req);
 		
+		NumberFormat formatter = new DecimalFormat("#0.00");     
+		
+		log.setLevel(Level.INFO);
+		log.info("Test Log Message");
+		
+		double startTime = System.currentTimeMillis();
+		
 		Long profile_id = Long.parseLong(m.getMsg().trim());
+		
+		List<PlayerProjected> l = getPlayerProjectedService().getPlayerProjections(getProjectionProfileService().get(profile_id));
+		
+		double estimatedTime = System.currentTimeMillis() - startTime;
+		
+		log.info("Time to get projections from Objectify: " + formatter.format(estimatedTime/1000) + " seconds");
 
-		return getPlayerProjectedService().getPlayerProjections(getProjectionProfileService().get(profile_id));
+		return l;
 
 	}
 

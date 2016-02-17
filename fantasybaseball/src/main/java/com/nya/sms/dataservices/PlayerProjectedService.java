@@ -4,11 +4,12 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
@@ -56,11 +57,33 @@ public class PlayerProjectedService implements Serializable {
 			profile = getProjectionProfileService().get(profile.getProjection_service(),
 					profile.getProjection_period(), profile.getProjected_year());
 		}
+		
+		double startTime = System.currentTimeMillis();
+		
+		NumberFormat formatter = new DecimalFormat("#0.00");     
+		
+		Key<ProjectionProfile> profileKey = Key.create(ProjectionProfile.class, profile.getId());
 
-		Iterable<PlayerProjected> players = ofy().load().type(PlayerProjected.class)
-				.filter("projection_profile", profile);
+//		Iterable<PlayerProjected> players = ofy().load().type(PlayerProjected.class)
+//				.filter("projection_profile", profile);
+		
+		List<PlayerProjected> players = ofy().load().type(PlayerProjected.class)
+				.filter("projection_profile", profileKey).list();
+		
+//		List<PlayerProjected> players = ofy().load().type(PlayerProjected.class)
+//				.filter("age > ", 1).list();
+		
+		
+		double estimatedTime1 = System.currentTimeMillis() - startTime;
+		
+		// List<PlayerProjected> lp = Lists.newArrayList(players);
+		
+		// double estimatedTime2 = System.currentTimeMillis() - startTime - estimatedTime1;
+		System.out.println("Do something with list: " + players.get(500).getFull_name());
+		System.out.println("InService: Time to Query in Objectify: " + formatter.format(estimatedTime1/1000) + " seconds");
+		// System.out.println("InService: Time to convert Iterable: " + formatter.format(estimatedTime2/1000) + " seconds");
 
-		return Lists.newArrayList(players);
+		return players;
 	}
 
 	/**
