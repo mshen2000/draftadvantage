@@ -1,12 +1,20 @@
 package com.nya.sms.dataservices;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 import com.nya.sms.entities.League;
+import com.nya.sms.entities.LeaguePlayer;
 import com.nya.sms.entities.LeagueTeam;
+import com.nya.sms.entities.PlayerProjected;
+import com.nya.sms.entities.ProjectionProfile;
 
 /**
  * @author Michael
@@ -15,6 +23,12 @@ import com.nya.sms.entities.LeagueTeam;
 public class LeagueService extends AbstractDataServiceImpl<League>{
 	
 	private static final long serialVersionUID = 1L;
+	
+	public static final String LEAGUE_SITE_CBS = "CBS";
+	public static final String LEAGUE_SITE_ESPN = "ESPN";
+	public static final String MLB_LEAGUES_AL = "AL";
+	public static final String MLB_LEAGUES_NL = "NL";
+	public static final String MLB_LEAGUES_BOTH = "BOTH";
 
 	public LeagueService(Class<League> clazz) {
 		super(clazz);
@@ -107,11 +121,75 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	}
 	
 	
+	public void updateLeaguePlayerData(long league_id, String username) {
+
+		League league = this.get(league_id);
+
+		List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(
+				league.getProjection_profile(), league.getMlb_leagues());
+		
+		Key<League> leaguekey = Key.create(League.class, league_id);
+		
+		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey).list();
+		
+		// Update existing league players
+		if (!leagueplayers.isEmpty()){
+			
+			Map<Key<LeaguePlayer>, LeaguePlayer> keylist = null;
+
+			keylist = ObjectifyService.ofy().save().entities(leagueplayers).now();
+			
+		}
+		
+		Key<PlayerProjected> ppkey;
+		List<LeaguePlayer> leagueplayers2;
+		
+		// Add new projection players
+		for (PlayerProjected p : projections){
+			
+			ppkey = Key.create(PlayerProjected.class, p.getId());
+			
+			leagueplayers2 = ofy().load().type(LeaguePlayer.class).filter("player_projected", ppkey).list();
+			
+			// If player projected does not match an existing league player, then add new league player
+			if (leagueplayers2.isEmpty()){
+				
+				LeaguePlayer lp = new LeaguePlayer();
+				lp.setLeague(league);
+				lp.setPlayer_projected(p);
+				getLeaguePlayerService().save(lp, username);
+				
+			}
+			
+		}
+		
+
+	}
+	
 	
 	private LeagueTeamService getLeagueTeamService(){
 
 		return new LeagueTeamService(LeagueTeam.class);
 
 	}
+	
+	private LeaguePlayerService getLeaguePlayerService(){
+
+		return new LeaguePlayerService(LeaguePlayer.class);
+
+	}
+	
+	private ProjectionProfileService getProjectionProfileService(){
+
+		return new ProjectionProfileService(ProjectionProfile.class);
+
+	}
+	
+	private PlayerProjectedService getPlayerProjectedService(){
+
+		return new PlayerProjectedService();
+
+	}
+
 
 }

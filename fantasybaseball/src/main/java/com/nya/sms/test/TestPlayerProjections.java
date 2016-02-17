@@ -17,6 +17,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.IdentityService;
+import com.nya.sms.dataservices.LeagueService;
 import com.nya.sms.dataservices.PlayerProjectedService;
 import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.entities.PlayerProjected;
@@ -242,7 +243,7 @@ public class TestPlayerProjections {
 		
 		// Test there are of 2 projections for a particular projection set
 		// Tests method getPlayerProjections
-		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1).size() == 2);
+		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1,LeagueService.MLB_LEAGUES_BOTH).size() == 2);
 		
 		// Test Count all projections
 		Assert.assertTrue(getPlayerProjectedService().countAllPlayerProjections() == 5);
@@ -269,13 +270,13 @@ public class TestPlayerProjections {
 		
 		// Test deleting player projections
 		getPlayerProjectedService().deletePlayerProjections(p1);
-		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1).size() == 0);
+		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p1,LeagueService.MLB_LEAGUES_BOTH).size() == 0);
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 3);
 		
 		// Test deleting a profile (and all it's projections)
 		getProjectionProfileService().delete(p2_id);
 		Assert.assertNull(getProjectionProfileService().get(p2_id));
-		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p2).size() == 0);
+		Assert.assertTrue(getPlayerProjectedService().getPlayerProjections(p2,LeagueService.MLB_LEAGUES_BOTH).size() == 0);
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 1);
 		
 		// Test deleting all player projections

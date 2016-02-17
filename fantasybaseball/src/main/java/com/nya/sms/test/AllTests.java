@@ -8,7 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ TestBasicDataStore.class, TestEntityUserRole.class,
 		TestStudentAndGroup.class, TestProgramScores.class, TestOtherStudentData.class,
 		TestAuthorization.class, TestSite.class, TestProgram.class, TestPlayerProjections.class,
-		TestProjectionProfiles.class})
+		TestProjectionProfiles.class, TestLeagues.class})
 public class AllTests {
 
 }

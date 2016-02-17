@@ -45,7 +45,7 @@ public class PlayerProjectedService implements Serializable {
 	 * @param profile
 	 * @return Returns a list of PlayerProjected for the given parameters
 	 */
-	public List<PlayerProjected> getPlayerProjections(ProjectionProfile profile) {
+	public List<PlayerProjected> getPlayerProjections(ProjectionProfile profile, String mlb_leagues) {
 
 		// Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class);
 		// q = q.filter("projection_service", proj_service);
@@ -63,25 +63,23 @@ public class PlayerProjectedService implements Serializable {
 		NumberFormat formatter = new DecimalFormat("#0.00");     
 		
 		Key<ProjectionProfile> profileKey = Key.create(ProjectionProfile.class, profile.getId());
+		List<PlayerProjected> players = new ArrayList<PlayerProjected>();
+		
+		if (mlb_leagues.equals(LeagueService.MLB_LEAGUES_BOTH)) {
+			players = ofy().load().type(PlayerProjected.class).filter("projection_profile", profileKey).list();
+		} else {
+			List<String> league_list = new ArrayList<String>();
+			league_list.add("FA");
+			league_list.add(mlb_leagues);
 
-//		Iterable<PlayerProjected> players = ofy().load().type(PlayerProjected.class)
-//				.filter("projection_profile", profile);
-		
-		List<PlayerProjected> players = ofy().load().type(PlayerProjected.class)
-				.filter("projection_profile", profileKey).list();
-		
-//		List<PlayerProjected> players = ofy().load().type(PlayerProjected.class)
-//				.filter("age > ", 1).list();
-		
-		
+			players = ofy().load().type(PlayerProjected.class).filter("projection_profile", profileKey)
+					.filter("al_nl in", league_list).list();
+		}
+
 		double estimatedTime1 = System.currentTimeMillis() - startTime;
 		
-		// List<PlayerProjected> lp = Lists.newArrayList(players);
-		
-		// double estimatedTime2 = System.currentTimeMillis() - startTime - estimatedTime1;
-		System.out.println("Do something with list: " + players.get(500).getFull_name());
+		// System.out.println("Do something with list: " + players.get(500).getFull_name());
 		System.out.println("InService: Time to Query in Objectify: " + formatter.format(estimatedTime1/1000) + " seconds");
-		// System.out.println("InService: Time to convert Iterable: " + formatter.format(estimatedTime2/1000) + " seconds");
 
 		return players;
 	}
@@ -316,7 +314,7 @@ public class PlayerProjectedService implements Serializable {
 
 		final List<PlayerProjected> updateplayerlist = playerlist;
 
-		final List<PlayerProjected> sourceplayerlist = getPlayerProjections(profile);
+		final List<PlayerProjected> sourceplayerlist = getPlayerProjections(profile, LeagueService.MLB_LEAGUES_BOTH);
 
 		List<PlayerProjected> playerlistdelete = new ArrayList<PlayerProjected>();
 

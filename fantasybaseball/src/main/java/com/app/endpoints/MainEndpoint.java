@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nya.sms.dataservices.IdentityService;
+import com.nya.sms.dataservices.LeagueService;
 import com.nya.sms.dataservices.PlayerProjectedService;
 import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.entities.PlayerProjected;
@@ -64,24 +65,26 @@ public class MainEndpoint {
 	}
 
 	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
-	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req) throws UnauthorizedException {
+	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req)
+			throws UnauthorizedException {
 		System.out.println("Profile id: " + m.getMsg());
 		validateAdminToken(req);
-		
-		NumberFormat formatter = new DecimalFormat("#0.00");     
-		
+
+		NumberFormat formatter = new DecimalFormat("#0.00");
+
 		log.setLevel(Level.INFO);
 		log.info("Test Log Message");
-		
+
 		double startTime = System.currentTimeMillis();
-		
+
 		Long profile_id = Long.parseLong(m.getMsg().trim());
-		
-		List<PlayerProjected> l = getPlayerProjectedService().getPlayerProjections(getProjectionProfileService().get(profile_id));
-		
+
+		List<PlayerProjected> l = getPlayerProjectedService().getPlayerProjections(
+				getProjectionProfileService().get(profile_id), LeagueService.MLB_LEAGUES_BOTH);
+
 		double estimatedTime = System.currentTimeMillis() - startTime;
-		
-		log.info("Time to get projections from Objectify: " + formatter.format(estimatedTime/1000) + " seconds");
+
+		log.info("Time to get projections from Objectify: " + formatter.format(estimatedTime / 1000) + " seconds");
 
 		return l;
 
