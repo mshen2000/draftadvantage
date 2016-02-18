@@ -34,23 +34,23 @@ public class League extends BaseEntity implements Serializable {
 	@Index
 	Ref<ProjectionProfile> projection_profile;
 	
-	float team_salary;
+	double team_salary;
 	
-	float avg_hitter_ba;
+	double avg_hitter_ba;
 	
-	float avg_hitter_ab;
+	double avg_hitter_ab;
 	
-	float avg_hitter_hits;
+	double avg_hitter_hits;
 	
-	float avg_pitcher_era;
+	double avg_pitcher_era;
 	
-	float avg_pitcher_ip;
+	double avg_pitcher_ip;
 	
-	float avg_pitcher_er;
+	double avg_pitcher_er;
 	
-	float avg_pitcher_whip;
+	double avg_pitcher_whip;
 	
-	float avg_pitcher_bbplushits;
+	double avg_pitcher_bbplushits;
 	
 	@Index
 	boolean cat_hitter_hr;
@@ -208,75 +208,75 @@ public class League extends BaseEntity implements Serializable {
 		this.projection_profile = Ref.create(projection_profile);
 	}
 
-	public float getTeam_salary() {
+	public double getTeam_salary() {
 		return team_salary;
 	}
 
-	public void setTeam_salary(float team_salary) {
+	public void setTeam_salary(double team_salary) {
 		this.team_salary = team_salary;
 	}
 
-	public float getAvg_hitter_ba() {
+	public double getAvg_hitter_ba() {
 		return avg_hitter_ba;
 	}
 
-	public void setAvg_hitter_ba(float avg_hitter_ba) {
+	public void setAvg_hitter_ba(double avg_hitter_ba) {
 		this.avg_hitter_ba = avg_hitter_ba;
 	}
 
-	public float getAvg_hitter_ab() {
+	public double getAvg_hitter_ab() {
 		return avg_hitter_ab;
 	}
 
-	public void setAvg_hitter_ab(float avg_hitter_ab) {
+	public void setAvg_hitter_ab(double avg_hitter_ab) {
 		this.avg_hitter_ab = avg_hitter_ab;
 	}
 
-	public float getAvg_hitter_hits() {
+	public double getAvg_hitter_hits() {
 		return avg_hitter_hits;
 	}
 
-	public void setAvg_hitter_hits(float avg_hitter_hits) {
+	public void setAvg_hitter_hits(double avg_hitter_hits) {
 		this.avg_hitter_hits = avg_hitter_hits;
 	}
 
-	public float getAvg_pitcher_era() {
+	public double getAvg_pitcher_era() {
 		return avg_pitcher_era;
 	}
 
-	public void setAvg_pitcher_era(float avg_pitcher_era) {
+	public void setAvg_pitcher_era(double avg_pitcher_era) {
 		this.avg_pitcher_era = avg_pitcher_era;
 	}
 
-	public float getAvg_pitcher_ip() {
+	public double getAvg_pitcher_ip() {
 		return avg_pitcher_ip;
 	}
 
-	public void setAvg_pitcher_ip(float avg_pitcher_ip) {
+	public void setAvg_pitcher_ip(double avg_pitcher_ip) {
 		this.avg_pitcher_ip = avg_pitcher_ip;
 	}
 
-	public float getAvg_pitcher_er() {
+	public double getAvg_pitcher_er() {
 		return avg_pitcher_er;
 	}
 
-	public void setAvg_pitcher_er(float avg_pitcher_er) {
+	public void setAvg_pitcher_er(double avg_pitcher_er) {
 		this.avg_pitcher_er = avg_pitcher_er;
 	}
 
-	public float getAvg_pitcher_whip() {
+	public double getAvg_pitcher_whip() {
 		return avg_pitcher_whip;
 	}
 
-	public void setAvg_pitcher_whip(float avg_pitcher_whip) {
+	public void setAvg_pitcher_whip(double avg_pitcher_whip) {
 		this.avg_pitcher_whip = avg_pitcher_whip;
 	}
 
-	public float getAvg_pitcher_bbplushits() {
+	public double getAvg_pitcher_bbplushits() {
 		return avg_pitcher_bbplushits;
 	}
 
-	public void setAvg_pitcher_bbplushits(float avg_pitcher_bbplushits) {
+	public void setAvg_pitcher_bbplushits(double avg_pitcher_bbplushits) {
 		this.avg_pitcher_bbplushits = avg_pitcher_bbplushits;
 	}
 

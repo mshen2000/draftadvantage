@@ -99,10 +99,11 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		for (iter = lg.listIterator(); iter.hasNext(); ) {
 			LeagueTeam a = iter.next();
-		    if (a.id == team_id) {
+			System.out.println("Delete check: " + a.getId() + ", " + team_id);
+		    if (a.getId().equals(team_id)) {
 		    	System.out.println("In deleteLeagueTeam: Team to remove found = " + a.getTeam_name() + ", " + a.getId());
 		    	isTeamFound = true;
-		    	delete_team_id = a.id;
+		    	delete_team_id = a.getId();
 		        iter.remove();
 		    } else {
 		    	teams.add(a);
@@ -121,6 +122,28 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	}
 	
 	
+	/**
+	 * Description:	Get a list of LeaguePlayers based on a given league
+	 * @param league_id
+	 * @param username
+	 * @return List<LeaguePlayer>
+	 */
+	public List<LeaguePlayer> getLeaguePlayers(long league_id, String username){
+		
+		Key<League> leaguekey = Key.create(League.class, league_id);
+		
+		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey).list();
+		
+		return leagueplayers;
+		
+	}
+	
+	
+	/**
+	 * Description:	Create/update league player data from projection data
+	 * @param league_id
+	 * @param username 
+	 */
 	public void updateLeaguePlayerData(long league_id, String username) {
 
 		League league = this.get(league_id);
@@ -128,21 +151,35 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(
 				league.getProjection_profile(), league.getMlb_leagues());
 		
-		Key<League> leaguekey = Key.create(League.class, league_id);
+		List<LeaguePlayer> leagueplayers = this.getLeaguePlayers(league_id, username);
 		
-		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey).list();
+		// Delete league players that don't have projections
+		for (LeaguePlayer lp : leagueplayers){
+			
+			if (lp.getPlayer_projected() == null){
+				getLeaguePlayerService().delete(lp.getId());
+				System.out.println("Deleting LeaguePlayer with null projection:  " + lp.getFull_name());
+			}
+			
+		}
+		
+		leagueplayers = this.getLeaguePlayers(league_id, username);
 		
 		// Update existing league players
 		if (!leagueplayers.isEmpty()){
 			
 			Map<Key<LeaguePlayer>, LeaguePlayer> keylist = null;
-
+			
+			// Save activates onsave and onload methods in LeaguePlayers
 			keylist = ObjectifyService.ofy().save().entities(leagueplayers).now();
+			System.out.println("Updated " + leagueplayers.size() + " existing LeaguePlayers.");
 			
 		}
 		
 		Key<PlayerProjected> ppkey;
 		List<LeaguePlayer> leagueplayers2;
+		
+		int i = 0;
 		
 		// Add new projection players
 		for (PlayerProjected p : projections){
@@ -158,10 +195,15 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				lp.setLeague(league);
 				lp.setPlayer_projected(p);
 				getLeaguePlayerService().save(lp, username);
+				i++;
 				
 			}
 			
 		}
+		
+		System.out.println("Added " + i + " new LeaguePlayers from Projections.");
+		
+
 		
 
 	}

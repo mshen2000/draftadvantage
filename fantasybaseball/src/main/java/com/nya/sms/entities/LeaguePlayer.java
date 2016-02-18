@@ -229,6 +229,66 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 		this.init_auction_value = init_auction_value;
 	}
 
+	public String getFull_name() {
+		return full_name;
+	}
+
+	public void setFull_name(String full_name) {
+		this.full_name = full_name;
+	}
+
+	public String getDc_status() {
+		return dc_status;
+	}
+
+	public void setDc_status(String dc_status) {
+		this.dc_status = dc_status;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public String getPitcher_hitter() {
+		return pitcher_hitter;
+	}
+
+	public void setPitcher_hitter(String pitcher_hitter) {
+		this.pitcher_hitter = pitcher_hitter;
+	}
+
+	public String getPlayer_position() {
+		return player_position;
+	}
+
+	public void setPlayer_position(String player_position) {
+		this.player_position = player_position;
+	}
+
+	public void setLeague(Ref<League> league) {
+		this.league = league;
+	}
+
+	public void setLeague_team(Ref<LeagueTeam> league_team) {
+		this.league_team = league_team;
+	}
+
+	public void setPlayer_projected(Ref<PlayerProjected> player_projected) {
+		this.player_projected = player_projected;
+	}
+
 	
 
 }

@@ -628,9 +628,6 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 	
 	var t0 = performance.now();
 
-
-	
-	
 	var profile_table_b = $('#profile_table').DataTable();
     profile_table_b.button( 2 ).disable();
 	loadspinner.showLoader('#hitter-projections-table-div');
