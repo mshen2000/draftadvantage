@@ -23,7 +23,7 @@ public class League extends BaseEntity implements Serializable {
 	Ref<User> user;
 	
 	@Index
-	Integer num_of_teams;
+	int num_of_teams;
 	
 	@Index
 	String mlb_leagues;
@@ -83,37 +83,37 @@ public class League extends BaseEntity implements Serializable {
 	boolean cat_pitcher_whip;
 	
 	@Index
-	Integer num_1b;
+	int num_1b;
 	
 	@Index
-	Integer num_2b;
+	int num_2b;
 	
 	@Index
-	Integer num_3b;
+	int num_3b;
 	
 	@Index
-	Integer num_ss;
+	int num_ss;
 	
 	@Index
-	Integer num_c;
+	int num_c;
 	
 	@Index
-	Integer num_of;
+	int num_of;
 	
 	@Index
-	Integer num_p;
+	int num_p;
 	
 	@Index
-	Integer num_util;
+	int num_util;
 	
 	@Index
-	Integer num_res;
+	int num_res;
 	
 	@Index
-	Integer num_mi;
+	int num_mi;
 	
 	@Index
-	Integer num_ci;
+	int num_ci;
 	
 
 	public League() {
@@ -168,11 +168,11 @@ public class League extends BaseEntity implements Serializable {
 		this.user = Ref.create(user);
 	}
 
-	public Integer getNum_of_teams() {
+	public int getNum_of_teams() {
 		return num_of_teams;
 	}
 
-	public void setNum_of_teams(Integer num_of_teams) {
+	public void setNum_of_teams(int num_of_teams) {
 		this.num_of_teams = num_of_teams;
 	}
 
@@ -360,91 +360,91 @@ public class League extends BaseEntity implements Serializable {
 		this.cat_pitcher_whip = cat_pitcher_whip;
 	}
 
-	public Integer getNum_1b() {
+	public int getNum_1b() {
 		return num_1b;
 	}
 
-	public void setNum_1b(Integer num_1b) {
+	public void setNum_1b(int num_1b) {
 		this.num_1b = num_1b;
 	}
 
-	public Integer getNum_2b() {
+	public int getNum_2b() {
 		return num_2b;
 	}
 
-	public void setNum_2b(Integer num_2b) {
+	public void setNum_2b(int num_2b) {
 		this.num_2b = num_2b;
 	}
 
-	public Integer getNum_3b() {
+	public int getNum_3b() {
 		return num_3b;
 	}
 
-	public void setNum_3b(Integer num_3b) {
+	public void setNum_3b(int num_3b) {
 		this.num_3b = num_3b;
 	}
 
-	public Integer getNum_ss() {
+	public int getNum_ss() {
 		return num_ss;
 	}
 
-	public void setNum_ss(Integer num_ss) {
+	public void setNum_ss(int num_ss) {
 		this.num_ss = num_ss;
 	}
 
-	public Integer getNum_c() {
+	public int getNum_c() {
 		return num_c;
 	}
 
-	public void setNum_c(Integer num_c) {
+	public void setNum_c(int num_c) {
 		this.num_c = num_c;
 	}
 
-	public Integer getNum_of() {
+	public int getNum_of() {
 		return num_of;
 	}
 
-	public void setNum_of(Integer num_of) {
+	public void setNum_of(int num_of) {
 		this.num_of = num_of;
 	}
 
-	public Integer getNum_p() {
+	public int getNum_p() {
 		return num_p;
 	}
 
-	public void setNum_p(Integer num_p) {
+	public void setNum_p(int num_p) {
 		this.num_p = num_p;
 	}
 
-	public Integer getNum_util() {
+	public int getNum_util() {
 		return num_util;
 	}
 
-	public void setNum_util(Integer num_util) {
+	public void setNum_util(int num_util) {
 		this.num_util = num_util;
 	}
 
-	public Integer getNum_res() {
+	public int getNum_res() {
 		return num_res;
 	}
 
-	public void setNum_res(Integer num_res) {
+	public void setNum_res(int num_res) {
 		this.num_res = num_res;
 	}
 
-	public Integer getNum_mi() {
+	public int getNum_mi() {
 		return num_mi;
 	}
 
-	public void setNum_mi(Integer num_mi) {
+	public void setNum_mi(int num_mi) {
 		this.num_mi = num_mi;
 	}
 
-	public Integer getNum_ci() {
+	public int getNum_ci() {
 		return num_ci;
 	}
 
-	public void setNum_ci(Integer num_ci) {
+	public void setNum_ci(int num_ci) {
 		this.num_ci = num_ci;
 	}
 

@@ -67,130 +67,130 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	public String pitcher_pos;
 	
 	@Index
-	public float hitter_games;
+	public double hitter_games;
 	
 	@Index
-	public float hitter_pa;
+	public double hitter_pa;
 	
 	@Index
-	public float hitter_ab;
+	public double hitter_ab;
 	
 	@Index
-	public float hitter_runs;
+	public double hitter_runs;
 	
 	@Index
-	public float hitter_hr;
+	public double hitter_hr;
 	
 	@Index
-	public float hitter_rbi;
+	public double hitter_rbi;
 	
 	@Index
-	public float hitter_sb;
+	public double hitter_sb;
 	
 	@Index
-	public float hitter_hits;
+	public double hitter_hits;
 	
 	@Index
-	public float hitter_singles;
+	public double hitter_singles;
 	
 	@Index
-	public float hitter_doubles;
+	public double hitter_doubles;
 	
 	@Index
-	public float hitter_triples;
+	public double hitter_triples;
 	
 	@Index
-	public float hitter_tb;
+	public double hitter_tb;
 	
 	@Index
-	public float hitter_so;
+	public double hitter_so;
 	
 	@Index
-	public float hitter_bb;
+	public double hitter_bb;
 	
 	@Index
-	public float hitter_hbp;
+	public double hitter_hbp;
 	
 	@Index
-	public float hitter_sf;
+	public double hitter_sf;
 	
 	@Index
-	public float hitter_cs;
+	public double hitter_cs;
 	
 	@Index
-	public float hitter_avg;
+	public double hitter_avg;
 	
 	@Index
-	public float hitter_obp;
+	public double hitter_obp;
 	
 	@Index
-	public float hitter_slg;
+	public double hitter_slg;
 	
 	@Index
-	public float hitter_ops;
+	public double hitter_ops;
 	
 	@Index
-	public float pitcher_games;
+	public double pitcher_games;
 	
 	@Index
-	public float pitcher_gs;
+	public double pitcher_gs;
 	
 	@Index
-	public float pitcher_qs;
+	public double pitcher_qs;
 	
 	@Index
-	public float pitcher_ip;
+	public double pitcher_ip;
 	
 	@Index
-	public float pitcher_w;
+	public double pitcher_w;
 	
 	@Index
-	public float pitcher_l;
+	public double pitcher_l;
 	
 	@Index
-	public float pitcher_sv;
+	public double pitcher_sv;
 	
 	@Index
-	public float pitcher_hld;
+	public double pitcher_hld;
 	
 	@Index
-	public float pitcher_era;
+	public double pitcher_era;
 	
 	@Index
-	public float pitcher_siera;
+	public double pitcher_siera;
 	
 	@Index
-	public float pitcher_k;
+	public double pitcher_k;
 	
 	@Index
-	public float pitcher_bb;
+	public double pitcher_bb;
 	
 	@Index
-	public float pitcher_hits;
+	public double pitcher_hits;
 	
 	@Index
-	public float pitcher_hbp;
+	public double pitcher_hbp;
 	
 	@Index
-	public float pitcher_er;
+	public double pitcher_er;
 	
 	@Index
-	public float pitcher_r;
+	public double pitcher_r;
 	
 	@Index
-	public float pitcher_hr;
+	public double pitcher_hr;
 	
 	@Index
-	public float pitcher_gb_pct;
+	public double pitcher_gb_pct;
 	
 	@Index
-	public float pitcher_fb_pct;
+	public double pitcher_fb_pct;
 	
 	@Index
-	public float pitcher_ld_pct;
+	public double pitcher_ld_pct;
 	
 	@Index
-	public float pitcher_babip;
+	public double pitcher_babip;
 
 	public PlayerProjected() {
 	}
@@ -331,339 +331,339 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 		this.pitcher_pos = pitcher_pos;
 	}
 
-	public float getHitter_games() {
+	public double getHitter_games() {
 		return hitter_games;
 	}
 
-	public void setHitter_games(float hitter_games) {
+	public void setHitter_games(double hitter_games) {
 		this.hitter_games = hitter_games;
 	}
 
-	public float getHitter_pa() {
+	public double getHitter_pa() {
 		return hitter_pa;
 	}
 
-	public void setHitter_pa(float hitter_pa) {
+	public void setHitter_pa(double hitter_pa) {
 		this.hitter_pa = hitter_pa;
 	}
 
-	public float getHitter_ab() {
+	public double getHitter_ab() {
 		return hitter_ab;
 	}
 
-	public void setHitter_ab(float hitter_ab) {
+	public void setHitter_ab(double hitter_ab) {
 		this.hitter_ab = hitter_ab;
 	}
 
-	public float getHitter_runs() {
+	public double getHitter_runs() {
 		return hitter_runs;
 	}
 
-	public void setHitter_runs(float hitter_runs) {
+	public void setHitter_runs(double hitter_runs) {
 		this.hitter_runs = hitter_runs;
 	}
 
-	public float getHitter_hr() {
+	public double getHitter_hr() {
 		return hitter_hr;
 	}
 
-	public void setHitter_hr(float hitter_hr) {
+	public void setHitter_hr(double hitter_hr) {
 		this.hitter_hr = hitter_hr;
 	}
 
-	public float getHitter_rbi() {
+	public double getHitter_rbi() {
 		return hitter_rbi;
 	}
 
-	public void setHitter_rbi(float hitter_rbi) {
+	public void setHitter_rbi(double hitter_rbi) {
 		this.hitter_rbi = hitter_rbi;
 	}
 
-	public float getHitter_sb() {
+	public double getHitter_sb() {
 		return hitter_sb;
 	}
 
-	public void setHitter_sb(float hitter_sb) {
+	public void setHitter_sb(double hitter_sb) {
 		this.hitter_sb = hitter_sb;
 	}
 
-	public float getHitter_hits() {
+	public double getHitter_hits() {
 		return hitter_hits;
 	}
 
-	public void setHitter_hits(float hitter_hits) {
+	public void setHitter_hits(double hitter_hits) {
 		this.hitter_hits = hitter_hits;
 	}
 
-	public float getHitter_singles() {
+	public double getHitter_singles() {
 		return hitter_singles;
 	}
 
-	public void setHitter_singles(float hitter_singles) {
+	public void setHitter_singles(double hitter_singles) {
 		this.hitter_singles = hitter_singles;
 	}
 
-	public float getHitter_doubles() {
+	public double getHitter_doubles() {
 		return hitter_doubles;
 	}
 
-	public void setHitter_doubles(float hitter_doubles) {
+	public void setHitter_doubles(double hitter_doubles) {
 		this.hitter_doubles = hitter_doubles;
 	}
 
-	public float getHitter_triples() {
+	public double getHitter_triples() {
 		return hitter_triples;
 	}
 
-	public void setHitter_triples(float hitter_triples) {
+	public void setHitter_triples(double hitter_triples) {
 		this.hitter_triples = hitter_triples;
 	}
 
-	public float getHitter_tb() {
+	public double getHitter_tb() {
 		return hitter_tb;
 	}
 
-	public void setHitter_tb(float hitter_tb) {
+	public void setHitter_tb(double hitter_tb) {
 		this.hitter_tb = hitter_tb;
 	}
 
-	public float getHitter_so() {
+	public double getHitter_so() {
 		return hitter_so;
 	}
 
-	public void setHitter_so(float hitter_so) {
+	public void setHitter_so(double hitter_so) {
 		this.hitter_so = hitter_so;
 	}
 
-	public float getHitter_bb() {
+	public double getHitter_bb() {
 		return hitter_bb;
 	}
 
-	public void setHitter_bb(float hitter_bb) {
+	public void setHitter_bb(double hitter_bb) {
 		this.hitter_bb = hitter_bb;
 	}
 
-	public float getHitter_hbp() {
+	public double getHitter_hbp() {
 		return hitter_hbp;
 	}
 
-	public void setHitter_hbp(float hitter_hbp) {
+	public void setHitter_hbp(double hitter_hbp) {
 		this.hitter_hbp = hitter_hbp;
 	}
 
-	public float getHitter_sf() {
+	public double getHitter_sf() {
 		return hitter_sf;
 	}
 
-	public void setHitter_sf(float hitter_sf) {
+	public void setHitter_sf(double hitter_sf) {
 		this.hitter_sf = hitter_sf;
 	}
 
-	public float getHitter_cs() {
+	public double getHitter_cs() {
 		return hitter_cs;
 	}
 
-	public void setHitter_cs(float hitter_cs) {
+	public void setHitter_cs(double hitter_cs) {
 		this.hitter_cs = hitter_cs;
 	}
 
-	public float getHitter_avg() {
+	public double getHitter_avg() {
 		return hitter_avg;
 	}
 
-	public void setHitter_avg(float hitter_avg) {
+	public void setHitter_avg(double hitter_avg) {
 		this.hitter_avg = hitter_avg;
 	}
 
-	public float getHitter_obp() {
+	public double getHitter_obp() {
 		return hitter_obp;
 	}
 
-	public void setHitter_obp(float hitter_obp) {
+	public void setHitter_obp(double hitter_obp) {
 		this.hitter_obp = hitter_obp;
 	}
 
-	public float getHitter_slg() {
+	public double getHitter_slg() {
 		return hitter_slg;
 	}
 
-	public void setHitter_slg(float hitter_slg) {
+	public void setHitter_slg(double hitter_slg) {
 		this.hitter_slg = hitter_slg;
 	}
 
-	public float getHitter_ops() {
+	public double getHitter_ops() {
 		return hitter_ops;
 	}
 
-	public void setHitter_ops(float hitter_ops) {
+	public void setHitter_ops(double hitter_ops) {
 		this.hitter_ops = hitter_ops;
 	}
 
-	public float getPitcher_games() {
+	public double getPitcher_games() {
 		return pitcher_games;
 	}
 
-	public void setPitcher_games(float pitcher_games) {
+	public void setPitcher_games(double pitcher_games) {
 		this.pitcher_games = pitcher_games;
 	}
 
-	public float getPitcher_gs() {
+	public double getPitcher_gs() {
 		return pitcher_gs;
 	}
 
-	public void setPitcher_gs(float pitcher_gs) {
+	public void setPitcher_gs(double pitcher_gs) {
 		this.pitcher_gs = pitcher_gs;
 	}
 
-	public float getPitcher_qs() {
+	public double getPitcher_qs() {
 		return pitcher_qs;
 	}
 
-	public void setPitcher_qs(float pitcher_qs) {
+	public void setPitcher_qs(double pitcher_qs) {
 		this.pitcher_qs = pitcher_qs;
 	}
 
-	public float getPitcher_ip() {
+	public double getPitcher_ip() {
 		return pitcher_ip;
 	}
 
-	public void setPitcher_ip(float pitcher_ip) {
+	public void setPitcher_ip(double pitcher_ip) {
 		this.pitcher_ip = pitcher_ip;
 	}
 
-	public float getPitcher_w() {
+	public double getPitcher_w() {
 		return pitcher_w;
 	}
 
-	public void setPitcher_w(float pitcher_w) {
+	public void setPitcher_w(double pitcher_w) {
 		this.pitcher_w = pitcher_w;
 	}
 
-	public float getPitcher_l() {
+	public double getPitcher_l() {
 		return pitcher_l;
 	}
 
-	public void setPitcher_l(float pitcher_l) {
+	public void setPitcher_l(double pitcher_l) {
 		this.pitcher_l = pitcher_l;
 	}
 
-	public float getPitcher_sv() {
+	public double getPitcher_sv() {
 		return pitcher_sv;
 	}
 
-	public void setPitcher_sv(float pitcher_sv) {
+	public void setPitcher_sv(double pitcher_sv) {
 		this.pitcher_sv = pitcher_sv;
 	}
 
-	public float getPitcher_hld() {
+	public double getPitcher_hld() {
 		return pitcher_hld;
 	}
 
-	public void setPitcher_hld(float pitcher_hld) {
+	public void setPitcher_hld(double pitcher_hld) {
 		this.pitcher_hld = pitcher_hld;
 	}
 
-	public float getPitcher_era() {
+	public double getPitcher_era() {
 		return pitcher_era;
 	}
 
-	public void setPitcher_era(float pitcher_era) {
+	public void setPitcher_era(double pitcher_era) {
 		this.pitcher_era = pitcher_era;
 	}
 
-	public float getPitcher_siera() {
+	public double getPitcher_siera() {
 		return pitcher_siera;
 	}
 
-	public void setPitcher_siera(float pitcher_siera) {
+	public void setPitcher_siera(double pitcher_siera) {
 		this.pitcher_siera = pitcher_siera;
 	}
 
-	public float getPitcher_k() {
+	public double getPitcher_k() {
 		return pitcher_k;
 	}
 
-	public void setPitcher_k(float pitcher_k) {
+	public void setPitcher_k(double pitcher_k) {
 		this.pitcher_k = pitcher_k;
 	}
 
-	public float getPitcher_bb() {
+	public double getPitcher_bb() {
 		return pitcher_bb;
 	}
 
-	public void setPitcher_bb(float pitcher_bb) {
+	public void setPitcher_bb(double pitcher_bb) {
 		this.pitcher_bb = pitcher_bb;
 	}
 
-	public float getPitcher_hits() {
+	public double getPitcher_hits() {
 		return pitcher_hits;
 	}
 
-	public void setPitcher_hits(float pitcher_hits) {
+	public void setPitcher_hits(double pitcher_hits) {
 		this.pitcher_hits = pitcher_hits;
 	}
 
-	public float getPitcher_hbp() {
+	public double getPitcher_hbp() {
 		return pitcher_hbp;
 	}
 
-	public void setPitcher_hbp(float pitcher_hbp) {
+	public void setPitcher_hbp(double pitcher_hbp) {
 		this.pitcher_hbp = pitcher_hbp;
 	}
 
-	public float getPitcher_er() {
+	public double getPitcher_er() {
 		return pitcher_er;
 	}
 
-	public void setPitcher_er(float pitcher_er) {
+	public void setPitcher_er(double pitcher_er) {
 		this.pitcher_er = pitcher_er;
 	}
 
-	public float getPitcher_r() {
+	public double getPitcher_r() {
 		return pitcher_r;
 	}
 
-	public void setPitcher_r(float pitcher_r) {
+	public void setPitcher_r(double pitcher_r) {
 		this.pitcher_r = pitcher_r;
 	}
 
-	public float getPitcher_hr() {
+	public double getPitcher_hr() {
 		return pitcher_hr;
 	}
 
-	public void setPitcher_hr(float pitcher_hr) {
+	public void setPitcher_hr(double pitcher_hr) {
 		this.pitcher_hr = pitcher_hr;
 	}
 
-	public float getPitcher_gb_pct() {
+	public double getPitcher_gb_pct() {
 		return pitcher_gb_pct;
 	}
 
-	public void setPitcher_gb_pct(float pitcher_gb_pct) {
+	public void setPitcher_gb_pct(double pitcher_gb_pct) {
 		this.pitcher_gb_pct = pitcher_gb_pct;
 	}
 
-	public float getPitcher_fb_pct() {
+	public double getPitcher_fb_pct() {
 		return pitcher_fb_pct;
 	}
 
-	public void setPitcher_fb_pct(float pitcher_fb_pct) {
+	public void setPitcher_fb_pct(double pitcher_fb_pct) {
 		this.pitcher_fb_pct = pitcher_fb_pct;
 	}
 
-	public float getPitcher_ld_pct() {
+	public double getPitcher_ld_pct() {
 		return pitcher_ld_pct;
 	}
 
-	public void setPitcher_ld_pct(float pitcher_ld_pct) {
+	public void setPitcher_ld_pct(double pitcher_ld_pct) {
 		this.pitcher_ld_pct = pitcher_ld_pct;
 	}
 
-	public float getPitcher_babip() {
+	public double getPitcher_babip() {
 		return pitcher_babip;
 	}
 
-	public void setPitcher_babip(float pitcher_babip) {
+	public void setPitcher_babip(double pitcher_babip) {
 		this.pitcher_babip = pitcher_babip;
 	}
 

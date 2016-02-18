@@ -111,7 +111,7 @@ public class TestLeagues {
 		ProjectionProfile p1_r = getProjectionProfileService().get(p1_id);
 		
 		// Parser
-		Reader in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210-test200.csv");
+		Reader in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210.csv");
 
 		getPlayerProjectedService().updatePlayerProjections(parseProjections(in), p1_r, usr1.getUsername());
 	
@@ -264,13 +264,13 @@ public class TestLeagues {
 		// Create a league
 		League l1 = new League();
 		l1.setMlb_leagues(LeagueService.MLB_LEAGUES_AL);
-		l1.setNum_of_teams(2);
+		l1.setNum_of_teams(11);
 		l1.setAvg_hitter_ab(6500);
 		l1.setAvg_hitter_ba(0.258);
 		l1.setAvg_hitter_hits(l1.getAvg_hitter_ab()*l1.getAvg_hitter_ba());
 		
 		l1.setAvg_pitcher_era(3.96);
-		l1.setAvg_pitcher_ip(1000);
+		l1.setAvg_pitcher_ip(1500);
 		l1.setAvg_pitcher_whip(1.27);
 		l1.setAvg_pitcher_er((l1.getAvg_pitcher_era()/9)*l1.getAvg_pitcher_ip());
 		l1.setAvg_pitcher_bbplushits(l1.getAvg_pitcher_ip()*l1.getAvg_pitcher_whip());
@@ -311,12 +311,12 @@ public class TestLeagues {
 		List<LeaguePlayer> leagueplayers = getLeagueService().getLeaguePlayers(l1_id, usr1.getUsername());
 		
 		// Test count of AL and FA league players
-		Assert.assertTrue(leagueplayers.size() == 116);
+		Assert.assertTrue(leagueplayers.size() == 851);
 		
 		// Parser
 		Reader in = null;
 		try {
-			in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210-test200b.csv");
+			in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210b.csv");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -329,7 +329,7 @@ public class TestLeagues {
 		leagueplayers = getLeagueService().getLeaguePlayers(l1_id, usr1.getUsername());
 		
 		// Test updated count of AL and FA league players
-		Assert.assertTrue(leagueplayers.size() == 115);
+		Assert.assertTrue(leagueplayers.size() == 850);
 		
 		Key<League> leaguekey = Key.create(League.class, l1_id);
 		

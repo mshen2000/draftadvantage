@@ -37,7 +37,7 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	String dc_status;  // updated from player_projected
 	
 	@Index
-	Integer age;  // updated from player_projected
+	int age;  // updated from player_projected
 	
 	@Index
 	String team;  // updated from player_projected
@@ -48,19 +48,23 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	@Index
 	String player_position;  // updated from player_projected
 
-	float hitter_z_hr;
-	float hitter_z_rbi;
-	float hitter_z_runs;
-	float hitter_z_sb;
-	float hitter_z_avg;
-	float pitcher_z_wins;
-	float pitcher_z_saves;
-	float pitcher_z_so;
-	float pitcher_z_era;
-	float pitcher_z_whip;
-	float total_z;
-	Integer rank_z;
-	Integer init_auction_value;
+	double hitter_avg_eff;
+	double pitcher_era_eff;
+	double pitcher_whip_eff;
+	
+	double hitter_z_hr;
+	double hitter_z_rbi;
+	double hitter_z_runs;
+	double hitter_z_sb;
+	double hitter_z_avg;
+	double pitcher_z_wins;
+	double pitcher_z_saves;
+	double pitcher_z_so;
+	double pitcher_z_era;
+	double pitcher_z_whip;
+	double total_z;
+	int rank_z;
+	int init_auction_value;
 
 	public LeaguePlayer() {
 	}
@@ -125,107 +129,107 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 		this.league_update_date = league_update_date;
 	}
 
-	public float getHitter_z_hr() {
+	public double getHitter_z_hr() {
 		return hitter_z_hr;
 	}
 
-	public void setHitter_z_hr(float hitter_z_hr) {
+	public void setHitter_z_hr(double hitter_z_hr) {
 		this.hitter_z_hr = hitter_z_hr;
 	}
 
-	public float getHitter_z_rbi() {
+	public double getHitter_z_rbi() {
 		return hitter_z_rbi;
 	}
 
-	public void setHitter_z_rbi(float hitter_z_rbi) {
+	public void setHitter_z_rbi(double hitter_z_rbi) {
 		this.hitter_z_rbi = hitter_z_rbi;
 	}
 
-	public float getHitter_z_runs() {
+	public double getHitter_z_runs() {
 		return hitter_z_runs;
 	}
 
-	public void setHitter_z_runs(float hitter_z_runs) {
+	public void setHitter_z_runs(double hitter_z_runs) {
 		this.hitter_z_runs = hitter_z_runs;
 	}
 
-	public float getHitter_z_sb() {
+	public double getHitter_z_sb() {
 		return hitter_z_sb;
 	}
 
-	public void setHitter_z_sb(float hitter_z_sb) {
+	public void setHitter_z_sb(double hitter_z_sb) {
 		this.hitter_z_sb = hitter_z_sb;
 	}
 
-	public float getHitter_z_avg() {
+	public double getHitter_z_avg() {
 		return hitter_z_avg;
 	}
 
-	public void setHitter_z_avg(float hitter_z_avg) {
+	public void setHitter_z_avg(double hitter_z_avg) {
 		this.hitter_z_avg = hitter_z_avg;
 	}
 
-	public float getPitcher_z_wins() {
+	public double getPitcher_z_wins() {
 		return pitcher_z_wins;
 	}
 
-	public void setPitcher_z_wins(float pitcher_z_wins) {
+	public void setPitcher_z_wins(double pitcher_z_wins) {
 		this.pitcher_z_wins = pitcher_z_wins;
 	}
 
-	public float getPitcher_z_saves() {
+	public double getPitcher_z_saves() {
 		return pitcher_z_saves;
 	}
 
-	public void setPitcher_z_saves(float pitcher_z_saves) {
+	public void setPitcher_z_saves(double pitcher_z_saves) {
 		this.pitcher_z_saves = pitcher_z_saves;
 	}
 
-	public float getPitcher_z_so() {
+	public double getPitcher_z_so() {
 		return pitcher_z_so;
 	}
 
-	public void setPitcher_z_so(float pitcher_z_so) {
+	public void setPitcher_z_so(double pitcher_z_so) {
 		this.pitcher_z_so = pitcher_z_so;
 	}
 
-	public float getPitcher_z_era() {
+	public double getPitcher_z_era() {
 		return pitcher_z_era;
 	}
 
-	public void setPitcher_z_era(float pitcher_z_era) {
+	public void setPitcher_z_era(double pitcher_z_era) {
 		this.pitcher_z_era = pitcher_z_era;
 	}
 
-	public float getPitcher_z_whip() {
+	public double getPitcher_z_whip() {
 		return pitcher_z_whip;
 	}
 
-	public void setPitcher_z_whip(float pitcher_z_whip) {
+	public void setPitcher_z_whip(double pitcher_z_whip) {
 		this.pitcher_z_whip = pitcher_z_whip;
 	}
 
-	public float getTotal_z() {
+	public double getTotal_z() {
 		return total_z;
 	}
 
-	public void setTotal_z(float total_z) {
+	public void setTotal_z(double total_z) {
 		this.total_z = total_z;
 	}
 
-	public Integer getRank_z() {
+	public int getRank_z() {
 		return rank_z;
 	}
 
-	public void setRank_z(Integer rank_z) {
+	public void setRank_z(int rank_z) {
 		this.rank_z = rank_z;
 	}
 
-	public Integer getInit_auction_value() {
+	public int getInit_auction_value() {
 		return init_auction_value;
 	}
 
-	public void setInit_auction_value(Integer init_auction_value) {
+	public void setInit_auction_value(int init_auction_value) {
 		this.init_auction_value = init_auction_value;
 	}
 
@@ -245,11 +249,11 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 		this.dc_status = dc_status;
 	}
 
-	public Integer getAge() {
+	public int getAge() {
 		return age;
 	}
 
-	public void setAge(Integer age) {
+	public void setAge(int age) {
 		this.age = age;
 	}
 
@@ -287,6 +291,30 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 
 	public void setPlayer_projected(Ref<PlayerProjected> player_projected) {
 		this.player_projected = player_projected;
+	}
+
+	public double getHitter_avg_eff() {
+		return hitter_avg_eff;
+	}
+
+	public void setHitter_avg_eff(double hitter_avg_eff) {
+		this.hitter_avg_eff = hitter_avg_eff;
+	}
+
+	public double getPitcher_era_eff() {
+		return pitcher_era_eff;
+	}
+
+	public void setPitcher_era_eff(double pitcher_era_eff) {
+		this.pitcher_era_eff = pitcher_era_eff;
+	}
+
+	public double getPitcher_whip_eff() {
+		return pitcher_whip_eff;
+	}
+
+	public void setPitcher_whip_eff(double pitcher_whip_eff) {
+		this.pitcher_whip_eff = pitcher_whip_eff;
 	}
 
 	
