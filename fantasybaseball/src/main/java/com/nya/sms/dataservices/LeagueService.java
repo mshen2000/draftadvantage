@@ -3,6 +3,8 @@ package com.nya.sms.dataservices;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -218,27 +220,27 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		List<Double> pitcher_whipeff = new ArrayList<Double>();
 		List<Double> pitcher_eraeff = new ArrayList<Double>();
 		
-		double hitter_hr_mean;
-		double hitter_hr_sd;
-		double hitter_rbi_mean;
-		double hitter_rbi_sd;
-		double hitter_r_mean;
-		double hitter_r_sd;
-		double hitter_sb_mean;
-		double hitter_sb_sd;
-		double hitter_avgeff_mean;
-		double hitter_avgeff_sd;
+		double hitter_hr_mean = 0;
+		double hitter_hr_sd = 0;
+		double hitter_rbi_mean = 0;
+		double hitter_rbi_sd = 0;
+		double hitter_r_mean = 0;
+		double hitter_r_sd = 0;
+		double hitter_sb_mean = 0;
+		double hitter_sb_sd = 0;
+		double hitter_avgeff_mean = 0;
+		double hitter_avgeff_sd = 0;
 		
-		double pitcher_w_mean;
-		double pitcher_w_sd;
-		double pitcher_sv_mean;
-		double pitcher_sv_sd;
-		double pitcher_k_mean;
-		double pitcher_k_sd;
-		double pitcher_whipeff_mean;
-		double pitcher_whipeff_sd;
-		double pitcher_eraeff_mean;
-		double pitcher_eraeff_sd;
+		double pitcher_w_mean = 0;
+		double pitcher_w_sd = 0;
+		double pitcher_sv_mean = 0;
+		double pitcher_sv_sd = 0;
+		double pitcher_k_mean = 0;
+		double pitcher_k_sd = 0;
+		double pitcher_whipeff_mean = 0;
+		double pitcher_whipeff_sd = 0;
+		double pitcher_eraeff_mean = 0;
+		double pitcher_eraeff_sd = 0;
 
 		leagueplayers = this.getLeaguePlayers(league_id, username);
 		
@@ -342,7 +344,158 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		}
 		
 		
+		// Calculate Z scores
+		for (LeaguePlayer lp : leagueplayers) {
+			
+			double z = 0;
+			double tz = 0;
+			
+			PlayerProjected pp = lp.getPlayer_projected();
 
+			if (lp.getPitcher_hitter().equals(PlayerProjectedService.PITCHER_HITTER_HITTER)){
+
+				if (league.isCat_hitter_hr()){
+					z = calcZ(pp.getHitter_hr(),hitter_hr_mean,hitter_hr_sd);
+					lp.setHitter_z_hr(z);
+					tz = tz + z;
+				}
+				if (league.isCat_hitter_rbi()){
+					z = calcZ(pp.getHitter_rbi(),hitter_rbi_mean,hitter_rbi_sd);
+					lp.setHitter_z_rbi(z);
+					tz = tz + z;
+				}
+				if (league.isCat_hitter_r()){
+					z = calcZ(pp.getHitter_runs(),hitter_r_mean,hitter_r_sd);
+					lp.setHitter_z_runs(z);
+					tz = tz + z;
+				}
+				if (league.isCat_hitter_sb()){
+					z = calcZ(pp.getHitter_sb(),hitter_sb_mean,hitter_sb_sd);
+					lp.setHitter_z_sb(z);
+					tz = tz + z;
+				}
+				if (league.isCat_hitter_avg()){ 
+					z = calcZ(lp.getHitter_avg_eff(),hitter_avgeff_mean,hitter_avgeff_sd);
+					lp.setHitter_z_avg(z);
+					tz = tz + z;
+				}
+			}
+			else if (lp.getPitcher_hitter().equals(PlayerProjectedService.PITCHER_HITTER_PITCHER)){
+				if (league.isCat_pitcher_wins()){
+					z = calcZ(pp.getPitcher_w(),pitcher_w_mean,pitcher_w_sd);
+					lp.setPitcher_z_wins(z);
+					tz = tz + z;
+				}
+				if (league.isCat_pitcher_saves()){
+					z = calcZ(pp.getPitcher_sv(),pitcher_sv_mean,pitcher_sv_sd);
+					lp.setPitcher_z_saves(z);
+					tz = tz + z;
+				}
+				if (league.isCat_pitcher_so()){
+					z = calcZ(pp.getPitcher_k(),pitcher_k_mean,pitcher_k_sd);
+					lp.setPitcher_z_so(z);
+					tz = tz + z;
+				}
+				if (league.isCat_pitcher_whip()){ 
+					z = -calcZ(lp.getPitcher_whip_eff(),pitcher_whipeff_mean,pitcher_whipeff_sd);
+					lp.setPitcher_z_whip(z);
+					tz = tz + z;
+				}
+				if (league.isCat_pitcher_era()){
+					z = -calcZ(lp.getPitcher_era_eff(),pitcher_eraeff_mean,pitcher_eraeff_sd);
+					lp.setPitcher_z_era(z);
+					tz = tz + z;
+				}
+			}
+			
+			lp.setTotal_z(tz);
+			
+			if (lp.getTotal_z() > 15)
+				System.out.println("Found total Z: " + lp.getTotal_z());
+			
+			if (lp.getFull_name().equals("Chris Sale")){
+				System.out.println("Found total Chris Sale, total Z: " + lp.getTotal_z());
+				System.out.println("--Win Z:  " + lp.getPitcher_z_wins());
+				System.out.println("--Save Z: " + lp.getPitcher_z_saves());
+				System.out.println("--K Z:    " + lp.getPitcher_z_so());
+				System.out.println("--WHIP Z: " + lp.getPitcher_z_whip());
+				System.out.println("--ERA  Z: " + lp.getPitcher_z_era());
+			}
+			
+		}
+		
+		// Calculate static auction value
+		double num_teams = league.getNum_of_teams();
+		
+		double roster_c = num_teams * league.getNum_c();
+		double roster_1b = num_teams * (league.getNum_1b() + league.getNum_ci()/2.0 + league.getNum_util()/5.0);
+		double roster_2b = num_teams * (league.getNum_2b() + league.getNum_mi()/2.0 + league.getNum_util()/5.0);
+		double roster_3b = num_teams * (league.getNum_3b() + league.getNum_ci()/2.0 + league.getNum_util()/5.0);
+		double roster_ss = num_teams * (league.getNum_ss() + league.getNum_mi()/2.0 + league.getNum_util()/5.0);
+		double roster_of = num_teams * (league.getNum_of() + league.getNum_util()/5.0);
+		double roster_p = num_teams * league.getNum_p();
+		
+		double roster_c_wRes = roster_c;
+		double roster_1b_wRes = roster_1b + (num_teams * league.getNum_res()/12.0);
+		double roster_2b_wRes = roster_2b + (num_teams * league.getNum_res()/12.0);
+		double roster_3b_wRes = roster_3b + (num_teams * league.getNum_res()/12.0);
+		double roster_ss_wRes = roster_ss + (num_teams * league.getNum_res()/12.0);
+		double roster_of_wRes = roster_of + (num_teams * league.getNum_res()/3.0);
+		double roster_p_wRes = roster_p + (num_teams * league.getNum_res()/3.0);
+		
+		int iroster_c = (int) Math.round(roster_c);
+		int iroster_1b = (int) Math.round(roster_1b);
+		int iroster_2b = (int) Math.round(roster_2b);
+		int iroster_3b = (int) Math.round(roster_3b);
+		int iroster_ss = (int) Math.round(roster_ss);
+		int iroster_of = (int) Math.round(roster_of);
+		int iroster_p = (int) Math.round(roster_p);
+		
+		int iroster_c_wRes = (int) Math.round(roster_c_wRes);
+		int iroster_1b_wRes = (int) Math.round(roster_1b_wRes);
+		int iroster_2b_wRes = (int) Math.round(roster_2b_wRes);
+		int iroster_3b_wRes = (int) Math.round(roster_3b_wRes);
+		int iroster_ss_wRes = (int) Math.round(roster_ss_wRes);
+		int iroster_of_wRes = (int) Math.round(roster_of_wRes);
+		int iroster_p_wRes = (int) Math.round(roster_p_wRes);
+		
+		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
+		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
+		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
+		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
+		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
+		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
+		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
+		
+		// Sort players by descending Z
+		Collections.sort(leagueplayers, new Comparator<LeaguePlayer>() {
+		    @Override
+		    public int compare(LeaguePlayer z1, LeaguePlayer z2) {
+		        if (z1.getTotal_z() < z2.getTotal_z())
+		            return 1;
+		        if (z1.getTotal_z() > z2.getTotal_z())
+		            return -1;
+		        return 0;
+		    }
+		});
+		
+		System.out.println("After sort, first LP: " + leagueplayers.get(0).getFull_name() + ", " + leagueplayers.get(0).getTotal_z());
+		System.out.println("After sort, second LP: " + leagueplayers.get(1).getFull_name() + ", " + leagueplayers.get(1).getTotal_z());
+		System.out.println("After sort, third LP: " + leagueplayers.get(2).getFull_name() + ", " + leagueplayers.get(2).getTotal_z());
+		
+
+	}
+	
+	/**
+	 * Description:	Calculates z score
+	 * @param player_value
+	 * @param mean
+	 * @param std_dev
+	 * @return calculated z value
+	 */
+	private double calcZ (double player_value, double mean, double std_dev){
+		double z = (player_value-mean)/std_dev;
+		return z;
 	}
 	
 	
