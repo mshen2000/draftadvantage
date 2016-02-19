@@ -89,7 +89,7 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 			this.age = this.getPlayer_projected().getAge();  
 			this.team = this.getPlayer_projected().getTeam();  
 			this.pitcher_hitter = this.getPlayer_projected().getPitcher_hitter();  
-			if (this.getPlayer_projected().getPitcher_hitter() == "P"){
+			if (this.getPlayer_projected().getPitcher_hitter().equals("P")){
 				this.player_position = this.getPlayer_projected().getPitcher_pos();  
 			} else {
 				this.player_position = this.getPlayer_projected().getHitter_pos_elig_espn();

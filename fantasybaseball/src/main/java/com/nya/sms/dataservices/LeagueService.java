@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
+import com.app.endpoints.entities.PositionalZContainer;
 import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
@@ -409,19 +410,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			}
 			
 			lp.setTotal_z(tz);
-			
-			if (lp.getTotal_z() > 15)
-				System.out.println("Found total Z: " + lp.getTotal_z());
-			
-			if (lp.getFull_name().equals("Chris Sale")){
-				System.out.println("Found total Chris Sale, total Z: " + lp.getTotal_z());
-				System.out.println("--Win Z:  " + lp.getPitcher_z_wins());
-				System.out.println("--Save Z: " + lp.getPitcher_z_saves());
-				System.out.println("--K Z:    " + lp.getPitcher_z_so());
-				System.out.println("--WHIP Z: " + lp.getPitcher_z_whip());
-				System.out.println("--ERA  Z: " + lp.getPitcher_z_era());
-			}
-			
+
 		}
 		
 		// Calculate static auction value
@@ -479,12 +468,123 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		    }
 		});
 		
-		System.out.println("After sort, first LP: " + leagueplayers.get(0).getFull_name() + ", " + leagueplayers.get(0).getTotal_z());
-		System.out.println("After sort, second LP: " + leagueplayers.get(1).getFull_name() + ", " + leagueplayers.get(1).getTotal_z());
-		System.out.println("After sort, third LP: " + leagueplayers.get(2).getFull_name() + ", " + leagueplayers.get(2).getTotal_z());
+//		System.out.println("After sort, first LP: " + leagueplayers.get(0).getFull_name() + ", " + leagueplayers.get(0).getPlayer_position() + ", " + leagueplayers.get(0).getTotal_z());
+//		System.out.println("After sort, second LP: " + leagueplayers.get(1).getFull_name() + ", " + leagueplayers.get(1).getPlayer_position() + ", " + leagueplayers.get(1).getTotal_z());
+//		System.out.println("After sort, third LP: " + leagueplayers.get(2).getFull_name() + ", " + leagueplayers.get(2).getPlayer_position() + ", " + leagueplayers.get(2).getTotal_z());
+//		System.out.println("After sort, third LP: " + leagueplayers.get(3).getFull_name() + ", " + leagueplayers.get(3).getPlayer_position() + ", " + leagueplayers.get(3).getTotal_z());
+	
+		PositionalZContainer posz_c = getPositionalZ(leagueplayers, "C", iroster_c);
+		PositionalZContainer posz_1b = getPositionalZ(leagueplayers, "1B", iroster_1b);
+		PositionalZContainer posz_2b = getPositionalZ(leagueplayers, "2B", iroster_2b);
+		PositionalZContainer posz_3b = getPositionalZ(leagueplayers, "3B", iroster_3b);
+		PositionalZContainer posz_ss = getPositionalZ(leagueplayers, "SS", iroster_ss);
+		PositionalZContainer posz_of = getPositionalZ(leagueplayers, "OF", iroster_of);
+		PositionalZContainer posz_p = getPositionalZ(leagueplayers, "P", iroster_p);
+		double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
 		
+		
+		double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
+				+ posz_3b.getTotalvalue() + posz_ss.getTotalvalue() + posz_of.getTotalvalue() + posz_p.getTotalvalue();
+		
+		double coef = (league.getTeam_salary()*league.getNum_of_teams())/posz_total;
+		
+		// Update auction value
+		for (LeaguePlayer lp : leagueplayers){
+			
+			double auct = 0;
+			
+			if (lp.getPlayer_position().toLowerCase().contains("c")) 
+				auct = Math.max(auct,(lp.getTotal_z()-posz_c.getReplacementvalue())*coef);
+			if (lp.getPlayer_position().toLowerCase().contains("1b")) 
+				auct = Math.max(auct,(lp.getTotal_z()-posz_1b.getReplacementvalue())*coef);
+			if (lp.getPlayer_position().toLowerCase().contains("2b")) 
+				auct = Math.max(auct,(lp.getTotal_z()-posz_2b.getReplacementvalue())*coef);
+			if (lp.getPlayer_position().toLowerCase().contains("3b")) 
+				auct = Math.max(auct,(lp.getTotal_z()-posz_3b.getReplacementvalue())*coef);
+			if (lp.getPlayer_position().toLowerCase().contains("ss")) 
+				auct = Math.max(auct,(lp.getTotal_z()-posz_ss.getReplacementvalue())*coef);
+			if (lp.getPlayer_position().toLowerCase().contains("of")) 
+				auct = Math.max(auct,(lp.getTotal_z()-posz_of.getReplacementvalue())*coef);
+			if (lp.getPlayer_position().toLowerCase().contains("p")) 
+				auct = Math.max(auct,(lp.getTotal_z()-posz_p.getReplacementvalue())*coef);
+			if (lp.getPlayer_position().toLowerCase().contains("dh")) 
+				auct = Math.max(auct,(lp.getTotal_z()-replval_dh)*coef);
+			
+			if (auct < 0) auct = 0;
+			
+			lp.setInit_auction_value((int)Math.round(auct));
 
+		}
+		
+		System.out.println("After sort, first LP: " + leagueplayers.get(0).getFull_name() + ", " + leagueplayers.get(0).getPlayer_position() + ", " + leagueplayers.get(0).getInit_auction_value());
+		System.out.println("After sort, second LP: " + leagueplayers.get(1).getFull_name() + ", " + leagueplayers.get(1).getPlayer_position() + ", " + leagueplayers.get(1).getInit_auction_value());
+		System.out.println("After sort, third LP: " + leagueplayers.get(2).getFull_name() + ", " + leagueplayers.get(2).getPlayer_position() + ", " + leagueplayers.get(2).getInit_auction_value());
+		System.out.println("After sort, third LP: " + leagueplayers.get(3).getFull_name() + ", " + leagueplayers.get(3).getPlayer_position() + ", " + leagueplayers.get(3).getInit_auction_value());
+
+		Map<Key<LeaguePlayer>, LeaguePlayer> keylist = null;
+		keylist = ObjectifyService.ofy().save().entities(leagueplayers).now();
+		
 	}
+	
+	
+	/**
+	 * Description:	Calculate the total Z value for the given position up the the replacement level.
+	 * 				Also determines the avg replacement value. 
+	 * @param leagueplayers
+	 * @param position
+	 * @param repl_level
+	 * @return 
+	 */
+	private PositionalZContainer getPositionalZ(List<LeaguePlayer> leagueplayers, String position, int repl_level){
+		
+		int i = 0;
+		double totalz = 0;
+		double avgz = 0;
+		
+		PositionalZContainer p = new PositionalZContainer();
+		
+		for (LeaguePlayer lp : leagueplayers){
+			
+			if ((lp.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
+				&& (i < repl_level)){
+				
+				totalz = totalz + lp.getTotal_z();
+				i++;
+				
+				// System.out.println(position + ": " + lp.getTotal_z());
+				
+			} else if ((lp.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
+					&& (i == repl_level)){
+				
+				avgz = avgz + lp.getTotal_z();
+				i++;
+				
+				System.out.println(position + "-AVG1: " + lp.getTotal_z());
+				
+			} else if ((lp.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
+					&& (i == repl_level + 1)){
+				
+				avgz = avgz + lp.getTotal_z();
+				i++;
+				
+				System.out.println(position + "-AVG2: " + lp.getTotal_z());
+				
+			} else if (i > repl_level + 1) {break;}
+
+		}
+		
+		avgz = avgz/2;
+		totalz = totalz - repl_level*avgz;
+		
+		System.out.println(position + "-TOTAL: " + totalz);
+		
+		p.setTotalvalue(totalz);
+		p.setReplacementvalue(avgz);
+		
+		return p;
+		
+	}
+	
 	
 	/**
 	 * Description:	Calculates z score
