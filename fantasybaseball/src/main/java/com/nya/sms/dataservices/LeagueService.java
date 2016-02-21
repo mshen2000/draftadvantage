@@ -13,9 +13,9 @@ import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
 import com.app.endpoints.entities.PositionalZContainer;
-import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Ref;
 import com.nya.sms.entities.League;
 import com.nya.sms.entities.LeaguePlayer;
 import com.nya.sms.entities.LeagueTeam;
@@ -59,6 +59,21 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 	}
 	
+	public boolean isLeagueTeamsMaxed(Long league_id){
+		
+		League league = this.get(league_id);
+		
+		if (league.getLeague_teams().isEmpty()){
+
+			return false;
+		} else if (league.getLeague_teams().size() >= league.getNum_of_teams()) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
 	public void addLeagueTeam(Long league_id, Long team_id, String uname) throws IndexOutOfBoundsException {
 
 		League league = this.get(league_id);
@@ -98,16 +113,16 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		boolean isTeamFound = false;
 		long delete_team_id = 0;
 		
-		System.out.println("In deleteLeagueTeam: Number of league teams = " + lg.size());
+		// System.out.println("In deleteLeagueTeam: Number of league teams = " + lg.size());
 		
 		Iterator<LeagueTeam> iter;
 		List<LeagueTeam> teams = new ArrayList<LeagueTeam>();
 
 		for (iter = lg.listIterator(); iter.hasNext(); ) {
 			LeagueTeam a = iter.next();
-			System.out.println("Delete check: " + a.getId() + ", " + team_id);
+			// System.out.println("Delete check: " + a.getId() + ", " + team_id);
 		    if (a.getId().equals(team_id)) {
-		    	System.out.println("In deleteLeagueTeam: Team to remove found = " + a.getTeam_name() + ", " + a.getId());
+		    	// System.out.println("In deleteLeagueTeam: Team to remove found = " + a.getTeam_name() + ", " + a.getId());
 		    	isTeamFound = true;
 		    	delete_team_id = a.getId();
 		        iter.remove();
@@ -122,27 +137,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
         // List<LeagueTeam> teams = Lists.newArrayList(iter);
         league.setLeague_teams(teams);
-        System.out.println("In deleteLeagueTeam: Number of league teams after update = " + teams.size());
+        // System.out.println("In deleteLeagueTeam: Number of league teams after update = " + teams.size());
         this.save(league, uname);
         getLeagueTeamService().delete(delete_team_id);
 	}
 	
-	
-	/**
-	 * Description:	Get a list of LeaguePlayers based on a given league
-	 * @param league_id
-	 * @param username
-	 * @return List<LeaguePlayer>
-	 */
-	public List<LeaguePlayer> getLeaguePlayers(long league_id, String username){
-		
-		Key<League> leaguekey = Key.create(League.class, league_id);
-		
-		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey).list();
-		
-		return leagueplayers;
-		
-	}
+
 	
 	
 	/**
@@ -151,25 +151,33 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param username 
 	 */
 	public void updateLeaguePlayerData(long league_id, String username) {
+		
+		System.out.println("Update League Player Data: BEGIN");
+		
+		System.out.println("Update League Player Data: Deleting LeaguePlayers w/out projections...");
 
 		League league = this.get(league_id);
-
-		List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(
-				league.getProjection_profile(), league.getMlb_leagues());
 		
-		List<LeaguePlayer> leagueplayers = this.getLeaguePlayers(league_id, username);
+		List<LeaguePlayer> leagueplayers = getLeaguePlayerService().getLeaguePlayersByLeague(league_id, username);
+		
+		int deleted = 0;
 		
 		// Delete league players that don't have projections
 		for (LeaguePlayer lp : leagueplayers){
 			
 			if (lp.getPlayer_projected() == null){
 				getLeaguePlayerService().delete(lp.getId());
-				System.out.println("Deleting LeaguePlayer with null projection:  " + lp.getFull_name());
+				deleted++;
+				// System.out.println("Deleting LeaguePlayer with null projection:  " + lp.getFull_name());
 			}
 			
 		}
 		
-		leagueplayers = this.getLeaguePlayers(league_id, username);
+		System.out.println("Update League Player Data: " + deleted + " LeaguePlayers deleted.");
+		
+		System.out.println("Update League Player Data: Update existing LeaguePlayers...");
+		
+		leagueplayers = getLeaguePlayerService().getLeaguePlayersByLeague(league_id, username);
 		
 		// Update existing league players
 		if (!leagueplayers.isEmpty()){
@@ -177,38 +185,72 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			Map<Key<LeaguePlayer>, LeaguePlayer> keylist = null;
 			
 			// Save activates onsave and onload methods in LeaguePlayers
-			keylist = ObjectifyService.ofy().save().entities(leagueplayers).now();
-			System.out.println("Updated " + leagueplayers.size() + " existing LeaguePlayers.");
+			// keylist = ObjectifyService.ofy().save().entities(leagueplayers).now();
+			keylist = getLeaguePlayerService().save(leagueplayers, username);
 			
 		}
 		
+		System.out.println("Update League Player Data: " + leagueplayers.size() + " LeaguePlayers updated.");
+		
+		System.out.println("Update League Player Data: Adding new LeaguePlayers...");
+		
+		List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(
+				league.getProjection_profile(), league.getMlb_leagues());
+		
 		Key<PlayerProjected> ppkey;
+		Ref<PlayerProjected> ppref;
 		List<LeaguePlayer> leagueplayers2;
+		List<LeaguePlayer> leagueplayerstoadd = new ArrayList<LeaguePlayer>();
 		
 		int i = 0;
 		
 		// Add new projection players
 		for (PlayerProjected p : projections){
+			boolean inlp = false;
 			
-			ppkey = Key.create(PlayerProjected.class, p.getId());
-			
-			leagueplayers2 = ofy().load().type(LeaguePlayer.class).filter("player_projected", ppkey).list();
+			for (LeaguePlayer lp : leagueplayers){
+				if (p.getId() == lp.getPlayer_projectedRef().getKey().getId())
+					inlp = true;
+			}
 			
 			// If player projected does not match an existing league player, then add new league player
-			if (leagueplayers2.isEmpty()){
+			if (!inlp){
 				
 				LeaguePlayer lp = new LeaguePlayer();
 				lp.setLeague(league);
 				lp.setPlayer_projected(p);
-				getLeaguePlayerService().save(lp, username);
+				leagueplayerstoadd.add(lp);
+				// getLeaguePlayerService().save(lp, username);
 				i++;
 				
 			}
 			
+//			ppkey = Key.create(PlayerProjected.class, p.getId());
+//			ppref = Ref.create(ppkey);
+			
+//			leagueplayers2 = ofy().load().type(LeaguePlayer.class).filter("player_projected", ppkey).list();
+
+			// If player projected does not match an existing league player, then add new league player
+//			if (leagueplayers2.isEmpty()){
+//				
+//				LeaguePlayer lp = new LeaguePlayer();
+//				lp.setLeague(league);
+//				lp.setPlayer_projected(p);
+//				leagueplayerstoadd.add(lp);
+//				// getLeaguePlayerService().save(lp, username);
+//				i++;
+//				
+//			}
+			
 		}
 		
-		System.out.println("Added " + i + " new LeaguePlayers from Projections.");
+		getLeaguePlayerService().save(leagueplayerstoadd, username);
 		
+		System.out.println("Update League Player Data: " + i + " LeaguePlayers added.");
+		
+		System.out.println("Update League Player Data: Calculating league means and std deviations...");
+		
+		// Calculate league means and std deviations
 		List<Double> hitter_hrs = new ArrayList<Double>();
 		List<Double> hitter_rbis = new ArrayList<Double>();
 		List<Double> hitter_runs = new ArrayList<Double>();
@@ -243,7 +285,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		double pitcher_eraeff_mean = 0;
 		double pitcher_eraeff_sd = 0;
 
-		leagueplayers = this.getLeaguePlayers(league_id, username);
+		leagueplayers = getLeaguePlayerService().getLeaguePlayersByLeague(league_id, username);
 		
 		for (LeaguePlayer lp : leagueplayers) {
 
@@ -297,8 +339,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_hitter_hr()){
 			hitter_hr_mean = StatUtils.mean(toPrimitive(hitter_hrs));
 			hitter_hr_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_hrs)));
-			System.out.println("Hitter HR Mean: " + hitter_hr_mean);
-			System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
+			// System.out.println("Hitter HR Mean: " + hitter_hr_mean);
+			// System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
 		}
 		if (league.isCat_hitter_rbi()){
 			hitter_rbi_mean = StatUtils.mean(toPrimitive(hitter_rbis));
@@ -315,15 +357,15 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_hitter_avg()) {
 			hitter_avgeff_mean = StatUtils.mean(toPrimitive(hitter_avgeff));
 			hitter_avgeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_avgeff)));
-			System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
-			System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
+			// System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
+			// System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
 		}
 		
 		if (league.isCat_pitcher_wins()){
 			pitcher_w_mean = StatUtils.mean(toPrimitive(pitcher_wins));
 			pitcher_w_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_wins)));
-			System.out.println("Pitcher Wins Mean: " + pitcher_w_mean);
-			System.out.println("Pitcher Wins Std Dev: " + pitcher_w_sd);
+			// System.out.println("Pitcher Wins Mean: " + pitcher_w_mean);
+			// System.out.println("Pitcher Wins Std Dev: " + pitcher_w_sd);
 		}
 		if (league.isCat_pitcher_saves()){
 			pitcher_sv_mean = StatUtils.mean(toPrimitive(pitcher_saves));
@@ -340,11 +382,11 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_pitcher_era()) {
 			pitcher_eraeff_mean = StatUtils.mean(toPrimitive(pitcher_eraeff));
 			pitcher_eraeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_eraeff)));
-			System.out.println("Pitcher ERA Eff Mean: " + pitcher_eraeff_mean);
-			System.out.println("Pitcher ERA Eff Std Dev: " + pitcher_eraeff_sd);
+			// System.out.println("Pitcher ERA Eff Mean: " + pitcher_eraeff_mean);
+			// System.out.println("Pitcher ERA Eff Std Dev: " + pitcher_eraeff_sd);
 		}
 		
-		
+		System.out.println("Update League Player Data: Calculating LeaguePlayer Z scores...");
 		// Calculate Z scores
 		for (LeaguePlayer lp : leagueplayers) {
 			
@@ -413,6 +455,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		}
 		
+		System.out.println("Update League Player Data: Calculating LeaguePlayer static auction values...");
+		
 		// Calculate static auction value
 		double num_teams = league.getNum_of_teams();
 		
@@ -467,12 +511,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		        return 0;
 		    }
 		});
-		
-//		System.out.println("After sort, first LP: " + leagueplayers.get(0).getFull_name() + ", " + leagueplayers.get(0).getPlayer_position() + ", " + leagueplayers.get(0).getTotal_z());
-//		System.out.println("After sort, second LP: " + leagueplayers.get(1).getFull_name() + ", " + leagueplayers.get(1).getPlayer_position() + ", " + leagueplayers.get(1).getTotal_z());
-//		System.out.println("After sort, third LP: " + leagueplayers.get(2).getFull_name() + ", " + leagueplayers.get(2).getPlayer_position() + ", " + leagueplayers.get(2).getTotal_z());
-//		System.out.println("After sort, third LP: " + leagueplayers.get(3).getFull_name() + ", " + leagueplayers.get(3).getPlayer_position() + ", " + leagueplayers.get(3).getTotal_z());
-	
+
 		PositionalZContainer posz_c = getPositionalZ(leagueplayers, "C", iroster_c);
 		PositionalZContainer posz_1b = getPositionalZ(leagueplayers, "1B", iroster_1b);
 		PositionalZContainer posz_2b = getPositionalZ(leagueplayers, "2B", iroster_2b);
@@ -481,8 +520,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		PositionalZContainer posz_of = getPositionalZ(leagueplayers, "OF", iroster_of);
 		PositionalZContainer posz_p = getPositionalZ(leagueplayers, "P", iroster_p);
 		double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
-		
-		
+
 		double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
 				+ posz_3b.getTotalvalue() + posz_ss.getTotalvalue() + posz_of.getTotalvalue() + posz_p.getTotalvalue();
 		
@@ -516,13 +554,17 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		}
 		
-		System.out.println("After sort, first LP: " + leagueplayers.get(0).getFull_name() + ", " + leagueplayers.get(0).getPlayer_position() + ", " + leagueplayers.get(0).getInit_auction_value());
-		System.out.println("After sort, second LP: " + leagueplayers.get(1).getFull_name() + ", " + leagueplayers.get(1).getPlayer_position() + ", " + leagueplayers.get(1).getInit_auction_value());
-		System.out.println("After sort, third LP: " + leagueplayers.get(2).getFull_name() + ", " + leagueplayers.get(2).getPlayer_position() + ", " + leagueplayers.get(2).getInit_auction_value());
-		System.out.println("After sort, third LP: " + leagueplayers.get(3).getFull_name() + ", " + leagueplayers.get(3).getPlayer_position() + ", " + leagueplayers.get(3).getInit_auction_value());
+		for (int out = 0; out < 150; out++) {
+			System.out.println("--Player Test: " + leagueplayers.get(out).getFull_name() + ", "
+					+ leagueplayers.get(out).getPlayer_position() + ", " + leagueplayers.get(out).getInit_auction_value());
+		}
 
+		System.out.println("Update League Player Data: Saving LeaguePlayers...");
+		
 		Map<Key<LeaguePlayer>, LeaguePlayer> keylist = null;
 		keylist = ObjectifyService.ofy().save().entities(leagueplayers).now();
+		
+		System.out.println("Update League Player Data: COMPLETE");
 		
 	}
 	
@@ -559,7 +601,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				avgz = avgz + lp.getTotal_z();
 				i++;
 				
-				System.out.println(position + "-AVG1: " + lp.getTotal_z());
+				// System.out.println(position + "-AVG1: " + lp.getTotal_z());
 				
 			} else if ((lp.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
 					&& (i == repl_level + 1)){
@@ -567,7 +609,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				avgz = avgz + lp.getTotal_z();
 				i++;
 				
-				System.out.println(position + "-AVG2: " + lp.getTotal_z());
+				// System.out.println(position + "-AVG2: " + lp.getTotal_z());
 				
 			} else if (i > repl_level + 1) {break;}
 
@@ -576,7 +618,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		avgz = avgz/2;
 		totalz = totalz - repl_level*avgz;
 		
-		System.out.println(position + "-TOTAL: " + totalz);
+		// System.out.println(position + "-TOTAL: " + totalz);
 		
 		p.setTotalvalue(totalz);
 		p.setReplacementvalue(avgz);
@@ -609,7 +651,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		 double[] target = new double[doublelist.size()];
 		 for (int i = 0; i < target.length; i++) {
 
-		    target[i] = doublelist.get(i);                // java 1.5+ style (outboxing)
+		    target[i] = doublelist.get(i);         
 		 }
 		 
 		 return target;

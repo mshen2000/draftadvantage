@@ -20,6 +20,9 @@ public class League extends BaseEntity implements Serializable {
 	String league_site;
 	
 	@Index
+	int league_year;
+	
+	@Index
 	Ref<User> user;
 	
 	@Index
@@ -446,6 +449,14 @@ public class League extends BaseEntity implements Serializable {
 
 	public void setNum_ci(int num_ci) {
 		this.num_ci = num_ci;
+	}
+
+	public int getLeague_year() {
+		return league_year;
+	}
+
+	public void setLeague_year(int league_year) {
+		this.league_year = league_year;
 	}
 
 	

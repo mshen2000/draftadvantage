@@ -5,11 +5,13 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.entities.BaseEntity;
+import com.nya.sms.entities.LeaguePlayer;
 import com.nya.sms.entities.Points;
 import com.nya.sms.entities.Student;
 
@@ -36,6 +38,24 @@ public class AbstractDataServiceImpl<T extends BaseEntity> implements Serializab
 		Key<T> key = ObjectifyService.ofy().save().entity(item).now(); 
 		
 		return key.getId();
+		
+	}
+	
+	public Map<Key<T>, T> save(List<T> itemlist, String uname){
+		
+		Map<Key<T>, T> keylist = null;
+		
+		for (T item : itemlist){
+			
+			if (item.getId() == null) item.setCreatedby(uname);
+			
+			item.setModifiedby(uname);
+			
+		}
+
+		keylist = ObjectifyService.ofy().save().entities(itemlist).now();
+		
+		return keylist;
 		
 	}
 

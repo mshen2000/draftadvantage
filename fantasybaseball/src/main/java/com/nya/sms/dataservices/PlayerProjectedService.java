@@ -79,7 +79,7 @@ public class PlayerProjectedService implements Serializable {
 		double estimatedTime1 = System.currentTimeMillis() - startTime;
 		
 		// System.out.println("Do something with list: " + players.get(500).getFull_name());
-		System.out.println("InService: Time to Query in Objectify: " + formatter.format(estimatedTime1/1000) + " seconds");
+		// System.out.println("InService: Time to Query in Objectify: " + formatter.format(estimatedTime1/1000) + " seconds");
 
 		return players;
 	}
@@ -356,9 +356,9 @@ public class PlayerProjectedService implements Serializable {
 
 		}
 
-		System.out.println("Number of players to DELETE: " + playerlistdelete.size());
-		System.out.println("Number of players in Update list: " + updateplayerlist.size());
-		System.out.println("Number of update players matching source: " + j);
+//		System.out.println("Number of players to DELETE: " + playerlistdelete.size());
+//		System.out.println("Number of players in Update list: " + updateplayerlist.size());
+//		System.out.println("Number of update players matching source: " + j);
 
 		// Previously used transaction to group delete and add
 		// Integer size = ObjectifyService.ofy().transact(new Work<Integer>() {
@@ -402,15 +402,15 @@ public class PlayerProjectedService implements Serializable {
 			i++;
 		}
 
-		System.out.println("Number of players saved: " + keylist.size());
+		// System.out.println("Number of players saved: " + keylist.size());
 
 		// Set pitcher and hitter count
 		profile.setHitters(countHitterProjections(profile));
 		profile.setPitchers(countPitcherProjections(profile));
 		getProjectionProfileService().save(profile, uname);
 		
-		System.out.println("--Hitters: " + profile.getHitters());
-		System.out.println("--Pitchers: " + profile.getPitchers());
+//		System.out.println("--Hitters: " + profile.getHitters());
+//		System.out.println("--Pitchers: " + profile.getPitchers());
 		
 		return keylist.size();
 

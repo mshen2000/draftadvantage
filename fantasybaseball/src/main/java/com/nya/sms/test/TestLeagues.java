@@ -111,7 +111,7 @@ public class TestLeagues {
 		ProjectionProfile p1_r = getProjectionProfileService().get(p1_id);
 		
 		// Parser
-		Reader in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210.csv");
+		Reader in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210a.csv");
 
 		getPlayerProjectedService().updatePlayerProjections(parseProjections(in), p1_r, usr1.getUsername());
 	
@@ -231,6 +231,9 @@ public class TestLeagues {
 		// Test count of league teams in league
 		Assert.assertTrue(l1_r.getLeague_teams().size() == 2);  
 		
+		// Test league team max check method (true)
+		Assert.assertTrue(getLeagueService().isLeagueTeamsMaxed(l1_r.getId()));
+		
 		// Test limit of teams in league
 		try {
 			getLeagueService().addLeagueTeam(l1_id, lt4_id, usr1.getUsername());
@@ -241,6 +244,9 @@ public class TestLeagues {
 		l1_r = getLeagueService().get(l1_id);
 
 		getLeagueService().deleteLeagueTeam(l1_id, lt2_id, usr1.getUsername());
+		
+		// Test league team max check method (false)
+		Assert.assertTrue(!getLeagueService().isLeagueTeamsMaxed(l1_r.getId()));
 		
 		// Test count of league teams and total teams after delete Team from League
 		Assert.assertTrue(l1_r.getLeague_teams().size() == 1);
@@ -260,6 +266,8 @@ public class TestLeagues {
 		User usr1 = getIdentityService().getUser("test1");
 		ProjectionProfile p1 = getProjectionProfileService().get(ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
 				ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016);
+		
+		String uname = usr1.getUsername();
 		
 		// Create a league
 		League l1 = new League();
@@ -308,7 +316,7 @@ public class TestLeagues {
 
 		getLeagueService().updateLeaguePlayerData(l1_id, usr1.getUsername());
 		
-		List<LeaguePlayer> leagueplayers = getLeagueService().getLeaguePlayers(l1_id, usr1.getUsername());
+		List<LeaguePlayer> leagueplayers = getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, usr1.getUsername());
 		
 		// Test count of AL and FA league players
 		Assert.assertTrue(leagueplayers.size() == 851);
@@ -326,7 +334,7 @@ public class TestLeagues {
 		
 		getLeagueService().updateLeaguePlayerData(l1_id, usr1.getUsername());
 		
-		leagueplayers = getLeagueService().getLeaguePlayers(l1_id, usr1.getUsername());
+		leagueplayers = getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, usr1.getUsername());
 		
 		// Test updated count of AL and FA league players
 		Assert.assertTrue(leagueplayers.size() == 850);
@@ -350,6 +358,84 @@ public class TestLeagues {
 				.filter("league",leaguekey).list().size() == 1);  //  Checks if player exists
 		Assert.assertTrue(ofy().load().type(LeaguePlayer.class).filter("full_name", "Ian Kinsler")
 				.filter("dc-status", "S").filter("league",leaguekey).list().isEmpty());  //  Checks if update worked
+		
+		
+		LeaguePlayer chris_sale = ofy().load().type(LeaguePlayer.class).filter("full_name", "Chris Sale")
+				.filter("league", leaguekey).list().get(0);
+		LeaguePlayer chris_davis = ofy().load().type(LeaguePlayer.class).filter("full_name", "Chris Davis")
+				.filter("league", leaguekey).list().get(0);
+		LeaguePlayer starlin_castro = ofy().load().type(LeaguePlayer.class).filter("full_name", "Starlin Castro")
+				.filter("league", leaguekey).list().get(0);
+		LeaguePlayer mike_trout = ofy().load().type(LeaguePlayer.class).filter("full_name", "Mike Trout")
+				.filter("league", leaguekey).list().get(0);
+		LeaguePlayer aroldis_chapman = ofy().load().type(LeaguePlayer.class).filter("full_name", "Aroldis Chapman")
+				.filter("league", leaguekey).list().get(0);
+		LeaguePlayer salvadar_perez = ofy().load().type(LeaguePlayer.class).filter("full_name", "Salvador Perez")
+				.filter("league", leaguekey).list().get(0);
+		
+		// Test auction values
+		Assert.assertTrue(chris_sale.getInit_auction_value() == 54);  
+		Assert.assertTrue(chris_davis.getInit_auction_value() == 18); 
+		Assert.assertTrue(starlin_castro.getInit_auction_value() == 17); 
+		Assert.assertTrue(mike_trout.getInit_auction_value() == 43); 
+		Assert.assertTrue(aroldis_chapman.getInit_auction_value() == 28); 
+		Assert.assertTrue(salvadar_perez.getInit_auction_value() == 18); 
+		
+		// Create teams in league
+		LeagueTeam lt1 = new LeagueTeam();
+		lt1.setTeam_name("Team1");
+		lt1.setOwner_name("Owner1");
+		lt1.setIsuserowner(true);
+		
+		LeagueTeam lt2 = new LeagueTeam();
+		lt2.setTeam_name("Team2");
+		lt2.setOwner_name("Owner2");
+		
+		LeagueTeam lt3 = new LeagueTeam();
+		lt3.setTeam_name("Team3");
+		lt3.setOwner_name("Owner3");
+
+		long lt1_id = getLeagueTeamService().save(lt1, usr1.getUsername());
+		long lt2_id = getLeagueTeamService().save(lt2, usr1.getUsername());
+		long lt3_id = getLeagueTeamService().save(lt3, usr1.getUsername());
+		
+		LeagueTeam lt1_r = getLeagueTeamService().get(lt1_id);
+		LeagueTeam lt2_r = getLeagueTeamService().get(lt2_id);
+		LeagueTeam lt3_r = getLeagueTeamService().get(lt3_id);
+		
+		getLeagueService().addLeagueTeam(l1_id, lt1_id, usr1.getUsername());
+		getLeagueService().addLeagueTeam(l1_id, lt2_id, usr1.getUsername());
+		getLeagueService().addLeagueTeam(l1_id, lt3_id, usr1.getUsername());
+		
+		getLeaguePlayerService().draftLeaguePlayer(lt1_id, chris_sale.getId(), uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt1_id, chris_davis.getId(), uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt1_id, salvadar_perez.getId(), uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt2_id, starlin_castro.getId(), uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt2_id, aroldis_chapman.getId(), uname);
+		
+		// Test isLeaguePlayerDrafted
+		Assert.assertTrue(getLeaguePlayerService().isLeaguePlayerDrafted(chris_sale.getId()));
+		Assert.assertFalse(getLeaguePlayerService().isLeaguePlayerDrafted(mike_trout.getId()));
+		
+		// Test getLeaguePlayersbyTeam
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 3);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt3_id, uname).size() == 0);
+		
+		// Test undraftLeaguePlayer
+		getLeaguePlayerService().undraftLeaguePlayer(chris_davis.getId(), uname);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 2);
+		
+		// Test undraftLeaguePlayerbyTeam
+		getLeaguePlayerService().undraftAllLeaguePlayersInTeam(lt1_id, uname);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 0);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 2);
+		
+		// Test undraftLeaguePlayerbyLeague
+		getLeaguePlayerService().undraftAllLeaguePlayersInLeague(l1_id, uname);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 0);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 0);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt3_id, uname).size() == 0);
+		
 		
 	}
 	

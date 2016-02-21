@@ -106,7 +106,14 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	}
 
 	public LeagueTeam getLeague_team() {
+		
+		if (league_team == null) return null;
+		
 		return league_team.get();
+	}
+	
+	public Ref<LeagueTeam> getLeague_teamRef() {
+		return league_team;
 	}
 
 	public void setLeague_team(LeagueTeam league_team) {
@@ -115,6 +122,11 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 
 	public PlayerProjected getPlayer_projected() {
 		return player_projected.get();
+	}
+	
+	// Added to get only ref
+	public Ref<PlayerProjected> getPlayer_projectedRef() {
+		return player_projected;
 	}
 
 	public void setPlayer_projected(PlayerProjected player_projected) {
