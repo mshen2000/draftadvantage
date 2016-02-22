@@ -21,6 +21,7 @@ import com.nya.sms.entities.LeaguePlayer;
 import com.nya.sms.entities.LeagueTeam;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
+import com.nya.sms.entities.User;
 
 /**
  * @author Michael
@@ -57,6 +58,17 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		super.delete(id);
 		
+	}
+	
+	public List<League> getUserLeagues(String username){
+		
+		getIdentityService().getUser(username);
+		
+		Key<User> userkey = Key.create(User.class, getIdentityService().getUser(username).getId());
+		
+		List<League> leagues = ofy().load().type(League.class).filter("user", userkey).list();
+		
+		return leagues;
 	}
 	
 	public boolean isLeagueTeamsMaxed(Long league_id){
@@ -671,9 +683,9 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 	}
 	
-	private ProjectionProfileService getProjectionProfileService(){
+	private IdentityService getIdentityService(){
 
-		return new ProjectionProfileService(ProjectionProfile.class);
+		return new IdentityService();
 
 	}
 	

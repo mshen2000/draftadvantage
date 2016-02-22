@@ -89,25 +89,24 @@
 	
 		<div >
 			  <div style="float:right;">
-				<select style="width:auto;margin-top:10px;" class="form-control" id="draftKey">
+				<select style="width:auto;margin-top:10px;" class="form-control" id="league-select">
 					  <option value="0">---- Select League ----</option>
-				
 					  <option value="new">Add New League...</option>
 				</select>
 			 </div>		
 	    </div>
 			
-	  <h3>
-	    Cheat Sheet Calculator
-	  </h3>
+	  <h2>
+	    Auction Draft Manager
+	  </h2>
 	
 	</div>
 	
 	<div class="container">
 		<div class="jumbotron">
-		  <h2>Hello, world!</h2>
-		  <p>...</p>
-		  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+		  <h1>Get Started</h1>
+		  <p>Manage fantasy baseball auction drafts with this application.  Select the dropdown above to create and manage
+		  the auction draft for a specific league.</p>
 		</div>
 	</div>
 
@@ -154,15 +153,15 @@
 	<!-- PROGRESS SPINNER -->
 	<script src="../../js/progress-spinner.js"></script>
 	
-	<script async src="../../js/loadprojections.js"></script>
+	<script async src="../../js/draftmanager.js"></script>
 	<script async src="../../js/base.js"></script>
 
 	<script>
 		function init() {
 			mssolutions.fbapp.login.auth_user('//' + window.location.host
 					+ '/_ah/api');
-			// mssolutions.fbapp.loadprojections.init_nav('//'
-			// 		+ window.location.host + '/_ah/api');
+			mssolutions.fbapp.draftmanager.init_nav('//'
+					+ window.location.host + '/_ah/api');
 		}
 	</script>
 	<script src="https://apis.google.com/js/client.js?onload=init"></script>

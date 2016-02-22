@@ -16,6 +16,7 @@ import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.LeagueService;
 import com.nya.sms.dataservices.PlayerProjectedService;
 import com.nya.sms.dataservices.ProjectionProfileService;
+import com.nya.sms.entities.League;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
 
@@ -55,6 +56,13 @@ public class MainEndpoint {
 
 	}
 
+	private LeagueService getLeagueService() {
+
+		return new LeagueService(League.class);
+
+	}
+
+	
 	private com.nya.sms.entities.User validateAdminToken(HttpServletRequest req) throws UnauthorizedException {
 		APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
 
@@ -63,6 +71,16 @@ public class MainEndpoint {
 
 		return getIdentityService().getUserfromToken(token);
 	}
+	
+	
+	
+	@ApiMethod(name = "league.getuserleagues")
+	public List<League> getUserLeagues(HttpServletRequest req) throws UnauthorizedException {
+
+		return getLeagueService().getUserLeagues(validateAdminToken(req).getUsername());
+
+	}
+	
 
 	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
 	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req)
@@ -99,13 +117,14 @@ public class MainEndpoint {
 
 	}
 
+
 	@ApiMethod(name = "projectionprofile.save")
 	public APIGeneralResult saveProjectionProfile(ProjectionProfile profile, HttpServletRequest req)
 			throws UnauthorizedException {
 
-		System.out.println("Endpoint Profile Service: " + profile.getProjection_service());
-		System.out.println("Endpoint Profile Period: " + profile.getProjection_period());
-		System.out.println("Endpoint Profile Year: " + profile.getProjected_year());
+//		System.out.println("Endpoint Profile Service: " + profile.getProjection_service());
+//		System.out.println("Endpoint Profile Period: " + profile.getProjection_period());
+//		System.out.println("Endpoint Profile Year: " + profile.getProjected_year());
 
 		getProjectionProfileService().save(profile, validateAdminToken(req).getUsername());
 
@@ -162,11 +181,6 @@ public class MainEndpoint {
 		// System.out.println("Player 0: " + p_array.get(0).getFull_name());
 
 		int count = 0;
-
-		// ProjectionProfile profile = new ProjectionProfile();
-		// profile.setProjected_year(container.getProj_year());
-		// profile.setProjection_period(container.getProj_period());
-		// profile.setProjection_service(container.getProj_service());
 		
 		System.out.println("Profile service: " + container.getProj_service());
 		System.out.println("Profile period: " + container.getProj_period());

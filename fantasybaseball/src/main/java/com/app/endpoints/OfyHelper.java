@@ -32,6 +32,9 @@ import com.nya.sms.entities.BaseFieldString;
 import com.nya.sms.entities.CustomObjectTest;
 import com.nya.sms.entities.HealthRule;
 import com.nya.sms.entities.JKey;
+import com.nya.sms.entities.League;
+import com.nya.sms.entities.LeaguePlayer;
+import com.nya.sms.entities.LeagueTeam;
 import com.nya.sms.entities.Note;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.Points;
@@ -106,6 +109,10 @@ public class OfyHelper implements ServletContextListener {
 
 		ObjectifyService.register(PlayerProjected.class);
 		ObjectifyService.register(ProjectionProfile.class);
+		ObjectifyService.register(League.class);
+		ObjectifyService.register(LeaguePlayer.class);
+		ObjectifyService.register(LeagueTeam.class);
+		
 
 		ObjectifyService.run(new VoidWork() {
 			public void vrun() {

@@ -97,8 +97,13 @@ public class TestLeagues {
 		User usr1 = new User("test1", "test1");
 		usr1.setFirstname("Test");
 		usr1.setLastname("One");
+		
+		User usr2 = new User("test2", "test2");
+		usr2.setFirstname("Test");
+		usr2.setLastname("Two");
 
 		getIdentityService().saveUser(usr1, usr1.getUsername());
+		getIdentityService().saveUser(usr2, usr2.getUsername());
 		
 		// Create projection profile
 		ProjectionProfile p1 = new ProjectionProfile();
@@ -132,6 +137,7 @@ public class TestLeagues {
 	public void testLeagues() {
 		
 		User usr1 = getIdentityService().getUser("test1");
+		User usr2 = getIdentityService().getUser("test2");
 		
 		LeagueTeam lt1 = new LeagueTeam();
 		lt1.setTeam_name("Team1");
@@ -177,6 +183,7 @@ public class TestLeagues {
 		
 		// Test League Team count
 		Assert.assertTrue(getLeagueTeamService().getAll().size() == 4);
+
 		
 		getLeagueTeamService().delete(lt3_id);
 		
@@ -230,6 +237,10 @@ public class TestLeagues {
 		
 		// Test count of league teams in league
 		Assert.assertTrue(l1_r.getLeague_teams().size() == 2);  
+
+		// Test get Leagues by user
+		Assert.assertTrue(getLeagueService().getUserLeagues(usr1.getUsername()).size() == 1);
+		Assert.assertTrue(getLeagueService().getUserLeagues(usr2.getUsername()).size() == 0);
 		
 		// Test league team max check method (true)
 		Assert.assertTrue(getLeagueService().isLeagueTeamsMaxed(l1_r.getId()));
