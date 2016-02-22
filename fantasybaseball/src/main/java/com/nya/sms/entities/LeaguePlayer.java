@@ -24,6 +24,9 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	Ref<LeagueTeam> league_team;
 	
 	@Index
+	String team_roster_position;
+	
+	@Index
 	@Load
 	Ref<PlayerProjected> player_projected;
 	
@@ -118,6 +121,14 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 
 	public void setLeague_team(LeagueTeam league_team) {
 		this.league_team = Ref.create(league_team);
+	}
+	
+	public String getTeam_roster_position() {
+		return team_roster_position;
+	}
+
+	public void setTeam_roster_position(String team_roster_position) {
+		this.team_roster_position = team_roster_position;
 	}
 
 	public PlayerProjected getPlayer_projected() {

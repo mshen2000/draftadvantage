@@ -186,10 +186,12 @@ public class IdentityService implements Serializable {
 	}
 	
 	public boolean validateUserJWT(APIToken jwt){
+		System.out.println("In validateUserJWT");
 		return validateJWT("user",jwt);
 	}
 
 	public boolean validateAdminJWT(APIToken jwt){
+		System.out.println("In validateAdminJWT");
 		return validateJWT("admin",jwt);
 	}
 	

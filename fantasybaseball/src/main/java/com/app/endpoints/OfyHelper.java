@@ -186,6 +186,10 @@ public class OfyHelper implements ServletContextListener {
 		if (!isGroupPresent("admin")) {
 			createAdminRole();
 		}
+		
+		if (!isGroupPresent("user")) {
+			createUserRole();
+		}
 	}
 
 	private void deleteAllIfPresent() {
@@ -236,6 +240,8 @@ public class OfyHelper implements ServletContextListener {
 		usr.setExt_id("103506611204742844645");
 
 		getIdentityService().saveUser(usr, usr.getUsername());
+		
+		assignAdminUserToGroups(usr);
 
 	}
 
@@ -248,7 +254,19 @@ public class OfyHelper implements ServletContextListener {
 
 	private void assignAdminUserToGroups(User usr) {
 
-		getIdentityService().createMembership(usr.getUsername(), "admin");
+		List<Role> roles = getIdentityService().getUserRoles(usr.getUsername());
+		boolean isRoleAdmin = false;
+		boolean isRoleUser = false;
+		
+		for (Role r : roles){
+			
+			if (r.getName().equals("user")) isRoleUser = true;
+			if (r.getName().equals("admin")) isRoleAdmin = true;
+			
+		}
+		
+		if (!isRoleAdmin) getIdentityService().createMembership(usr.getUsername(), "admin");
+		if (!isRoleUser) getIdentityService().createMembership(usr.getUsername(), "user");
 
 	}
 
@@ -293,6 +311,16 @@ public class OfyHelper implements ServletContextListener {
 
 		getIdentityService().saveRole(role, "admin");
 
+	}
+	
+	private void createUserRole(){
+		log.log(Level.INFO,
+				"Creating a group with the id '{1}' and name '{2}'",
+				new Object[] { "user", "User" });
+
+		Role role = new Role("user", "User");
+
+		getIdentityService().saveRole(role, "admin");
 	}
 
 	private void createStaffRole() {

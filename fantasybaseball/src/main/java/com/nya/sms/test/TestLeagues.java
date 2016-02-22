@@ -407,11 +407,16 @@ public class TestLeagues {
 		getLeagueService().addLeagueTeam(l1_id, lt2_id, usr1.getUsername());
 		getLeagueService().addLeagueTeam(l1_id, lt3_id, usr1.getUsername());
 		
-		getLeaguePlayerService().draftLeaguePlayer(lt1_id, chris_sale.getId(), uname);
-		getLeaguePlayerService().draftLeaguePlayer(lt1_id, chris_davis.getId(), uname);
-		getLeaguePlayerService().draftLeaguePlayer(lt1_id, salvadar_perez.getId(), uname);
-		getLeaguePlayerService().draftLeaguePlayer(lt2_id, starlin_castro.getId(), uname);
-		getLeaguePlayerService().draftLeaguePlayer(lt2_id, aroldis_chapman.getId(), uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt1_id, chris_sale.getId(),
+				LeaguePlayerService.TEAM_ROSTER_POSITION_P, uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt1_id, chris_davis.getId(),
+				LeaguePlayerService.TEAM_ROSTER_POSITION_1B, uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt1_id, salvadar_perez.getId(),
+				LeaguePlayerService.TEAM_ROSTER_POSITION_C, uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt2_id, starlin_castro.getId(),
+				LeaguePlayerService.TEAM_ROSTER_POSITION_2B, uname);
+		getLeaguePlayerService().draftLeaguePlayer(lt2_id, aroldis_chapman.getId(),
+				LeaguePlayerService.TEAM_ROSTER_POSITION_P, uname);
 		
 		// Test isLeaguePlayerDrafted
 		Assert.assertTrue(getLeaguePlayerService().isLeaguePlayerDrafted(chris_sale.getId()));

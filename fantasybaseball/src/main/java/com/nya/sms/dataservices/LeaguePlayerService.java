@@ -17,6 +17,18 @@ import com.nya.sms.entities.LeagueTeam;
 public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	
 	private static final long serialVersionUID = 1L;
+	
+	public static final String TEAM_ROSTER_POSITION_C = "C";
+	public static final String TEAM_ROSTER_POSITION_1B = "1B";
+	public static final String TEAM_ROSTER_POSITION_2B = "2B";
+	public static final String TEAM_ROSTER_POSITION_SS = "SS";
+	public static final String TEAM_ROSTER_POSITION_3B = "3B";
+	public static final String TEAM_ROSTER_POSITION_MI = "MI";
+	public static final String TEAM_ROSTER_POSITION_CI = "CI";
+	public static final String TEAM_ROSTER_POSITION_OF = "OF";
+	public static final String TEAM_ROSTER_POSITION_P = "P";
+	public static final String TEAM_ROSTER_POSITION_UT = "UT";
+	public static final String TEAM_ROSTER_POSITION_RES = "RES";
 
 	public LeaguePlayerService(Class<LeaguePlayer> clazz) {
 		super(clazz);
@@ -66,11 +78,12 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		
 	}
 	
-	public void draftLeaguePlayer (Long leagueteamid, Long leagueplayerid, String uname){
+	public void draftLeaguePlayer (Long leagueteamid, Long leagueplayerid, String team_roster_position, String uname){
 		
 		LeaguePlayer lp = this.get(leagueplayerid);
 		
 		lp.setLeague_team(Ref.create(Key.create(LeagueTeam.class, leagueteamid)));
+		lp.setTeam_roster_position(team_roster_position);
 		
 		this.save(lp, uname);
 		

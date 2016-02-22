@@ -125,6 +125,20 @@ public class LogonEndpoint {
       else return new APIGeneralResult("KO", "Token is invalid: " + token.getToken());
 
   }
+  
+  
+  @ApiMethod(name = "auth.authenticateuser", httpMethod = "post")
+  public APIGeneralResult AuthenticateUser(HttpServletRequest req)  {
+
+      APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
+	  
+      if(getIdentityService().validateUserJWT(token)) //Validate credentials
+      {
+        return new APIGeneralResult("OK", "Token is valid: " + token.getToken());
+      }
+      else return new APIGeneralResult("KO", "Token is invalid: " + token.getToken());
+
+  }
 
 	private boolean validateLogin(String email, String password) {
 		
