@@ -29,12 +29,13 @@ mssolutions.fbapp.draftmanager.SCOPES =
 // TEMP Example for selector listener
 $(function() {
 
-	  $('#select-profile').on('change', function(){
+	  $('#league-select').on('change', function(){
+		  console.log("In league-select on change");
 	    var selected = $(this).find("option:selected").val();
-		if(selected == "1") {
-			$('#btn-load-proj').prop("disabled",true);
+		if(selected == "newleague") {
+			$("#createleague-modal").modal("show");
 		} else {
-			$('#btn-load-proj').prop("disabled",false);
+			// $('#btn-load-proj').prop("disabled",false);
 		}
 	  });
 	  

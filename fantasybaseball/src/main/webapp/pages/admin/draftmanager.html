@@ -91,7 +91,7 @@
 			  <div style="float:right;">
 				<select style="width:auto;margin-top:10px;" class="form-control" id="league-select">
 					  <option value="0">---- Select League ----</option>
-					  <option value="new">Add New League...</option>
+					  <option value="newleague">Add New League...</option>
 				</select>
 			 </div>		
 	    </div>
@@ -104,11 +104,327 @@
 	
 	<div class="container">
 		<div class="jumbotron">
-		  <h1>Get Started</h1>
+		  <h1>Welcome to Draft Manager!</h1>
 		  <p>Manage fantasy baseball auction drafts with this application.  Select the dropdown above to create and manage
 		  the auction draft for a specific league.</p>
 		</div>
 	</div>
+	
+		<!-- League Wizard Modal -->
+		<div id="createleague-modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Add New League</h4>
+					</div>
+					<div class="modal-body">
+						<div id="rootwizard">
+							<div class="navbar">
+								<div class="navbar-inner">
+									<div class="container">
+										<ul>
+											<li><a href="#tab1" data-toggle="tab">1. League Info</a></li>
+											<li><a href="#tab2" data-toggle="tab">2. Categories & Roster</a></li>
+											<li><a href="#tab3" data-toggle="tab">3. Teams</a></li>
+											<li><a href="#tab3" data-toggle="tab">4. Preview</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="progress">
+								<div class="progress-bar progress-bar-striped active"
+									role="progressbar" aria-valuenow="40" aria-valuemin="0"
+									aria-valuemax="100"></div>
+							</div>
+							<div class="tab-content">
+
+								<div class="tab-pane" id="tab1">
+									<form class="form-horizontal" role="form">
+										<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-sm-3">League Name:</label>
+											<div class="col-sm-7">
+												<input class="form-control" id="input-leaguename" placeholder="League Name">
+											</div>
+										</div>
+									<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-sm-3">League Year:</label>
+											<div class="col-sm-9">
+												<select style="width:auto;" class="form-control" id="select-leagueyear">
+													  <option value="0">Test1</option>
+													  <option value="1">Test2</option>
+												</select>
+											</div>
+									</div>
+									<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-sm-3">League Site:</label>
+											<div class="col-sm-9">
+												<select style="width:auto;" class="form-control" id="select-leaguesite">
+													  <option value="0">Test1</option>
+													  <option value="1">Test2</option>
+												</select>
+											</div>
+									</div>
+									<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-sm-3">MLB Leagues:</label>
+											<div class="col-sm-9">
+												<select style="width:auto;" class="form-control" id="select-mlbleagues">
+													  <option value="0">Test1</option>
+													  <option value="1">Test2</option>
+												</select>
+											</div>
+									</div>
+									<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-sm-3">Team Salary:</label>
+											<div class="col-sm-9">
+												<select style="width:auto;" class="form-control" id="select-teamsalary">
+													  <option value="0">Test1</option>
+													  <option value="1">Test2</option>
+												</select>
+											</div>
+									</div>
+									</form>
+								</div>
+								<div class="tab-pane" id="tab2">
+
+<div class="row">
+  <div class="col-md-6">
+    <div><H4>Stat Categories</H4></div>
+  <div class="col-md-3">
+    
+  	<label>Hitting</label>
+    <div class="checkbox">
+    	<label><input type="checkbox"> HR</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> R</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> RBI</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> SB</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> AVG</label>
+  	</div>
+  </div>
+  <div class="col-md-3">
+  	<label>Pitching</label>
+    <div class="checkbox">
+    	<label><input type="checkbox"> W</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> SV</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> K</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> ERA</label>
+  	</div>
+    <div class="checkbox">
+      	<label><input type="checkbox"> WHIP</label>
+  	</div>
+  </div>
+  </div>
+  <div class="col-md-6">
+    <div><h4>Roster Positions</h4></div>
+  <div class="col-md-3">
+    
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-1 control-label">1B:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="1b-num-select">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">2B:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="2b-num-select">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">SS:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="ss-num-select">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">3B:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="3b-num-select">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">MI:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="mi-num-select">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">CI:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="ci-num-select">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+     
+    </form>
+  </div>
+  <div class="col-md-3">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-1 control-label">C:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control" id="c-num-select">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">OF:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="of-num-select">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">P:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="p-num-select">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9" selected>9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">UT: </label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="util-num-select">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">RS:</label>
+        <div class="col-sm-1">
+          <select style="width:auto;" class="form-control"  id="res-num-select">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+          </select>
+        </div>
+      </div>
+    
+     
+    </form>
+  </div>
+  </div>
+</div>
+								</div>
+								<div class="tab-pane" id="tab3">Additional Data</div>
+								<div class="tab-pane" id="tab4">
+									<form class="form-horizontal">
+										<div class="form-group">
+											<label for="proj-profile-label" class="control-label col-xs-3">Projection
+												Profile:</label>
+											<div class="col-xs-9">
+												<p class="form-control-static" id="proj-profile-label2">Example</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="proj-date-label" class="control-label col-xs-3">Projection
+												Date:</label>
+											<div class="col-xs-9">
+												<p class="form-control-static" id="proj-date-label">Example</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="proj-hitterfile-label" class="control-label col-xs-3">Projection
+												Hitter File:</label>
+											<div class="col-xs-9">
+												<p class="form-control-static" id="proj-hitterfile-label">Example</p>
+											</div>
+										</div>
+									</form>
+
+								</div>
+
+								<ul class="pager wizard">
+									<li class="previous first" style="display: none;"><a
+										href="#">First</a></li>
+									<li class="previous"><a href="#">Previous</a></li>
+									<li class="next last" style="display: none;"><a href="#">Last</a></li>
+									<li class="next"><a href="#">Next</a></li>
+									<li class="next finish" style="display:none;"><a href="javascript:;">Finish</a></li>
+								</ul>
+							</div>
+						</div>
+					
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- League Wizard Modal -->
 
 	<!-- /container -->
 
