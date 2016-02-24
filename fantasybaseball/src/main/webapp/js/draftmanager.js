@@ -26,7 +26,7 @@ mssolutions.fbapp.draftmanager.SCOPES =
     'https://www.googleapis.com/auth/userinfo.email';
 
 
-// TEMP Example for selector listener
+// League selector listener
 $(function() {
 
 	  $('#league-select').on('change', function(){
@@ -45,6 +45,7 @@ $(function() {
 
 $(document).ready(function()
 {
+	
 	
   	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
 		var $total = navigation.find('li').length;
@@ -78,9 +79,68 @@ $(document).ready(function()
 		parseprojections();
 
 	});
+	
+	$('#btn-addteam').click(function() 
+	{
+		var teamtable = $('#team_table').DataTable();
+		
+		teamtable.row.add( {
+	        "team_name":       $("#input-teamname").val(),
+	        "owner_name":   $("#input-teamowner").val(),
+	        "isuserowner":     $("#check-myteam").is(":checked"),
+	        "delete": "0"
+	    } ).draw();
+		    	
+	});
+	
+    $('#team_table').on( 'click', 'button', function () {
+    	var teamtable = $('#team_table').DataTable();
+        // var data = teamtable.row( $(this).parents('tr') ).data();
+        
+        teamtable
+        .row( $(this).parents('tr') )
+        .remove()
+        .draw();
+
+    } );
+	
+	loadTeamTable(null, true);
 
 
 });
+
+function loadTeamTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#team_table');
+	var config = {
+        "data": data,
+        responsive: true,
+        "searching": false,
+        "paging": false,
+        "columns": [
+            { "title": "Team Name", "mData": "team_name" },
+            { "title": "Team Owner", "mData": "owner_name"},
+            { "title": "My Team?", "mData": "isuserowner"},
+            { "title": "<i class='fa fa-trash-o'></i>"},
+        ],
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": "<button class='btn btn-danger btn-xs'>&nbsp;&nbsp;<i class='fa fa-trash-o'></i>&nbsp;&nbsp;</button>"
+        } ]
+    };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+	}
+
+}
 
 
 function loadLeagueSelector(data){
