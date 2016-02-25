@@ -1,5 +1,6 @@
 package com.app.endpoints;
 
+import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.app.endpoints.entities.ProjectionPeriod;
@@ -72,12 +73,30 @@ public class MainEndpoint {
 		return getIdentityService().getUserfromToken(token);
 	}
 	
+	private com.nya.sms.entities.User validateUserToken(HttpServletRequest req) throws UnauthorizedException {
+		APIToken token = new APIToken(req.getHeader("Authorization").split(" ")[1]);
+
+		if (!getIdentityService().validateUserJWT(token))
+			throw new UnauthorizedException("Token is invalid");
+
+		return getIdentityService().getUserfromToken(token);
+	}
+	
 	
 	
 	@ApiMethod(name = "league.getuserleagues")
 	public List<League> getUserLeagues(HttpServletRequest req) throws UnauthorizedException {
 
-		return getLeagueService().getUserLeagues(validateAdminToken(req).getUsername());
+		return getLeagueService().getUserLeagues(validateUserToken(req).getUsername());
+
+	}
+	
+	@ApiMethod(name = "league.getleaguemodalfields")
+	public LeagueModalFields getLeagueModalFields(HttpServletRequest req) throws UnauthorizedException {
+
+		validateUserToken(req);
+		
+		return getLeagueService().getLeagueModalFields();
 
 	}
 	

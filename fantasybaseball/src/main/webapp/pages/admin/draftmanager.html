@@ -142,169 +142,207 @@
 							<div class="tab-content">
 
 								<div class="tab-pane" id="tab1">
+								<div class="row">
+									 <div class="col-sm-4">
+										<div class="page-header">
+											<h3>League Info</h3>
+										</div>
+										<p>Enter basic information about your rotisserie league.
+										</p>
+									</div>
+									<div class="col-sm-8">
 									<form class="form-horizontal" role="form">
 										<div class="form-group">
-											<label for="proj-profile-label" class="control-label col-sm-3">League Name:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="input-leaguename" placeholder="League Name">
+												<label for="proj-profile-label" class="control-label col-sm-4">League Name:</label>
+												<div class="col-sm-7">
+													<input class="form-control" id="input-leaguename" placeholder="League Name">
+												</div>
 											</div>
+										<div class="form-group">
+												<label for="proj-profile-label" class="control-label col-sm-4">League Year:</label>
+												<div class="col-sm-8">
+													<select style="width:auto;" class="form-control" id="select-leagueyear">
+														  <option value="Test1">Test1</option>
+														  <option value="Test2">Test2</option>
+													</select>
+												</div>
 										</div>
-									<div class="form-group">
-											<label for="proj-profile-label" class="control-label col-sm-3">League Year:</label>
-											<div class="col-sm-9">
-												<select style="width:auto;" class="form-control" id="select-leagueyear">
-													  <option value="0">Test1</option>
-													  <option value="1">Test2</option>
-												</select>
-											</div>
-									</div>
-									<div class="form-group">
-											<label for="proj-profile-label" class="control-label col-sm-3">League Site:</label>
-											<div class="col-sm-9">
-												<select style="width:auto;" class="form-control" id="select-leaguesite">
-													  <option value="0">Test1</option>
-													  <option value="1">Test2</option>
-												</select>
-											</div>
-									</div>
-									<div class="form-group">
-											<label for="proj-profile-label" class="control-label col-sm-3">MLB Leagues:</label>
-											<div class="col-sm-9">
-												<select style="width:auto;" class="form-control" id="select-mlbleagues">
-													  <option value="0">Test1</option>
-													  <option value="1">Test2</option>
-												</select>
-											</div>
-									</div>
-									<div class="form-group">
-											<label for="proj-profile-label" class="control-label col-sm-3">Team Salary:</label>
-											<div class="col-sm-9">
-												<select style="width:auto;" class="form-control" id="select-teamsalary">
-													  <option value="0">Test1</option>
-													  <option value="1">Test2</option>
-												</select>
-											</div>
-									</div>
+										<div class="form-group">
+												<label for="proj-profile-label" class="control-label col-sm-4">League Site:</label>
+												<div class="col-sm-8">
+													<select style="width:auto;" class="form-control" id="select-leaguesite">
+														  <option value="0">Test1</option>
+														  <option value="1">Test2</option>
+													</select>
+												</div>
+										</div>
+										<div class="form-group">
+												<label for="proj-profile-label" class="control-label col-sm-4">MLB Leagues:</label>
+												<div class="col-sm-8">
+													<select style="width:auto;" class="form-control" id="select-mlbleagues">
+														  <option value="0">Test1</option>
+														  <option value="1">Test2</option>
+													</select>
+												</div>
+										</div>
+										<div class="form-group">
+												<label for="proj-profile-label" class="control-label col-sm-4">Team Salary:</label>
+												<div class="col-sm-8">
+													<select style="width:auto;" class="form-control" id="select-teamsalary">
+														  <option value="0">Test1</option>
+														  <option value="1">Test2</option>
+													</select>
+												</div>
+										</div>
+										<div class="form-group">
+												<label class="control-label col-sm-4">Number of Teams:</label>
+												<div class="col-sm-8">
+													<select style="width:auto;" class="form-control" id="select-numberofteams">
+														  <option value="2">2</option>
+														  <option value="3">3</option>
+														  <option value="4">4</option>
+														  <option value="5">5</option>
+														  <option value="6">6</option>
+														  <option value="7">7</option>
+														  <option value="8">8</option>
+														  <option value="9">9</option>
+														  <option value="10">10</option>
+														  <option value="11" selected>11</option>
+														  <option value="12">12</option>
+														  <option value="13">13</option>
+													</select>
+												</div>
+										</div>
 									</form>
+									</div>
+								</div>
 								</div>
 								<div class="tab-pane" id="tab2">
 
                                   <div class="row">
-                                    <div class="col-md-6">
+                                  	<div class="col-sm-4">
+										<div class="page-header">
+											<h3>Categories & Roster</h3>
+										</div>
+										<p>Under Stat Categories, select the categories measured by your league.
+										</p>
+										<p>Under Roster Positions, select the number of players designated for each roster position.</p>
+									</div>
+                                    <div class="col-md-4">
                                       <div><H4>Stat Categories</H4></div>
-                                    <div class="col-md-3">
-                                      
-                                      <label>Hitting</label>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> HR</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> R</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> RBI</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> SB</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> AVG</label>
-                                      </div>
+	                                    <div class="col-md-6">
+	                                      
+	                                      <label>Hitting</label>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-hitter-hr" type="checkbox" checked="checked"> HR</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-hitter-r" type="checkbox" checked="checked"> R</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-hitter-rbi" type="checkbox" checked="checked"> RBI</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-hitter-sb" type="checkbox" checked="checked"> SB</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-hitter-avg" type="checkbox" checked="checked"> AVG</label>
+	                                      </div>
+	                                    </div>
+	                                    <div class="col-md-6">
+	                                      <label>Pitching</label>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-pitcher-w" type="checkbox" checked="checked"> W</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-pitcher-sv" type="checkbox" checked="checked"> SV</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-pitcher-k" type="checkbox" checked="checked"> K</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-pitcher-era" type="checkbox" checked="checked"> ERA</label>
+	                                      </div>
+	                                      <div class="checkbox active">
+	                                          <label><input id="cat-pitcher-whip" type="checkbox" checked="checked"> WHIP</label>
+	                                      </div>
+	                                    </div>
                                     </div>
-                                    <div class="col-md-3">
-                                      <label>Pitching</label>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> W</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> SV</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> K</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> ERA</label>
-                                      </div>
-                                      <div class="checkbox">
-                                          <label><input type="checkbox"> WHIP</label>
-                                      </div>
-                                    </div>
-                                    </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                       <div><h4>Roster Positions</h4></div>
-                                    <div class="col-md-3">
-                                      
-                                      <form class="form-horizontal">
-                                        <div class="form-group">
-                                          <label class="col-sm-1 control-label">1B:</label>
-                                          <div class="col-sm-1">
-                                            <select style="width:auto;" class="form-control"  id="1b-num-select">
-                                              <option value="0">0</option>
-                                              <option value="1" selected>1</option>
-                                              <option value="2">2</option>
-                                              <option value="3">3</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="col-sm-1 control-label">2B:</label>
-                                          <div class="col-sm-1">
-                                            <select style="width:auto;" class="form-control"  id="2b-num-select">
-                                              <option value="0">0</option>
-                                              <option value="1" selected>1</option>
-                                              <option value="2">2</option>
-                                              <option value="3">3</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="col-sm-1 control-label">SS:</label>
-                                          <div class="col-sm-1">
-                                            <select style="width:auto;" class="form-control"  id="ss-num-select">
-                                              <option value="0">0</option>
-                                              <option value="1" selected>1</option>
-                                              <option value="2">2</option>
-                                              <option value="3">3</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="col-sm-1 control-label">3B:</label>
-                                          <div class="col-sm-1">
-                                            <select style="width:auto;" class="form-control"  id="3b-num-select">
-                                              <option value="0">0</option>
-                                              <option value="1" selected>1</option>
-                                              <option value="2">2</option>
-                                              <option value="3">3</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="col-sm-1 control-label">MI:</label>
-                                          <div class="col-sm-1">
-                                            <select style="width:auto;" class="form-control"  id="mi-num-select">
-                                              <option value="0">0</option>
-                                              <option value="1" selected>1</option>
-                                              <option value="2">2</option>
-                                              <option value="3">3</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                        <div class="form-group">
-                                          <label class="col-sm-1 control-label">CI:</label>
-                                          <div class="col-sm-1">
-                                            <select style="width:auto;" class="form-control"  id="ci-num-select">
-                                              <option value="0">0</option>
-                                              <option value="1" selected>1</option>
-                                              <option value="2">2</option>
-                                              <option value="3">3</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                       
-                                      </form>
-                                    </div>
-                                    <div class="col-md-3">
+	                                    <div class="col-md-6">
+	                                      
+	                                      <form class="form-horizontal">
+	                                        <div class="form-group">
+	                                          <label class="col-sm-1 control-label">1B:</label>
+	                                          <div class="col-sm-1">
+	                                            <select style="width:auto;" class="form-control"  id="1b-num-select">
+	                                              <option value="0">0</option>
+	                                              <option value="1" selected>1</option>
+	                                              <option value="2">2</option>
+	                                              <option value="3">3</option>
+	                                            </select>
+	                                          </div>
+	                                        </div>
+	                                        <div class="form-group">
+	                                          <label class="col-sm-1 control-label">2B:</label>
+	                                          <div class="col-sm-1">
+	                                            <select style="width:auto;" class="form-control"  id="2b-num-select">
+	                                              <option value="0">0</option>
+	                                              <option value="1" selected>1</option>
+	                                              <option value="2">2</option>
+	                                              <option value="3">3</option>
+	                                            </select>
+	                                          </div>
+	                                        </div>
+	                                        <div class="form-group">
+	                                          <label class="col-sm-1 control-label">SS:</label>
+	                                          <div class="col-sm-1">
+	                                            <select style="width:auto;" class="form-control"  id="ss-num-select">
+	                                              <option value="0">0</option>
+	                                              <option value="1" selected>1</option>
+	                                              <option value="2">2</option>
+	                                              <option value="3">3</option>
+	                                            </select>
+	                                          </div>
+	                                        </div>
+	                                        <div class="form-group">
+	                                          <label class="col-sm-1 control-label">3B:</label>
+	                                          <div class="col-sm-1">
+	                                            <select style="width:auto;" class="form-control"  id="3b-num-select">
+	                                              <option value="0">0</option>
+	                                              <option value="1" selected>1</option>
+	                                              <option value="2">2</option>
+	                                              <option value="3">3</option>
+	                                            </select>
+	                                          </div>
+	                                        </div>
+	                                        <div class="form-group">
+	                                          <label class="col-sm-1 control-label">MI:</label>
+	                                          <div class="col-sm-1">
+	                                            <select style="width:auto;" class="form-control"  id="mi-num-select">
+	                                              <option value="0">0</option>
+	                                              <option value="1" selected>1</option>
+	                                              <option value="2">2</option>
+	                                              <option value="3">3</option>
+	                                            </select>
+	                                          </div>
+	                                        </div>
+	                                        <div class="form-group">
+	                                          <label class="col-sm-1 control-label">CI:</label>
+	                                          <div class="col-sm-1">
+	                                            <select style="width:auto;" class="form-control"  id="ci-num-select">
+	                                              <option value="0">0</option>
+	                                              <option value="1" selected>1</option>
+	                                              <option value="2">2</option>
+	                                              <option value="3">3</option>
+	                                            </select>
+	                                          </div>
+	                                        </div>
+	                                       
+	                                      </form>
+	                                    </div>
+                                    <div class="col-md-6">
                                       <form class="form-horizontal">
                                         <div class="form-group">
                                           <label class="col-sm-1 control-label">C:</label>
@@ -382,41 +420,18 @@
 								</div>
 								<div class="tab-pane" id="tab3">
                                   <div class="row">
-                                    <div class="col-sm-5">
-                                      <div><H4>Team Form</H4></div>
-                                        <form class="form-horizontal">
-                                          <div class="form-group">
-                                            <label class="control-label col-sm-4" for="email">Team Name:</label>
-                                            <div class="col-sm-8">
-                                              <input class="form-control" id="input-teamname" placeholder="Team Name">
-                                            </div>
-                                          </div>
-                                          <div class="form-group">
-                                            <label class="control-label col-sm-4" for="pwd">Team Owner:</label>
-                                            <div class="col-sm-8"> 
-                                              <input class="form-control" id="input-teamowner" placeholder="Team Owner">
-                                            </div>
-                                          </div>
-                                          <div class="form-group"> 
-                                            <div class="col-sm-offset-4 col-sm-6">
-                                              <div class="checkbox">
-                                                <label><input id="check-myteam" type="checkbox"> My Team?</label>
-                                              </div>
-                                            </div>
-                                          </div>
-
-                                        </form>
-                                          <div class="form-group"> 
-                                            <div style="float:right;">
-                                              <button id="btn-addteam" class="btn btn-success">Add Team <i class="fa fa-arrow-right"></i></button>
-                                            </div>
-                                          </div>
-                                    </div>
-                                    <div class="col-sm-7">
-                                      	<div><H4>Teams</H4></div>
+									<div class="col-sm-4">
+										<div class="page-header">
+											<h3>Add Teams</h3>
+										</div>
+										<p>Update the team names and owners of the teams in your league.
+										</p>
+										<p>Team #1 is reserved for your team.</p>
+									</div>
+									<div class="col-sm-8">
 			                            <div id="teams-div" style="margin-top:10px">
 											<div id="teams-table-div">
-											<table id="team_table" class="table table-bordered" width="100%"></table>
+											<table id="team_table" class="table table-bordered display compact" cellspacing="0" width="100%"></table>
 											</div>
 										</div>
                                     </div>  
@@ -424,20 +439,26 @@
                               </div>
 								<div class="tab-pane" id="tab4">
                                   <div class="row">
+                                  	<div class="col-sm-12">
+                                  		<div class="page-header">
+											<h3>League Info Preview   <small>Review all fields before finishing</small></h3>
+										</div>
+										</div>
 									<div class="col-sm-6">
                                       <div class="panel panel-default">
                                         <div class="panel-heading">
                                           <h3 class="panel-title">League Info</h3>
                                         </div>
                                         <div class="panel-body">
-                                          <p>League Name:<b>  Great American Rotisserie</b></p>
+                                          <p>League Name:  <b id='prevleaguename'>Test Name</b></p>
                                           <div class="col-sm-6">
-	                                          <p>League Year:<b>  2016</b></p>
-	                                          <p>League Site:<b>  CBS</b></p>
+	                                          <!--   <p>League Year:  <b id='prevleagueyear'>0000</b></p> -->
+	                                          <p>League Site:  <b id='prevleaguesite'>XXX</b></p>
+	                                          <p># of Teams:  <b id='prevnumteams'>0</b></p>
                                           </div>
                                           <div class="col-sm-6">
-	                                          <p>MLB Leagues:<b>  AL</b></p>
-	                                          <p>Team Salary:<b>  $260</b></p>
+	                                          <p>MLB Leagues:  <b id='prevmlbleagues'>XX</b></p>
+	                                          <p>Team Salary:  <b>$</b></b><b id='prevteamsalary'>0</b></p>
                                           </div>
                                         </div>
                                       </div>
@@ -446,8 +467,8 @@
                                           <h3 class="panel-title">Stat Categories</h3>
                                         </div>
                                         <div class="panel-body">
-                                          <p>Pitching:<b> W, SV, K, ERA, WHIP</b></p>
-                                          <p>Hitting:<b> AVG, HR, SB, R, RBI</b></p>
+                                          <p>Pitching:  <b id='prevpitchingcats'>XXXXXXX</b></p>
+                                          <p>Hitting:  <b id='prevhittingcats'>XXXXXXX</b></p>
 
                                         </div>
                                       </div>
@@ -456,16 +477,46 @@
                                           <h3 class="panel-title">Roster Positions</h3>
                                         </div>
                                         <div class="panel-body">
-                                          <div class="col-sm-4">
-                                            <p>1B:<b> 1</b></p><p>2B:<b> 1</b></p><p>SS:<b> 1</b></p><p>3B:<b> 1</b></p>
-                                          </div>
-                                          <div class="col-sm-4">
-                                            <p>MI:<b> 1</b></p><p>CI:<b> 1</b></p><p>C:<b> 2</b></p><p>OF:<b> 5</b></p>
-                                          </div>
-                                          <div class="col-sm-4">
-                                            <p>P:<b> 9</b></p><p>UT:<b> 1</b></p><p>RS:<b> 3</b></p>
-                                          </div>
-                                        </div>
+												<div class="col-sm-4">
+													<p>
+														1B: <b id='prev1b'>0</b>
+													</p>
+													<p>
+														2B: <b id='prev2b'>0</b>
+													</p>
+													<p>
+														SS: <b id='prevss'>0</b>
+													</p>
+													<p>
+														3B: <b id='prev3b'>0</b>
+													</p>
+												</div>
+												<div class="col-sm-4">
+													<p>
+														MI: <b id='prevmi'>0</b>
+													</p>
+													<p>
+														CI: <b id='prevci'>0</b>
+													</p>
+													<p>
+														C: <b id='prevc'>0</b>
+													</p>
+													<p>
+														OF: <b id='prevof'>0</b>
+													</p>
+												</div>
+												<div class="col-sm-4">
+													<p>
+														P: <b id='prevp'>0</b>
+													</p>
+													<p>
+														UT: <b id='prevut'>0</b>
+													</p>
+													<p>
+														RS: <b id='prevrs'>0</b>
+													</p>
+												</div>
+											</div>
                                       </div>
                                   	</div>
 
@@ -474,10 +525,7 @@
                                         <div class="panel-heading">
                                           <h3 class="panel-title">League Teams</h3>
                                         </div>
-                                        <div class="panel-body">
-                                        This is some test text
-                                        </div>
-                                        <table id="teamprev_table" class="table" width="100%"></table>
+                                        <table id="teamprev_table" class="table display compact" width="100%"></table>
                                         
                                       </div>
                                   	</div>

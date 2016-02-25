@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
+import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.PositionalZContainer;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
@@ -41,6 +42,20 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		super(clazz);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public LeagueModalFields getLeagueModalFields(){
+		List<String> mlb_leagues = new ArrayList<String>();
+		List<String> league_sites = new ArrayList<String>();
+		league_sites.add(LEAGUE_SITE_CBS);
+		league_sites.add(LEAGUE_SITE_ESPN);
+		mlb_leagues.add(MLB_LEAGUES_AL);
+		mlb_leagues.add(MLB_LEAGUES_NL);
+		mlb_leagues.add(MLB_LEAGUES_BOTH);
+		
+		return new LeagueModalFields(mlb_leagues, league_sites);
+		
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see com.nya.sms.dataservices.AbstractDataServiceImpl#delete(java.lang.Long)
