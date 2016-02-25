@@ -55,9 +55,12 @@ $(document).ready(function()
 		
 		// If it's the preview tab then load projection selections
 		if($current == 4) {
-			$("#proj-date-label").text($( "#projection-date-selector2" ).val());
-			var hitterfile = $( "#hitter-proj-file" ).val().toString().split("\\");
-			$("#proj-hitterfile-label").text(hitterfile[hitterfile.length - 1]);
+			var teamtable = $('#team_table').DataTable();
+	        var data = teamtable.rows().data();
+			loadTeamPreviewTable(data, false);
+//			$("#proj-date-label").text($( "#projection-date-selector2" ).val());
+//			var hitterfile = $( "#hitter-proj-file" ).val().toString().split("\\");
+//			$("#proj-hitterfile-label").text(hitterfile[hitterfile.length - 1]);
 		} 
 		
 		// If it's the last tab then hide the last button and show the finish instead
@@ -104,6 +107,7 @@ $(document).ready(function()
 
     } );
 	
+    loadTeamPreviewTable(null, true);
 	loadTeamTable(null, true);
 
 
@@ -116,6 +120,7 @@ function loadTeamTable(data, isInitialLoad)
 	var config = {
         "data": data,
         responsive: true,
+        "bSort" : false,
         "searching": false,
         "paging": false,
         "columns": [
@@ -125,10 +130,69 @@ function loadTeamTable(data, isInitialLoad)
             { "title": "<i class='fa fa-trash-o'></i>"},
         ],
         "columnDefs": [ {
+            // The `data` parameter refers to the data for the cell (defined by the
+            // `data` option, which defaults to the column being worked with, in
+            // this case `data: 0`.
+            "render": function ( data, type, row ) {
+                // return data +' ('+ row[3]+')';
+                
+                if (data == true){
+                	return "<i class='fa fa-check' style='color: #008000;'></i>";
+                } else {
+                	return "";
+                }
+                
+            },
+            "targets": 2
+        },
+        {
             "targets": -1,
             "data": null,
             "defaultContent": "<button class='btn btn-danger btn-xs'>&nbsp;&nbsp;<i class='fa fa-trash-o'></i>&nbsp;&nbsp;</button>"
         } ]
+    };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+	}
+
+}
+
+
+function loadTeamPreviewTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#teamprev_table');
+	var config = {
+        "data": data,
+        responsive: true,
+        "bSort" : false,
+        "searching": false,
+        "paging": false,
+        "columns": [
+            { "title": "Team Name", "mData": "team_name" },
+            { "title": "Team Owner", "mData": "owner_name"},
+            { "title": "My Team?", "mData": "isuserowner"},
+        ],
+        "columnDefs": [ {
+            // The `data` parameter refers to the data for the cell (defined by the
+            // `data` option, which defaults to the column being worked with, in
+            // this case `data: 0`.
+            "render": function ( data, type, row ) {
+                if (data == true){
+                	return "<i class='fa fa-check' style='color: #008000;'></i>";
+                } else {
+                	return "";
+                }
+                
+            },
+            "targets": 2
+        }]
     };
 	
 	if (isInitialLoad) 	{
