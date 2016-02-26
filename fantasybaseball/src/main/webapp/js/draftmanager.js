@@ -331,9 +331,15 @@ function loadLeagueSelector(data){
 	var options = $("#league-select");
 	options.find('option').remove().end();
 	options.append($("<option value='0'/>").text("--- Select League ---"));
-	$.each(data, function() {
-		options.append($("<option value='"+ this.id +"'/>").text(this.league_name));
-	});
+	
+	if (undefined !== data){
+		$.each(data, function() {
+			options.append($("<option value='"+ this.id +"'/>").text(this.league_name));
+		});
+	} else {
+		console.log("League data is null");
+	}
+
 	options.append($("<option value='newleague'/>").text("Add New League..."));
 }
 
