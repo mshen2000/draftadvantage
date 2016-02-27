@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.ProjectionPeriod;
 import com.app.endpoints.entities.ProjectionService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -53,13 +54,6 @@ public class TestLeagues {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
-	
-//	private static final String[] FILE_HEADER_MAPPING = { "id", "dup-id", "age", "P-H", "dc-status", "League", "#",
-//			"Name", "Team", "Bats", "H_ESPN", "H_YAHOO", "H_G", "H_PA", "H_AB", "H_R", "H_HR", "H_RBI", "H_SB", "H_H",
-//			"H_1B", "H_2B", "H_3B", "H_TB", "H_SO", "H_BB", "H_HBP", "H_SF", "H_SH", "H_CS", "H_AVG", "H_OBP", "H_SLG",
-//			"H_OPS", "P_POS", "P_R/L", "P_G", "P_GS", "P_QS", "P_TBF", "P_IP", "P_W", "P_L", "P_SV", "P_HLD", "P_ERA",
-//			"P_SIERA", "P_WHIP", "P_K", "P_BB", "P_H", "P_HBP", "P_ER", "P_R", "P_HR", "P_GB%", "P_FB%", "P_LD%",
-//			"P_BABIP" };
 
 	private Closeable closeable;
 
@@ -271,6 +265,121 @@ public class TestLeagues {
 
 	}
 	
+	
+	@Test
+	public void testLeagueContainer() {
+		
+		User usr1 = getIdentityService().getUser("test1");
+		ProjectionProfile p1 = new ProjectionProfile();
+		p1.setProjection_service(ProjectionProfileService.PROJECTION_SERVICE_STEAMER);
+		p1.setProjection_period(ProjectionProfileService.PROJECTION_PERIOD_PRESEASON);
+		p1.setProjected_year(2016);
+		
+		String uname = usr1.getUsername();
+		
+		// Create a league
+		League l1 = new League();
+		l1.setMlb_leagues(LeagueService.MLB_LEAGUES_AL);
+		l1.setNum_of_teams(11);
+		
+		l1.setCat_hitter_avg(true);
+		l1.setCat_hitter_hr(true);
+		l1.setCat_hitter_r(true);
+		l1.setCat_hitter_rbi(true);
+		l1.setCat_hitter_sb(true);
+		l1.setCat_pitcher_era(true);
+		l1.setCat_pitcher_saves(true);
+		l1.setCat_pitcher_so(true);
+		l1.setCat_pitcher_whip(true);
+		l1.setCat_pitcher_wins(true);
+		
+		l1.setLeague_name("League 1");
+		l1.setLeague_site("CBS");
+		l1.setLeague_year(2016);
+		l1.setNum_1b(1);
+		l1.setNum_2b(1);
+		l1.setNum_3b(1);
+		l1.setNum_c(2);
+		l1.setNum_ci(1);
+		l1.setNum_mi(1);
+		l1.setNum_of(5);
+		l1.setNum_res(3);
+		l1.setNum_ss(1);
+		l1.setNum_util(1);
+		l1.setNum_p(9);
+		l1.setTeam_salary(260);
+		
+		// Create list of teams 
+		LeagueTeam lt1 = new LeagueTeam();
+		lt1.setTeam_name("Team1");
+		lt1.setOwner_name("Owner1");
+		lt1.setIsuserowner(true);
+		lt1.setTeam_num(1);
+		
+		LeagueTeam lt2 = new LeagueTeam();
+		lt2.setTeam_name("Team2");
+		lt2.setOwner_name("Owner2");
+		lt2.setTeam_num(2);
+		
+		LeagueTeam lt3 = new LeagueTeam();
+		lt3.setTeam_name("Team3");
+		lt3.setOwner_name("Owner3");
+		lt3.setTeam_num(3);
+		
+		List<LeagueTeam> teamlist = new ArrayList<LeagueTeam>();
+		teamlist.add(lt1);
+		teamlist.add(lt2);
+		teamlist.add(lt3);
+		
+		LeagueCreateContainer container = new LeagueCreateContainer();
+		container.setLeague(l1);
+		container.setLeague_teams(teamlist);
+		container.setProfile(p1);
+		
+		getLeagueService().saveNewLeague(container, uname);
+		
+		List<League> leaguelist = getLeagueService().getUserLeague("League 1", 2016, uname);
+		
+		// Test saveNewLeague saved one league
+		Assert.assertTrue(leaguelist.size() == 1);
+		
+		List<LeagueTeam> teamlist2 = leaguelist.get(0).getLeague_teams();
+		
+		// Test saveNewLeague saved league has 3 teams
+		Assert.assertTrue(teamlist2.size() == 3);
+		
+		ProjectionProfile p2 = leaguelist.get(0).getProjection_profile();
+		
+		// Test saveNewLeague saved profile
+		Assert.assertTrue(p2.getProjection_service() == ProjectionProfileService.PROJECTION_SERVICE_STEAMER);
+		
+		// Test saving existing league causes exception
+		try {
+			getLeagueService().saveNewLeague(container, uname);
+		    fail( "Saving league did not cause exception for duplicate league." );
+		} catch (IllegalArgumentException e) {
+		}
+		
+		// Test Non-existent profile causes exception
+		ProjectionProfile p3 = new ProjectionProfile();
+		p3.setProjection_service("Fake Profile");
+		p3.setProjection_period(ProjectionProfileService.PROJECTION_PERIOD_PRESEASON);
+		p3.setProjected_year(2016);
+		
+		LeagueCreateContainer container2 = new LeagueCreateContainer();
+		container2.setLeague(l1);
+		container2.setLeague_teams(teamlist);
+		container2.setProfile(p3);
+
+		try {
+			getLeagueService().saveNewLeague(container2, uname);
+		    fail( "Saving league did not cause exception for non-existent profile." );
+		} catch (IllegalArgumentException e) {
+		}
+
+	}
+	
+	
 	@Test
 	public void testLeaguePlayerUpdate() {
 		
@@ -279,6 +388,9 @@ public class TestLeagues {
 				ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016);
 		
 		String uname = usr1.getUsername();
+		
+		// Test getUserLeague = 0
+		Assert.assertTrue(getLeagueService().getUserLeague("League 1", 2016, usr1.getUsername()).size() == 0);
 		
 		// Create a league
 		League l1 = new League();
@@ -307,6 +419,7 @@ public class TestLeagues {
 		
 		l1.setLeague_name("League 1");
 		l1.setLeague_site("CBS");
+		l1.setLeague_year(2016);
 		l1.setNum_1b(1);
 		l1.setNum_2b(1);
 		l1.setNum_3b(1);
@@ -428,6 +541,10 @@ public class TestLeagues {
 				LeaguePlayerService.TEAM_ROSTER_POSITION_2B, uname);
 		getLeaguePlayerService().draftLeaguePlayer(lt2_id, aroldis_chapman.getId(),
 				LeaguePlayerService.TEAM_ROSTER_POSITION_P, uname);
+		
+		// Test getUserLeague = 1
+		Assert.assertTrue(getLeagueService().getUserLeague("League 1", 2016, usr1.getUsername()).size() == 1);
+		
 		
 		// Test isLeaguePlayerDrafted
 		Assert.assertTrue(getLeaguePlayerService().isLeaguePlayerDrafted(chris_sale.getId()));

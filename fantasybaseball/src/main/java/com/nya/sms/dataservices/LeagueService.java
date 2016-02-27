@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
+import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.PositionalZContainer;
 import com.googlecode.objectify.Key;
@@ -56,6 +57,53 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 	}
 	
+
+	
+	/**
+	 * Description: Create a new league (new league only) based on a
+	 * LeagueCreateContainer which contains league, team, and profile
+	 * information. This is used to make it easier for REST and GCE.
+	 * 
+	 * @param container
+	 * @param username
+	 * @return
+	 */
+	public long saveNewLeague(LeagueCreateContainer container, String username){
+		
+		League league = container.getLeague();
+		
+		List<League> existingleagues = getUserLeague(league.getLeague_name(), league.getLeague_year(), username);
+		
+		if (existingleagues.size() > 0){
+			throw new IllegalArgumentException("League already exists, cannot create a new league.");
+		}
+		
+		//  For each team in container, save league team
+		Map<Key<LeagueTeam>, LeagueTeam>  map = getLeagueTeamService().save(container.getLeague_teams(), username);
+		List<LeagueTeam> teamlist = new ArrayList<LeagueTeam>(map.values());
+
+		System.out.println("saveNewLeague - League Name: " + league.getLeague_name());
+		System.out.println("saveNewLeague - Size of Teamlist: " + teamlist.size());
+		
+		league.setLeague_teams(teamlist);
+		
+		league.setUser(getIdentityService().getUser(username));
+		
+		System.out.println("saveNewLeague - Profile Service: " + container.getProfile().getProjection_service());
+		System.out.println("saveNewLeague - Profile Period: " + container.getProfile().getProjection_period());
+		System.out.println("saveNewLeague - Profile Year: " + container.getProfile().getProjected_year());
+
+		ProjectionProfile p = getProjectionProfileService().get(container.getProfile().getProjection_service(),
+				container.getProfile().getProjection_period(), container.getProfile().getProjected_year());
+		
+		if (p == null) throw new IllegalArgumentException("Projection profile does not exist, cannot create a new league.");
+
+		league.setProjection_profile(p);
+		
+		return this.save(league, username);
+		
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see com.nya.sms.dataservices.AbstractDataServiceImpl#delete(java.lang.Long)
@@ -73,6 +121,21 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		super.delete(id);
 		
+	}
+	
+	public List<League> getUserLeague(String leaguename, int year, String username){
+		
+		getIdentityService().getUser(username);
+		
+		Key<User> userkey = Key.create(User.class, getIdentityService().getUser(username).getId());
+		
+		List<League> leagues = ofy().load().type(League.class)
+				.filter("user", userkey)
+				.filter("league_name", leaguename)
+				.filter("league_year", year)
+				.list();
+		
+		return leagues;
 	}
 	
 	public List<League> getUserLeagues(String username){
@@ -707,6 +770,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	private PlayerProjectedService getPlayerProjectedService(){
 
 		return new PlayerProjectedService();
+
+	}
+
+	private ProjectionProfileService getProjectionProfileService(){
+
+		return new ProjectionProfileService(ProjectionProfile.class);
 
 	}
 

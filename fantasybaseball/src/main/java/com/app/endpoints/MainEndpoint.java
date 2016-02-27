@@ -1,10 +1,12 @@
 package com.app.endpoints;
 
+import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.app.endpoints.entities.ProjectionPeriod;
 import com.app.endpoints.entities.ProjectionService;
+import com.app.endpoints.utilities.DoubleTypeAdapter;
 import com.app.endpoints.utilities.FloatTypeAdapter;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -100,6 +102,17 @@ public class MainEndpoint {
 
 	}
 	
+	@ApiMethod(name = "league.savenewleague")
+	public APIGeneralResult saveLeague(LeagueCreateContainer leaguecontainer,HttpServletRequest req) throws UnauthorizedException {
+		
+		long league_id = getLeagueService().saveNewLeague(leaguecontainer, validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", league_id);
+		
+		return result;
+
+	}
+	
 
 	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
 	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req)
@@ -187,6 +200,7 @@ public class MainEndpoint {
 
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(float.class, new FloatTypeAdapter());
+		builder.registerTypeAdapter(double.class, new DoubleTypeAdapter());
 		// if Adapter didn't check for nulls in its read/write methods, you
 		// should instead use
 		// builder.registerTypeAdapter(Point.class, new

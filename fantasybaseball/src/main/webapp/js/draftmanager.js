@@ -30,7 +30,7 @@ mssolutions.fbapp.draftmanager.SCOPES =
 $(function() {
 
 	  $('#league-select').on('change', function(){
-		  console.log("In league-select on change");
+		  // console.log("In league-select on change");
 	    var selected = $(this).find("option:selected").val();
 		if(selected == "newleague") {
 
@@ -79,7 +79,7 @@ $(document).ready(function()
 	        	teams.push(team);
 	        }
 	        
-	        console.log('Teams: ' + JSON.stringify(teams));
+	        // console.log('Teams: ' + JSON.stringify(teams));
 	        loadTeamTable(teams, false);
 			
 		}
@@ -166,10 +166,61 @@ $(document).ready(function()
 
 	$('#rootwizard .finish').click(function()
 	{
-		$('#draftmanager-modal').modal('hide');
+		$('#createleague-modal').modal('hide');
 		progressmodal.showPleaseWait("Updating Projections...");
-		parseprojections();
+		
+		var leaguecontainer = {};
+		var league = {};
+		var teamlist = [];
+		var teams = {};
+		var team = {};
+		var profile = {};
+		
+		league["league_name"] = $("#input-leaguename").val();
+		league["league_site"] = $("#select-leaguesite").find("option:selected").val();
+		league["league_year"] = $("#select-leagueyear").find("option:selected").val();
+		league["num_of_teams"] = $("#select-numberofteams").find("option:selected").val();
+		league["mlb_leagues"] = $("#select-mlbleagues").find("option:selected").val();
+		league["team_salary"] = $("#select-teamsalary").find("option:selected").val();
+		
+		league["cat_hitter_hr"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_hitter_rbi"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_hitter_r"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_hitter_sb"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_hitter_avg"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_pitcher_wins"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_pitcher_saves"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_pitcher_so"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_pitcher_era"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_pitcher_whip"] = $("#cat-hitter-hr").is(':checked');
+		league["num_1b"] = $("#1b-num-select").val();
+		league["num_2b"] = $("#2b-num-select").val();
+		league["num_ss"] = $("#ss-num-select").val();
+		league["num_3b"] = $("#3b-num-select").val();
+		league["num_mi"] = $("#mi-num-select").val();
+		league["num_ci"] = $("#ci-num-select").val();
+		league["num_of"] = $("#of-num-select").val();
+		league["num_p"] = $("#p-num-select").val();
+		league["num_util"] = $("#util-num-select").val();
+		league["num_res"] = $("#res-num-select").val();
+		league["num_c"] = $("#c-num-select").val();
 
+		var teamtable = $('#teamprev_table').DataTable();
+
+		teamlist = teamtable.rows().data().toArray();
+		
+		profile["proj_service"] = "Steamer";
+		profile["proj_period"] = "Pre-Season";
+		profile["proj_year"] = (new Date).getFullYear();
+
+		leaguecontainer["league"] = league;
+		leaguecontainer["league_teams"] = teamlist;
+		leaguecontainer["profile"] = profile;
+
+		console.log("leaguecontainer: " + JSON.stringify(leaguecontainer));
+		
+		mssolutions.fbapp.draftmanager.createandupdateLeague(leaguecontainer);
+		
 	});
 
     loadTeamPreviewTable(null, true);
@@ -208,10 +259,10 @@ function loadTeamTable(data, isInitialLoad)
         {
             "render": function ( data, type, row ) {
             	if (row.team_num == "1"){
-            		console.log("In row.team_num = 1 check: " + row.team_num);
+            		// console.log("In row.team_num = 1 check: " + row.team_num);
             		return "<input class='form-control input-sm' style='font-weight: bold;' id='inputteamname"+ row.team_num +"'  value='" + data + "'>";
             	} else {
-            		console.log("In row.team_num else check: " + row.team_num);
+            		// console.log("In row.team_num else check: " + row.team_num);
             		return "<input class='form-control input-sm' id='inputteamname"+ row.team_num +"' value='" + data + "'>";
             	}
             },
@@ -220,10 +271,10 @@ function loadTeamTable(data, isInitialLoad)
         {
             "render": function ( data, type, row ) {
             	if (row.team_num == "1"){
-            		console.log("In row.team_num = 1 check: " + row.team_num);
+            		// console.log("In row.team_num = 1 check: " + row.team_num);
             		return "<input class='form-control input-sm' style='font-weight: bold;'  id='inputteamowner"+ row.team_num +"' value='" + data + "'>";
             	} else {
-            		console.log("In row.team_num else check: " + row.team_num);
+            		// console.log("In row.team_num else check: " + row.team_num);
             		return "<input class='form-control input-sm'  id='inputteamowner"+ row.team_num +"' value='" + data + "'>";
             	}
             },
@@ -337,11 +388,45 @@ function loadLeagueSelector(data){
 			options.append($("<option value='"+ this.id +"'/>").text(this.league_name));
 		});
 	} else {
-		console.log("League data is null");
+		// console.log("League data is null");
 	}
 
 	options.append($("<option value='newleague'/>").text("Add New League..."));
 }
+
+/**
+ * Create a new league and update it via the API.
+ */
+mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer) {
+
+	gapi.client.draftapp.league.savenewleague(leaguecontainer).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("League save complete.");
+        	mssolutions.fbapp.draftmanager.loadLeagues();
+        	progressmodal.hidePleaseWait();
+        }
+        else {
+        	console.log("Failed to create league: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * Update a league via the API.
+ */
+mssolutions.fbapp.draftmanager.updateLeague = function() {
+
+	gapi.client.draftapp.league.updateleague().execute(
+      function(resp) {
+        if (!resp.code) { 
+        	// loadLeagueSelector(resp.items);
+        }
+        else {
+        	console.log("Failed to load leagues: ", resp.code + " : " + resp.message);
+        }
+      });
+};
 
 
 /**

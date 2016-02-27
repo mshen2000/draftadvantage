@@ -19,6 +19,9 @@ public class LeagueTeam extends BaseEntity implements Serializable {
 	@Index
 	boolean isuserowner; 
 	
+	@Index
+	int team_num;
+	
 	double salary_adjustment;
 
 	public LeagueTeam() {
@@ -29,6 +32,13 @@ public class LeagueTeam extends BaseEntity implements Serializable {
 		this.team_name = team_name;
 		this.owner_name = owner_name;
 		this.isuserowner = isuserowner;
+	}
+	
+	public LeagueTeam(int team_num, String team_name, String owner_name, boolean isuserowner) {
+		this.team_name = team_name;
+		this.owner_name = owner_name;
+		this.isuserowner = isuserowner;
+		this.team_num = team_num;
 	}
 
 	public String getTeam_name() {
@@ -61,6 +71,14 @@ public class LeagueTeam extends BaseEntity implements Serializable {
 
 	public void setSalary_adjustment(double salary_adjustment) {
 		this.salary_adjustment = salary_adjustment;
+	}
+
+	public int getTeam_num() {
+		return team_num;
+	}
+
+	public void setTeam_num(int team_num) {
+		this.team_num = team_num;
 	}
 
 

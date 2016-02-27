@@ -5,6 +5,7 @@ public class APIGeneralResult {
 	public String status;
 	public String description;
 	public String description2;
+	long longdescription;
 
 	public APIGeneralResult() {
 	};
@@ -18,6 +19,11 @@ public class APIGeneralResult {
 		this.status = status;
 		this.description = description;
 		this.description2 = description2;
+	}
+	
+	public APIGeneralResult(String status, long longdescription) {
+		this.status = status;
+		this.longdescription = longdescription;
 	}
 
 	public String getStatus() {
@@ -43,5 +49,15 @@ public class APIGeneralResult {
 	public void setDescription2(String description2) {
 		this.description2 = description2;
 	}
+
+	public long getLongdescription() {
+		return longdescription;
+	}
+
+	public void setLongdescription(long longdescription) {
+		this.longdescription = longdescription;
+	}
+	
+	
 
 }
