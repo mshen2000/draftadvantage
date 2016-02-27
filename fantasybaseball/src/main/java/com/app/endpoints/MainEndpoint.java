@@ -113,6 +113,17 @@ public class MainEndpoint {
 
 	}
 	
+	@ApiMethod(name = "league.updateleagueplayerdata")
+	public APIGeneralResult updateLeaguePlayerData(APIGeneralMessage m, HttpServletRequest req) throws UnauthorizedException {
+		
+		getLeagueService().updateLeaguePlayerData(m.getLongmsg(), validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", "League player update successful.");
+		
+		return result;
+
+	}
+	
 
 	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
 	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req)
@@ -123,7 +134,6 @@ public class MainEndpoint {
 		NumberFormat formatter = new DecimalFormat("#0.00");
 
 		log.setLevel(Level.INFO);
-		log.info("Test Log Message");
 
 		double startTime = System.currentTimeMillis();
 

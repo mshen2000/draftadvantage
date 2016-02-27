@@ -11,6 +11,8 @@ public class APIGeneralMessage {
 	
 	public String token;
 	
+	long longmsg;
+	
 	public APIGeneralMessage(){}
 
 	public APIGeneralMessage(String msg) {
@@ -32,5 +34,15 @@ public class APIGeneralMessage {
 	public void setToken(String token) {
 		this.token = token;
 	}
+
+	public long getLongmsg() {
+		return longmsg;
+	}
+
+	public void setLongmsg(long longmsg) {
+		this.longmsg = longmsg;
+	}
+	
+	
 
 }

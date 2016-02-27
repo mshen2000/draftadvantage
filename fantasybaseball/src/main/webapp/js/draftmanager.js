@@ -33,11 +33,12 @@ $(function() {
 		  // console.log("In league-select on change");
 	    var selected = $(this).find("option:selected").val();
 		if(selected == "newleague") {
-
-			
 			$("#createleague-modal").modal("show");
+		} else if (selected == "0") {
+			$("#intro-container").show();
+			$("#league-container").hide();
 		} else {
-			// $('#btn-load-proj').prop("disabled",false);
+			loadLeagueContent(selected);
 		}
 	  });
 	  
@@ -209,15 +210,15 @@ $(document).ready(function()
 
 		teamlist = teamtable.rows().data().toArray();
 		
-		profile["proj_service"] = "Steamer";
-		profile["proj_period"] = "Pre-Season";
-		profile["proj_year"] = (new Date).getFullYear();
+		profile["projection_service"] = "Steamer";
+		profile["projection_period"] = "Pre-Season";
+		profile["projected_year"] = (new Date).getFullYear();
 
 		leaguecontainer["league"] = league;
 		leaguecontainer["league_teams"] = teamlist;
 		leaguecontainer["profile"] = profile;
 
-		console.log("leaguecontainer: " + JSON.stringify(leaguecontainer));
+		// console.log("leaguecontainer: " + JSON.stringify(leaguecontainer));
 		
 		mssolutions.fbapp.draftmanager.createandupdateLeague(leaguecontainer);
 		
@@ -377,6 +378,12 @@ function loadTeamPreviewTable(data, isInitialLoad)
 
 }
 
+function loadLeagueContent(leagueid){
+	
+	$("#intro-container").hide();
+	$("#league-container").show();
+}
+
 
 function loadLeagueSelector(data){
 	var options = $("#league-select");
@@ -385,7 +392,7 @@ function loadLeagueSelector(data){
 	
 	if (undefined !== data){
 		$.each(data, function() {
-			options.append($("<option value='"+ this.id +"'/>").text(this.league_name));
+			options.append($("<option value='"+ this.id +"'/>").text(this.league_name + "(" + this.league_year + ")"));
 		});
 	} else {
 		// console.log("League data is null");
@@ -402,9 +409,8 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
 	gapi.client.draftapp.league.savenewleague(leaguecontainer).execute(
       function(resp) {
         if (!resp.code) { 
-        	console.log("League save complete.");
-        	mssolutions.fbapp.draftmanager.loadLeagues();
-        	progressmodal.hidePleaseWait();
+        	console.log("League save complete. League ID: " + resp.longdescription);
+        	mssolutions.fbapp.draftmanager.updateLeague(resp.longdescription);
         }
         else {
         	console.log("Failed to create league: ", resp.code + " : " + resp.message);
@@ -415,24 +421,30 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
 /**
  * Update a league via the API.
  */
-mssolutions.fbapp.draftmanager.updateLeague = function() {
+mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
 
-	gapi.client.draftapp.league.updateleague().execute(
+	gapi.client.draftapp.league.updateleagueplayerdata({
+		'longmsg' : leagueid}).execute(
       function(resp) {
         if (!resp.code) { 
         	// loadLeagueSelector(resp.items);
+        	console.log("League player update complete.");
+        	mssolutions.fbapp.draftmanager.loadLeagueList();
+        	$('#league-select').selectpicker('val', leagueid);
+        	// $('#league-select').selectpicker('refresh');
+        	progressmodal.hidePleaseWait();
         }
         else {
-        	console.log("Failed to load leagues: ", resp.code + " : " + resp.message);
+        	console.log("Failed to update league: ", resp.code + " : " + resp.message);
         }
       });
 };
 
 
 /**
- * load projection profiles via the API.
+ * load List of leagues via the API.
  */
-mssolutions.fbapp.draftmanager.loadLeagues = function() {
+mssolutions.fbapp.draftmanager.loadLeagueList = function() {
 
 	gapi.client.draftapp.league.getuserleagues().execute(
       function(resp) {
@@ -444,6 +456,7 @@ mssolutions.fbapp.draftmanager.loadLeagues = function() {
         }
       });
 };
+
 
 /**
  * load league definition lists for the league create modal via the API.
@@ -507,7 +520,7 @@ mssolutions.fbapp.draftmanager.init_nav = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
-				mssolutions.fbapp.draftmanager.loadLeagues();
+				mssolutions.fbapp.draftmanager.loadLeagueList();
 				mssolutions.fbapp.draftmanager.loadLeagueModal();
 			}
 		}
@@ -517,7 +530,7 @@ mssolutions.fbapp.draftmanager.init_nav = function(apiRoot) {
 
 	}
 	else {
-		mssolutions.fbapp.draftmanager.loadLeagues();
+		mssolutions.fbapp.draftmanager.loadLeagueList();
 		mssolutions.fbapp.draftmanager.loadLeagueModal();
 	}
 };
