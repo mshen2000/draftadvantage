@@ -26,8 +26,7 @@ public class League extends BaseEntity implements Serializable {
 	
 	@Index
 	Ref<User> user;
-	
-	@Index
+
 	int num_of_teams;
 	
 	@Index
@@ -40,87 +39,38 @@ public class League extends BaseEntity implements Serializable {
 	Ref<ProjectionProfile> projection_profile;
 	
 	double team_salary;
-	
 	double avg_hitter_ba;
-	
 	double avg_hitter_ab;
-	
 	double avg_hitter_hits;
-	
 	double avg_pitcher_era;
-	
 	double avg_pitcher_ip;
-	
 	double avg_pitcher_er;
-	
 	double avg_pitcher_whip;
-	
 	double avg_pitcher_bbplushits;
 	
-	@Index
 	boolean cat_hitter_hr;
-	
-	@Index
 	boolean cat_hitter_rbi;
-	
-	@Index
 	boolean cat_hitter_r;
-	
-	@Index
 	boolean cat_hitter_sb;
-	
-	@Index
 	boolean cat_hitter_avg;
-	
-	@Index
 	boolean cat_pitcher_wins;
-	
-	@Index
 	boolean cat_pitcher_saves;
-
-	@Index
 	boolean cat_pitcher_so;
-	
-	@Index
 	boolean cat_pitcher_era;
-	
-	@Index
 	boolean cat_pitcher_whip;
-	
-	@Index
+
 	int num_1b;
-	
-	@Index
 	int num_2b;
-	
-	@Index
 	int num_3b;
-	
-	@Index
 	int num_ss;
-	
-	@Index
 	int num_c;
-	
-	@Index
 	int num_of;
-	
-	@Index
 	int num_p;
-	
-	@Index
 	int num_util;
-	
-	@Index
 	int num_res;
-	
-	@Index
 	int num_mi;
-	
-	@Index
 	int num_ci;
 	
-
 	public League() {
 		this.cat_hitter_hr = false;
 		this.cat_hitter_rbi = false;

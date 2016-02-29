@@ -10,6 +10,8 @@ import com.app.endpoints.utilities.DoubleTypeAdapter;
 import com.app.endpoints.utilities.FloatTypeAdapter;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
+import com.google.api.server.spi.config.ApiMethod.HttpMethod;
+import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.config.Nullable;
 import com.google.api.server.spi.response.*;
 import com.google.gson.Gson;
@@ -124,12 +126,12 @@ public class MainEndpoint {
 
 	}
 	
-	@ApiMethod(name = "league.deleteleague")
-	public APIGeneralResult deleteLeague(APIGeneralMessage m, HttpServletRequest req) throws UnauthorizedException {
+	@ApiMethod(name = "league.deleteleague", httpMethod = HttpMethod.DELETE)
+	public APIGeneralResult deleteLeague(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
 		
-		System.out.println("Longmsg: " + m.getLongmsg());
+		System.out.println("League id: " + id);
 		
-		getLeagueService().deleteLeagueFull(m.getLongmsg(), validateUserToken(req).getUsername());
+		getLeagueService().deleteLeagueFull(id, validateUserToken(req).getUsername());
 		
 		APIGeneralResult result = new APIGeneralResult("OK", "League delete successful.");
 		

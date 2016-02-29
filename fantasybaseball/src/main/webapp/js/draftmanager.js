@@ -34,6 +34,7 @@ $(function() {
 	    var selected = $(this).find("option:selected").val();
 		if(selected == "newleague") {
 			$("#createleague-modal").modal("show");
+			$('#league-select').val("0");
 		} else if (selected == "0") {
 			$("#intro-container").show();
 			$("#league-container").hide();
@@ -64,6 +65,7 @@ $(document).ready(function()
                   autospin: true,
                   label: 'Delete',
                   action: function(dialog) {
+                	  $("#btn-confirm-delete-league").prop("disabled",true);
                 	var selected = $("#league-select").find("option:selected").val();
                 	console.log("Selected league id: " + selected);
                 	mssolutions.fbapp.draftmanager.deleteLeague(selected);
@@ -78,12 +80,13 @@ $(document).ready(function()
 	    	
 		});
 	
-	
   	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
 		var $total = navigation.find('li').length;
 		var $current = index+1;
 		var $percent = ($current/$total) * 100;
 		$('#rootwizard').find('.progress-bar').css({width:$percent + '%'});
+		
+
 		
 		// If it's the league team tab then pre-load teams
 		if($current == 3){
@@ -413,6 +416,11 @@ function loadLeagueContent(leagueid){
 	$("#league-container").show();
 }
 
+function loadLeagueIntro(){
+	$("#league-container").hide();
+	$("#intro-container").show();
+}
+
 
 function loadLeagueSelector(data){
 	var options = $("#league-select");
@@ -458,12 +466,9 @@ mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
 		'longmsg' : leagueid}).execute(
       function(resp) {
         if (!resp.code) { 
-        	// loadLeagueSelector(resp.items);
         	console.log("League player update complete.");
-        	
         	$('#league-select').val(leagueid);
-        	// $('#league-select').selectpicker('val', leagueid);
-        	// $('#league-select').selectpicker('refresh');
+        	loadLeagueContent(leagueid);
         	progressmodal.hidePleaseWait();
         }
         else {
@@ -478,13 +483,12 @@ mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
 mssolutions.fbapp.draftmanager.deleteLeague = function(leagueid) {
 	console.log("Deleting League id..." + leagueid);
 	gapi.client.draftapp.league.deleteleague({
-		'longmsg' : leagueid}).execute(
+		'id' : leagueid}).execute(
       function(resp) {
         if (!resp.code) { 
-        	// loadLeagueSelector(resp.items);
         	console.log("League delete complete.");
         	mssolutions.fbapp.draftmanager.loadLeagueList();
-        	// $('#league-select').selectpicker('val', leagueid);
+        	loadLeagueIntro();
         	BootstrapDialog.closeAll();
         }
         else {
