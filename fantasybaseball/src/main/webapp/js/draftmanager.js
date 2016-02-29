@@ -440,6 +440,7 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
       function(resp) {
         if (!resp.code) { 
         	console.log("League save complete. League ID: " + resp.longdescription);
+        	mssolutions.fbapp.draftmanager.loadLeagueList();
         	mssolutions.fbapp.draftmanager.updateLeague(resp.longdescription);
         }
         else {
@@ -459,7 +460,7 @@ mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
         if (!resp.code) { 
         	// loadLeagueSelector(resp.items);
         	console.log("League player update complete.");
-        	mssolutions.fbapp.draftmanager.loadLeagueList();
+        	
         	$('#league-select').val(leagueid);
         	// $('#league-select').selectpicker('val', leagueid);
         	// $('#league-select').selectpicker('refresh');
