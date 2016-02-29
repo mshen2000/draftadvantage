@@ -592,7 +592,7 @@ mssolutions.fbapp.loadprojections.deleteProfile = function(id) {
         if (!resp.code) { 
         	mssolutions.fbapp.loadprojections.loadProfiles();
         	loadProjectionTable(null, false);
-        	BootstrapDialog.closeAll()
+        	BootstrapDialog.closeAll();
         }
         else {
         	console.log("Failed to delete profile: ", resp.code + " : " + resp.message);

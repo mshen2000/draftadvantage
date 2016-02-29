@@ -81,6 +81,12 @@ public class AbstractDataServiceImpl<T extends BaseEntity> implements Serializab
 //			ObjectifyService.ofy().delete().entity(item).now(); 
 		
 	}
+	
+	public void delete(List<Key<T>> keys, String uname) {
+		
+		ofy().delete().keys(keys);
+
+	}
 
 
 	public T get(Long id) {

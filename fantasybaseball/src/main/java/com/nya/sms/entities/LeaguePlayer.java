@@ -30,7 +30,7 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	@Load
 	Ref<PlayerProjected> player_projected;
 	
-	@Index
+
 	Date league_update_date;
 	
 	@Index
@@ -39,16 +39,16 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	@Index
 	String dc_status;  // updated from player_projected
 	
-	@Index
+
 	int age;  // updated from player_projected
 	
-	@Index
+
 	String team;  // updated from player_projected
 	
 	@Index
 	String pitcher_hitter;  // updated from player_projected
 	
-	@Index
+
 	String player_position;  // updated from player_projected
 
 	double hitter_avg_eff;

@@ -17,179 +17,75 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	@Index
 	@Load
 	Ref<ProjectionProfile> projection_profile;
-	
-	@Index
+
 	public String mlb_id;
+
+	@Index public String other_id_name;
+
+	@Index public String other_id;
+
+	@Index public String full_name;
 	
-	@Index 
-	public String other_id_name;
-	
-	@Index
-	public String other_id;
-	
-	@Index
-	public String full_name;
-	
-	@Index
 	public String first_name;
 	
-	@Index
 	public String last_name;
 	
-	@Index
-	String dc_status;
+	@Index public String dc_status;
 	
-	@Index
-	Integer age;
-	
-	@Index
+	public Integer age;
+
 	public String team;
+
+	@Index public String al_nl;
+
+	@Index public String pitcher_hitter;
 	
-	@Index
-	public String al_nl;
-	
-	@Index
-	public String pitcher_hitter;
-	
-	@Index 
 	public String hitter_bats;
-	
-	@Index 
 	public String pitcher_throws;
-	
-	@Index
 	public String hitter_pos_elig_espn;
-	
-	@Index
 	public String hitter_pos_elig_yahoo;
-	
-	@Index
 	public String pitcher_pos;
-	
-	@Index
 	public double hitter_games;
-	
-	@Index
 	public double hitter_pa;
-	
-	@Index
 	public double hitter_ab;
-	
-	@Index
 	public double hitter_runs;
-	
-	@Index
 	public double hitter_hr;
-	
-	@Index
 	public double hitter_rbi;
-	
-	@Index
 	public double hitter_sb;
-	
-	@Index
 	public double hitter_hits;
-	
-	@Index
 	public double hitter_singles;
-	
-	@Index
 	public double hitter_doubles;
-	
-	@Index
 	public double hitter_triples;
-	
-	@Index
 	public double hitter_tb;
-	
-	@Index
 	public double hitter_so;
-	
-	@Index
 	public double hitter_bb;
-	
-	@Index
 	public double hitter_hbp;
-	
-	@Index
 	public double hitter_sf;
-	
-	@Index
 	public double hitter_cs;
-	
-	@Index
 	public double hitter_avg;
-	
-	@Index
 	public double hitter_obp;
-	
-	@Index
 	public double hitter_slg;
-	
-	@Index
 	public double hitter_ops;
-	
-	@Index
 	public double pitcher_games;
-	
-	@Index
 	public double pitcher_gs;
-	
-	@Index
 	public double pitcher_qs;
-	
-	@Index
 	public double pitcher_ip;
-	
-	@Index
 	public double pitcher_w;
-	
-	@Index
 	public double pitcher_l;
-	
-	@Index
 	public double pitcher_sv;
-	
-	@Index
 	public double pitcher_hld;
-	
-	@Index
 	public double pitcher_era;
-	
-	@Index
 	public double pitcher_siera;
-	
-	@Index
 	public double pitcher_k;
-	
-	@Index
 	public double pitcher_bb;
-	
-	@Index
 	public double pitcher_hits;
-	
-	@Index
 	public double pitcher_hbp;
-	
-	@Index
 	public double pitcher_er;
-	
-	@Index
 	public double pitcher_r;
-	
-	@Index
 	public double pitcher_hr;
-	
-	@Index
 	public double pitcher_gb_pct;
-	
-	@Index
 	public double pitcher_fb_pct;
-	
-	@Index
 	public double pitcher_ld_pct;
-	
-	@Index
 	public double pitcher_babip;
 
 	public PlayerProjected() {

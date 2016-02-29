@@ -107,18 +107,33 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	
 	/* (non-Javadoc)
 	 * @see com.nya.sms.dataservices.AbstractDataServiceImpl#delete(java.lang.Long)
-	 * When deleting League, also delete associated teams
+	 * When deleting League, also delete associated teams and league players
 	 */
-	@Override
-	public void delete(Long id){
+	public void deleteLeagueFull(Long id, String username){
+		
+		System.out.println("In deleteLeagueFull, id: " + id);
 		
 		League league = this.get(id);
-		List<LeagueTeam> lt = league.getLeague_teams();
 		
-		for (LeagueTeam t : lt){
-			getLeagueTeamService().delete(t.id);
+		// Delete League Teams
+		System.out.println("Delete League: Delete League Teams...");
+		List<Ref<LeagueTeam>> ltr = league.getLeague_teamRefs();
+		
+		if (ltr.size() > 0){
+			List<Key<LeagueTeam>> ltk = new ArrayList<Key<LeagueTeam>>();
+			for (Ref<LeagueTeam> r : ltr){
+				ltk.add(r.getKey());
+			}
+			getLeagueTeamService().delete(ltk, username);
 		}
+
 		
+		// Delete League Players
+		System.out.println("Delete League: Delete League Players...");
+		getLeaguePlayerService().deleteLeaguePlayersByLeague(id, username);
+		
+		// Delete League
+		System.out.println("Delete League: Delete League...");
 		super.delete(id);
 		
 	}

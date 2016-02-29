@@ -128,6 +128,7 @@
 		  </div>
 		  <div id="maintab3" class="tab-pane fade">
 		    <h3>Menu 2</h3>
+		    <button type="button" class="btn btn-default" id="btn-deleteleague">Delete League</button>
 		    <p>Some content in menu 2.</p>
 		  </div>
 		</div>
@@ -621,10 +622,12 @@
 
 	<script>
 		function init() {
+			console.log("Begin init...");
 			mssolutions.fbapp.login.auth_user('//' + window.location.host
 					+ '/_ah/api');
 			mssolutions.fbapp.draftmanager.init_nav('//'
 					+ window.location.host + '/_ah/api');
+			console.log("init COMPLETE.");
 		}
 	</script>
 	<script src="https://apis.google.com/js/client.js?onload=init"></script>

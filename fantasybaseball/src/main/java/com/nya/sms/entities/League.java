@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
@@ -193,6 +195,11 @@ public class League extends BaseEntity implements Serializable {
 			t.add(l.get());
 		}
 		return t;
+	}
+	
+	 @ApiResourceProperty(ignored = AnnotationBoolean.TRUE) 
+	public List<Ref<LeagueTeam>> getLeague_teamRefs() {
+		return this.league_teams;
 	}
 
 	public void setLeague_teams(List<LeagueTeam> league_teams) {

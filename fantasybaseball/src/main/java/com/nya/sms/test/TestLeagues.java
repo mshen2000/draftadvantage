@@ -257,7 +257,7 @@ public class TestLeagues {
 		Assert.assertTrue(l1_r.getLeague_teams().size() == 1);
 		Assert.assertTrue(getLeagueTeamService().getAll().size() == 2);
 		
-		getLeagueService().delete(l1_id);
+		getLeagueService().deleteLeagueFull(l1_id,usr1.getUsername());
 		
 		// Test count of Leagues and Teams after deleting the League
 		Assert.assertTrue(getLeagueTeamService().getAll().size() == 1);
@@ -569,6 +569,17 @@ public class TestLeagues {
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 0);
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt3_id, uname).size() == 0);
 		
+		// Test Delete league
+		getLeagueService().deleteLeagueFull(l1_id, uname);
+		
+		// Verify league has no players
+		Assert.assertTrue(getLeaguePlayerService().getAll().size() == 0);
+		
+		// Verify league has no teams
+		Assert.assertTrue(getLeagueTeamService().getAll().size() == 0);
+		
+		// Verify league was deleted
+		Assert.assertTrue(getLeagueService().getAll().size() == 0);
 		
 	}
 	

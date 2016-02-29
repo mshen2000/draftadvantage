@@ -48,6 +48,35 @@ $(function() {
 
 $(document).ready(function()
 {
+	$('#btn-deleteleague').click(function() 
+		{
+		var selectedtext = $("#league-select").find("option:selected").text();
+		
+        BootstrapDialog.show({
+          	type: 'type-default',
+              title: 'Confirm Delete League',
+              message: 'Are you sure you want to delete league ' + selectedtext + '?',
+              spinicon: 'fa fa-refresh',
+              buttons: [{
+                  id: 'btn-confirm-delete-league',   
+                  icon: 'fa fa-trash',       
+                  cssClass: 'btn-danger', 
+                  autospin: true,
+                  label: 'Delete',
+                  action: function(dialog) {
+                	var selected = $("#league-select").find("option:selected").val();
+                	console.log("Selected league id: " + selected);
+                	mssolutions.fbapp.draftmanager.deleteLeague(selected);
+                  }
+              }, {
+                  label: 'Cancel',
+                  action: function(dialog) {
+                  	dialog.close();
+                  }
+              }]
+          });
+	    	
+		});
 	
 	
   	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
@@ -392,6 +421,7 @@ function loadLeagueSelector(data){
 	
 	if (undefined !== data){
 		$.each(data, function() {
+			console.log("Loading league selector: ID-" + this.id + " VAL-" + this.league_name);
 			options.append($("<option value='"+ this.id +"'/>").text(this.league_name + "(" + this.league_year + ")"));
 		});
 	} else {
@@ -430,12 +460,34 @@ mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
         	// loadLeagueSelector(resp.items);
         	console.log("League player update complete.");
         	mssolutions.fbapp.draftmanager.loadLeagueList();
-        	$('#league-select').selectpicker('val', leagueid);
+        	$('#league-select').val(leagueid);
+        	// $('#league-select').selectpicker('val', leagueid);
         	// $('#league-select').selectpicker('refresh');
         	progressmodal.hidePleaseWait();
         }
         else {
         	console.log("Failed to update league: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * Delete a league via the API.
+ */
+mssolutions.fbapp.draftmanager.deleteLeague = function(leagueid) {
+	console.log("Deleting League id..." + leagueid);
+	gapi.client.draftapp.league.deleteleague({
+		'longmsg' : leagueid}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	// loadLeagueSelector(resp.items);
+        	console.log("League delete complete.");
+        	mssolutions.fbapp.draftmanager.loadLeagueList();
+        	// $('#league-select').selectpicker('val', leagueid);
+        	BootstrapDialog.closeAll();
+        }
+        else {
+        	console.log("Failed to delete league: ", resp.code + " : " + resp.message);
         }
       });
 };

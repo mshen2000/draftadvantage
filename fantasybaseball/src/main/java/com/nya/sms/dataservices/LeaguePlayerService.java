@@ -53,6 +53,23 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	}
 	
 	/**
+	 * Description:	Delete a list of LeaguePlayers based on a given league
+	 * @param league_id
+	 * @param username
+	 * @return 
+	 */
+	public void deleteLeaguePlayersByLeague(long league_id, String username){
+		
+		Key<League> leaguekey = Key.create(League.class, league_id);
+		
+		List<Key<LeaguePlayer>> leagueplayerskeys = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey).keys().list();
+		
+		if (leagueplayerskeys.size() > 0)
+			ofy().delete().keys(leagueplayerskeys).now();
+
+	}
+	
+	/**
 	 * Description:	Get a list of LeaguePlayers based on a given league team
 	 * @param team_id
 	 * @param username

@@ -124,6 +124,19 @@ public class MainEndpoint {
 
 	}
 	
+	@ApiMethod(name = "league.deleteleague")
+	public APIGeneralResult deleteLeague(APIGeneralMessage m, HttpServletRequest req) throws UnauthorizedException {
+		
+		System.out.println("Longmsg: " + m.getLongmsg());
+		
+		getLeagueService().deleteLeagueFull(m.getLongmsg(), validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", "League delete successful.");
+		
+		return result;
+
+	}
+	
 
 	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
 	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req)

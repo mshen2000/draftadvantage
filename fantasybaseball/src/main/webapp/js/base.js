@@ -119,6 +119,7 @@ mssolutions.fbapp.login.init_login = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
+				console.log("Loading gapi.client.authenticate - COMPLETE.");
 				mssolutions.fbapp.login.enableButtons();
 			}
 		}
@@ -129,6 +130,7 @@ mssolutions.fbapp.login.init_login = function(apiRoot) {
 	}
 	else {
 		mssolutions.fbapp.login.enableButtons();
+		console.log("Loading gapi.client.authenticate - COMPLETE.");
 	}
 };
 
@@ -154,6 +156,7 @@ mssolutions.fbapp.login.auth_admin = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
+				console.log("Loading gapi.client.authenticate - COMPLETE.");
 				mssolutions.fbapp.login.authenticate_admin();
 			}
 		}
@@ -164,6 +167,7 @@ mssolutions.fbapp.login.auth_admin = function(apiRoot) {
 	}
 	else {
 		// If app is already initialized, run the callback
+		console.log("Loading gapi.client.authenticate - COMPLETE.");
 		mssolutions.fbapp.login.authenticate_admin();
 	}
 };
@@ -190,6 +194,7 @@ mssolutions.fbapp.login.auth_user = function(apiRoot) {
 		var apisToLoad;
 		var callback = function() {
 			if (--apisToLoad == 0) {
+				console.log("Loading gapi.client.authenticate - COMPLETE.");
 				mssolutions.fbapp.login.authenticate_user();
 			}
 		}
@@ -200,6 +205,7 @@ mssolutions.fbapp.login.auth_user = function(apiRoot) {
 	}
 	else {
 		// If app is already initialized, run the callback
+		console.log("Loading gapi.client.authenticate - COMPLETE.");
 		mssolutions.fbapp.login.authenticate_user();
 	}
 };
