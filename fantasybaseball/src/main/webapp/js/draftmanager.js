@@ -258,8 +258,60 @@ $(document).ready(function()
 
     loadTeamPreviewTable(null, true);
 	loadTeamTable(null, true);
+	loadPlayerGridTable(null, true);
 
 });
+
+function loadPlayerGridTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#playergrid_table');
+	var config = {
+			responsive: true,
+        	"processing": true,
+            data: data,
+            "order": [[ 15, "desc" ]],
+            "columns": [
+                { "title": "Name", "mData": "full_name" },
+                { "title": "Age", "mData": "age" },
+                { "title": "Team", "mData": "team"},
+                { "title": "Pos", "mData": "player_position", "sDefaultContent": ""},
+                { "title": "St", "mData": "dc_status", "sDefaultContent": ""},
+                { "title": "Avg", "mData": "hitter_avg", render: $.fn.dataTable.render.number( ',', '.', 3 ), "sDefaultContent": ""},
+                { "title": "HR", "mData": "hitter_hr", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "SB", "mData": "hitter_sb", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "R", "mData": "hitter_runs", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "RBI", "mData": "hitter_rbi", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                
+                { "title": "W", "mData": "pitcher_w", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "SV", "mData": "pitcher_sv", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "SO", "mData": "pitcher_k", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "ERA", "mData": "pitcher_era", render: $.fn.dataTable.render.number( ',', '.', 2 ), "sDefaultContent": ""},
+                { "title": "WHIP", "mData": "pitcher_whip", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                
+                { "title": "NPV", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "i$", "mData": "init_auction_value", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "l$", "mData": "live_auction_value", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+            ],
+//            "searchCols": [
+//               { "search": "H" },
+//               null,null,null,null,null,
+//               null,null,null,null,null
+//            ]
+        };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+	}
+	
+	$('.DataTables_sort_icon').remove();
+
+}
 
 function loadTeamTable(data, isInitialLoad)
 {
@@ -414,6 +466,8 @@ function loadLeagueContent(leagueid){
 	
 	$("#intro-container").hide();
 	$("#league-container").show();
+	
+	mssolutions.fbapp.draftmanager.getLeaguePlayerData(leagueid);
 }
 
 function loadLeagueIntro(){
@@ -449,7 +503,11 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
         if (!resp.code) { 
         	console.log("League save complete. League ID: " + resp.longdescription);
         	mssolutions.fbapp.draftmanager.loadLeagueList();
-        	mssolutions.fbapp.draftmanager.updateLeague(resp.longdescription);
+        	$('#league-select').val(resp.longdescription);
+        	loadLeagueContent(resp.longdescription);
+        	progressmodal.hidePleaseWait();
+        	
+        	// mssolutions.fbapp.draftmanager.updateLeague(resp.longdescription);
         }
         else {
         	console.log("Failed to create league: ", resp.code + " : " + resp.message);
@@ -458,24 +516,42 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
 };
 
 /**
- * Update a league via the API.
+ * Get league player data via the API.
  */
-mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
-
-	gapi.client.draftapp.league.updateleagueplayerdata({
-		'longmsg' : leagueid}).execute(
+mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
+	console.log("getLeaguePlayerData, leagueid: " + leagueid);
+	gapi.client.draftapp.league.getleagueplayerdata({
+		'id' : leagueid}).execute(
       function(resp) {
         if (!resp.code) { 
-        	console.log("League player update complete.");
-        	$('#league-select').val(leagueid);
-        	loadLeagueContent(leagueid);
-        	progressmodal.hidePleaseWait();
+        	console.log("League player get complete.");
+        	loadPlayerGridTable(resp.items, false);
         }
         else {
-        	console.log("Failed to update league: ", resp.code + " : " + resp.message);
+        	console.log("Failed to get league player data: ", resp.code + " : " + resp.message);
         }
       });
 };
+
+/**
+ * Update a league via the API.
+ */
+//mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
+//
+//	gapi.client.draftapp.league.updateleagueplayerdata({
+//		'longmsg' : leagueid}).execute(
+//      function(resp) {
+//        if (!resp.code) { 
+//        	console.log("League player update complete.");
+//        	$('#league-select').val(leagueid);
+//        	loadLeagueContent(leagueid);
+//        	progressmodal.hidePleaseWait();
+//        }
+//        else {
+//        	console.log("Failed to update league: ", resp.code + " : " + resp.message);
+//        }
+//      });
+//};
 
 /**
  * Delete a league via the API.

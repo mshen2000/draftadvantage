@@ -26,11 +26,12 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	@Index
 	String team_roster_position;
 	
+	long team_roster_position_num;
+	
 	@Index
 	@Load
 	Ref<PlayerProjected> player_projected;
 	
-
 	Date league_update_date;
 	
 	@Index
@@ -129,6 +130,14 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 
 	public void setTeam_roster_position(String team_roster_position) {
 		this.team_roster_position = team_roster_position;
+	}
+
+	public long getTeam_roster_position_num() {
+		return team_roster_position_num;
+	}
+
+	public void setTeam_roster_position_num(long team_roster_position_num) {
+		this.team_roster_position_num = team_roster_position_num;
 	}
 
 	public PlayerProjected getPlayer_projected() {

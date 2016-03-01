@@ -115,14 +115,21 @@ public class MainEndpoint {
 
 	}
 	
-	@ApiMethod(name = "league.updateleagueplayerdata")
-	public APIGeneralResult updateLeaguePlayerData(APIGeneralMessage m, HttpServletRequest req) throws UnauthorizedException {
-		
-		getLeagueService().updateLeaguePlayerData(m.getLongmsg(), validateUserToken(req).getUsername());
-		
-		APIGeneralResult result = new APIGeneralResult("OK", "League player update successful.");
-		
-		return result;
+//	@ApiMethod(name = "league.updateleagueplayerdata")
+//	public APIGeneralResult updateLeaguePlayerData(APIGeneralMessage m, HttpServletRequest req) throws UnauthorizedException {
+//		
+//		getLeagueService().updateLeaguePlayerData(m.getLongmsg(), validateUserToken(req).getUsername());
+//		
+//		APIGeneralResult result = new APIGeneralResult("OK", "League player update successful.");
+//		
+//		return result;
+//
+//	}
+	
+	@ApiMethod(name = "league.getleagueplayerdata", httpMethod = HttpMethod.GET)
+	public List<LeaguePlayerOutput> getLeaguePlayerData(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
+		System.out.println("In getLeaguePlayerData, id: " + id);
+		return getLeagueService().getLeaguePlayerData(id, validateUserToken(req).getUsername());
 
 	}
 	
