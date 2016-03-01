@@ -79,6 +79,18 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			throw new IllegalArgumentException("League already exists, cannot create a new league.");
 		}
 		
+		// Set league average baseline values (for 11 teams)
+		// NEED TO PARAMETERIZE based on number of teams.
+		league.setAvg_hitter_ab(6500);
+		league.setAvg_hitter_ba(0.258);
+		league.setAvg_hitter_hits(league.getAvg_hitter_ab()*league.getAvg_hitter_ba());
+		
+		league.setAvg_pitcher_era(3.96);
+		league.setAvg_pitcher_ip(1500);
+		league.setAvg_pitcher_whip(1.27);
+		league.setAvg_pitcher_er((league.getAvg_pitcher_era()/9)*league.getAvg_pitcher_ip());
+		league.setAvg_pitcher_bbplushits(league.getAvg_pitcher_ip()*league.getAvg_pitcher_whip());
+		
 		//  For each team in container, save league team
 		Map<Key<LeagueTeam>, LeagueTeam>  map = getLeagueTeamService().save(container.getLeague_teams(), username);
 		List<LeagueTeam> teamlist = new ArrayList<LeagueTeam>(map.values());
@@ -259,6 +271,10 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		System.out.println("Get Player Output Data: BEGIN");
 
 		League league = this.get(league_id);
+		
+		
+		
+		
 		ProjectionProfile profile = league.getProjection_profile();
 
 		System.out.println("Get Player Output Data: Convert player projections to output...");
@@ -586,7 +602,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		for (int out = 0; out < 150; out++) {
 			System.out.println("--Player Test: " + playeroutput.get(out).getFull_name() + ", "
-					+ playeroutput.get(out).getPlayer_position() + ", " + playeroutput.get(out).getInit_auction_value());
+					+ playeroutput.get(out).getPlayer_position() + ", " + playeroutput.get(out).getInit_auction_value()
+					+ ", " + playeroutput.get(out).getPitcher_whip_eff() + ", " + playeroutput.get(out).getPitcher_z_whip());
 		}
 		
 		System.out.println("Get Player Output Data: COMPLETE");
