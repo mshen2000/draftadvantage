@@ -80,6 +80,72 @@ $(document).ready(function()
 	    	
 		});
 	
+	$('#btn-allplayers').click(function() 
+	{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' ).draw();
+	});
+	$('#btn-pitchers').click(function() 
+	{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+		$('#playergrid_table').DataTable().columns( 0 ).search( 'P' ).draw();	
+	});
+	$('#btn-hitters').click(function() 
+			{
+				$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 0 ).search( 'H' ).draw();	
+			});
+	$('#btn-c').click(function() 
+			{
+				$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( 'C' ).draw();	
+			});
+	$('#btn-1b').click(function() 
+			{
+				$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( '1B' ).draw();	
+			});
+	$('#btn-2b').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( '2B' ).draw();	
+			});
+	$('#btn-ss').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( 'SS' ).draw();	
+			});
+	$('#btn-3b').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( '3B' ).draw();	
+			});
+	$('#btn-mi').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( '2B|SS',true ).draw();	
+			});
+	$('#btn-ci').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( '1B|3B',true ).draw();	
+			});
+	$('#btn-of').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( 'OF' ).draw();	
+			});
+	$('#btn-rp').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( 'RP' ).draw();	
+			});
+	$('#btn-sp').click(function() 
+			{
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+				$('#playergrid_table').DataTable().columns( 4 ).search( 'SP' ).draw();	
+			});
+	
+	
   	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
 		var $total = navigation.find('li').length;
 		var $current = index+1;
@@ -273,17 +339,26 @@ function loadPlayerGridTable(data, isInitialLoad)
 			responsive: true,
         	"processing": true,
             data: data,
-            "scrollY": calcDataTableHeight(),
-            "paging": false,
+            // "scrollY": calcDataTableHeight(),
+            "paging": true,
             "order": [[ 16, "desc" ]],
+            "iDisplayLength": 15,
+            "language": {
+                "lengthMenu": "Display <select  style='width:auto;' class='form-control'><option value='10'>10</option>" +
+                		"<option value='15'>15</option>" +
+                		"<option value='20'>20</option>" +
+                		"<option value='25'>25</option>" +
+                		"<option value='50'>50</option></select> records per page"
+            },
             "columns": [
                 { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
-                { "title": "Name", "mData": "full_name" },
+                { "title": "Name", "mData": "full_name",  "render": function ( data, type, row ) {
+                	return data + " (" + row.team + ")"
+	                }},
                 { "title": "Age", "mData": "age" },
-                { "title": "Team", "mData": "team"},
+                { "visible": false, "title": "Team", "mData": "team"},
                 { "title": "Pos", "mData": "player_position", "sDefaultContent": ""},
                 { "title": "St", "mData": "dc_status", "sDefaultContent": ""},
-                // { "title": "Avg", "mData": "hitter_avg", render: $.fn.dataTable.render.number( ',', '.', 3 ), "sDefaultContent": ""},
                 { "title": "Avg", "mData": "hitter_avg", "render": function ( data, type, row ) {
                 	if (row.pitcher_hitter == "H"){
                 		var avgnum = data.toFixed(3);

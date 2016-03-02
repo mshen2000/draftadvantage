@@ -53,7 +53,7 @@ table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sor
 table.dataTable thead > tr > td.sorting_asc,
 table.dataTable thead > tr > td.sorting_desc,
 table.dataTable thead > tr > td.sorting {
-  padding-right: 4px !important;
+  padding-right: 6px !important;
 }
 
 .table>tbody>tr>th,
@@ -62,7 +62,7 @@ table.dataTable thead > tr > td.sorting {
 .table>tfoot>tr>th,
 .table>thead>tr>td,
 .table>thead>tr>th{
-	padding: 4px !important;
+	padding: 6px !important;
 /* 	line-height:1.42857143; */
 /* 	vertical-align:top; */
 /* 	border-top:1px solid #ddd */
@@ -151,8 +151,28 @@ td { font-size: 12px; }
 		  <div id="maintab1" class="tab-pane fade in active">
 			<div class="row">
 			  <div class="col-md-9">
-			  <h3>Player Grid</h3>
-			  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+				  <h3>Player Grid</h3>
+				  <div class="btn-toolbar" role="toolbar" aria-label="...">
+					  <div class="btn-group btn-group-sm" role="group" aria-label="...">
+					    <button type="button" class="btn btn-default" id="btn-allplayers">All Players</button>
+						<button type="button" class="btn btn-default" id="btn-pitchers">Pitchers</button>
+						<button type="button" class="btn btn-default" id="btn-hitters">Hitters</button>
+					  </div>
+					  <div class="btn-group btn-group-sm" role="group" aria-label="...">
+						<button type="button" class="btn btn-default" id="btn-c">C</button>
+						<button type="button" class="btn btn-default" id="btn-1b">1B</button>
+						<button type="button" class="btn btn-default" id="btn-2b">2B</button>
+						<button type="button" class="btn btn-default" id="btn-ss">SS</button>
+						<button type="button" class="btn btn-default" id="btn-3b">3B</button>
+						<button type="button" class="btn btn-default" id="btn-ci">CI</button>
+						<button type="button" class="btn btn-default" id="btn-mi">MI</button>
+						<button type="button" class="btn btn-default" id="btn-of">OF</button>
+						<button type="button" class="btn btn-default" id="btn-sp">SP</button>
+						<button type="button" class="btn btn-default" id="btn-rp">RP</button>
+					  </div>
+				  </div>
+				  <div style="margin-top:5px"></div>
+				  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
 			  </div>
 			  <div class="col-md-3"><h3>Team Rosters</h3>
 			  </div>
