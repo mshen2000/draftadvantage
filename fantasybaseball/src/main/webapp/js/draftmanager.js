@@ -264,32 +264,80 @@ $(document).ready(function()
 
 function loadPlayerGridTable(data, isInitialLoad)
 {
+    var calcDataTableHeight = function() {
+        return $(window).height();
+    };
 	var data_table;
 	var table_element = $('#playergrid_table');
 	var config = {
 			responsive: true,
         	"processing": true,
             data: data,
-            "order": [[ 15, "desc" ]],
+            "scrollY": calcDataTableHeight(),
+            "paging": false,
+            "order": [[ 16, "desc" ]],
             "columns": [
+                { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
                 { "title": "Name", "mData": "full_name" },
                 { "title": "Age", "mData": "age" },
                 { "title": "Team", "mData": "team"},
                 { "title": "Pos", "mData": "player_position", "sDefaultContent": ""},
                 { "title": "St", "mData": "dc_status", "sDefaultContent": ""},
-                { "title": "Avg", "mData": "hitter_avg", render: $.fn.dataTable.render.number( ',', '.', 3 ), "sDefaultContent": ""},
-                { "title": "HR", "mData": "hitter_hr", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
-                { "title": "SB", "mData": "hitter_sb", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
-                { "title": "R", "mData": "hitter_runs", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
-                { "title": "RBI", "mData": "hitter_rbi", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                // { "title": "Avg", "mData": "hitter_avg", render: $.fn.dataTable.render.number( ',', '.', 3 ), "sDefaultContent": ""},
+                { "title": "Avg", "mData": "hitter_avg", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "H"){
+                		var avgnum = data.toFixed(3);
+	                    return avgnum.toString().substr(avgnum.length - 4);
+                	} else if (row.pitcher_hitter == "P"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "HR", "mData": "hitter_hr", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "H"){
+                		return avgnum = data.toFixed(0);
+                	} else if (row.pitcher_hitter == "P"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "SB", "mData": "hitter_sb", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "H"){
+                		return avgnum = data.toFixed(0);
+                	} else if (row.pitcher_hitter == "P"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "R", "mData": "hitter_runs", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "H"){
+                		return avgnum = data.toFixed(0);
+                	} else if (row.pitcher_hitter == "P"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "RBI", "mData": "hitter_rbi", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "H"){
+                		return avgnum = data.toFixed(0);
+                	} else if (row.pitcher_hitter == "P"){return "";}
+	                }, "sDefaultContent": ""},
                 
-                { "title": "W", "mData": "pitcher_w", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
-                { "title": "SV", "mData": "pitcher_sv", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
-                { "title": "SO", "mData": "pitcher_k", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
-                { "title": "ERA", "mData": "pitcher_era", render: $.fn.dataTable.render.number( ',', '.', 2 ), "sDefaultContent": ""},
-                { "title": "WHIP", "mData": "pitcher_whip", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "W", "mData": "pitcher_w", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "P"){
+                		return avgnum = data.toFixed(0);
+                	} else if (row.pitcher_hitter == "H"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "SV", "mData": "pitcher_sv", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "P"){
+                		return avgnum = data.toFixed(0);
+                	} else if (row.pitcher_hitter == "H"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "SO", "mData": "pitcher_k", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "P"){
+                		return avgnum = data.toFixed(0);
+                	} else if (row.pitcher_hitter == "H"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "ERA", "mData": "pitcher_era", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "P"){
+                		return avgnum = data.toFixed(2);
+                	} else if (row.pitcher_hitter == "H"){return "";}
+	                }, "sDefaultContent": ""},
+                { "title": "WHIP", "mData": "pitcher_whip", "render": function ( data, type, row ) {
+                	if (row.pitcher_hitter == "P"){
+                		return avgnum = data.toFixed(2);
+                	} else if (row.pitcher_hitter == "H"){return "";}
+	                }, "sDefaultContent": ""},
                 
-                { "title": "NPV", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "NPV", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ), "sDefaultContent": ""},
                 { "title": "i$", "mData": "init_auction_value", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
                 { "title": "l$", "mData": "live_auction_value", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
             ],
@@ -301,12 +349,18 @@ function loadPlayerGridTable(data, isInitialLoad)
         };
 	
 	if (isInitialLoad) 	{
+		console.log("window height: " + calcDataTableHeight());
 		data_table = table_element.dataTable(config);
+		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
+		
 	} else {
+		console.log("window height: " + calcDataTableHeight());
 		data_table = table_element.DataTable();
 		data_table.destroy();
 		table_element.empty();
 		data_table = table_element.dataTable(config);
+		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
+		
 	}
 	
 	$('.DataTables_sort_icon').remove();

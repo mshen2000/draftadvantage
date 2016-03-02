@@ -87,6 +87,7 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	public double pitcher_fb_pct;
 	public double pitcher_ld_pct;
 	public double pitcher_babip;
+	public double pitcher_whip;
 
 	public PlayerProjected() {
 	}
@@ -570,6 +571,14 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 
 	public void setOther_id_name(String other_id_name) {
 		this.other_id_name = other_id_name;
+	}
+
+	public double getPitcher_whip() {
+		return pitcher_whip;
+	}
+
+	public void setPitcher_whip(double pitcher_whip) {
+		this.pitcher_whip = pitcher_whip;
 	}
 	
 	

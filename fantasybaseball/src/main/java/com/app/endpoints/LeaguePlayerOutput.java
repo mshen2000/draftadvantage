@@ -114,6 +114,8 @@ public class LeaguePlayerOutput extends PlayerProjected{
 		this.pitcher_hitter = p.getPitcher_hitter();
 		this.pitcher_pos = p.getPitcher_pos();
 		this.pitcher_throws = p.getPitcher_throws();
+		
+		this.pitcher_whip = (p.getPitcher_bb() + p.getPitcher_hits())/p.pitcher_ip;
 	}
 	
 	@Override
