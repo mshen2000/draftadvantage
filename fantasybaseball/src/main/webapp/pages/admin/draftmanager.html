@@ -71,6 +71,12 @@ table.dataTable thead > tr > td.sorting {
 th { font-size: 12px; }
 td { font-size: 12px; }
 
+@media (min-width: 1000px) {
+    .container{
+        width: 1340px !important;
+    }
+}
+
 </style>
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -174,7 +180,32 @@ td { font-size: 12px; }
 				  <div style="margin-top:5px"></div>
 				  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
 			  </div>
-			  <div class="col-md-3"><h3>Team Rosters</h3>
+			  <div class="col-md-3">
+			  	<div style="margin-top:15px"></div>
+			  	<div class="panel panel-default">
+<!-- 				  <div class="panel-heading"> -->
+<!-- 				    <h3 class="panel-title">Panel title</h3> -->
+<!-- 				  </div> -->
+				  <div class="panel-body">
+				    <ul class="nav nav-tabs">
+					  <li class="active"><a data-toggle="tab" href="#tab-playerinfo">Player Info</a></li>
+					  <li><a data-toggle="tab" href="#tab-teaminfo">Team Info</a></li>
+					</ul>
+					
+					<div class="tab-content">
+					  <div id="tab-playerinfo" class="tab-pane fade in active">
+					    <h3>HOME</h3>
+					    <p>Some content.</p>
+					  </div>
+					  <div id="tab-teaminfo" class="tab-pane fade">
+						<select style="width:auto;margin-top:10px;" class="form-control" id="team-select">
+						</select>
+					    <h4 id="lbl-teambalance"><font color="green" id="lbl-teambalance">Balance: $0</font></h4>
+					    <table id="teamroster_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+					  </div>
+					</div>
+				  </div>
+				</div>
 			  </div>
 			</div>
 		  </div>

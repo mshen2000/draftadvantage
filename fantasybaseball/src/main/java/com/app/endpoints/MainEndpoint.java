@@ -2,6 +2,7 @@ package com.app.endpoints;
 
 import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
+import com.app.endpoints.entities.LeagueRosterItem;
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.app.endpoints.entities.ProjectionPeriod;
@@ -22,6 +23,7 @@ import com.nya.sms.dataservices.LeagueService;
 import com.nya.sms.dataservices.PlayerProjectedService;
 import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.entities.League;
+import com.nya.sms.entities.LeagueTeam;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
 
@@ -130,6 +132,20 @@ public class MainEndpoint {
 	public List<LeaguePlayerOutput> getLeaguePlayerData(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
 		System.out.println("In getLeaguePlayerData, id: " + id);
 		return getLeagueService().getLeaguePlayerData(id, validateUserToken(req).getUsername());
+
+	}
+	
+	@ApiMethod(name = "league.getleagueteams", httpMethod = HttpMethod.GET)
+	public List<LeagueTeam> getLeagueTeams(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
+		System.out.println("In getLeagueTeams, id: " + id);
+		return getLeagueService().getLeagueTeams(id, validateUserToken(req).getUsername());
+
+	}
+	
+	@ApiMethod(name = "league.getleagueroster", httpMethod = HttpMethod.GET)
+	public List<LeagueRosterItem> getLeagueRoster(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
+		System.out.println("In getLeagueRoster, id: " + id);
+		return getLeagueService().getLeagueRoster(id, validateUserToken(req).getUsername());
 
 	}
 	

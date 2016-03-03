@@ -43,6 +43,11 @@ $(function() {
 		}
 	  });
 	  
+	  $('#team-select').on('change', function(){
+	    var selected = $(this).find("option:selected").text();
+	    // $("#lbl-teamname").text(selected);
+	  });
+	  
 });
 
 
@@ -325,8 +330,55 @@ $(document).ready(function()
     loadTeamPreviewTable(null, true);
 	loadTeamTable(null, true);
 	loadPlayerGridTable(null, true);
+	loadTeamRosterTable(null, true);
 
 });
+
+
+function loadTeamRosterTable(data, isInitialLoad)
+{
+    var calcDataTableHeight = function() {
+        return $(window).height();
+    };
+	var data_table;
+	var table_element = $('#teamroster_table');
+	var config = {
+			responsive: true,
+        	"processing": true,
+            "bSort" : false,
+            "searching": false,
+            "info": false,
+        	select: 'single',
+            data: data,
+            // "scrollY": calcDataTableHeight(),
+            "paging": false,
+            "order": [[ 0, "asc" ]],
+            "columns": [
+                { "visible": false, "title": "index", "mData": "index" },
+                { "title": "Pos", "mData": "position" },
+                { "title": "Player", "mData": "name", "sDefaultContent": ""},
+                { "title": "$", "mData": "salary", "sDefaultContent": ""},
+
+            ]
+        };
+	
+	if (isInitialLoad) 	{
+		console.log("window height: " + calcDataTableHeight());
+		data_table = table_element.dataTable(config);
+		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
+		
+	} else {
+		console.log("window height: " + calcDataTableHeight());
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
+		
+	}
+
+}
+
 
 function loadPlayerGridTable(data, isInitialLoad)
 {
@@ -413,8 +465,12 @@ function loadPlayerGridTable(data, isInitialLoad)
 	                }, "sDefaultContent": ""},
                 
                 { "title": "NPV", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ), "sDefaultContent": ""},
-                { "title": "i$", "mData": "init_auction_value", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
-                { "title": "l$", "mData": "live_auction_value", render: $.fn.dataTable.render.number( ',', '.', 0 ), "sDefaultContent": ""},
+                { "title": "i$", "mData": "init_auction_value", "render": function ( data, type, row ) {
+                		return "$" + data.toFixed(0);
+	                }, "sDefaultContent": ""},
+                { "title": "l$", "mData": "live_auction_value", "render": function ( data, type, row ) {
+            		return "$" + data.toFixed(0);
+                }, "sDefaultContent": ""},
             ],
 //            "searchCols": [
 //               { "search": "H" },
@@ -597,6 +653,8 @@ function loadLeagueContent(leagueid){
 	$("#league-container").show();
 	
 	mssolutions.fbapp.draftmanager.getLeaguePlayerData(leagueid);
+	mssolutions.fbapp.draftmanager.getLeagueTeams(leagueid);
+	mssolutions.fbapp.draftmanager.getLeagueRoster(leagueid);
 }
 
 function loadLeagueIntro(){
@@ -622,6 +680,20 @@ function loadLeagueSelector(data){
 	options.append($("<option value='newleague'/>").text("Add New League..."));
 }
 
+function loadTeamSelect(data){
+	var options = $("#team-select");
+	options.find('option').remove().end();
+	if (undefined !== data){
+		$.each(data, function() {
+			console.log("Loading team selector: ID-" + this.id + " VAL-" + this.team_name);
+			options.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+		});
+	} else {
+		// console.log("League data is null");
+	}
+
+}
+
 /**
  * Create a new league and update it via the API.
  */
@@ -644,6 +716,43 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
       });
 };
 
+
+/**
+ * Get league roster via the API.
+ */
+mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
+	console.log("getLeagueRoster, leagueid: " + leagueid);
+	gapi.client.draftapp.league.getleagueroster({
+		'id' : leagueid}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("League roster get complete.");
+        	loadTeamRosterTable(resp.items, false);
+        }
+        else {
+        	console.log("Failed to get league roster: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * Get league teams via the API.
+ */
+mssolutions.fbapp.draftmanager.getLeagueTeams = function(leagueid) {
+	console.log("getLeagueTeams, leagueid: " + leagueid);
+	gapi.client.draftapp.league.getleagueteams({
+		'id' : leagueid}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("League teams get complete.");
+        	loadTeamSelect(resp.items);
+        }
+        else {
+        	console.log("Failed to get league teams: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
 /**
  * Get league player data via the API.
  */
@@ -662,25 +771,6 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
       });
 };
 
-/**
- * Update a league via the API.
- */
-//mssolutions.fbapp.draftmanager.updateLeague = function(leagueid) {
-//
-//	gapi.client.draftapp.league.updateleagueplayerdata({
-//		'longmsg' : leagueid}).execute(
-//      function(resp) {
-//        if (!resp.code) { 
-//        	console.log("League player update complete.");
-//        	$('#league-select').val(leagueid);
-//        	loadLeagueContent(leagueid);
-//        	progressmodal.hidePleaseWait();
-//        }
-//        else {
-//        	console.log("Failed to update league: ", resp.code + " : " + resp.message);
-//        }
-//      });
-//};
 
 /**
  * Delete a league via the API.

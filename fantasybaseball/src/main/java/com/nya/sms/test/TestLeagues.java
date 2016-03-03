@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import com.app.endpoints.LeaguePlayerOutput;
 import com.app.endpoints.entities.LeagueCreateContainer;
+import com.app.endpoints.entities.LeagueRosterItem;
 import com.app.endpoints.entities.ProjectionPeriod;
 import com.app.endpoints.entities.ProjectionService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -337,7 +338,7 @@ public class TestLeagues {
 		container.setLeague_teams(teamlist);
 		container.setProfile(p1);
 		
-		getLeagueService().saveNewLeague(container, uname);
+		long league_id = getLeagueService().saveNewLeague(container, uname);
 		
 		List<League> leaguelist = getLeagueService().getUserLeague("League 1", 2016, uname);
 		
@@ -377,6 +378,10 @@ public class TestLeagues {
 		    fail( "Saving league did not cause exception for non-existent profile." );
 		} catch (IllegalArgumentException e) {
 		}
+		
+		// Test getLeagueRosterItems
+		List<LeagueRosterItem> items = getLeagueService().getLeagueRoster(league_id, uname);
+		Assert.assertTrue(items.size() == 26);
 
 	}
 	

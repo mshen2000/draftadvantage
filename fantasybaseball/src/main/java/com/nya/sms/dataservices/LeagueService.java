@@ -15,6 +15,7 @@ import org.apache.commons.math3.util.FastMath;
 import com.app.endpoints.LeaguePlayerOutput;
 import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
+import com.app.endpoints.entities.LeagueRosterItem;
 import com.app.endpoints.entities.PositionalZContainer;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
@@ -213,6 +214,71 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			}
 		}
 
+	}
+	
+	
+	public List<LeagueTeam> getLeagueTeams(Long league_id, String uname) {
+		
+		League league = this.get(league_id);
+		
+		return league.getLeague_teams();
+		
+	}
+	
+	
+	public List<LeagueRosterItem> getLeagueRoster(long league_id, String uname){
+	
+		League league = this.get(league_id);
+		List<LeagueRosterItem> items = new ArrayList<LeagueRosterItem>();
+		int j = 0;
+		
+		for (int i = 1; i <= league.getNum_c(); i++){
+			items.add(new LeagueRosterItem(j, "C"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_1b(); i++){
+			items.add(new LeagueRosterItem(j, "1B"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_2b(); i++){
+			items.add(new LeagueRosterItem(j, "2B"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_ss(); i++){
+			items.add(new LeagueRosterItem(j, "SS"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_3b(); i++){
+			items.add(new LeagueRosterItem(j, "3B"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_mi(); i++){
+			items.add(new LeagueRosterItem(j, "MI"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_ci(); i++){
+			items.add(new LeagueRosterItem(j, "CI"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_of(); i++){
+			items.add(new LeagueRosterItem(j, "OF"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_util(); i++){
+			items.add(new LeagueRosterItem(j, "UT"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_p(); i++){
+			items.add(new LeagueRosterItem(j, "P"));
+			j++;
+		}
+		for (int i = 1; i <= league.getNum_res(); i++){
+			items.add(new LeagueRosterItem(j, "RES"));
+			j++;
+		}
+		
+		return items;
+	
 	}
 	
 	
