@@ -45,11 +45,9 @@ $(function() {
 	  
 	  $('#team-select').on('change', function(){
 	    var selected = $(this).find("option:selected").text();
-	    // $("#lbl-teamname").text(selected);
 	  });
 	  
 });
-
 
 
 $(document).ready(function()
@@ -250,10 +248,7 @@ $(document).ready(function()
 			}
 			
 			loadTeamPreviewTable(dataout, false);
-			
-//			$("#proj-date-label").text($( "#projection-date-selector2" ).val());
-//			var hitterfile = $( "#hitter-proj-file" ).val().toString().split("\\");
-//			$("#proj-hitterfile-label").text(hitterfile[hitterfile.length - 1]);
+
 		} 
 		
 		// If it's the last tab then hide the last button and show the finish instead
@@ -343,23 +338,22 @@ function loadTeamRosterTable(data, isInitialLoad)
 	var data_table;
 	var table_element = $('#teamroster_table');
 	var config = {
-			responsive: true,
-        	"processing": true,
-            "bSort" : false,
-            "searching": false,
-            "info": false,
-        	select: 'single',
-            data: data,
-            // "scrollY": calcDataTableHeight(),
-            "paging": false,
-            "order": [[ 0, "asc" ]],
-            "columns": [
-                { "visible": false, "title": "index", "mData": "index" },
-                { "title": "Pos", "mData": "position" },
-                { "title": "Player", "mData": "name", "sDefaultContent": ""},
-                { "title": "$", "mData": "salary", "sDefaultContent": ""},
-
-            ]
+		responsive: true,
+    	"processing": true,
+        "bSort" : false,
+        "searching": false,
+        "info": false,
+    	select: 'single',
+        data: data,
+        // "scrollY": calcDataTableHeight(),
+        "paging": false,
+        "order": [[ 0, "asc" ]],
+        "columns": [
+            { "visible": false, "title": "index", "mData": "index" },
+            { "title": "Pos", "mData": "position" },
+            { "title": "Player", "mData": "name", "sDefaultContent": ""},
+            { "title": "$", "mData": "salary", "sDefaultContent": ""},
+        ]
         };
 	
 	if (isInitialLoad) 	{
@@ -388,95 +382,89 @@ function loadPlayerGridTable(data, isInitialLoad)
 	var data_table;
 	var table_element = $('#playergrid_table');
 	var config = {
-			responsive: true,
-        	"processing": true,
-            data: data,
-            // "scrollY": calcDataTableHeight(),
-            "paging": true,
-            "order": [[ 16, "desc" ]],
-            "iDisplayLength": 15,
-            "language": {
-                "lengthMenu": "Display <select  style='width:auto;' class='form-control'><option value='10'>10</option>" +
-                		"<option value='15'>15</option>" +
-                		"<option value='20'>20</option>" +
-                		"<option value='25'>25</option>" +
-                		"<option value='50'>50</option></select> records per page"
-            },
-            "columns": [
-                { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
-                { "title": "Name", "mData": "full_name",  "render": function ( data, type, row ) {
-                	return data + " (" + row.team + ")"
-	                }},
-                { "title": "Age", "mData": "age" },
-                { "visible": false, "title": "Team", "mData": "team"},
-                { "title": "Pos", "mData": "player_position", "sDefaultContent": ""},
-                { "title": "St", "mData": "dc_status", "sDefaultContent": ""},
-                { "title": "Avg", "mData": "hitter_avg", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "H"){
-                		var avgnum = data.toFixed(3);
-	                    return avgnum.toString().substr(avgnum.length - 4);
-                	} else if (row.pitcher_hitter == "P"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "HR", "mData": "hitter_hr", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "H"){
-                		return avgnum = data.toFixed(0);
-                	} else if (row.pitcher_hitter == "P"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "SB", "mData": "hitter_sb", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "H"){
-                		return avgnum = data.toFixed(0);
-                	} else if (row.pitcher_hitter == "P"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "R", "mData": "hitter_runs", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "H"){
-                		return avgnum = data.toFixed(0);
-                	} else if (row.pitcher_hitter == "P"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "RBI", "mData": "hitter_rbi", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "H"){
-                		return avgnum = data.toFixed(0);
-                	} else if (row.pitcher_hitter == "P"){return "";}
-	                }, "sDefaultContent": ""},
-                
-                { "title": "W", "mData": "pitcher_w", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "P"){
-                		return avgnum = data.toFixed(0);
-                	} else if (row.pitcher_hitter == "H"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "SV", "mData": "pitcher_sv", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "P"){
-                		return avgnum = data.toFixed(0);
-                	} else if (row.pitcher_hitter == "H"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "SO", "mData": "pitcher_k", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "P"){
-                		return avgnum = data.toFixed(0);
-                	} else if (row.pitcher_hitter == "H"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "ERA", "mData": "pitcher_era", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "P"){
-                		return avgnum = data.toFixed(2);
-                	} else if (row.pitcher_hitter == "H"){return "";}
-	                }, "sDefaultContent": ""},
-                { "title": "WHIP", "mData": "pitcher_whip", "render": function ( data, type, row ) {
-                	if (row.pitcher_hitter == "P"){
-                		return avgnum = data.toFixed(2);
-                	} else if (row.pitcher_hitter == "H"){return "";}
-	                }, "sDefaultContent": ""},
-                
-                { "title": "NPV", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ), "sDefaultContent": ""},
-                { "title": "i$", "mData": "init_auction_value", "render": function ( data, type, row ) {
-                		return "$" + data.toFixed(0);
-	                }, "sDefaultContent": ""},
-                { "title": "l$", "mData": "live_auction_value", "render": function ( data, type, row ) {
+		responsive: true,
+		select: 'single',
+    	"processing": true,
+        data: data,
+        // "scrollY": calcDataTableHeight(),
+        "paging": true,
+        "order": [[ 16, "desc" ]],
+        "iDisplayLength": 15,
+        "language": {
+            "lengthMenu": "Display <select  style='width:auto;' class='form-control'><option value='10'>10</option>" +
+            		"<option value='15'>15</option>" +
+            		"<option value='20'>20</option>" +
+            		"<option value='25'>25</option>" +
+            		"<option value='50'>50</option></select> records per page"
+        },
+        "columns": [
+            { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
+            { "title": "Name", "mData": "full_name",  "render": function ( data, type, row ) {
+            	return data + " (" + row.team + ")"
+                }},
+            { "title": "Age", "mData": "age" },
+            { "visible": false, "title": "Team", "mData": "team"},
+            { "title": "Pos", "mData": "player_position", "sDefaultContent": ""},
+            { "title": "St", "mData": "dc_status", "sDefaultContent": ""},
+            { "title": "Avg", "mData": "hitter_avg", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){
+            		var avgnum = data.toFixed(3);
+                    return avgnum.toString().substr(avgnum.length - 4);
+            	} else if (row.pitcher_hitter == "P"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "HR", "mData": "hitter_hr", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){
+            		return avgnum = data.toFixed(0);
+            	} else if (row.pitcher_hitter == "P"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "SB", "mData": "hitter_sb", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){
+            		return avgnum = data.toFixed(0);
+            	} else if (row.pitcher_hitter == "P"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "R", "mData": "hitter_runs", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){
+            		return avgnum = data.toFixed(0);
+            	} else if (row.pitcher_hitter == "P"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "RBI", "mData": "hitter_rbi", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){
+            		return avgnum = data.toFixed(0);
+            	} else if (row.pitcher_hitter == "P"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "W", "mData": "pitcher_w", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){
+            		return avgnum = data.toFixed(0);
+            	} else if (row.pitcher_hitter == "H"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "SV", "mData": "pitcher_sv", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){
+            		return avgnum = data.toFixed(0);
+            	} else if (row.pitcher_hitter == "H"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "SO", "mData": "pitcher_k", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){
+            		return avgnum = data.toFixed(0);
+            	} else if (row.pitcher_hitter == "H"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "ERA", "mData": "pitcher_era", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){
+            		return avgnum = data.toFixed(2);
+            	} else if (row.pitcher_hitter == "H"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "WHIP", "mData": "pitcher_whip", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){
+            		return avgnum = data.toFixed(2);
+            	} else if (row.pitcher_hitter == "H"){return "";}
+                }, "sDefaultContent": ""},
+            { "title": "NPV", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ), "sDefaultContent": ""},
+            { "title": "i$", "mData": "init_auction_value", "render": function ( data, type, row ) {
             		return "$" + data.toFixed(0);
                 }, "sDefaultContent": ""},
-            ],
-//            "searchCols": [
-//               { "search": "H" },
-//               null,null,null,null,null,
-//               null,null,null,null,null
-//            ]
+            { "title": "l$", "mData": "live_auction_value", "render": function ( data, type, row ) {
+        		return "$" + data.toFixed(0);
+            }, "sDefaultContent": ""},
+        ]
         };
 	
 	if (isInitialLoad) 	{
@@ -494,7 +482,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 		
 	}
 	
-	$('.DataTables_sort_icon').remove();
+	// $('.DataTables_sort_icon').remove();
 
 }
 
@@ -504,7 +492,6 @@ function loadTeamTable(data, isInitialLoad)
 	var table_element = $('#team_table');
 	var config = {
         "data": data,
-        // responsive: true,
         "bSort" : false,
         "searching": false,
         "paging": false,
@@ -512,18 +499,12 @@ function loadTeamTable(data, isInitialLoad)
         "columns": [
             { "title": "#", "mData": "team_num", className: "dt-center",
                 "render": function ( data, type, row ) {
-                	if (data == "1"){
-                		return "<b>" + data + "</b>";
-                	} else {
-                		return data;
-                	}
-                	
+                	if (data == "1"){return "<b>" + data + "</b>";
+                	} else {return data;}
                 },
                 "targets": 0 },
             { "title": "Team Name", "mData": "team_name" },
             { "title": "Team Owner", "mData": "owner_name"},
-            // { "title": "My Team?", "mData": "isuserowner"},
-            // { "title": "<i class='fa fa-trash-o'></i>"},
         ],
         "columnDefs": [ 
         {
@@ -582,54 +563,24 @@ function loadTeamPreviewTable(data, isInitialLoad)
             { "title": "Team Owner", "mData": "owner_name"},
         ],
         "columnDefs": [ 
-//        {
-//            "render": function ( data, type, row ) {
-//                if (data == true){
-//                	return "<i class='fa fa-check' style='color: #008000;'></i>";
-//                } else {
-//                	return "";
-//                }
-//                
-//            },
-//            "targets": 2
-//        },
         {
             "render": function ( data, type, row ) {
-            	if (row.team_num == "1"){
-            		return "<b>" + data + "</b>";
-            	} else {
-            		return data;
-            	}
+            	if (row.team_num == "1"){return "<b>" + data + "</b>";
+            	} else {return data;}
             },
             "targets": 0
         },
-//        {
-//            "render": function ( data, type, row ) {
-//            	if (row.team_num == "1"){
-//            		return "<i class='fa fa-user'></i>";
-//            	} else {
-//            		return "";
-//            	}
-//            },
-//            "targets": 1
-//        },
         {
             "render": function ( data, type, row ) {
-            	if (row.team_num == "1"){
-            		return "<b>" + data + "</b>";
-            	} else {
-            		return data;
-            	}
+            	if (row.team_num == "1"){return "<b>" + data + "</b>";
+            	} else {return data;}
             },
             "targets": 1
         },
         {
             "render": function ( data, type, row ) {
-            	if (row.team_num == "1"){
-            		return "<b>" + data + "</b>";
-            	} else {
-            		return data;
-            	}
+            	if (row.team_num == "1"){return "<b>" + data + "</b>";
+            	} else {return data;}
             },
             "targets": 2
         },

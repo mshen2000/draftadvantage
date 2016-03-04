@@ -125,7 +125,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 */
 	public void deleteLeagueFull(Long id, String username){
 		
-		System.out.println("In deleteLeagueFull, id: " + id);
+		// System.out.println("In deleteLeagueFull, id: " + id);
 		
 		League league = this.get(id);
 		
@@ -338,9 +338,6 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		League league = this.get(league_id);
 		
-		
-		
-		
 		ProjectionProfile profile = league.getProjection_profile();
 
 		System.out.println("Get Player Output Data: Convert player projections to output...");
@@ -359,10 +356,9 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			po.setLeague_id(league_id);
 			po.setProjection_date(profile.getProjection_date());
 			playeroutput.add(po);
-
+			i++;
 		}
 
-		
 		System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");
 		if (j > 0) System.out.println("Get Player Output Data: " + j + " PlayerProjected NOT CONVERTED.");
 		
@@ -604,13 +600,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		int iroster_of_wRes = (int) Math.round(roster_of_wRes);
 		int iroster_p_wRes = (int) Math.round(roster_p_wRes);
 		
-		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
-		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
-		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
-		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
-		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
-		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
-		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
+//		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
+//		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
+//		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
+//		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
+//		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
+//		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
+//		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
 		
 		// Sort players by descending Z
 		Collections.sort(playeroutput, new Comparator<LeaguePlayerOutput>() {
@@ -666,11 +662,40 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		}
 		
-		for (int out = 0; out < 150; out++) {
-			System.out.println("--Player Test: " + playeroutput.get(out).getFull_name() + ", "
-					+ playeroutput.get(out).getPlayer_position() + ", " + playeroutput.get(out).getInit_auction_value()
-					+ ", " + playeroutput.get(out).getPitcher_whip_eff() + ", " + playeroutput.get(out).getPitcher_z_whip());
+		System.out.println("Get Player Output Data: Updating with League Player data...");
+		
+		List<LeaguePlayer> lplist = getLeaguePlayerService().getLeaguePlayersByLeague(league_id, username);
+			
+		for (LeaguePlayer lp : lplist){
+			
+			for (LeaguePlayerOutput po : playeroutput){
+				
+				if (po.getId() == lp.getPlayer_projectedRef().getKey().getId()){
+					
+					// System.out.println("Get Player Output Data: Found matching LeaguePlayer in PO, ID= " + po.getId());
+					
+					if (lp.getLeague_teamRef() != null){
+						po.setLeagueteam_id(lp.getLeague_teamRef().getKey().getId());
+						po.setTeam_roster_position(lp.getTeam_roster_position());
+						po.setTeam_player_salary(lp.getTeam_player_salary());
+//						System.out.println("Get Player Output Data: Updated PO, TeamID= " + po.getLeagueteam_id());
+//						System.out.println("Get Player Output Data: Updated PO, TeamRosterPostion= " + po.getTeam_roster_position());
+					}
+					
+					po.setTeam_player_note(lp.getTeam_player_note());
+				}
+				
+			}
+			
 		}
+
+		System.out.println("Get Player Output Data: " + lplist.size() + " LeaguePlayers found and updated.");
+		
+//		for (int out = 0; out < 150; out++) {
+//			System.out.println("--Player Test: " + playeroutput.get(out).getFull_name() + ", "
+//					+ playeroutput.get(out).getPlayer_position() + ", " + playeroutput.get(out).getInit_auction_value()
+//					+ ", " + playeroutput.get(out).getPitcher_whip_eff() + ", " + playeroutput.get(out).getPitcher_z_whip());
+//		}
 		
 		System.out.println("Get Player Output Data: COMPLETE");
 		

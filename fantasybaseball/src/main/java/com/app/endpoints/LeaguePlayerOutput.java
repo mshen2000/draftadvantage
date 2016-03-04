@@ -24,6 +24,10 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	
 	long team_roster_position_num;
 
+	double team_player_salary;
+	
+	String team_player_note;
+	
 	Date projection_date;
 
 	double hitter_avg_eff;
@@ -56,6 +60,7 @@ public class LeaguePlayerOutput extends PlayerProjected{
 			this.player_position = p.getHitter_pos_elig_espn();
 		}
 		
+		this.id = p.getId();
 		this.hitter_ab = p.getHitter_ab();
 		this.hitter_avg = p.getHitter_avg();
 		this.hitter_bb = p.getHitter_bb();
@@ -162,6 +167,22 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	public void setTeam_roster_position_num(long team_roster_position_num) {
 		this.team_roster_position_num = team_roster_position_num;
+	}
+
+	public double getTeam_player_salary() {
+		return team_player_salary;
+	}
+
+	public void setTeam_player_salary(double team_player_salary) {
+		this.team_player_salary = team_player_salary;
+	}
+
+	public String getTeam_player_note() {
+		return team_player_note;
+	}
+
+	public void setTeam_player_note(String team_player_note) {
+		this.team_player_note = team_player_note;
 	}
 
 	public Date getProjection_date() {

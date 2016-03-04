@@ -45,6 +45,10 @@
 
 <style media="all" type="text/css">
 
+#pagetitle {
+	margin-top: 10px !important;
+}
+
 .dataTable > thead > tr > th[class*="sort"]:after{
     content: "" !important;
 }
@@ -63,13 +67,32 @@ table.dataTable thead > tr > td.sorting {
 .table>thead>tr>td,
 .table>thead>tr>th{
 	padding: 6px !important;
-/* 	line-height:1.42857143; */
-/* 	vertical-align:top; */
-/* 	border-top:1px solid #ddd */
 }
 
 th { font-size: 12px; }
 td { font-size: 12px; }
+
+#teamroster_table thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
+#teamroster_table thead > tr > td.sorting_asc,
+#teamroster_table thead > tr > td.sorting_desc,
+#teamroster_table thead > tr > td.sorting {
+  padding-right: 6px !important;
+}
+
+#teamroster_table>tbody>tr>th,
+#teamroster_table>tbody>tr>td,
+#teamroster_table>tfoot>tr>td,
+#teamroster_table>tfoot>tr>th,
+#teamroster_table>thead>tr>td,
+#teamroster_table>thead>tr>th{
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+#teamroster_table > thead > tr > th { font-size: 11px; }
+#teamroster_table > tbody > tr > td { font-size: 11px; }
 
 @media (min-width: 1000px) {
     .container{
@@ -132,7 +155,7 @@ td { font-size: 12px; }
 			 </div>		
 	    </div>
 			
-	  <h2>
+	  <h2 id="pagetitle">
 	    Auction Draft Manager
 	  </h2>
 	
@@ -202,6 +225,11 @@ td { font-size: 12px; }
 						</select>
 					    <h4 id="lbl-teambalance"><font color="green" id="lbl-teambalance">Balance: $0</font></h4>
 					    <table id="teamroster_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+					    <ul class="list-unstyled">
+						  <li><b>Roster Overview</b></li>
+						  <li>Remaining Spots: 0</li>
+						  <li>Per Player Amount: $0</li>
+						</ul>
 					  </div>
 					</div>
 				  </div>

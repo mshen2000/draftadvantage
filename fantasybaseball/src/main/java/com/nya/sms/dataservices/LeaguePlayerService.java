@@ -4,11 +4,13 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
 
+import com.app.endpoints.entities.LeaguePlayerInputContainer;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.nya.sms.entities.League;
 import com.nya.sms.entities.LeaguePlayer;
 import com.nya.sms.entities.LeagueTeam;
+import com.nya.sms.entities.PlayerProjected;
 
 /**
  * @author Michael
@@ -85,24 +87,53 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		
 	}
 	
-	public boolean isLeaguePlayerDrafted (Long leagueplayerid){
-		
-		LeaguePlayer lp = this.get(leagueplayerid);
-		
-		if (lp.getLeague_teamRef() == null) return false;
-		
-		return true;
-		
-	}
+//	public boolean isLeaguePlayerDrafted (Long leagueplayerid){
+//		
+//		LeaguePlayer lp = this.get(leagueplayerid);
+//		
+//		if (lp.getLeague_teamRef() == null) return false;
+//		
+//		return true;
+//		
+//	}
+//	
+//	public void draftLeaguePlayer (Long leagueteamid, Long leagueplayerid, String team_roster_position, String uname){
+//		
+//		LeaguePlayer lp = this.get(leagueplayerid);
+//		
+//		lp.setLeague_team(Ref.create(Key.create(LeagueTeam.class, leagueteamid)));
+//		lp.setTeam_roster_position(team_roster_position);
+//		
+//		this.save(lp, uname);
+//		
+//	}
 	
-	public void draftLeaguePlayer (Long leagueteamid, Long leagueplayerid, String team_roster_position, String uname){
+	public long draftLeaguePlayer (LeaguePlayerInputContainer container, String uname){
 		
-		LeaguePlayer lp = this.get(leagueplayerid);
+		Key<LeagueTeam> teamkey = Key.create(LeagueTeam.class, container.getLeague_team_id());
+		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
+		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
 		
-		lp.setLeague_team(Ref.create(Key.create(LeagueTeam.class, leagueteamid)));
-		lp.setTeam_roster_position(team_roster_position);
+		// Check to see if LeaguePlayer already exists
+		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+				.filter("player_projected", playerprojectedkey).list();
+
+		LeaguePlayer lp = new LeaguePlayer();
 		
-		this.save(lp, uname);
+		// If exists, update existing LeaguePlayer
+		// Otherwise, update new LeaguePlayer with draft information
+		if (leagueplayers.size() > 0) {
+			lp = leagueplayers.get(0);
+		} else {
+			lp.setLeagueRef(Ref.create(leaguekey));
+			lp.setPlayer_projected(Ref.create(playerprojectedkey));
+		}
+
+		lp.setLeague_team(Ref.create(teamkey));
+		lp.setTeam_player_salary(container.getTeam_player_salary());
+		lp.setTeam_roster_position(container.getTeam_roster_position());
+		
+		return this.save(lp, uname);
 		
 	}
 	
@@ -113,6 +144,8 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		Ref<LeagueTeam> r = null;
 		
 		lp.setLeague_team(r);
+		lp.setTeam_roster_position(null);
+		lp.setTeam_player_salary(0);
 		
 		this.save(lp, uname);
 		
