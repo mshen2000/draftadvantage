@@ -52,14 +52,11 @@ $(function() {
 
 $(document).ready(function()
 {
-    /**
-     * Make sure the subject's limit is 2
-     */
-    $("#select-draftteam option").click(function(e){
+    $("#select-draftteam").change(function(e){
 
-    	if ($(this).parent().val() != null){
-	        if ($(this).parent().val().length > 1) {
-	            $(this).removeAttr("selected");
+    	if ($(this).val() != null){
+	        if ($(this).val().length > 1) {
+	            $("option", this).removeAttr("selected");
 	        }
     	}
         
@@ -72,26 +69,11 @@ $(document).ready(function()
         }
 
     });
-    $("#select-draftamt option").click(function(e){
+    $("#select-draftamt").change(function(e){
 
-    	if ($(this).parent().val() != null){
-	        if ($(this).parent().val().length > 1) {
-	            $(this).removeAttr("selected");
-	        }
-    	}
-        if (($("#select-draftteam").val() == null) ||
-        		($("#select-draftamt").val() == null) ||
-        		($("#select-draftposition").val() == null)){
-        	$("#btn-draftplayer").attr("disabled","disabled");
-        } else {
-        	$("#btn-draftplayer").removeAttr("disabled");
-        }
-    });
-    $("#select-draftposition option").click(function(e){
-
-    	if ($(this).parent().val() != null){
-	        if ($(this).parent().val().length > 1) {
-	            $(this).removeAttr("selected");
+    	if ($(this).val() != null){
+	        if ($(this).val().length > 1) {
+	            $("option", this).removeAttr("selected");
 	        }
     	}
         
@@ -102,7 +84,26 @@ $(document).ready(function()
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
         }
+
     });
+    $("#select-draftposition").change(function(e){
+
+    	if ($(this).val() != null){
+	        if ($(this).val().length > 1) {
+	            $("option", this).removeAttr("selected");
+	        }
+    	}
+        
+        if (($("#select-draftteam").val() == null) ||
+        		($("#select-draftamt").val() == null) ||
+        		($("#select-draftposition").val() == null)){
+        	$("#btn-draftplayer").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayer").removeAttr("disabled");
+        }
+
+    });
+
 
 	
 	$('#btn-deleteleague').click(function() 
