@@ -21,6 +21,7 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	Ref<League> league;
 	
 	@Index
+	@Load
 	Ref<LeagueTeam> league_team;
 	
 	@Index

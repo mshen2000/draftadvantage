@@ -615,6 +615,7 @@ public class TestLeagues {
 		
 		// Test attributes of drafted players from playeroutput
 		Assert.assertTrue(po_sale.getLeagueteam_id() == lt1_id);
+		Assert.assertTrue(po_sale.getLeagueteam_name().equals("Team1"));
 		Assert.assertTrue(po_davis.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_1B));
 		Assert.assertTrue(po_perez.getTeam_player_salary() == 10);
 		Assert.assertTrue(po_castro.getTeam_player_salary() == 10);

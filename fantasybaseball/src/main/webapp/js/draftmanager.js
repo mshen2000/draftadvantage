@@ -464,6 +464,9 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "title": "l$", "mData": "live_auction_value", "render": function ( data, type, row ) {
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
+            { "title": "Draft", "mData": "leagueteam_id", "render": function ( data, type, row ) {
+        		return  "<button type='button' class='btn btn-primary btn-xs'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
+            }},
         ]
         };
 	

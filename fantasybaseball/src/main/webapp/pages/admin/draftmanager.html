@@ -61,12 +61,23 @@ table.dataTable thead > tr > td.sorting {
 }
 
 .table>tbody>tr>th,
-.table>tbody>tr>td,
+.table>tbody>tr>td{
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+	vertical-align: middle !important;
+	padding-top: 3px !important;
+	padding-bottom: 3px !important;
+}
+
 .table>tfoot>tr>td,
 .table>tfoot>tr>th,
 .table>thead>tr>td,
 .table>thead>tr>th{
-	padding: 6px !important;
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+	vertical-align: middle !important;
+	padding-top: 6px !important;
+	padding-bottom: 6px !important;
 }
 
 th { font-size: 12px; }
@@ -98,6 +109,10 @@ td { font-size: 12px; }
     .container{
         width: 1340px !important;
     }
+}
+
+#side-panel{
+    padding-bottom: 2px !important;
 }
 
 </style>
@@ -209,7 +224,7 @@ td { font-size: 12px; }
 <!-- 				  <div class="panel-heading"> -->
 <!-- 				    <h3 class="panel-title">Panel title</h3> -->
 <!-- 				  </div> -->
-				  <div class="panel-body">
+				  <div class="panel-body" id="side-panel">
 				    <ul class="nav nav-tabs">
 					  <li class="active"><a data-toggle="tab" href="#tab-playerinfo">Player Info</a></li>
 					  <li><a data-toggle="tab" href="#tab-teaminfo">Team Info</a></li>

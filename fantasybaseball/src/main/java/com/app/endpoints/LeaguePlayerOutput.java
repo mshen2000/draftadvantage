@@ -18,6 +18,8 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	long leagueteam_id;
 	
+	String leagueteam_name;
+	
 	String player_position;
 
 	String team_roster_position;
@@ -143,6 +145,14 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	public void setLeagueteam_id(long leagueteam_id) {
 		this.leagueteam_id = leagueteam_id;
+	}
+
+	public String getLeagueteam_name() {
+		return leagueteam_name;
+	}
+
+	public void setLeagueteam_name(String leagueteam_name) {
+		this.leagueteam_name = leagueteam_name;
 	}
 
 	public String getPlayer_position() {

@@ -676,6 +676,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 					
 					if (lp.getLeague_teamRef() != null){
 						po.setLeagueteam_id(lp.getLeague_teamRef().getKey().getId());
+						po.setLeagueteam_name(lp.getLeague_team().getTeam_name());
 						po.setTeam_roster_position(lp.getTeam_roster_position());
 						po.setTeam_player_salary(lp.getTeam_player_salary());
 //						System.out.println("Get Player Output Data: Updated PO, TeamID= " + po.getLeagueteam_id());
