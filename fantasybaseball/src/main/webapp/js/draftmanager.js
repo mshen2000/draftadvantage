@@ -52,6 +52,59 @@ $(function() {
 
 $(document).ready(function()
 {
+    /**
+     * Make sure the subject's limit is 2
+     */
+    $("#select-draftteam option").click(function(e){
+
+    	if ($(this).parent().val() != null){
+	        if ($(this).parent().val().length > 1) {
+	            $(this).removeAttr("selected");
+	        }
+    	}
+        
+        if (($("#select-draftteam").val() == null) ||
+        		($("#select-draftamt").val() == null) ||
+        		($("#select-draftposition").val() == null)){
+        	$("#btn-draftplayer").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayer").removeAttr("disabled");
+        }
+
+    });
+    $("#select-draftamt option").click(function(e){
+
+    	if ($(this).parent().val() != null){
+	        if ($(this).parent().val().length > 1) {
+	            $(this).removeAttr("selected");
+	        }
+    	}
+        if (($("#select-draftteam").val() == null) ||
+        		($("#select-draftamt").val() == null) ||
+        		($("#select-draftposition").val() == null)){
+        	$("#btn-draftplayer").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayer").removeAttr("disabled");
+        }
+    });
+    $("#select-draftposition option").click(function(e){
+
+    	if ($(this).parent().val() != null){
+	        if ($(this).parent().val().length > 1) {
+	            $(this).removeAttr("selected");
+	        }
+    	}
+        
+        if (($("#select-draftteam").val() == null) ||
+        		($("#select-draftamt").val() == null) ||
+        		($("#select-draftposition").val() == null)){
+        	$("#btn-draftplayer").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayer").removeAttr("disabled");
+        }
+    });
+
+	
 	$('#btn-deleteleague').click(function() 
 		{
 		var selectedtext = $("#league-select").find("option:selected").text();
@@ -465,8 +518,9 @@ function loadPlayerGridTable(data, isInitialLoad)
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
             { "title": "Draft", "mData": "leagueteam_id", "render": function ( data, type, row ) {
-        		return  "<button type='button' class='btn btn-primary btn-xs'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
+        		return  "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
             }},
+            { "title": "TM ID", "mData": "leagueteam_id", "sDefaultContent": ""},
         ]
         };
 	
@@ -485,7 +539,13 @@ function loadPlayerGridTable(data, isInitialLoad)
 		
 	}
 	
-	// $('.DataTables_sort_icon').remove();
+    
+    $('#playergrid_table tbody').on( 'click', '.btn-draft', function () {
+    	var data_table = $('#playergrid_table').DataTable();
+        var data = data_table.row( $(this).parents('tr') ).data();
+        // alert( data[0] +"'s salary is: "+ data[ 5 ] );
+        $("#draftplayer-modal").modal("show");
+    } );
 
 }
 
