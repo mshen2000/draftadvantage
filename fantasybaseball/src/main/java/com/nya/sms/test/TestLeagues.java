@@ -575,6 +575,15 @@ public class TestLeagues {
 		Assert.assertTrue(chapman.getTeam_player_salary() == 5);
 		Assert.assertTrue(chapman.getLeague_team().getId() == lt2_id);
 		
+		// Test update exsting drafted player
+		cont_chapman.setTeam_player_salary(7);
+		chapman_id = getLeaguePlayerService().draftLeaguePlayer(cont_chapman, uname);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 1);
+		chapman = getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).get(0);
+		Assert.assertTrue(chapman.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_P));
+		Assert.assertTrue(chapman.getTeam_player_salary() == 7);
+		Assert.assertTrue(chapman.getLeague_team().getId() == lt2_id);
+		
 		// Test undraft player
 		getLeaguePlayerService().undraftLeaguePlayer(chapman_id, uname);
 		

@@ -115,6 +115,10 @@ td { font-size: 12px; }
     padding-bottom: 2px !important;
 }
 
+#dl-draftpreview{
+	margin-bottom: 0px !important;
+}
+
 </style>
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -270,12 +274,9 @@ td { font-size: 12px; }
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			        <h4 class="modal-title">Draft Player</h4>
+			        <h4 class="modal-title" id="header-draftplayer">Draft Player: Mike Trout (LAA)</h4>
 			      </div>
 			      <div class="modal-body">
-			        <div>
-			        	<h4 id="label-draftplayername">Mike Trout (LAA)</h4>
-			        </div>
 			        <div class="row">
 					  <div class="col-md-6">
 					  	<form>
@@ -330,6 +331,22 @@ td { font-size: 12px; }
 							</div>
 						</form>
 					  </div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+						</div>
+						<div class="col-md-8">
+							<dl class="dl-horizontal" id ="dl-draftpreview">
+							  <dt>Player</dt>
+							  <dd id="lbl-draftprevplayer">Test Player (LAA)</dd>
+							  <dt>Team</dt>
+							  <dd id="lbl-draftprevteam">[none]</dd>
+							  <dt>Amount</dt>
+							  <dd id="lbl-draftprevamt">[none]</dd>
+							  <dt>Position</dt>
+							  <dd id="lbl-draftprevpos">[none]</dd>
+							</dl>
+						</div>
 					</div>
 			        
 			      </div>

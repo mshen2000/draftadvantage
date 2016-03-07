@@ -57,8 +57,13 @@ $(document).ready(function()
     	if ($(this).val() != null){
 	        if ($(this).val().length > 1) {
 	            $("option", this).removeAttr("selected");
+	            $('#lbl-draftprevteam').text("[none]");
+	        } else {
+	        	$('#lbl-draftprevteam').text($(this).find("option:selected").text());
 	        }
-    	}
+    	} else {
+        	$('#lbl-draftprevteam').text("[none]");
+        }
         
         if (($("#select-draftteam").val() == null) ||
         		($("#select-draftamt").val() == null) ||
@@ -67,6 +72,8 @@ $(document).ready(function()
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
         }
+        
+        
 
     });
     $("#select-draftamt").change(function(e){
@@ -74,8 +81,13 @@ $(document).ready(function()
     	if ($(this).val() != null){
 	        if ($(this).val().length > 1) {
 	            $("option", this).removeAttr("selected");
+	            $('#lbl-draftprevamt').text("[none]");
+	        } else {
+	        	$('#lbl-draftprevamt').text($(this).find("option:selected").text());
 	        }
-    	}
+    	} else {
+        	$('#lbl-draftprevamt').text("[none]");
+        }
         
         if (($("#select-draftteam").val() == null) ||
         		($("#select-draftamt").val() == null) ||
@@ -91,8 +103,13 @@ $(document).ready(function()
     	if ($(this).val() != null){
 	        if ($(this).val().length > 1) {
 	            $("option", this).removeAttr("selected");
+	            $('#lbl-draftprevpos').text("[none]");
+	        } else {
+	        	$('#lbl-draftprevpos').text($(this).find("option:selected").text());
 	        }
-    	}
+    	} else {
+        	$('#lbl-draftprevpos').text("[none]");
+        }
         
         if (($("#select-draftteam").val() == null) ||
         		($("#select-draftamt").val() == null) ||
@@ -208,9 +225,7 @@ $(document).ready(function()
 		var $current = index+1;
 		var $percent = ($current/$total) * 100;
 		$('#rootwizard').find('.progress-bar').css({width:$percent + '%'});
-		
 
-		
 		// If it's the league team tab then pre-load teams
 		if($current == 3){
 			var teamtable = $('#team_table').DataTable();
