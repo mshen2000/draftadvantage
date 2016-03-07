@@ -60,6 +60,7 @@ $(document).ready(function()
 	            $('#lbl-draftprevteam').text("[none]");
 	        } else {
 	        	$('#lbl-draftprevteam').text($(this).find("option:selected").text());
+	        	loadDraftPlayerPosSelector();
 	        }
     	} else {
         	$('#lbl-draftprevteam').text("[none]");
@@ -72,8 +73,7 @@ $(document).ready(function()
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
         }
-        
-        
+
 
     });
     $("#select-draftamt").change(function(e){
@@ -218,6 +218,30 @@ $(document).ready(function()
 		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
 				$('#playergrid_table').DataTable().columns( 4 ).search( 'SP' ).draw();	
 			});
+	
+	
+	$('#btn-draftplayer').click(function() 
+	{
+		var playertable = $('#playergrid_table').DataTable();
+		var playerid = $("#header-draftplayer").val();
+		var teamid = $("#select-draftteam").find("option:selected").val();
+		var position = $("#select-draftposition").find("option:selected").val();
+		var amount = $("#select-draftamt").find("option:selected").val();
+		
+		var row = playertable.row('#' + playerid);
+		row.leagueteam_id = teamid;
+		row.team_roster_position = position;
+		row.team_player_salary = amount;
+		
+		console.log("Draft Player: " + row.full_name);
+		console.log("Draft Player P-H: " + row.pitcher_hitter);
+		console.log("Draft Player ID: " + row.id);
+		
+		playertable.row('#' + playerid + '').data(row).draw();
+
+		$('#draftplayer-modal').modal('hide');
+		
+	});
 	
 	
   	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
@@ -395,8 +419,58 @@ $(document).ready(function()
 	loadTeamTable(null, true);
 	loadPlayerGridTable(null, true);
 	loadTeamRosterTable(null, true);
+	
+	loadDraftPlayerAmtSelector();
 
 });
+
+
+function loadDraftPlayerAmtSelector(){
+	
+	var amtselector = $("#select-draftamt");
+	amtselector.find('option').remove().end();
+
+	for (i = 1; i <= 100; i++) { 
+		amtselector.append($("<option value='" + i + "'/>").text("$" + i));
+	}
+
+}
+
+
+function loadDraftPlayerPosSelector(){
+	
+	var teamid = $("#select-draftteam").val();
+	var posselector = $("#select-draftposition");
+	posselector.find('option').remove().end();
+	
+	posselector.append($("<option value='C'/>").text("C"));
+	posselector.append($("<option value='1B'/>").text("1B"));
+	posselector.append($("<option value='2B'/>").text("2B"));
+	posselector.append($("<option value='SS'/>").text("SS"));
+	posselector.append($("<option value='3B'/>").text("3B"));
+	posselector.append($("<option value='MI'/>").text("MI"));
+	posselector.append($("<option value='CI'/>").text("CI"));
+	posselector.append($("<option value='OF'/>").text("OF"));
+	posselector.append($("<option value='Util'/>").text("Util"));
+	posselector.append($("<option value='P'/>").text("P"));
+	posselector.append($("<option value='Res'/>").text("Res"));
+	
+	var playertable = $('#playergrid_table').DataTable();
+	 
+	// Find indexes of rows which have `Yes` in the second column
+	var indexes = playertable.rows().eq( 0 ).filter( function (rowIdx) {
+	    return playertable.cell( rowIdx, 20 ).data() === teamid ? true : false;
+	} );
+
+	var data = playertable.rows( indexes ).data();
+	
+    for ( var i = 0; i < data.length; i++ ) {
+        console.log(data[i]);
+    };
+    
+    console.log("Size of data: " + data.length);
+	
+}
 
 
 function loadTeamRosterTable(data, isInitialLoad)
@@ -452,10 +526,10 @@ function loadPlayerGridTable(data, isInitialLoad)
 	var table_element = $('#playergrid_table');
 	var config = {
 		responsive: true,
-		select: 'single',
     	"processing": true,
         data: data,
         // "scrollY": calcDataTableHeight(),
+        rowId: 'id',
         "paging": true,
         "order": [[ 16, "desc" ]],
         "iDisplayLength": 15,
@@ -537,6 +611,9 @@ function loadPlayerGridTable(data, isInitialLoad)
         		return  "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
             }},
             { "title": "TM ID", "mData": "leagueteam_id", "sDefaultContent": ""},
+            { "visible": false, "title": "id", "mData": "id" },
+            { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
+            { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
         ]
         };
 	
@@ -555,12 +632,17 @@ function loadPlayerGridTable(data, isInitialLoad)
 		
 	}
 	
-    
     $('#playergrid_table tbody').on( 'click', '.btn-draft', function () {
     	var data_table = $('#playergrid_table').DataTable();
         var data = data_table.row( $(this).parents('tr') ).data();
-        // alert( data[0] +"'s salary is: "+ data[ 5 ] );
+        
+        $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
+        $("#header-draftplayer").val(data.id);
+        $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
         $("#draftplayer-modal").modal("show");
+        
+        // console.log("Player id: " + $("#header-draftplayer").val());
+        
     } );
 
 }
@@ -711,16 +793,24 @@ function loadLeagueSelector(data){
 }
 
 function loadTeamSelect(data){
-	var options = $("#team-select");
-	options.find('option').remove().end();
+	var teamselect = $("#team-select");
+	teamselect.find('option').remove().end();
 	if (undefined !== data){
 		$.each(data, function() {
-			console.log("Loading team selector: ID-" + this.id + " VAL-" + this.team_name);
-			options.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+			// console.log("Loading team selector: ID-" + this.id + " VAL-" + this.team_name);
+			teamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
 		});
 	} else {
 		// console.log("League data is null");
 	}
+	
+	var draftteamselect = $("#select-draftteam");
+	draftteamselect.find('option').remove().end();
+	if (undefined !== data){
+		$.each(data, function() {
+			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+		});
+	} else {}
 
 }
 
