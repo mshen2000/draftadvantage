@@ -25,6 +25,14 @@ mssolutions.fbapp.draftmanager.CLIENT_ID =
 mssolutions.fbapp.draftmanager.SCOPES =
     'https://www.googleapis.com/auth/userinfo.email';
 
+// Saves the selected player from the player grid
+var playerdraftrow;
+
+// A blank template of a team roster (includes positions)
+var teamrostertemplate;
+
+// The teamrostertemplate converted into just a list of roster positions and counts.
+var teamrostercounts;
 
 // League selector listener
 $(function() {
@@ -105,7 +113,7 @@ $(document).ready(function()
 	            $("option", this).removeAttr("selected");
 	            $('#lbl-draftprevpos').text("[none]");
 	        } else {
-	        	$('#lbl-draftprevpos').text($(this).find("option:selected").text());
+	        	$('#lbl-draftprevpos').text($(this).find("option:selected").text().split(" ")[0]);
 	        }
     	} else {
         	$('#lbl-draftprevpos').text("[none]");
@@ -228,16 +236,18 @@ $(document).ready(function()
 		var position = $("#select-draftposition").find("option:selected").val();
 		var amount = $("#select-draftamt").find("option:selected").val();
 		
-		var row = playertable.row('#' + playerid);
-		row.leagueteam_id = teamid;
-		row.team_roster_position = position;
-		row.team_player_salary = amount;
+//		var row = playertable.row('#' + playerid);
+		playerdraftrow.leagueteam_id = teamid;
+		playerdraftrow.team_roster_position = position;
+		playerdraftrow.team_player_salary = amount;
 		
-		console.log("Draft Player: " + row.full_name);
-		console.log("Draft Player P-H: " + row.pitcher_hitter);
-		console.log("Draft Player ID: " + row.id);
+		console.log("Draft Player: " + playerdraftrow.full_name);
+		console.log("Draft Player ID: " + playerdraftrow.id);
+		console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+		console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
+		console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
 		
-		playertable.row('#' + playerid + '').data(row).draw();
+		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
 
 		$('#draftplayer-modal').modal('hide');
 		
@@ -442,33 +452,142 @@ function loadDraftPlayerPosSelector(){
 	var teamid = $("#select-draftteam").val();
 	var posselector = $("#select-draftposition");
 	posselector.find('option').remove().end();
+
 	
-	posselector.append($("<option value='C'/>").text("C"));
-	posselector.append($("<option value='1B'/>").text("1B"));
-	posselector.append($("<option value='2B'/>").text("2B"));
-	posselector.append($("<option value='SS'/>").text("SS"));
-	posselector.append($("<option value='3B'/>").text("3B"));
-	posselector.append($("<option value='MI'/>").text("MI"));
-	posselector.append($("<option value='CI'/>").text("CI"));
-	posselector.append($("<option value='OF'/>").text("OF"));
-	posselector.append($("<option value='Util'/>").text("Util"));
-	posselector.append($("<option value='P'/>").text("P"));
-	posselector.append($("<option value='Res'/>").text("Res"));
+	console.log("TeamID: " + teamid);
 	
 	var playertable = $('#playergrid_table').DataTable();
-	 
-	// Find indexes of rows which have `Yes` in the second column
-	var indexes = playertable.rows().eq( 0 ).filter( function (rowIdx) {
-	    return playertable.cell( rowIdx, 20 ).data() === teamid ? true : false;
-	} );
-
-	var data = playertable.rows( indexes ).data();
 	
-    for ( var i = 0; i < data.length; i++ ) {
-        console.log(data[i]);
-    };
+	// Get players from table that have been drafted by selected team
+	var teamplayers = playertable.rows( function ( idx, data, node ) {
+        return data.leagueteam_id == teamid ?
+            true : false;
+    } )
+    .data();
+	
+	// Convert team roster data into just a list of roster positions and counts.
+	var arr = [];
+	var liveteamrostercounts = {};
+	
+	$.each( teamplayers, function( key, value ) {
+		  arr.push(value.team_roster_position);
+		});
+
+	for(var i = 0; i< arr.length; i++) {
+	    var pos = arr[i];
+	    liveteamrostercounts[pos] = liveteamrostercounts[pos] ? liveteamrostercounts[pos]+1 : 1;
+	}
+	
+	// console.log("Team Roster Counts: " + JSON.stringify(teamrostercounts));
+	
+	
+//    for ( var i = 0; i < teamplayers.length; i++ ) {
+//        console.log("Player: " + teamplayers[i].full_name + ", TeamID: " + teamplayers[i].leagueteam_id);
+//    };
     
-    console.log("Size of data: " + data.length);
+    // console.log("Size of data: " + teamplayers.length);
+	
+	var selc = true;
+	var sel1b = true;
+	var sel2b = true;
+	var sel3b = true;
+	var selss = true;
+	var selmi = true;
+	var selci = true;
+	var selof = true;
+	var selutil = true;
+	var selp = true;
+	var selres = true;
+	
+	var countc = teamrostercounts["C"];
+	var count1b = teamrostercounts["1B"];
+	var count2b = teamrostercounts["2B"];
+	var count3b = teamrostercounts["SS"];
+	var countss = teamrostercounts["3B"];
+	var countmi = teamrostercounts["MI"];
+	var countci = teamrostercounts["CI"];
+	var countof = teamrostercounts["OF"];
+	var countutil = teamrostercounts["UT"];
+	var countp = teamrostercounts["P"];
+	var countres = teamrostercounts["RES"];
+
+//	$.each( teamrostercounts, function( key, value ) {
+//		
+//		$.each( liveteamrostercounts, function( lkey, lvalue ) {
+//			
+//			if ((key == "C")&&(lkey == "C"))  countc = value - lvalue;
+//			if ((key == "1B")&&(lkey == "1B"))  count1b = value - lvalue;
+//			if ((key == "2B")&&(lkey == "2B"))  count2b = value - lvalue;
+//			if ((key == "SS")&&(lkey == "SS"))  countss = value - lvalue;
+//			if ((key == "3B")&&(lkey == "3B"))  count3b = value - lvalue;
+//			if ((key == "MI")&&(lkey == "MI"))  countmi = value - lvalue;
+//			if ((key == "CI")&&(lkey == "CI"))  countci = value - lvalue;
+//			if ((key == "OF")&&(lkey == "OF"))  countof = value - lvalue;
+//			if ((key == "UT")&&(lkey == "UT"))  countutil = value - lvalue;
+//			if ((key == "P")&&(lkey == "P"))  countp = value - lvalue;
+//			if ((key == "RES")&&(lkey == "RES"))  countres = value - lvalue;
+//			
+//			if ((key == "C")&&(lkey == "C")&&(value <= lvalue)) selc = false;
+//			if ((key == "1B")&&(lkey == "1B")&&(value <= lvalue)) sel1b = false;
+//			if ((key == "2B")&&(lkey == "2B")&&(value <= lvalue)) sel2b = false;
+//			if ((key == "SS")&&(lkey == "SS")&&(value <= lvalue)) selss = false;
+//			if ((key == "3B")&&(lkey == "3B")&&(value <= lvalue)) sel3b = false;
+//			if ((key == "MI")&&(lkey == "MI")&&(value <= lvalue)) selmi = false;
+//			if ((key == "CI")&&(lkey == "CI")&&(value <= lvalue)) selci = false;
+//			if ((key == "OF")&&(lkey == "OF")&&(value <= lvalue)) selof = false;
+//			if ((key == "UT")&&(lkey == "UT")&&(value <= lvalue)) selutil = false;
+//			if ((key == "P")&&(lkey == "P")&&(value <= lvalue)) selp = false;
+//			if ((key == "RES")&&(lkey == "RES")&&(value <= lvalue)) selres = false;
+//				
+//		});
+//
+//	});
+	
+	$.each( liveteamrostercounts, function( lkey, lvalue ) {
+		
+		if (lkey == "C")  countc = teamrostercounts["C"] - lvalue;
+		if (lkey == "1B")  count1b = teamrostercounts["1B"] - lvalue;
+		if (lkey == "2B")  count2b = teamrostercounts["2B"] - lvalue;
+		if (lkey == "SS")  countss = teamrostercounts["SS"] - lvalue;
+		if (lkey == "3B")  count3b = teamrostercounts["3B"] - lvalue;
+		if (lkey == "MI")  countmi = teamrostercounts["MI"] - lvalue;
+		if (lkey == "CI")  countci = teamrostercounts["CI"] - lvalue;
+		if (lkey == "OF")  countof = teamrostercounts["OF"] - lvalue;
+		if (lkey == "UT")  countutil = teamrostercounts["UT"] - lvalue;
+		if (lkey == "P")  countp = teamrostercounts["P"] - lvalue;
+		if (lkey == "RES")  countres = teamrostercounts["RES"] - lvalue;
+
+		
+		if ((lkey == "C")&&(teamrostercounts["C"] <= lvalue)) selc = false;
+		if ((lkey == "1B")&&(teamrostercounts["1B"] <= lvalue)) sel1b = false;
+		if ((lkey == "2B")&&(teamrostercounts["2B"] <= lvalue)) sel2b = false;
+		if ((lkey == "SS")&&(teamrostercounts["SS"] <= lvalue)) selss = false;
+		if ((lkey == "3B")&&(teamrostercounts["3B"] <= lvalue)) sel3b = false;
+		if ((lkey == "MI")&&(teamrostercounts["MI"] <= lvalue)) selmi = false;
+		if ((lkey == "CI")&&(teamrostercounts["CI"] <= lvalue)) selci = false;
+		if ((lkey == "OF")&&(teamrostercounts["OF"] <= lvalue)) selof = false;
+		if ((lkey == "UT")&&(teamrostercounts["UT"] <= lvalue)) selutil = false;
+		if ((lkey == "P")&&(teamrostercounts["P"] <= lvalue)) selp = false;
+		if ((lkey == "RES")&&(teamrostercounts["RES"] <= lvalue)) selres = false;
+			
+	});
+
+
+	if (playerdraftrow.pitcher_hitter == "H"){
+		if (selc) posselector.append($("<option value='C'/>").text("C (" + countc + ")"));
+		if (sel1b) posselector.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
+		if (sel2b) posselector.append($("<option value='2B'/>").text("2B (" + count2b + ")"));
+		if (selss) posselector.append($("<option value='SS'/>").text("SS (" + countss + ")"));
+		if (sel3b) posselector.append($("<option value='3B'/>").text("3B (" + count3b + ")"));
+		if (selmi) posselector.append($("<option value='MI'/>").text("MI (" + countmi + ")"));
+		if (selci) posselector.append($("<option value='CI'/>").text("CI (" + countci + ")"));
+		if (selof) posselector.append($("<option value='OF'/>").text("OF (" + countof + ")"));
+		if (selutil) posselector.append($("<option value='UT'/>").text("Util (" + countutil + ")"));
+		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
+	} else if (playerdraftrow.pitcher_hitter == "P"){
+		if (selp) posselector.append($("<option value='P'/>").text("P (" + countp + ")"));
+		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
+	}
 	
 }
 
@@ -635,6 +754,7 @@ function loadPlayerGridTable(data, isInitialLoad)
     $('#playergrid_table tbody').on( 'click', '.btn-draft', function () {
     	var data_table = $('#playergrid_table').DataTable();
         var data = data_table.row( $(this).parents('tr') ).data();
+        playerdraftrow = data;
         
         $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
         $("#header-draftplayer").val(data.id);
@@ -847,6 +967,27 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
       function(resp) {
         if (!resp.code) { 
         	console.log("League roster get complete.");
+        	
+        	// Save blank roster to global var
+        	teamrostertemplate = resp.items;
+
+        	// Convert roster template into just a list of roster positions and counts.
+        	var arr = [];
+        	var counts = {};
+        	
+        	$.each( resp.items, function( key, value ) {
+        		  arr.push(value.position);
+        		});
+
+        	for(var i = 0; i< arr.length; i++) {
+        	    var pos = arr[i];
+        	    counts[pos] = counts[pos] ? counts[pos]+1 : 1;
+        	}
+        	
+        	teamrostercounts = counts;
+        	console.log("Roster Counts: " + JSON.stringify(teamrostercounts));
+        	
+        	// Load the blank roster template into a datatable
         	loadTeamRosterTable(resp.items, false);
         }
         else {
