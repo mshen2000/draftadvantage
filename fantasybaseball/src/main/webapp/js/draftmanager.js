@@ -82,7 +82,6 @@ $(document).ready(function()
         	$("#btn-draftplayer").removeAttr("disabled");
         }
 
-
     });
     $("#select-draftamt").change(function(e){
 
@@ -126,6 +125,40 @@ $(document).ready(function()
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
         }
+
+    });
+    
+    // Team select in Team Info Tab
+    $("#team-select").change(function(e){
+
+    	var teamid = $(this).val();
+    	
+    	var playertable = $('#playergrid_table').DataTable();
+    	
+    	// Get players from table that have been drafted by selected team
+    	var teamplayers = playertable.rows( function ( idx, data, node ) {
+            return data.leagueteam_id == teamid ?
+                true : false;
+        } )
+        .data();
+    	
+    	$.each( teamplayers, function( key, value ) {
+  		  arr.push(value.team_roster_position);
+  		});
+    	
+    	
+    	// Convert team roster data into just a list of roster positions and counts.
+    	var arr = [];
+    	var liveteamrostercounts = {};
+    	
+    	$.each( teamplayers, function( key, value ) {
+    		  arr.push(value.team_roster_position);
+    		});
+
+    	for(var i = 0; i< arr.length; i++) {
+    	    var pos = arr[i];
+    	    liveteamrostercounts[pos] = liveteamrostercounts[pos] ? liveteamrostercounts[pos]+1 : 1;
+    	}
 
     });
 
@@ -480,13 +513,6 @@ function loadDraftPlayerPosSelector(){
 	
 	// console.log("Team Roster Counts: " + JSON.stringify(teamrostercounts));
 	
-	
-//    for ( var i = 0; i < teamplayers.length; i++ ) {
-//        console.log("Player: " + teamplayers[i].full_name + ", TeamID: " + teamplayers[i].leagueteam_id);
-//    };
-    
-    // console.log("Size of data: " + teamplayers.length);
-	
 	var selc = true;
 	var sel1b = true;
 	var sel2b = true;
@@ -510,38 +536,6 @@ function loadDraftPlayerPosSelector(){
 	var countutil = teamrostercounts["UT"];
 	var countp = teamrostercounts["P"];
 	var countres = teamrostercounts["RES"];
-
-//	$.each( teamrostercounts, function( key, value ) {
-//		
-//		$.each( liveteamrostercounts, function( lkey, lvalue ) {
-//			
-//			if ((key == "C")&&(lkey == "C"))  countc = value - lvalue;
-//			if ((key == "1B")&&(lkey == "1B"))  count1b = value - lvalue;
-//			if ((key == "2B")&&(lkey == "2B"))  count2b = value - lvalue;
-//			if ((key == "SS")&&(lkey == "SS"))  countss = value - lvalue;
-//			if ((key == "3B")&&(lkey == "3B"))  count3b = value - lvalue;
-//			if ((key == "MI")&&(lkey == "MI"))  countmi = value - lvalue;
-//			if ((key == "CI")&&(lkey == "CI"))  countci = value - lvalue;
-//			if ((key == "OF")&&(lkey == "OF"))  countof = value - lvalue;
-//			if ((key == "UT")&&(lkey == "UT"))  countutil = value - lvalue;
-//			if ((key == "P")&&(lkey == "P"))  countp = value - lvalue;
-//			if ((key == "RES")&&(lkey == "RES"))  countres = value - lvalue;
-//			
-//			if ((key == "C")&&(lkey == "C")&&(value <= lvalue)) selc = false;
-//			if ((key == "1B")&&(lkey == "1B")&&(value <= lvalue)) sel1b = false;
-//			if ((key == "2B")&&(lkey == "2B")&&(value <= lvalue)) sel2b = false;
-//			if ((key == "SS")&&(lkey == "SS")&&(value <= lvalue)) selss = false;
-//			if ((key == "3B")&&(lkey == "3B")&&(value <= lvalue)) sel3b = false;
-//			if ((key == "MI")&&(lkey == "MI")&&(value <= lvalue)) selmi = false;
-//			if ((key == "CI")&&(lkey == "CI")&&(value <= lvalue)) selci = false;
-//			if ((key == "OF")&&(lkey == "OF")&&(value <= lvalue)) selof = false;
-//			if ((key == "UT")&&(lkey == "UT")&&(value <= lvalue)) selutil = false;
-//			if ((key == "P")&&(lkey == "P")&&(value <= lvalue)) selp = false;
-//			if ((key == "RES")&&(lkey == "RES")&&(value <= lvalue)) selres = false;
-//				
-//		});
-//
-//	});
 	
 	$.each( liveteamrostercounts, function( lkey, lvalue ) {
 		
@@ -557,7 +551,6 @@ function loadDraftPlayerPosSelector(){
 		if (lkey == "P")  countp = teamrostercounts["P"] - lvalue;
 		if (lkey == "RES")  countres = teamrostercounts["RES"] - lvalue;
 
-		
 		if ((lkey == "C")&&(teamrostercounts["C"] <= lvalue)) selc = false;
 		if ((lkey == "1B")&&(teamrostercounts["1B"] <= lvalue)) sel1b = false;
 		if ((lkey == "2B")&&(teamrostercounts["2B"] <= lvalue)) sel2b = false;
@@ -571,7 +564,6 @@ function loadDraftPlayerPosSelector(){
 		if ((lkey == "RES")&&(teamrostercounts["RES"] <= lvalue)) selres = false;
 			
 	});
-
 
 	if (playerdraftrow.pitcher_hitter == "H"){
 		if (selc) posselector.append($("<option value='C'/>").text("C (" + countc + ")"));
