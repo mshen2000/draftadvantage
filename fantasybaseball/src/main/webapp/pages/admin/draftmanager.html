@@ -229,17 +229,17 @@ td { font-size: 12px; }
 <!-- 				    <h3 class="panel-title">Panel title</h3> -->
 <!-- 				  </div> -->
 				  <div class="panel-body" id="side-panel">
-				    <ul class="nav nav-tabs">
-					  <li class="active"><a data-toggle="tab" href="#tab-playerinfo">Player Info</a></li>
-					  <li><a data-toggle="tab" href="#tab-teaminfo">Team Info</a></li>
+				    <ul class="nav nav-tabs" id="info-tabs">
+					  <li class="active"><a data-toggle="tab" href="#tab-teaminfo">Team Info</a></li>
+					  <li><a data-toggle="tab" href="#tab-playerinfo">Player Info</a></li>
 					</ul>
 					
 					<div class="tab-content">
-					  <div id="tab-playerinfo" class="tab-pane fade in active">
+					  <div id="tab-playerinfo" class="tab-pane fade">
 					    <h3>HOME</h3>
 					    <p>Some content.</p>
 					  </div>
-					  <div id="tab-teaminfo" class="tab-pane fade">
+					  <div id="tab-teaminfo" class="tab-pane fade in active">
 						<select style="width:auto;margin-top:10px;" class="form-control" id="team-select">
 						</select>
 					    <h4><font color="green" id="lbl-teambalance">Balance: $0  </font><small id="lbl-teamstarting">Starting: 0$</small></h4>

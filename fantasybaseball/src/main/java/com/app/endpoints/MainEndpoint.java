@@ -2,6 +2,7 @@ package com.app.endpoints;
 
 import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
+import com.app.endpoints.entities.LeaguePlayerInputContainer;
 import com.app.endpoints.entities.LeagueRosterItem;
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
@@ -19,10 +20,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nya.sms.dataservices.IdentityService;
+import com.nya.sms.dataservices.LeaguePlayerService;
 import com.nya.sms.dataservices.LeagueService;
 import com.nya.sms.dataservices.PlayerProjectedService;
 import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.entities.League;
+import com.nya.sms.entities.LeaguePlayer;
 import com.nya.sms.entities.LeagueTeam;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
@@ -66,6 +69,12 @@ public class MainEndpoint {
 	private LeagueService getLeagueService() {
 
 		return new LeagueService(League.class);
+
+	}
+	
+	private LeaguePlayerService getLeaguePlayerService(){
+
+		return new LeaguePlayerService(LeaguePlayer.class);
 
 	}
 
@@ -112,6 +121,28 @@ public class MainEndpoint {
 		long league_id = getLeagueService().saveNewLeague(leaguecontainer, validateUserToken(req).getUsername());
 		
 		APIGeneralResult result = new APIGeneralResult("OK", league_id);
+		
+		return result;
+
+	}
+	
+	@ApiMethod(name = "league.draftplayer", httpMethod = HttpMethod.PUT)
+	public APIGeneralResult draftPlayer(LeaguePlayerInputContainer playercontainer,HttpServletRequest req) throws UnauthorizedException {
+		
+		long leagueplayer_id = getLeaguePlayerService().draftLeaguePlayer(playercontainer, validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", leagueplayer_id);
+		
+		return result;
+
+	}
+	
+	@ApiMethod(name = "league.undraftplayer")
+	public APIGeneralResult undraftPlayer(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
+		
+		getLeaguePlayerService().undraftLeaguePlayer(id, validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", "Undraft player successful");
 		
 		return result;
 

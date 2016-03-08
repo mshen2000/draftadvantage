@@ -242,6 +242,7 @@ $(document).ready(function()
 	
 	$('#btn-draftplayer').click(function() 
 	{
+		var league_id = $("#league-select").find("option:selected").val();
 		var playertable = $('#playergrid_table').DataTable();
 		var playerid = $("#header-draftplayer").val();
 		var teamid = $("#select-draftteam").find("option:selected").val();
@@ -260,9 +261,19 @@ $(document).ready(function()
 		console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
 		
 		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
-
+		
+		// Draft player
+		mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
+				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
+		
 		$('#draftplayer-modal').modal('hide');
 		
+		// Show the team info tab
+		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
+		// Set the team select to the drafting team
+		$("#team-select").val(teamid);
+
+
 	});
 	
 	
@@ -525,6 +536,18 @@ function loadDraftPlayerAmtSelector(){
 }
 
 
+function resetDraftPlayerModal(){
+	
+	$("option", "#select-draftteam").removeAttr("selected");
+	$("option", "#select-draftamt").removeAttr("selected");
+	var posselector = $("#select-draftposition");
+	posselector.find('option').remove().end();
+	$('#lbl-draftprevteam').text("[none]");
+	$('#lbl-draftprevamt').text("[none]");
+	$('#lbl-draftprevpos').text("[none]");
+	
+}
+
 function loadDraftPlayerPosSelector(){
 	
 	var teamid = $("#select-draftteam").val();
@@ -768,7 +791,9 @@ function loadPlayerGridTable(data, isInitialLoad)
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
             { "title": "Draft", "mData": "leagueteam_id", "render": function ( data, type, row ) {
-        		return  "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
+            	if (data == 0)
+            		return "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
+            	return "<button type='button' class='btn btn-default btn-xs btn-undraft'><i class='fa fa-chevron-left'></i><i class='fa fa-chevron-left'></i></button>";
             }},
             { "title": "TM ID", "mData": "leagueteam_id", "sDefaultContent": ""},
             { "visible": false, "title": "id", "mData": "id" },
@@ -790,19 +815,28 @@ function loadPlayerGridTable(data, isInitialLoad)
 		data_table = table_element.dataTable(config);
 		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
 		
+		// Update the team info tab
+		updateTeamInfoTab();
+		
 	}
-	
+
     $('#playergrid_table tbody').on( 'click', '.btn-draft', function () {
     	var data_table = $('#playergrid_table').DataTable();
         var data = data_table.row( $(this).parents('tr') ).data();
         playerdraftrow = data;
         
+        resetDraftPlayerModal();
         $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
         $("#header-draftplayer").val(data.id);
         $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
         $("#draftplayer-modal").modal("show");
         
         // console.log("Player id: " + $("#header-draftplayer").val());
+        
+    } );
+    
+    $('#playergrid_table tbody').on( 'click', '.btn-undraft', function () {
+
         
     } );
 
@@ -928,6 +962,7 @@ function loadLeagueContent(leagueid){
 	mssolutions.fbapp.draftmanager.getLeaguePlayerData(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueTeams(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueRoster(leagueid);
+	updateTeamInfoTab();
 }
 
 function loadLeagueIntro(){
@@ -974,6 +1009,55 @@ function loadTeamSelect(data){
 	} else {}
 
 }
+
+/**
+ * Draft player via the API.
+ */
+mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id, 
+		player_projected_id, team_roster_position, team_player_salary) {
+	
+	console.log("In draftPlayer...");
+	
+	gapi.client.draftapp.league.draftplayer({
+		'league_id' : league_id,
+		'league_team_id' : league_team_id,
+		'player_projected_id' : player_projected_id,
+		'team_roster_position' : team_roster_position,
+		'team_player_salary' : team_player_salary}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("Draft player complete. League Player ID: " + resp.longdescription);
+        }
+        else {
+        	console.log("Failed to draft player: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * Undraft player via the API.
+ */
+mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, league_team_id, 
+		player_projected_id, team_roster_position, team_player_salary) {
+	
+	console.log("In draftPlayer...");
+	
+	gapi.client.draftapp.league.draftplayer({
+		'league_id' : league_id,
+		'league_team_id' : league_team_id,
+		'player_projected_id' : player_projected_id,
+		'team_roster_position' : team_roster_position,
+		'team_player_salary' : team_player_salary}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("Draft player complete. League Player ID: " + resp.longdescription);
+        }
+        else {
+        	console.log("Failed to draft player: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
 
 /**
  * Create a new league and update it via the API.
