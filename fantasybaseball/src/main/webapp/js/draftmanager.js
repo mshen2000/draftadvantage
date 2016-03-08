@@ -246,11 +246,13 @@ $(document).ready(function()
 		var playertable = $('#playergrid_table').DataTable();
 		var playerid = $("#header-draftplayer").val();
 		var teamid = $("#select-draftteam").find("option:selected").val();
+		var teamname = $("#select-draftteam").find("option:selected").text();
 		var position = $("#select-draftposition").find("option:selected").val();
 		var amount = $("#select-draftamt").find("option:selected").val();
 		
 //		var row = playertable.row('#' + playerid);
 		playerdraftrow.leagueteam_id = teamid;
+		playerdraftrow.leagueteam_name = teamname;
 		playerdraftrow.team_roster_position = position;
 		playerdraftrow.team_player_salary = amount;
 		
@@ -795,7 +797,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             		return "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
             	return "<button type='button' class='btn btn-default btn-xs btn-undraft'><i class='fa fa-chevron-left'></i><i class='fa fa-chevron-left'></i></button>";
             }}, 
-            { "title": "TM ID", "mData": "leagueteam_id", "sDefaultContent": ""},
+            { "title": "TM Name", "mData": "leagueteam_name", "sDefaultContent": ""},
             { "visible": false, "title": "id", "mData": "id" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
@@ -837,6 +839,48 @@ function loadPlayerGridTable(data, isInitialLoad)
     
     $('#playergrid_table tbody').on( 'click', '.btn-undraft', function () {
 
+    	var league_id = $("#league-select").find("option:selected").val();
+    	var data_table = $('#playergrid_table').DataTable();
+        var data = data_table.row( $(this).parents('tr') ).data();
+        playerdraftrow = data;
+    	
+        BootstrapDialog.show({
+        	title: 'Undraft Player',
+            message: 'Are you sure you want to undraft player ' + data.full_name + ' from team ' + data.leagueteam_name + '?',
+            type: BootstrapDialog.TYPE_DEFAULT,
+            buttons: [{
+                label: 'Undraft Player',
+                cssClass: 'btn-primary',
+                action: function(dialogItself){
+//            		var row = playertable.row('#' + playerid);
+            		playerdraftrow.leagueteam_id = 0;
+            		playerdraftrow.leagueteam_name = "";
+            		playerdraftrow.team_roster_position = "";
+            		playerdraftrow.team_player_salary = 0;
+            		
+            		console.log("Undraft Player: " + playerdraftrow.full_name);
+            		console.log("Undraft Player ID: " + playerdraftrow.id);
+            		console.log("Undraft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+            		console.log("Undraft Player roster_position: " + playerdraftrow.team_roster_position);
+            		console.log("Undraft Player salary: " + playerdraftrow.team_player_salary);
+            		
+            		data_table.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
+            		
+            		mssolutions.fbapp.draftmanager.undraftPlayer(league_id, playerdraftrow.id);
+            		
+            		// Show the team info tab
+            		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
+            		// Set the team select to the drafting team
+            		$("#team-select").val(playerdraftrow.leagueteam_id);
+            		dialogItself.close();
+                }
+            }, {
+                label: 'Cancel',
+                action: function(dialogItself){
+                    dialogItself.close();
+                }
+            }]
+        });
         
     } );
 
@@ -1037,20 +1081,18 @@ mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id,
 /**
  * Undraft player via the API.
  */
-mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, league_team_id, 
-		player_projected_id, team_roster_position, team_player_salary) {
+mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, player_projected_id) {
 	
-	console.log("In draftPlayer...");
+	console.log("In undraftPlayer...");
 	
-	gapi.client.draftapp.league.draftplayer({
+	gapi.client.draftapp.league.undraftplayer({
 		'league_id' : league_id,
-		'league_team_id' : league_team_id,
-		'player_projected_id' : player_projected_id,
-		'team_roster_position' : team_roster_position,
-		'team_player_salary' : team_player_salary}).execute(
+		'player_projected_id' : player_projected_id}).execute(
       function(resp) {
         if (!resp.code) { 
-        	console.log("Draft player complete. League Player ID: " + resp.longdescription);
+        	console.log("Undraft player complete.");
+        	// update player grid, set team_id to 0
+        	// update team info, goto player's team and update info
         }
         else {
         	console.log("Failed to draft player: ", resp.code + " : " + resp.message);

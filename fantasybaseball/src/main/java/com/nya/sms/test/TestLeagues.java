@@ -596,7 +596,10 @@ public class TestLeagues {
 		Assert.assertTrue(chapman.getLeague_team().getId() == lt2_id);
 		
 		// Test undraft player
-		getLeaguePlayerService().undraftLeaguePlayer(chapman_id, uname);
+		LeaguePlayerInputContainer ud_container = new LeaguePlayerInputContainer();
+		ud_container.setPlayer_projected_id(aroldis_chapman.getId());
+		ud_container.setLeague_id(l1_id);
+		getLeaguePlayerService().undraftLeaguePlayer(ud_container, uname);
 		
 		// Test getLeaguePlayersbyLeague
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 5);

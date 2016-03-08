@@ -138,9 +138,9 @@ public class MainEndpoint {
 	}
 	
 	@ApiMethod(name = "league.undraftplayer")
-	public APIGeneralResult undraftPlayer(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
+	public APIGeneralResult undraftPlayer(LeaguePlayerInputContainer playercontainer, HttpServletRequest req) throws UnauthorizedException {
 		
-		getLeaguePlayerService().undraftLeaguePlayer(id, validateUserToken(req).getUsername());
+		getLeaguePlayerService().undraftLeaguePlayer(playercontainer, validateUserToken(req).getUsername());
 		
 		APIGeneralResult result = new APIGeneralResult("OK", "Undraft player successful");
 		

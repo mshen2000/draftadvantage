@@ -137,9 +137,26 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		
 	}
 	
-	public void undraftLeaguePlayer (Long leagueplayerid, String uname){
+	
+	/**
+	 * Description: Undrafts league player, only requires league_id and
+	 * player_projected_id from container.
+	 * 
+	 * @param container
+	 * @param uname
+	 */
+	public void undraftLeaguePlayer (LeaguePlayerInputContainer container, String uname){
 		
-		LeaguePlayer lp = ofy().load().type(LeaguePlayer.class).id(leagueplayerid).now();
+		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
+		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+		
+		// Check to see if LeaguePlayer already exists
+		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+				.filter("player_projected", playerprojectedkey).list();
+		
+		// LeaguePlayer lp = ofy().load().type(LeaguePlayer.class).id(leagueplayerid).now();
+		
+		LeaguePlayer lp = leagueplayers.get(0);
 		
 		Ref<LeagueTeam> r = null;
 		
