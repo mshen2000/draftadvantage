@@ -794,7 +794,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             	if (data == 0)
             		return "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
             	return "<button type='button' class='btn btn-default btn-xs btn-undraft'><i class='fa fa-chevron-left'></i><i class='fa fa-chevron-left'></i></button>";
-            }},
+            }}, 
             { "title": "TM ID", "mData": "leagueteam_id", "sDefaultContent": ""},
             { "visible": false, "title": "id", "mData": "id" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
