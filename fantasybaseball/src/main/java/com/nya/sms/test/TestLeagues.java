@@ -328,6 +328,7 @@ public class TestLeagues {
 		lt3.setTeam_name("Team3");
 		lt3.setOwner_name("Owner3");
 		lt3.setTeam_num(3);
+		lt3.setSalary_adjustment(30);
 		
 		List<LeagueTeam> teamlist = new ArrayList<LeagueTeam>();
 		teamlist.add(lt1);
@@ -350,6 +351,16 @@ public class TestLeagues {
 		
 		// Test saveNewLeague saved league has 3 teams
 		Assert.assertTrue(teamlist2.size() == 3);
+		
+		// Test that team salaries are correct
+		for (LeagueTeam team : teamlist2){
+			if (team.getTeam_name().equals("Team1")){
+				Assert.assertTrue(team.getAdj_starting_salary() == 260);
+			}
+			if (team.getTeam_name().equals("Team3")){
+				Assert.assertTrue(team.getAdj_starting_salary() == 290);
+			}
+		}
 		
 		ProjectionProfile p2 = leaguelist.get(0).getProjection_profile();
 		

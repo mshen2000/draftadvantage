@@ -23,6 +23,10 @@ public class LeagueTeam extends BaseEntity implements Serializable {
 	int team_num;
 	
 	double salary_adjustment;
+	
+	double starting_league_salary;
+	
+	double adj_starting_salary;
 
 	public LeagueTeam() {
 		this.isuserowner = false;
@@ -79,6 +83,22 @@ public class LeagueTeam extends BaseEntity implements Serializable {
 
 	public void setTeam_num(int team_num) {
 		this.team_num = team_num;
+	}
+
+	public double getStarting_league_salary() {
+		return starting_league_salary;
+	}
+
+	public void setStarting_league_salary(double starting_league_salary) {
+		this.starting_league_salary = starting_league_salary;
+	}
+
+	public double getAdj_starting_salary() {
+		return adj_starting_salary;
+	}
+
+	public void setAdj_starting_salary(double adj_starting_salary) {
+		this.adj_starting_salary = adj_starting_salary;
 	}
 
 

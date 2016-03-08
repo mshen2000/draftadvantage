@@ -92,7 +92,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		league.setAvg_pitcher_er((league.getAvg_pitcher_era()/9)*league.getAvg_pitcher_ip());
 		league.setAvg_pitcher_bbplushits(league.getAvg_pitcher_ip()*league.getAvg_pitcher_whip());
 		
-		//  For each team in container, save league team
+		//  For each team in container, set salaries, and save league team
+		for (LeagueTeam team : container.getLeague_teams()){
+			team.setStarting_league_salary(league.getTeam_salary());
+			team.setAdj_starting_salary(league.getTeam_salary() + team.getSalary_adjustment());
+		}
+		
 		Map<Key<LeagueTeam>, LeagueTeam>  map = getLeagueTeamService().save(container.getLeague_teams(), username);
 		List<LeagueTeam> teamlist = new ArrayList<LeagueTeam>(map.values());
 

@@ -242,12 +242,12 @@ td { font-size: 12px; }
 					  <div id="tab-teaminfo" class="tab-pane fade">
 						<select style="width:auto;margin-top:10px;" class="form-control" id="team-select">
 						</select>
-					    <h4 id="lbl-teambalance"><font color="green" id="lbl-teambalance">Balance: $0</font></h4>
+					    <h4><font color="green" id="lbl-teambalance">Balance: $0  </font><small id="lbl-teamstarting">Starting: 0$</small></h4>
 					    <table id="teamroster_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
 					    <ul class="list-unstyled">
 						  <li><b>Roster Overview</b></li>
-						  <li>Remaining Spots: 0</li>
-						  <li>Per Player Amount: $0</li>
+						  <li id="lbl-teamspots">Remaining Spots: 0</li>
+						  <li id="lbl-teamperplayer">Per Player Amount: $0</li>
 						</ul>
 					  </div>
 					</div>
@@ -797,6 +797,10 @@ td { font-size: 12px; }
 
 	<!-- DATA TABES SCRIPT -->
 	<script src="../../plugins/datatables/datatables.min.js"
+		type="text/javascript"></script> 
+		
+	<!-- DATA TABES SUM COLUMN SCRIPT -->
+	<script src="../../plugins/datatables/sum.js"
 		type="text/javascript"></script> 
 
 	<!-- WIZARD SCRIPT -->
