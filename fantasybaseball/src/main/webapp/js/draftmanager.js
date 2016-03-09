@@ -10,7 +10,11 @@ var mssolutions = mssolutions || {};
 mssolutions.fbapp = mssolutions.fbapp || {};
 
 /** projections namespace. */
-mssolutions.fbapp.draftmanager = mssolutions.fbapp.draftmanager || {};
+mssolutions.fbapp.draftmanager = mssolutions.fbapp.draftmanager || /**
+ * @author Michael
+ *
+ */
+{};
 /**
  * Client ID of the application (from the APIs Console).
  * @type {string}
@@ -283,23 +287,53 @@ $(document).ready(function()
 		var roster_table = $('#teamroster_table').DataTable();
 		var roster_row = roster_table.rows('.selected').data()[0];
 		
+//		console.log(roster_row);
+//		console.log(roster_row.playerid);
+
+    	var player_table = $('#playergrid_table').DataTable();
+        var data1 = player_table.row('#' + roster_row.playerid).data();
+        // console.log(JSON.stringify(data1));
+        
+        showUndraftPlayerDialog(data1);
+        
+    } );
+	
+	$('#btn-editdraftplayer').click(function () {
+		
+		var roster_table = $('#teamroster_table').DataTable();
+		var roster_row = roster_table.rows('.selected').data()[0];
+		var teamid = $('#team-select').find("option:selected").val();
+		var teamname = $('#team-select').find("option:selected").text();
+		
 		console.log(roster_row);
 		console.log(roster_row.playerid);
 
     	var player_table = $('#playergrid_table').DataTable();
-        var data1 = player_table.row('#' + roster_row.playerid).data();
-        console.log(JSON.stringify(data1));
+        var data = player_table.row('#' + roster_row.playerid).data();
+        playerdraftrow = data;
+        console.log(JSON.stringify(data));
         
-//        var data2 = player_table
-//        .rows( function ( idx, data, node ) {
-//            return data.id == roster_row.playerid ?
-//                true : false;
-//        } )
-//        .data();
-//        
-//        console.log(JSON.stringify(data2));
+        // resetDraftPlayerModal(roster_row);
+        $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
+        $("#header-draftplayer").val(data.id);
+        $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
         
-        showUndraftPlayerDialog(data1);
+        loadDraftPlayerAmtSelector();
+        loadDraftPlayerPosSelector(roster_row.position);
+    	$("#select-draftteam").val(teamid);
+    	// $("#select-draftamt").val(roster_row.salary);
+    	$("#select-draftposition").val(roster_row.position);
+    	
+    	var amtselect = $('#select-draftamt')[0];
+    	var amtopt = $('#select-draftamt option[value=' + roster_row.salary + ']')[0];
+    	amtopt.selected = true;
+    	selectAndScrollToOption(amtselect, amtopt);
+
+    	$('#lbl-draftprevteam').text(teamname);
+    	$('#lbl-draftprevamt').text('$' + roster_row.salary);
+    	$('#lbl-draftprevpos').text(roster_row.position);
+    	
+    	$("#draftplayer-modal").modal("show");
         
     } );
 	
@@ -572,7 +606,7 @@ function loadDraftPlayerAmtSelector(){
 
 
 function resetDraftPlayerModal(){
-	
+
 	$("option", "#select-draftteam").removeAttr("selected");
 	$("option", "#select-draftamt").removeAttr("selected");
 	var posselector = $("#select-draftposition");
@@ -580,16 +614,26 @@ function resetDraftPlayerModal(){
 	$('#lbl-draftprevteam').text("[none]");
 	$('#lbl-draftprevamt').text("[none]");
 	$('#lbl-draftprevpos').text("[none]");
-	
+
 }
 
-function loadDraftPlayerPosSelector(){
+
+/**
+ * Description: Loads selections for the position selector in the draft player
+ * modal. Selections are based on available positions based on the player and
+ * team. For an initial draft of player, the updateplayerposition parameter is
+ * null. For updating an existing drafted player, the parameter is the position
+ * string for that player. This makes sure that the position is included in the
+ * list even if the team has that position filled.
+ * 
+ * @param updateplayerposition
+ */
+function loadDraftPlayerPosSelector(updateplayerposition){
 	
 	var teamid = $("#select-draftteam").val();
 	var posselector = $("#select-draftposition");
 	posselector.find('option').remove().end();
 
-	
 	console.log("TeamID: " + teamid);
 	
 	var playertable = $('#playergrid_table').DataTable();
@@ -628,6 +672,7 @@ function loadDraftPlayerPosSelector(){
 	var selp = true;
 	var selres = true;
 	
+	// Get league roster counts for each position
 	var countc = teamrostercounts["C"];
 	var count1b = teamrostercounts["1B"];
 	var count2b = teamrostercounts["2B"];
@@ -640,6 +685,8 @@ function loadDraftPlayerPosSelector(){
 	var countp = teamrostercounts["P"];
 	var countres = teamrostercounts["RES"];
 	
+	// Update counts with by subtracting current team roster counts
+	// Determine if roster position is available based on count
 	$.each( liveteamrostercounts, function( lkey, lvalue ) {
 		
 		if (lkey == "C")  countc = teamrostercounts["C"] - lvalue;
@@ -667,6 +714,21 @@ function loadDraftPlayerPosSelector(){
 		if ((lkey == "RES")&&(teamrostercounts["RES"] <= lvalue)) selres = false;
 			
 	});
+	
+	// If updateplayerposition is not null, then make sure that the position is included
+	if (updateplayerposition != null){
+		if ((updateplayerposition == "C")) selc = true;
+		if ((updateplayerposition == "1B")) sel1b = true;
+		if ((updateplayerposition == "2B")) sel2b = true;
+		if ((updateplayerposition == "SS")) selss = true;
+		if ((updateplayerposition == "3B")) sel3b = true;
+		if ((updateplayerposition == "MI")) selmi = true;
+		if ((updateplayerposition == "CI")) selci = true;
+		if ((updateplayerposition == "OF")) selof = true;
+		if ((updateplayerposition == "UT")) selutil = true;
+		if ((updateplayerposition == "P")) selp = true;
+		if ((updateplayerposition == "RES")) selres = true;
+	}
 
 	if (playerdraftrow.pitcher_hitter == "H"){
 		if (selc) posselector.append($("<option value='C'/>").text("C (" + countc + ")"));
@@ -896,54 +958,11 @@ function loadPlayerGridTable(data, isInitialLoad)
     } );
     
     $('#playergrid_table tbody').on( 'click', '.btn-undraft', function () {
-//		var row = playertable.row('#' + playerid);
+
     	var data_table = $('#playergrid_table').DataTable();
         var data = data_table.row( $(this).parents('tr') ).data();
         
         showUndraftPlayerDialog(data);
-        
-//        var league_id = $("#league-select").find("option:selected").val();
-//        playerdraftrow = data;
-//    	
-//        BootstrapDialog.show({
-//        	title: 'Undraft Player',
-//            message: 'Are you sure you want to undraft player ' + data.full_name + ' from team ' + data.leagueteam_name + '?',
-//            type: BootstrapDialog.TYPE_DEFAULT,
-//            buttons: [{
-//                label: 'Undraft Player',
-//                cssClass: 'btn-primary',
-//                action: function(dialogItself){
-//
-//                	var originalteam_id = playerdraftrow.leagueteam_id;
-//            		playerdraftrow.leagueteam_id = 0;
-//            		playerdraftrow.leagueteam_name = "";
-//            		playerdraftrow.team_roster_position = "";
-//            		playerdraftrow.team_player_salary = 0;
-//            		
-//            		console.log("Undraft Player: " + playerdraftrow.full_name);
-//            		console.log("Undraft Player ID: " + playerdraftrow.id);
-//            		console.log("Undraft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
-//            		console.log("Undraft Player roster_position: " + playerdraftrow.team_roster_position);
-//            		console.log("Undraft Player salary: " + playerdraftrow.team_player_salary);
-//            		
-//            		data_table.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
-//            		
-//            		mssolutions.fbapp.draftmanager.undraftPlayer(league_id, playerdraftrow.id);
-//            		
-//            		// Show the team info tab
-//            		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
-//            		// Set the team select to the drafting team
-//            		$("#team-select").val(originalteam_id);
-//            		updateTeamInfoTab();
-//            		dialogItself.close();
-//                }
-//            }, {
-//                label: 'Cancel',
-//                action: function(dialogItself){
-//                    dialogItself.close();
-//                }
-//            }]
-//        });
         
     } );
 
