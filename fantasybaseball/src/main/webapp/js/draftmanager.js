@@ -141,8 +141,6 @@ $(document).ready(function()
 
     });
 
-
-	
 	$('#btn-deleteleague').click(function() 
 		{
 		var selectedtext = $("#league-select").find("option:selected").text();
@@ -274,6 +272,7 @@ $(document).ready(function()
 		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
 		// Set the team select to the drafting team
 		$("#team-select").val(teamid);
+		updateTeamInfoTab();
 
 
 	});
@@ -462,66 +461,69 @@ $(document).ready(function()
 
 function updateTeamInfoTab(){
 	// create a deep copy of teamrostertemplate
-	// var liveteamrostertemplate = $.extend( true, {}, teamrostertemplate );
-	var liveteamrostertemplate = JSON.parse(JSON.stringify(teamrostertemplate));
-	
-	// update teamrostertabel with the blank template
-	loadTeamRosterTable(liveteamrostertemplate, false);
-	
-	var teamid = $("#team-select").find("option:selected").val();
-	// console.log("TeamID: " + teamid);
-	var playertable = $('#playergrid_table').DataTable();
-	var teamrostertable = $('#teamroster_table').DataTable();
-	
-	
-	// Get players from table that have been drafted by selected team
-	var teamplayers = playertable.rows( function ( idx, data, node ) {
-        return data.leagueteam_id == teamid ?
-            true : false;
-    } )
-    .data();
+	var liveteamrostertemplate;
+	if (teamrostertemplate != null){
+		liveteamrostertemplate = JSON.parse(JSON.stringify(teamrostertemplate));
 
-	// For each drafted player on a team, fill them into the team roster grid
-	$.each( teamplayers, function( key, value ) {
-		// console.log("Each teamplayer: " + value.full_name);
-		$.each( liveteamrostertemplate, function( rkey, rvalue ) {
-			// console.log("Each teamrostertemplate: " + rvalue.position);
-			if ((value.team_roster_position == rvalue.position)&&
-					((rvalue.name == null)||(rvalue.name == ""))){
-				rvalue.name = value.full_name;
-				rvalue.salary = value.team_player_salary;
-				// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
-				teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
-				return false;
-			}
+		// update teamrostertabel with the blank template
+		loadTeamRosterTable(liveteamrostertemplate, false);
+		
+		var teamid = $("#team-select").find("option:selected").val();
+		// console.log("TeamID: " + teamid);
+		var playertable = $('#playergrid_table').DataTable();
+		var teamrostertable = $('#teamroster_table').DataTable();
+		
+		
+		// Get players from table that have been drafted by selected team
+		var teamplayers = playertable.rows( function ( idx, data, node ) {
+	        return data.leagueteam_id == teamid ?
+	            true : false;
+	    } )
+	    .data();
 
+		// For each drafted player on a team, fill them into the team roster grid
+		$.each( teamplayers, function( key, value ) {
+			// console.log("Each teamplayer: " + value.full_name);
+			$.each( liveteamrostertemplate, function( rkey, rvalue ) {
+				// console.log("Each teamrostertemplate: " + rvalue.position);
+				if ((value.team_roster_position == rvalue.position)&&
+						((rvalue.name == null)||(rvalue.name == ""))){
+					rvalue.name = value.full_name;
+					rvalue.salary = value.team_player_salary;
+					// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
+					teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
+					return false;
+				}
+
+			});
+			
 		});
 		
-	});
-	
-	// Find team in global team list
-	var team;
-	$.each( globalteamlist, function( key, value ) {
-		// console.log("Each teamlist: " + value.team_name);
-		if (teamid == value.id){
-			// console.log("Found team: " + value.team_name);
-			team = value;
-			return false;
-		}
-	});
-	
-	var teamstartingsalary = team.adj_starting_salary;
-	var balance = teamstartingsalary - teamrostertable.column( 3 ).data().sum();
-	var spots = liveteamrostertemplate.length - teamplayers.length - rescount;
-	var perplayer = balance / spots;
-	
-	console.log("Team salary: " + teamstartingsalary);
-	console.log("Sum of salaries: " + teamrostertable.column( 3 ).data().sum());
-	
-	$('#lbl-teambalance').text("Balance: $" + balance + "  ");
-	$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
-	$('#lbl-teamspots').text("Remaining Spots: " + spots);
-	$('#lbl-teamperplayer').text("Per Player Amount: $" + perplayer.toFixed(2));
+		// Find team in global team list
+		var team;
+		$.each( globalteamlist, function( key, value ) {
+			// console.log("Each teamlist: " + value.team_name);
+			if (teamid == value.id){
+				// console.log("Found team: " + value.team_name);
+				team = value;
+				return false;
+			}
+		});
+		
+		var teamstartingsalary = team.adj_starting_salary;
+		var balance = teamstartingsalary - teamrostertable.column( 3 ).data().sum();
+		var spots = liveteamrostertemplate.length - teamplayers.length - rescount;
+		var perplayer = balance / spots;
+		
+		console.log("Team salary: " + teamstartingsalary);
+		console.log("Sum of salaries: " + teamrostertable.column( 3 ).data().sum());
+		
+		$('#lbl-teambalance').text("Balance: $" + balance + "  ");
+		$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
+		$('#lbl-teamspots').text("Remaining Spots: " + spots);
+		$('#lbl-teamperplayer').text("Per Player Amount: $" + perplayer.toFixed(2));
+
+	}
 
 }
 
@@ -673,6 +675,14 @@ function loadTeamRosterTable(data, isInitialLoad)
         // "scrollY": calcDataTableHeight(),
         "paging": false,
         "order": [[ 0, "asc" ]],
+        "tableTools": {
+            "fnPreRowSelect": function ( e, nodes ) {
+                if ( (nodes[0].name == null)||(nodes[0].name == "") ) {
+                    return false;
+                }
+                return true;
+            }
+        },
         "columns": [
             { "visible": false, "title": "index", "mData": "index" },
             { "title": "Pos", "mData": "position" },
@@ -698,6 +708,20 @@ function loadTeamRosterTable(data, isInitialLoad)
 		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
 		
 	}
+	
+	data_table
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	console.log("Select");
+        var rowData = table.rows( indexes ).data().toArray();
+        $("#btn-editdraftplayer").removeAttr("disabled");  
+        $("#btn-undraftplayer").removeAttr("disabled");  
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+    	console.log("De-Select");
+        var rowData = table.rows( indexes ).data().toArray();
+        $("#btn-editdraftplayer").attr("disabled", "disabled");
+        $("#btn-undraftplayer").attr("disabled", "disabled");
+    } );
 
 }
 
@@ -797,7 +821,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             		return "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
             	return "<button type='button' class='btn btn-default btn-xs btn-undraft'><i class='fa fa-chevron-left'></i><i class='fa fa-chevron-left'></i></button>";
             }}, 
-            { "title": "TM Name", "mData": "leagueteam_name", "sDefaultContent": ""},
+            { "title": "Team", "mData": "leagueteam_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 5 )},
             { "visible": false, "title": "id", "mData": "id" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
@@ -853,6 +877,7 @@ function loadPlayerGridTable(data, isInitialLoad)
                 cssClass: 'btn-primary',
                 action: function(dialogItself){
 //            		var row = playertable.row('#' + playerid);
+                	var originalteam_id = playerdraftrow.leagueteam_id;
             		playerdraftrow.leagueteam_id = 0;
             		playerdraftrow.leagueteam_name = "";
             		playerdraftrow.team_roster_position = "";
@@ -871,7 +896,8 @@ function loadPlayerGridTable(data, isInitialLoad)
             		// Show the team info tab
             		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
             		// Set the team select to the drafting team
-            		$("#team-select").val(playerdraftrow.leagueteam_id);
+            		$("#team-select").val(originalteam_id);
+            		updateTeamInfoTab();
             		dialogItself.close();
                 }
             }, {
@@ -1110,8 +1136,8 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
       function(resp) {
         if (!resp.code) { 
         	console.log("League save complete. League ID: " + resp.longdescription);
-        	mssolutions.fbapp.draftmanager.loadLeagueList();
-        	$('#league-select').val(resp.longdescription);
+        	mssolutions.fbapp.draftmanager.loadLeagueList(resp.longdescription);
+        	// $('#league-select').val(resp.longdescription);
         	loadLeagueContent(resp.longdescription);
         	progressmodal.hidePleaseWait();
         	
@@ -1227,12 +1253,13 @@ mssolutions.fbapp.draftmanager.deleteLeague = function(leagueid) {
 /**
  * load List of leagues via the API.
  */
-mssolutions.fbapp.draftmanager.loadLeagueList = function() {
+mssolutions.fbapp.draftmanager.loadLeagueList = function(leagueid) {
 
 	gapi.client.draftapp.league.getuserleagues().execute(
       function(resp) {
         if (!resp.code) { 
         	loadLeagueSelector(resp.items);
+        	if (leagueid != null) $('#league-select').val(leagueid);
         }
         else {
         	console.log("Failed to load leagues: ", resp.code + " : " + resp.message);
