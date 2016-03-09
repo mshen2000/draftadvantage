@@ -6,6 +6,7 @@ public class LeagueRosterItem {
 	String position;
 	String name;
 	long salary;
+	long playerid;
 
 	public LeagueRosterItem() {
 		// TODO Auto-generated constructor stub
@@ -46,6 +47,14 @@ public class LeagueRosterItem {
 
 	public void setSalary(long salary) {
 		this.salary = salary;
+	}
+
+	public long getPlayerid() {
+		return playerid;
+	}
+
+	public void setPlayerid(long playerid) {
+		this.playerid = playerid;
 	}
 	
 	

@@ -278,6 +278,32 @@ $(document).ready(function()
 	});
 	
 	
+	$('#btn-undraftplayer').click(function () {
+		
+		var roster_table = $('#teamroster_table').DataTable();
+		var roster_row = roster_table.rows('.selected').data()[0];
+		
+		console.log(roster_row);
+		console.log(roster_row.playerid);
+
+    	var player_table = $('#playergrid_table').DataTable();
+        var data1 = player_table.row('#' + roster_row.playerid).data();
+        console.log(JSON.stringify(data1));
+        
+//        var data2 = player_table
+//        .rows( function ( idx, data, node ) {
+//            return data.id == roster_row.playerid ?
+//                true : false;
+//        } )
+//        .data();
+//        
+//        console.log(JSON.stringify(data2));
+        
+        showUndraftPlayerDialog(data1);
+        
+    } );
+	
+	
   	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
 		var $total = navigation.find('li').length;
 		var $current = index+1;
@@ -455,6 +481,7 @@ $(document).ready(function()
 	loadTeamRosterTable(null, true);
 	
 	loadDraftPlayerAmtSelector();
+	
 
 });
 
@@ -490,6 +517,7 @@ function updateTeamInfoTab(){
 						((rvalue.name == null)||(rvalue.name == ""))){
 					rvalue.name = value.full_name;
 					rvalue.salary = value.team_player_salary;
+					rvalue.playerid = value.id;
 					// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
 					teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
 					return false;
@@ -522,6 +550,9 @@ function updateTeamInfoTab(){
 		$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
 		$('#lbl-teamspots').text("Remaining Spots: " + spots);
 		$('#lbl-teamperplayer').text("Per Player Amount: $" + perplayer.toFixed(2));
+		
+        $("#btn-editdraftplayer").attr("disabled", "disabled");
+        $("#btn-undraftplayer").attr("disabled", "disabled");
 
 	}
 
@@ -675,16 +706,9 @@ function loadTeamRosterTable(data, isInitialLoad)
         // "scrollY": calcDataTableHeight(),
         "paging": false,
         "order": [[ 0, "asc" ]],
-        "tableTools": {
-            "fnPreRowSelect": function ( e, nodes ) {
-                if ( (nodes[0].name == null)||(nodes[0].name == "") ) {
-                    return false;
-                }
-                return true;
-            }
-        },
         "columns": [
             { "visible": false, "title": "index", "mData": "index" },
+            { "visible": false, "title": "ID", "mData": "playerid" },
             { "title": "Pos", "mData": "position" },
             { "title": "Player", "mData": "name", "sDefaultContent": ""},
             { "title": "$", "mData": "salary", "sDefaultContent": "", "render": function ( data, type, row ) {
@@ -709,19 +733,28 @@ function loadTeamRosterTable(data, isInitialLoad)
 		
 	}
 	
+	var data_table = $('#teamroster_table').DataTable();
 	data_table
     .on( 'select', function ( e, dt, type, indexes ) {
-    	console.log("Select");
-        var rowData = table.rows( indexes ).data().toArray();
-        $("#btn-editdraftplayer").removeAttr("disabled");  
-        $("#btn-undraftplayer").removeAttr("disabled");  
+    	var data_table_b = $('#teamroster_table').DataTable();
+        var rows = data_table_b.rows( indexes ).data();
+        // console.log("Select: " + rowData[0].name);
+        console.log("Select: " + JSON.stringify(rows[0]));
+        if ((rows[0].name == null)||(rows[0].name == "")){
+        	data_table_b.rows( indexes ).deselect();
+        } else {
+            $("#btn-editdraftplayer").removeAttr("disabled");  
+            $("#btn-undraftplayer").removeAttr("disabled");  
+        }
+
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
-    	console.log("De-Select");
-        var rowData = table.rows( indexes ).data().toArray();
+        // var rowData = data_table.rows( indexes ).data().toArray();
+        // console.log("De-Select: " + rowData[0].name);
         $("#btn-editdraftplayer").attr("disabled", "disabled");
         $("#btn-undraftplayer").attr("disabled", "disabled");
     } );
+
 
 }
 
@@ -847,6 +880,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 	}
 
     $('#playergrid_table tbody').on( 'click', '.btn-draft', function () {
+
     	var data_table = $('#playergrid_table').DataTable();
         var data = data_table.row( $(this).parents('tr') ).data();
         playerdraftrow = data;
@@ -862,54 +896,104 @@ function loadPlayerGridTable(data, isInitialLoad)
     } );
     
     $('#playergrid_table tbody').on( 'click', '.btn-undraft', function () {
-
-    	var league_id = $("#league-select").find("option:selected").val();
+//		var row = playertable.row('#' + playerid);
     	var data_table = $('#playergrid_table').DataTable();
         var data = data_table.row( $(this).parents('tr') ).data();
-        playerdraftrow = data;
-    	
-        BootstrapDialog.show({
-        	title: 'Undraft Player',
-            message: 'Are you sure you want to undraft player ' + data.full_name + ' from team ' + data.leagueteam_name + '?',
-            type: BootstrapDialog.TYPE_DEFAULT,
-            buttons: [{
-                label: 'Undraft Player',
-                cssClass: 'btn-primary',
-                action: function(dialogItself){
-//            		var row = playertable.row('#' + playerid);
-                	var originalteam_id = playerdraftrow.leagueteam_id;
-            		playerdraftrow.leagueteam_id = 0;
-            		playerdraftrow.leagueteam_name = "";
-            		playerdraftrow.team_roster_position = "";
-            		playerdraftrow.team_player_salary = 0;
-            		
-            		console.log("Undraft Player: " + playerdraftrow.full_name);
-            		console.log("Undraft Player ID: " + playerdraftrow.id);
-            		console.log("Undraft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
-            		console.log("Undraft Player roster_position: " + playerdraftrow.team_roster_position);
-            		console.log("Undraft Player salary: " + playerdraftrow.team_player_salary);
-            		
-            		data_table.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
-            		
-            		mssolutions.fbapp.draftmanager.undraftPlayer(league_id, playerdraftrow.id);
-            		
-            		// Show the team info tab
-            		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
-            		// Set the team select to the drafting team
-            		$("#team-select").val(originalteam_id);
-            		updateTeamInfoTab();
-            		dialogItself.close();
-                }
-            }, {
-                label: 'Cancel',
-                action: function(dialogItself){
-                    dialogItself.close();
-                }
-            }]
-        });
+        
+        showUndraftPlayerDialog(data);
+        
+//        var league_id = $("#league-select").find("option:selected").val();
+//        playerdraftrow = data;
+//    	
+//        BootstrapDialog.show({
+//        	title: 'Undraft Player',
+//            message: 'Are you sure you want to undraft player ' + data.full_name + ' from team ' + data.leagueteam_name + '?',
+//            type: BootstrapDialog.TYPE_DEFAULT,
+//            buttons: [{
+//                label: 'Undraft Player',
+//                cssClass: 'btn-primary',
+//                action: function(dialogItself){
+//
+//                	var originalteam_id = playerdraftrow.leagueteam_id;
+//            		playerdraftrow.leagueteam_id = 0;
+//            		playerdraftrow.leagueteam_name = "";
+//            		playerdraftrow.team_roster_position = "";
+//            		playerdraftrow.team_player_salary = 0;
+//            		
+//            		console.log("Undraft Player: " + playerdraftrow.full_name);
+//            		console.log("Undraft Player ID: " + playerdraftrow.id);
+//            		console.log("Undraft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+//            		console.log("Undraft Player roster_position: " + playerdraftrow.team_roster_position);
+//            		console.log("Undraft Player salary: " + playerdraftrow.team_player_salary);
+//            		
+//            		data_table.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
+//            		
+//            		mssolutions.fbapp.draftmanager.undraftPlayer(league_id, playerdraftrow.id);
+//            		
+//            		// Show the team info tab
+//            		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
+//            		// Set the team select to the drafting team
+//            		$("#team-select").val(originalteam_id);
+//            		updateTeamInfoTab();
+//            		dialogItself.close();
+//                }
+//            }, {
+//                label: 'Cancel',
+//                action: function(dialogItself){
+//                    dialogItself.close();
+//                }
+//            }]
+//        });
         
     } );
 
+}
+
+function showUndraftPlayerDialog(playergridundraftrow){
+	var data_table = $('#playergrid_table').DataTable();
+    var league_id = $("#league-select").find("option:selected").val();
+    playerdraftrow = playergridundraftrow;
+	
+    BootstrapDialog.show({
+    	title: 'Undraft Player',
+        message: 'Are you sure you want to undraft player ' + playerdraftrow.full_name + ' from team ' + playerdraftrow.leagueteam_name + '?',
+        type: BootstrapDialog.TYPE_DEFAULT,
+        buttons: [{
+            label: 'Undraft Player',
+            cssClass: 'btn-primary',
+            action: function(dialogItself){
+//        		var row = playertable.row('#' + playerid);
+            	var originalteam_id = playerdraftrow.leagueteam_id;
+        		playerdraftrow.leagueteam_id = 0;
+        		playerdraftrow.leagueteam_name = "";
+        		playerdraftrow.team_roster_position = "";
+        		playerdraftrow.team_player_salary = 0;
+        		
+        		console.log("Undraft Player: " + playerdraftrow.full_name);
+        		console.log("Undraft Player ID: " + playerdraftrow.id);
+        		console.log("Undraft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+        		console.log("Undraft Player roster_position: " + playerdraftrow.team_roster_position);
+        		console.log("Undraft Player salary: " + playerdraftrow.team_player_salary);
+        		
+        		data_table.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
+        		
+        		mssolutions.fbapp.draftmanager.undraftPlayer(league_id, playerdraftrow.id);
+        		
+        		// Show the team info tab
+        		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
+        		// Set the team select to the drafting team
+        		$("#team-select").val(originalteam_id);
+        		updateTeamInfoTab();
+        		dialogItself.close();
+            }
+        }, {
+            label: 'Cancel',
+            action: function(dialogItself){
+                dialogItself.close();
+            }
+        }]
+    });
+	
 }
 
 function loadTeamTable(data, isInitialLoad)
