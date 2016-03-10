@@ -111,13 +111,28 @@ td { font-size: 12px; }
     }
 }
 
-#side-panel{
-    padding-bottom: 2px !important;
+/* #side-panel{ */
+/*     padding-bottom: 2px !important; */
+/* } */
+#list-teamrosteroverview{
+	margin-bottom: 1px !important;
 }
 
 #dl-draftpreview{
 	margin-bottom: 0px !important;
 }
+
+.noresize {
+  resize: none; 
+}
+
+.vresize {
+  resize: vertical; 
+}
+  
+.hresize {
+  resize: horizontal;  
+} 
 
 </style>
 
@@ -238,17 +253,17 @@ td { font-size: 12px; }
 					  <div id="tab-playerinfo" class="tab-pane fade">
 					    <h3 id="lbl-playerinfoname">Player Name</h3>
 					    <ul class="list-unstyled">
-						  <li>Team: <b id="lbl-playerinfoteam">Fake Team</b></li>
-						  <li>Age: <b id="lbl-playerinfoage">99</b></li>
-						  <li>Eligibility: <b id="lbl-playerinfoelig">XX</b></li>
-						  <li>Owner: <b id="lbl-playerinfoowner">[un-owned]</b></li>
+						  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
+						  <li><b>Age:</b> <span id="lbl-playerinfoage">99</span></li>
+						  <li><b>Eligibility:</b> <span id="lbl-playerinfoelig">XX</span></li>
+						  <li><b>Owner:</b> <span id="lbl-playerinfoowner">[available]</span></li>
 						</ul>
 						<form>
 							<div class="form-group">
 							    <label for="textarea-playernote">Player Notes</label>
-							    <textarea class="form-control" rows="3" id="textarea-playernote"></textarea>
+							    <textarea class="form-control vresize" rows="4" id="textarea-playernote"></textarea>
 							</div>
-							<button class="btn btn-primary" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
+							<button class="btn btn-primary btn-block" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
 						</form>
 					  </div>
 					  <div id="tab-teaminfo" class="tab-pane fade in active">
@@ -267,7 +282,7 @@ td { font-size: 12px; }
 					    	</div>
 					    </div>
 					    
-					    <ul class="list-unstyled">
+					    <ul class="list-unstyled" id="list-teamrosteroverview">
 						  <li><b>Roster Overview</b></li>
 						  <li id="lbl-teamspots">Remaining Spots: 0</li>
 						  <li id="lbl-teamperplayer">Per Player Amount: $0</li>

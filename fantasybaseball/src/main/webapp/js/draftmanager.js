@@ -962,6 +962,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 		
 	}
 
+	// On Click of the Draft button in the Player Grid Table
     $('#playergrid_table tbody').on( 'click', '.btn-draft', function () {
 
     	var data_table = $('#playergrid_table').DataTable();
@@ -978,6 +979,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         
     } );
     
+    // On Click of the Undraft button in the Player Grid Table
     $('#playergrid_table tbody').on( 'click', '.btn-undraft', function () {
 
     	var data_table = $('#playergrid_table').DataTable();
@@ -987,6 +989,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         
     } );
     
+    // On Select of the Player Grid Table
 	var select_data_table = $('#playergrid_table').DataTable();
 	select_data_table
     .on( 'select', function ( e, dt, type, indexes ) {
@@ -995,6 +998,16 @@ function loadPlayerGridTable(data, isInitialLoad)
         
         // Show the player info tab
 		$('#info-tabs a[href="#tab-playerinfo"]').tab('show');
+		
+		$("#lbl-playerinfoname").val(row.id);
+		$("#lbl-playerinfoname").text(row.full_name);
+		$("#lbl-playerinfoteam").text(row.team);
+		$("#lbl-playerinfoage").text(row.age);
+		$("#lbl-playerinfoelig").text(row.player_position);
+		
+		if ((row.leagueteam_name == null)||(row.leagueteam_name == ""))
+			$("#lbl-playerinfoowner").text("[available]");
+		else $("#lbl-playerinfoowner").text(row.leagueteam_name);
 
     } )
 
