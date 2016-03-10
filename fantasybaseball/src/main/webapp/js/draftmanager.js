@@ -72,14 +72,21 @@ $(document).ready(function()
 {
     $("#select-draftteam").change(function(e){
 
+//    	if ($(this).val() != null){
+//	        if ($(this).val().length > 1) {
+//	            $("option", this).removeAttr("selected");
+//	            $('#lbl-draftprevteam').text("[none]");
+//	        } else {
+//	        	$('#lbl-draftprevteam').text($(this).find("option:selected").text());
+//	        	loadDraftPlayerPosSelector();
+//	        }
+//    	} else {
+//        	$('#lbl-draftprevteam').text("[none]");
+//        }
+    	
     	if ($(this).val() != null){
-	        if ($(this).val().length > 1) {
-	            $("option", this).removeAttr("selected");
-	            $('#lbl-draftprevteam').text("[none]");
-	        } else {
-	        	$('#lbl-draftprevteam').text($(this).find("option:selected").text());
-	        	loadDraftPlayerPosSelector();
-	        }
+        	$('#lbl-draftprevteam').text($(this).find("option:selected").text());
+        	loadDraftPlayerPosSelector();
     	} else {
         	$('#lbl-draftprevteam').text("[none]");
         }
@@ -95,13 +102,19 @@ $(document).ready(function()
     });
     $("#select-draftamt").change(function(e){
 
+//    	if ($(this).val() != null){
+//	        if ($(this).val().length > 1) {
+//	            $("option", this).removeAttr("selected");
+//	            $('#lbl-draftprevamt').text("[none]");
+//	        } else {
+//	        	$('#lbl-draftprevamt').text($(this).find("option:selected").text());
+//	        }
+//    	} else {
+//        	$('#lbl-draftprevamt').text("[none]");
+//        }
+    	
     	if ($(this).val() != null){
-	        if ($(this).val().length > 1) {
-	            $("option", this).removeAttr("selected");
-	            $('#lbl-draftprevamt').text("[none]");
-	        } else {
-	        	$('#lbl-draftprevamt').text($(this).find("option:selected").text());
-	        }
+	        $('#lbl-draftprevamt').text($(this).find("option:selected").text());
     	} else {
         	$('#lbl-draftprevamt').text("[none]");
         }
@@ -117,13 +130,19 @@ $(document).ready(function()
     });
     $("#select-draftposition").change(function(e){
 
+//    	if ($(this).val() != null){
+//	        if ($(this).val().length > 1) {
+//	            $("option", this).removeAttr("selected");
+//	            $('#lbl-draftprevpos').text("[none]");
+//	        } else {
+//	        	$('#lbl-draftprevpos').text($(this).find("option:selected").text().split(" ")[0]);
+//	        }
+//    	} else {
+//        	$('#lbl-draftprevpos').text("[none]");
+//        }
+    	
     	if ($(this).val() != null){
-	        if ($(this).val().length > 1) {
-	            $("option", this).removeAttr("selected");
-	            $('#lbl-draftprevpos').text("[none]");
-	        } else {
-	        	$('#lbl-draftprevpos').text($(this).find("option:selected").text().split(" ")[0]);
-	        }
+	        $('#lbl-draftprevpos').text($(this).find("option:selected").text().split(" ")[0]);
     	} else {
         	$('#lbl-draftprevpos').text("[none]");
         }
@@ -140,9 +159,7 @@ $(document).ready(function()
     
     // Team select in Team Info Tab
     $("#team-select").change(function(e){
-
     	updateTeamInfoTab();
-
     });
 
 	$('#btn-deleteleague').click(function() 
@@ -573,12 +590,12 @@ function updateTeamInfoTab(){
 		});
 		
 		var teamstartingsalary = team.adj_starting_salary;
-		var balance = teamstartingsalary - teamrostertable.column( 3 ).data().sum();
+		var balance = teamstartingsalary - teamrostertable.column( 4 ).data().sum();
 		var spots = liveteamrostertemplate.length - teamplayers.length - rescount;
 		var perplayer = balance / spots;
 		
 		console.log("Team salary: " + teamstartingsalary);
-		console.log("Sum of salaries: " + teamrostertable.column( 3 ).data().sum());
+		console.log("Sum of salaries: " + teamrostertable.column( 4 ).data().sum());
 		
 		$('#lbl-teambalance').text("Balance: $" + balance + "  ");
 		$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
@@ -832,7 +849,11 @@ function loadPlayerGridTable(data, isInitialLoad)
 		responsive: true,
     	"processing": true,
         data: data,
-        // "scrollY": calcDataTableHeight(),
+        select: {
+            style:    'single',
+            // If column with button is selected, it will not register select
+            selector: 'td:not(:nth-last-child(2))'  
+        },
         rowId: 'id',
         "paging": true,
         "order": [[ 16, "desc" ]],
@@ -965,6 +986,17 @@ function loadPlayerGridTable(data, isInitialLoad)
         showUndraftPlayerDialog(data);
         
     } );
+    
+	var select_data_table = $('#playergrid_table').DataTable();
+	select_data_table
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	var select_data_table_b = $('#playergrid_table').DataTable();
+        var row = select_data_table_b.rows( indexes ).data()[0];
+        
+        // Show the player info tab
+		$('#info-tabs a[href="#tab-playerinfo"]').tab('show');
+
+    } )
 
 }
 
@@ -975,7 +1007,7 @@ function showUndraftPlayerDialog(playergridundraftrow){
 	
     BootstrapDialog.show({
     	title: 'Undraft Player',
-        message: 'Are you sure you want to undraft player ' + playerdraftrow.full_name + ' from team ' + playerdraftrow.leagueteam_name + '?',
+        message: 'Are you sure you want to undraft player <b>' + playerdraftrow.full_name + '</b> from team <b>' + playerdraftrow.leagueteam_name + '</b>?',
         type: BootstrapDialog.TYPE_DEFAULT,
         buttons: [{
             label: 'Undraft Player',

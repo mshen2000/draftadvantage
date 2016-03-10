@@ -236,8 +236,20 @@ td { font-size: 12px; }
 					
 					<div class="tab-content">
 					  <div id="tab-playerinfo" class="tab-pane fade">
-					    <h3>HOME</h3>
-					    <p>Some content.</p>
+					    <h3 id="lbl-playerinfoname">Player Name</h3>
+					    <ul class="list-unstyled">
+						  <li>Team: <b id="lbl-playerinfoteam">Fake Team</b></li>
+						  <li>Age: <b id="lbl-playerinfoage">99</b></li>
+						  <li>Eligibility: <b id="lbl-playerinfoelig">XX</b></li>
+						  <li>Owner: <b id="lbl-playerinfoowner">[un-owned]</b></li>
+						</ul>
+						<form>
+							<div class="form-group">
+							    <label for="textarea-playernote">Player Notes</label>
+							    <textarea class="form-control" rows="3" id="textarea-playernote"></textarea>
+							</div>
+							<button class="btn btn-primary" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
+						</form>
 					  </div>
 					  <div id="tab-teaminfo" class="tab-pane fade in active">
 						<select style="width:auto;margin-top:10px;" class="form-control" id="team-select">
@@ -293,7 +305,7 @@ td { font-size: 12px; }
 					  	<form>
 						  	<div class="form-group">
 		    					<label for="select-draftteam">Team</label>
-							  	<select  class="form-control" multiple="multiple" id="select-draftteam" size="12">
+							  	<select  class="form-control" id="select-draftteam" size="12">
 								</select>
 							</div>
 						</form>
@@ -302,7 +314,7 @@ td { font-size: 12px; }
 					  	<form>
 						  	<div class="form-group">
 		    					<label for="select-draftamt">Amount</label>
-							  	<select  class="form-control" multiple="multiple" id="select-draftamt" size="12">
+							  	<select  class="form-control" id="select-draftamt" size="12">
 								</select>
 							</div>
 						</form>
@@ -311,7 +323,7 @@ td { font-size: 12px; }
 					  	<form>
 						  	<div class="form-group">
 		    					<label for="select-draftposition">Position</label>
-							  	<select  class="form-control" multiple="multiple" id="select-draftposition" size="12">
+							  	<select  class="form-control" id="select-draftposition" size="12">
 								</select>
 							</div>
 						</form>
