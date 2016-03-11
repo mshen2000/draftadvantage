@@ -197,6 +197,9 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 
 		lp.setTeam_player_note(container.getTeam_player_note());
 		
+		System.out.println("Saving player note for: " + lp.getPlayer_projected().getFull_name());
+		System.out.println("Player note: " + lp.getTeam_player_note());
+		
 		return this.save(lp, uname);
 		
 	}

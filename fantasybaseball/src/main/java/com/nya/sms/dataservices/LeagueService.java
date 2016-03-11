@@ -697,11 +697,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		System.out.println("Get Player Output Data: " + lplist.size() + " LeaguePlayers found and updated.");
 		
-//		for (int out = 0; out < 150; out++) {
-//			System.out.println("--Player Test: " + playeroutput.get(out).getFull_name() + ", "
+		for (int out = 0; out < 150; out++) {
+			System.out.println("--Player Test: " + playeroutput.get(out).getFull_name() + ", "
 //					+ playeroutput.get(out).getPlayer_position() + ", " + playeroutput.get(out).getInit_auction_value()
 //					+ ", " + playeroutput.get(out).getPitcher_whip_eff() + ", " + playeroutput.get(out).getPitcher_z_whip());
-//		}
+		+ ", " + playeroutput.get(out).getTeam_player_note());
+		}
 		
 		System.out.println("Get Player Output Data: COMPLETE");
 		

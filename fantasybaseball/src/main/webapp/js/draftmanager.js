@@ -178,7 +178,9 @@ $(document).ready(function()
 		
 		var league_id = $("#league-select").find("option:selected").val();
 		var playerid = $("#lbl-playerinfoname").val();
-		var playernote = $("#textarea-playernote").text();
+		var playernote = $("#textarea-playernote").val();
+		
+		console.log("player note textarea: " + playernote);
 		
 		mssolutions.fbapp.draftmanager.updatePlayerNote(league_id, 
 				playerid, playernote);
@@ -890,7 +892,9 @@ function loadPlayerGridTable(data, isInitialLoad)
         "columns": [
             { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
             { "title": "Name", "mData": "full_name",  "render": function ( data, type, row ) {
-            	return data + " (" + row.team + ")"
+            	if ((row.team_player_note == null)||(row.team_player_note.trim() == ""))
+            		return data + " (" + row.team + ")";
+            	else return data + " (" + row.team + ")  <i class='fa fa-file-text-o'></i>";
                 }},
             { "title": "Age", "mData": "age" },
             { "visible": false, "title": "Team", "mData": "team"},
@@ -963,6 +967,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "visible": false, "title": "id", "mData": "id" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
+            { "title": "Note", "mData": "team_player_note", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 5 ) },
         ]
         };
 	
@@ -1030,7 +1035,13 @@ function loadPlayerGridTable(data, isInitialLoad)
 		if ((row.leagueteam_name == null)||(row.leagueteam_name == ""))
 			$("#lbl-playerinfoowner").text("[available]");
 		else $("#lbl-playerinfoowner").text(row.leagueteam_name);
-
+		
+		if (row.team_player_note != null){
+			if (row.team_player_note.trim() != ""){
+				$("#textarea-playernote").text(row.team_player_note);
+			} else $("#textarea-playernote").text("");
+		}else $("#textarea-playernote").text("");
+			
     } )
 
 }
