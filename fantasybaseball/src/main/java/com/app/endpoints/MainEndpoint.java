@@ -2,7 +2,8 @@ package com.app.endpoints;
 
 import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
-import com.app.endpoints.entities.LeaguePlayerInputContainer;
+import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
+import com.app.endpoints.entities.LeaguePlayerInputNoteContainer;
 import com.app.endpoints.entities.LeagueRosterItem;
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
@@ -127,7 +128,7 @@ public class MainEndpoint {
 	}
 	
 	@ApiMethod(name = "league.draftplayer", httpMethod = HttpMethod.PUT)
-	public APIGeneralResult draftPlayer(LeaguePlayerInputContainer playercontainer,HttpServletRequest req) throws UnauthorizedException {
+	public APIGeneralResult draftPlayer(LeaguePlayerInputDraftContainer playercontainer,HttpServletRequest req) throws UnauthorizedException {
 		
 		long leagueplayer_id = getLeaguePlayerService().draftLeaguePlayer(playercontainer, validateUserToken(req).getUsername());
 		
@@ -138,11 +139,22 @@ public class MainEndpoint {
 	}
 	
 	@ApiMethod(name = "league.undraftplayer")
-	public APIGeneralResult undraftPlayer(LeaguePlayerInputContainer playercontainer, HttpServletRequest req) throws UnauthorizedException {
+	public APIGeneralResult undraftPlayer(LeaguePlayerInputDraftContainer playercontainer, HttpServletRequest req) throws UnauthorizedException {
 		
 		getLeaguePlayerService().undraftLeaguePlayer(playercontainer, validateUserToken(req).getUsername());
 		
 		APIGeneralResult result = new APIGeneralResult("OK", "Undraft player successful");
+		
+		return result;
+
+	}
+	
+	@ApiMethod(name = "league.updateplayernote", httpMethod = HttpMethod.PUT)
+	public APIGeneralResult updatePlayerNote(LeaguePlayerInputNoteContainer playercontainer,HttpServletRequest req) throws UnauthorizedException {
+		
+		long leagueplayer_id = getLeaguePlayerService().updateLeaguePlayerNote(playercontainer, validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", leagueplayer_id);
 		
 		return result;
 

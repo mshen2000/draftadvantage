@@ -1,6 +1,6 @@
 package com.app.endpoints.entities;
 
-public class LeaguePlayerInputContainer {
+public class LeaguePlayerInputDraftContainer {
 	
 	long league_id;
 	
@@ -13,10 +13,8 @@ public class LeaguePlayerInputContainer {
 	long team_roster_position_num;
 	
 	double team_player_salary;
-	
-	String team_player_note;
 
-	public LeaguePlayerInputContainer() {
+	public LeaguePlayerInputDraftContainer() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -58,14 +56,6 @@ public class LeaguePlayerInputContainer {
 
 	public void setTeam_player_salary(double team_player_salary) {
 		this.team_player_salary = team_player_salary;
-	}
-
-	public String getTeam_player_note() {
-		return team_player_note;
-	}
-
-	public void setTeam_player_note(String team_player_note) {
-		this.team_player_note = team_player_note;
 	}
 
 	public String getTeam_roster_position() {

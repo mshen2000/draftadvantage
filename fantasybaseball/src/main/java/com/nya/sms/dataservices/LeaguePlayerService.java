@@ -4,7 +4,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
 
-import com.app.endpoints.entities.LeaguePlayerInputContainer;
+import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
+import com.app.endpoints.entities.LeaguePlayerInputNoteContainer;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.nya.sms.entities.League;
@@ -108,7 +109,7 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 //		
 //	}
 	
-	public long draftLeaguePlayer (LeaguePlayerInputContainer container, String uname){
+	public long draftLeaguePlayer (LeaguePlayerInputDraftContainer container, String uname){
 		
 		Key<LeagueTeam> teamkey = Key.create(LeagueTeam.class, container.getLeague_team_id());
 		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
@@ -145,7 +146,7 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	 * @param container
 	 * @param uname
 	 */
-	public void undraftLeaguePlayer (LeaguePlayerInputContainer container, String uname){
+	public void undraftLeaguePlayer (LeaguePlayerInputDraftContainer container, String uname){
 		
 		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
 		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
@@ -153,8 +154,6 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		// Check to see if LeaguePlayer already exists
 		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
 				.filter("player_projected", playerprojectedkey).list();
-		
-		// LeaguePlayer lp = ofy().load().type(LeaguePlayer.class).id(leagueplayerid).now();
 		
 		LeaguePlayer lp = leagueplayers.get(0);
 		
@@ -165,6 +164,40 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		lp.setTeam_player_salary(0);
 		
 		this.save(lp, uname);
+		
+	}
+	
+	/**
+	 * Description: Updates note for league player, only requires league_id,
+	 * player_projected_id and team_player_note from container.
+	 * 
+	 * @param container
+	 * @param uname
+	 * @return Long, id of saved LeaguePlayer
+	 */
+	public Long updateLeaguePlayerNote (LeaguePlayerInputNoteContainer container, String uname){
+		
+		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
+		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+		
+		// Check to see if LeaguePlayer already exists
+		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+				.filter("player_projected", playerprojectedkey).list();
+
+		LeaguePlayer lp = new LeaguePlayer();
+		
+		// If exists, update existing LeaguePlayer note
+		// Otherwise, update new LeaguePlayer with note
+		if (leagueplayers.size() > 0) {
+			lp = leagueplayers.get(0);
+		} else {
+			lp.setLeagueRef(Ref.create(leaguekey));
+			lp.setPlayer_projected(Ref.create(playerprojectedkey));
+		}
+
+		lp.setTeam_player_note(container.getTeam_player_note());
+		
+		return this.save(lp, uname);
 		
 	}
 	

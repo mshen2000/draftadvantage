@@ -44,6 +44,8 @@ var rescounts;
 // List of teams from getleagueteams
 var globalteamlist;
 
+var isTextAreaEventActive = true;
+
 // League selector listener
 $(function() {
 
@@ -161,6 +163,26 @@ $(document).ready(function()
     $("#team-select").change(function(e){
     	updateTeamInfoTab();
     });
+    
+    // Text Area player note in player info tab
+    $('#textarea-playernote').keyup (function () {
+        console.log("TextArea change...");
+        
+        $("#btn-playerinfosavenote").removeAttr("disabled");
+
+    });
+    
+	$('#btn-playerinfosavenote').click(function() 
+	{
+		$("#btn-playerinfosavenote").attr("disabled","disabled");
+		
+		var league_id = $("#league-select").find("option:selected").val();
+		var playerid = $("#lbl-playerinfoname").val();
+		var playernote = $("#textarea-playernote").text();
+		
+		mssolutions.fbapp.draftmanager.updatePlayerNote(league_id, 
+				playerid, playernote);
+	});
 
 	$('#btn-deleteleague').click(function() 
 		{
@@ -1227,6 +1249,31 @@ function loadTeamSelect(data){
 	} else {}
 
 }
+
+
+/**
+ * Update player note via the API.
+ */
+mssolutions.fbapp.draftmanager.updatePlayerNote = function(league_id, 
+		player_projected_id, team_player_note) {
+	
+	console.log("In updatePlayerNote...");
+	
+	gapi.client.draftapp.league.updateplayernote({
+		'league_id' : league_id,
+		'player_projected_id' : player_projected_id,
+		'team_player_note' : team_player_note}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("Update player note complete. League Player ID: " + resp.longdescription);
+        	$("#btn-playerinfosavenote").removeAttr("disabled");
+        }
+        else {
+        	console.log("Failed to update player note: ", resp.code + " : " + resp.message);
+        	$("#btn-playerinfosavenote").removeAttr("disabled");
+        }
+      });
+};
 
 /**
  * Draft player via the API.
