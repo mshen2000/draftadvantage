@@ -13,8 +13,9 @@ function calcLiveAuctionValue(){
 	console.log("Get Player Output Data: Calculating LIVE auction values...");
 	
 	// Calculate LIVE auction value
-	var num_teams = globalteamlist.length;
+	var num_teams = dm_globalteamlist.length;
 	var rostercounts = dm_teamrostercounts;
+	var teamlist = dm_globalteamlist;
 	
 	var roster_c = num_teams * rostercounts["C"];
 	var roster_1b = num_teams * (rostercounts["1B"] + rostercounts["CI"]/2.0 + rostercounts["UT"]/5.0);
@@ -64,12 +65,18 @@ function calcLiveAuctionValue(){
 	    return parseFloat(b.total_z) - parseFloat(a.total_z);
 	});
 	
-	console.log(JSON.stringify(data_rows));
+//	var i = 0;
+//	$.each( data_rows, function( index, value ){
+//		console.log("Player: " + value.full_name + ", Z: " + value.total_z);
+//		if (i == 50) return false;
+//		i++;
+//	});
+
 	
 	// Live auction calc requires that "playeroutput" takes the full list of players but only calculates
 	// total z value based on undrafted players.
 	
-	/*
+	
 	// Get total z values
 	var posz_c = getPositionalZ(data_rows, "C", iroster_c);
 	var posz_1b = getPositionalZ(data_rows, "1B", iroster_1b);
@@ -78,13 +85,29 @@ function calcLiveAuctionValue(){
 	var posz_ss = getPositionalZ(data_rows, "SS", iroster_ss);
 	var posz_of = getPositionalZ(data_rows, "OF", iroster_of);
 	var posz_p = getPositionalZ(data_rows, "P", iroster_p);
-	double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
+	var replval_dh = (posz_1b["avgreplz"] + posz_of["avgreplz"])/2;
 
-	double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
-			+ posz_3b.getTotalvalue() + posz_ss.getTotalvalue() + posz_of.getTotalvalue() + posz_p.getTotalvalue();
+	var posz_total = posz_c["totalz"] + posz_1b["totalz"] + posz_2b["totalz"]
+			+ posz_3b["totalz"] + posz_ss["totalz"] + posz_of["totalz"] + posz_p["totalz"];
 	
-	double coef = (league.getTeam_salary()*league.getNum_of_teams())/posz_total;
+	var total_league_salary = 0;
 	
+	$.each( teamlist, function( index, value ){
+		console.log("Team: " + value.team_name + ", adj_sal: " + value.adj_starting_salary);
+		total_league_salary += value.adj_starting_salary;
+	});
+	
+	var total_draftedplayersalary = getTotalDraftedSalary(data_rows);
+	
+	console.log("Total adj Salary: " + total_league_salary);
+	console.log("Total drafted player Salary: " + total_draftedplayersalary);
+	
+	
+	var coef = (total_league_salary-total_draftedplayersalary)/posz_total;
+	
+	console.log("Coeff: " + coef);
+	
+	/*
 	// Update auction value
 	for (LeaguePlayerOutput po : playeroutput){
 		
@@ -134,6 +157,28 @@ function calcLiveAuctionValue(){
 }
 
 
+/**
+ * Description:	Calculate the sum of the drafted salaries of all drafted players 
+ * @param leagueplayers
+ * @return 
+ */
+function getTotalDraftedSalary(playertablerows){
+	
+	var draftedplayersalary = 0;
+	
+	$.each( playertablerows, function( index, value ){
+		
+		// Sum salaries of all drafted players
+		if ((value.leagueteam_name != null)&&(value.leagueteam_name != "")) {
+			draftedplayersalary =  parseInt(draftedplayersalary) + parseInt(value.team_player_salary);
+			console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
+		}
+
+	});
+	
+	return draftedplayersalary;
+	
+}
 
 
 /**
@@ -144,55 +189,60 @@ function calcLiveAuctionValue(){
  * @param repl_level
  * @return 
  */
-//function getPositionalZ(playertable, position, repl_level_num){
-//	
-//	var i = 0;
-//	var totalz = 0;
-//	var avgz = 0;
-//	
-//	PositionalZContainer p = new PositionalZContainer();
-//	
-//	for (LeaguePlayerOutput po : leagueplayers){
-//		
-//		if ((po.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
-//			&& (i < repl_level)){
-//			
-//			totalz = totalz + po.getTotal_z();
-//			i++;
-//			
-//			// System.out.println(position + ": " + lp.getTotal_z());
-//			
-//		} else if ((po.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
-//				&& (i == repl_level)){
-//			
-//			avgz = avgz + po.getTotal_z();
-//			i++;
-//			
-//			// System.out.println(position + "-AVG1: " + lp.getTotal_z());
-//			
-//		} else if ((po.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
-//				&& (i == repl_level + 1)){
-//			
-//			avgz = avgz + po.getTotal_z();
-//			i++;
-//			
-//			// System.out.println(position + "-AVG2: " + lp.getTotal_z());
-//			
-//		} else if (i > repl_level + 1) {break;}
-//
-//	}
-//	
-//	avgz = avgz/2;
-//	totalz = totalz - repl_level*avgz;
-//	
-//	// System.out.println(position + "-TOTAL: " + totalz);
-//	
-//	p.setTotalvalue(totalz);
-//	p.setReplacementvalue(avgz);
-//	
-//	return p;
-//	
-//}
+function getPositionalZ(playertablerows, position, position_num){
+	
+	var i = 0;
+	var totalz = 0;
+	var avgz = 0;
+
+	$.each( playertablerows, function( index, value ){
+
+		if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
+				&& (i < position_num)){
+			
+			// Add Z value only if player is undrafted
+			if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
+				totalz = totalz + value.total_z;
+				console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+			} else {
+				
+			}
+				
+			i++;
+				
+		} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
+				&& (i == position_num)){
+			
+			avgz = avgz + value.total_z;
+			i++;
+			
+			// System.out.println(position + "-AVG1: " + lp.getTotal_z());
+			
+		} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
+				&& (i < position_num + 1)){
+			
+			avgz = avgz + value.total_z;
+			i++;
+			
+			// System.out.println(position + "-AVG2: " + lp.getTotal_z());
+			
+		} else if (i > position_num + 1) {return false;}
+
+	});
+	
+	avgz = avgz/2;
+	totalz = totalz - position_num*avgz;
+	
+	var PositionalZOutput = {};
+	PositionalZOutput["totalz"] = totalz;
+	PositionalZOutput["avgreplz"] = avgz
+	
+	console.log(position + "-TOTAL Z: " + totalz);
+	console.log(position + "-AVG REPL Z: " + avgz);
+	
+	return PositionalZOutput;
+	
+}
 
 
 

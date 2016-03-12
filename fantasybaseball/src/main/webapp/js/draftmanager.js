@@ -45,7 +45,7 @@ var dm_teamrostercounts;
 var dm_rescount;
 
 // List of teams from getleagueteams
-var globalteamlist;
+var dm_globalteamlist;
 
 // Regex definition for filtering undrafted vs all players
 var regex_drafted = '';
@@ -552,7 +552,7 @@ function updateTeamInfoTab(){
 		
 		// Find team in global team list
 		var team;
-		$.each( globalteamlist, function( key, value ) {
+		$.each( dm_globalteamlist, function( key, value ) {
 			// console.log("Each teamlist: " + value.team_name);
 			if (teamid == value.id){
 				// console.log("Found team: " + value.team_name);
@@ -1360,7 +1360,7 @@ mssolutions.fbapp.draftmanager.getLeagueTeams = function(leagueid) {
       function(resp) {
         if (!resp.code) { 
         	console.log("League teams get complete.");
-        	globalteamlist = resp.items;
+        	dm_globalteamlist = resp.items;
         	loadTeamSelect(resp.items);
         }
         else {
