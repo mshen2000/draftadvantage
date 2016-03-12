@@ -29,8 +29,11 @@ mssolutions.fbapp.draftmanager.CLIENT_ID =
 mssolutions.fbapp.draftmanager.SCOPES =
     'https://www.googleapis.com/auth/userinfo.email';
 
-// Saves the selected player from the player grid
+// Saves the selected player from the player grid for draft update
 var playerdraftrow;
+
+//Saves the selected player from the player grid for note update
+var playernoterow;
 
 // A blank template of a team roster (includes positions)
 var teamrostertemplate;
@@ -44,7 +47,8 @@ var rescounts;
 // List of teams from getleagueteams
 var globalteamlist;
 
-var isTextAreaEventActive = true;
+// Regex definition for filtering undrafted vs all players
+var regex_drafted = '';
 
 // League selector listener
 $(function() {
@@ -72,6 +76,8 @@ $(function() {
 
 $(document).ready(function()
 {
+	
+	
     $("#select-draftteam").change(function(e){
 
 //    	if ($(this).val() != null){
@@ -179,8 +185,17 @@ $(document).ready(function()
 		var league_id = $("#league-select").find("option:selected").val();
 		var playerid = $("#lbl-playerinfoname").val();
 		var playernote = $("#textarea-playernote").val();
+		var playertable = $('#playergrid_table').DataTable();
 		
 		console.log("player note textarea: " + playernote);
+
+		playernoterow.team_player_note = playernote;
+		
+		console.log("Note Player: " + playernoterow.full_name);
+		console.log("Note Player ID: " + playernoterow.id);
+		console.log("Note Player team_player_note: " + playernoterow.team_player_note);
+		
+		playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
 		
 		mssolutions.fbapp.draftmanager.updatePlayerNote(league_id, 
 				playerid, playernote);
@@ -217,70 +232,81 @@ $(document).ready(function()
 	    	
 		});
 	
+	$('#btn-grp1 button').click(function() {
+	    $(this).addClass('active');
+	    $(this).siblings().removeClass('active');
+	    $('#btn-grp2 button').removeClass('active');
+	});
+    $('#btn-grp2 button').click(function() {
+	    $(this).addClass('active');
+	    $(this).siblings().removeClass('active');
+	    $('#btn-grp1 button').removeClass('active');
+	});
+	
 	$('#btn-allplayers').click(function() 
 	{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' ).draw();
+		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+		$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true ).draw();
 	});
 	$('#btn-pitchers').click(function() 
 	{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-		$('#playergrid_table').DataTable().columns( 0 ).search( 'P' ).draw();	
+		filterPlayerType('P');		
 	});
 	$('#btn-hitters').click(function() 
 			{
-				$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 0 ).search( 'H' ).draw();	
+				filterPlayerType('H');	
 			});
 	$('#btn-c').click(function() 
 			{
-				$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( 'C' ).draw();	
+		filterPlayerPosition('C');	
 			});
 	$('#btn-1b').click(function() 
 			{
-				$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( '1B' ).draw();	
+		filterPlayerPosition('1B');
 			});
 	$('#btn-2b').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( '2B' ).draw();	
+		filterPlayerPosition('2B');
 			});
 	$('#btn-ss').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( 'SS' ).draw();	
+		filterPlayerPosition('SS');
 			});
 	$('#btn-3b').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( '3B' ).draw();	
+		filterPlayerPosition('3B');
 			});
 	$('#btn-mi').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( '2B|SS',true ).draw();	
+		filterPlayerPosition('2B|SS');	
 			});
 	$('#btn-ci').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( '1B|3B',true ).draw();	
+		filterPlayerPosition('1B|3B');
 			});
 	$('#btn-of').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( 'OF' ).draw();	
+		filterPlayerPosition('OF');
 			});
 	$('#btn-rp').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( 'RP' ).draw();	
+		filterPlayerPosition('RP');
 			});
 	$('#btn-sp').click(function() 
 			{
-		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-				$('#playergrid_table').DataTable().columns( 4 ).search( 'SP' ).draw();	
+		filterPlayerPosition('SP');
 			});
+    $('#toggle-draftedplayers').change(function() {
+
+        if ($(this).prop('checked') == true){
+        	regex_drafted = '(^$)|(\s+$)';
+        	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true ).draw();	
+        }
+        else {
+        	regex_drafted = '';
+        	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true ).draw();	
+        }
+      })
 	
 	
 	$('#btn-draftplayer').click(function() 
@@ -559,6 +585,18 @@ $(document).ready(function()
 	
 
 });
+
+function filterPlayerPosition(position){
+	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true );	
+	$('#playergrid_table').DataTable().columns( 4 ).search( position , true ).draw();	
+}
+
+function filterPlayerType(pitcherhitter){
+	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true );	
+	$('#playergrid_table').DataTable().columns( 0 ).search( pitcherhitter , true ).draw();	
+}
 
 
 function updateTeamInfoTab(){
@@ -894,7 +932,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "title": "Name", "mData": "full_name",  "render": function ( data, type, row ) {
             	if ((row.team_player_note == null)||(row.team_player_note.trim() == ""))
             		return data + " (" + row.team + ")";
-            	else return data + " (" + row.team + ")  <i class='fa fa-file-text-o'></i>";
+            	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
                 }},
             { "title": "Age", "mData": "age" },
             { "visible": false, "title": "Team", "mData": "team"},
@@ -967,7 +1005,6 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "visible": false, "title": "id", "mData": "id" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
-            { "title": "Note", "mData": "team_player_note", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 5 ) },
         ]
         };
 	
@@ -1022,6 +1059,7 @@ function loadPlayerGridTable(data, isInitialLoad)
     .on( 'select', function ( e, dt, type, indexes ) {
     	var select_data_table_b = $('#playergrid_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
+        playernoterow = row;
         
         // Show the player info tab
 		$('#info-tabs a[href="#tab-playerinfo"]').tab('show');
@@ -1036,13 +1074,25 @@ function loadPlayerGridTable(data, isInitialLoad)
 			$("#lbl-playerinfoowner").text("[available]");
 		else $("#lbl-playerinfoowner").text(row.leagueteam_name);
 		
+		$("#textarea-playernote").removeAttr("disabled");
 		if (row.team_player_note != null){
 			if (row.team_player_note.trim() != ""){
-				$("#textarea-playernote").text(row.team_player_note);
-			} else $("#textarea-playernote").text("");
-		}else $("#textarea-playernote").text("");
+				$("#textarea-playernote").val(row.team_player_note);
+			} else $("#textarea-playernote").val("");
+		}else $("#textarea-playernote").val("");
 			
     } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+		$("#lbl-playerinfoname").val("");
+		$("#lbl-playerinfoname").text("[No Player Selected]");
+		$("#lbl-playerinfoteam").text("");
+		$("#lbl-playerinfoage").text("");
+		$("#lbl-playerinfoelig").text("");
+		$("#lbl-playerinfoowner").text("");
+		$("#textarea-playernote").val("");
+		$("#btn-playerinfosavenote").attr("disabled","disabled");
+		$("#textarea-playernote").attr("disabled","disabled"); 
+    } );
 
 }
 
@@ -1277,11 +1327,11 @@ mssolutions.fbapp.draftmanager.updatePlayerNote = function(league_id,
       function(resp) {
         if (!resp.code) { 
         	console.log("Update player note complete. League Player ID: " + resp.longdescription);
-        	$("#btn-playerinfosavenote").removeAttr("disabled");
+        	// $("#btn-playerinfosavenote").removeAttr("disabled");
         }
         else {
         	console.log("Failed to update player note: ", resp.code + " : " + resp.message);
-        	$("#btn-playerinfosavenote").removeAttr("disabled");
+        	// $("#btn-playerinfosavenote").removeAttr("disabled");
         }
       });
 };
