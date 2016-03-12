@@ -39,10 +39,10 @@ var playernoterow;
 var teamrostertemplate;
 
 // The teamrostertemplate converted into just a list of roster positions and counts.
-var teamrostercounts;
+var dm_teamrostercounts;
 
 // Count of RES spots in teamrostercounts
-var rescounts;
+var dm_rescount;
 
 // List of teams from getleagueteams
 var globalteamlist;
@@ -262,6 +262,8 @@ $(document).ready(function()
 		// Set the team select to the drafting team
 		$("#team-select").val(teamid);
 		updateTeamInfoTab();
+		
+		calcLiveAuctionValue();
 
 	});
 	
@@ -561,7 +563,7 @@ function updateTeamInfoTab(){
 		
 		var teamstartingsalary = team.adj_starting_salary;
 		var balance = teamstartingsalary - teamrostertable.column( 4 ).data().sum();
-		var spots = liveteamrostertemplate.length - teamplayers.length - rescount;
+		var spots = liveteamrostertemplate.length - teamplayers.length - dm_rescount;
 		var perplayer = balance / spots;
 		
 		console.log("Team salary: " + teamstartingsalary);
@@ -658,45 +660,45 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	var selres = true;
 	
 	// Get league roster counts for each position
-	var countc = teamrostercounts["C"];
-	var count1b = teamrostercounts["1B"];
-	var count2b = teamrostercounts["2B"];
-	var count3b = teamrostercounts["SS"];
-	var countss = teamrostercounts["3B"];
-	var countmi = teamrostercounts["MI"];
-	var countci = teamrostercounts["CI"];
-	var countof = teamrostercounts["OF"];
-	var countutil = teamrostercounts["UT"];
-	var countp = teamrostercounts["P"];
-	var countres = teamrostercounts["RES"];
+	var countc = dm_teamrostercounts["C"];
+	var count1b = dm_teamrostercounts["1B"];
+	var count2b = dm_teamrostercounts["2B"];
+	var count3b = dm_teamrostercounts["SS"];
+	var countss = dm_teamrostercounts["3B"];
+	var countmi = dm_teamrostercounts["MI"];
+	var countci = dm_teamrostercounts["CI"];
+	var countof = dm_teamrostercounts["OF"];
+	var countutil = dm_teamrostercounts["UT"];
+	var countp = dm_teamrostercounts["P"];
+	var countres = dm_teamrostercounts["RES"];
 	
 	// Update counts with by subtracting current team roster counts
 	// Determine if roster position is available based on count
 	$.each( liveteamrostercounts, function( lkey, lvalue ) {
 		
-		if (lkey == "C")  countc = teamrostercounts["C"] - lvalue;
-		if (lkey == "1B")  count1b = teamrostercounts["1B"] - lvalue;
-		if (lkey == "2B")  count2b = teamrostercounts["2B"] - lvalue;
-		if (lkey == "SS")  countss = teamrostercounts["SS"] - lvalue;
-		if (lkey == "3B")  count3b = teamrostercounts["3B"] - lvalue;
-		if (lkey == "MI")  countmi = teamrostercounts["MI"] - lvalue;
-		if (lkey == "CI")  countci = teamrostercounts["CI"] - lvalue;
-		if (lkey == "OF")  countof = teamrostercounts["OF"] - lvalue;
-		if (lkey == "UT")  countutil = teamrostercounts["UT"] - lvalue;
-		if (lkey == "P")  countp = teamrostercounts["P"] - lvalue;
-		if (lkey == "RES")  countres = teamrostercounts["RES"] - lvalue;
+		if (lkey == "C")  countc = dm_teamrostercounts["C"] - lvalue;
+		if (lkey == "1B")  count1b = dm_teamrostercounts["1B"] - lvalue;
+		if (lkey == "2B")  count2b = dm_teamrostercounts["2B"] - lvalue;
+		if (lkey == "SS")  countss = dm_teamrostercounts["SS"] - lvalue;
+		if (lkey == "3B")  count3b = dm_teamrostercounts["3B"] - lvalue;
+		if (lkey == "MI")  countmi = dm_teamrostercounts["MI"] - lvalue;
+		if (lkey == "CI")  countci = dm_teamrostercounts["CI"] - lvalue;
+		if (lkey == "OF")  countof = dm_teamrostercounts["OF"] - lvalue;
+		if (lkey == "UT")  countutil = dm_teamrostercounts["UT"] - lvalue;
+		if (lkey == "P")  countp = dm_teamrostercounts["P"] - lvalue;
+		if (lkey == "RES")  countres = dm_teamrostercounts["RES"] - lvalue;
 
-		if ((lkey == "C")&&(teamrostercounts["C"] <= lvalue)) selc = false;
-		if ((lkey == "1B")&&(teamrostercounts["1B"] <= lvalue)) sel1b = false;
-		if ((lkey == "2B")&&(teamrostercounts["2B"] <= lvalue)) sel2b = false;
-		if ((lkey == "SS")&&(teamrostercounts["SS"] <= lvalue)) selss = false;
-		if ((lkey == "3B")&&(teamrostercounts["3B"] <= lvalue)) sel3b = false;
-		if ((lkey == "MI")&&(teamrostercounts["MI"] <= lvalue)) selmi = false;
-		if ((lkey == "CI")&&(teamrostercounts["CI"] <= lvalue)) selci = false;
-		if ((lkey == "OF")&&(teamrostercounts["OF"] <= lvalue)) selof = false;
-		if ((lkey == "UT")&&(teamrostercounts["UT"] <= lvalue)) selutil = false;
-		if ((lkey == "P")&&(teamrostercounts["P"] <= lvalue)) selp = false;
-		if ((lkey == "RES")&&(teamrostercounts["RES"] <= lvalue)) selres = false;
+		if ((lkey == "C")&&(dm_teamrostercounts["C"] <= lvalue)) selc = false;
+		if ((lkey == "1B")&&(dm_teamrostercounts["1B"] <= lvalue)) sel1b = false;
+		if ((lkey == "2B")&&(dm_teamrostercounts["2B"] <= lvalue)) sel2b = false;
+		if ((lkey == "SS")&&(dm_teamrostercounts["SS"] <= lvalue)) selss = false;
+		if ((lkey == "3B")&&(dm_teamrostercounts["3B"] <= lvalue)) sel3b = false;
+		if ((lkey == "MI")&&(dm_teamrostercounts["MI"] <= lvalue)) selmi = false;
+		if ((lkey == "CI")&&(dm_teamrostercounts["CI"] <= lvalue)) selci = false;
+		if ((lkey == "OF")&&(dm_teamrostercounts["OF"] <= lvalue)) selof = false;
+		if ((lkey == "UT")&&(dm_teamrostercounts["UT"] <= lvalue)) selutil = false;
+		if ((lkey == "P")&&(dm_teamrostercounts["P"] <= lvalue)) selp = false;
+		if ((lkey == "RES")&&(dm_teamrostercounts["RES"] <= lvalue)) selres = false;
 			
 	});
 	
@@ -1334,10 +1336,10 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         	    counts[pos] = counts[pos] ? counts[pos]+1 : 1;
         	}
         	
-        	teamrostercounts = counts;
-        	rescount = counts["RES"];
-        	console.log("Roster Counts: " + JSON.stringify(teamrostercounts));
-        	console.log("RES Count: " + rescount);
+        	dm_teamrostercounts = counts;
+        	dm_rescount = counts["RES"];
+        	console.log("Roster Counts: " + JSON.stringify(dm_teamrostercounts));
+        	console.log("RES Count: " + dm_rescount);
         	
         	// Load the blank roster template into a datatable
         	loadTeamRosterTable(resp.items, false);

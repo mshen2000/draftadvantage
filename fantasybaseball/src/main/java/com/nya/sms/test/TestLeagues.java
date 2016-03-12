@@ -58,6 +58,9 @@ public class TestLeagues {
 	private Date tomorrow;
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
+	
+	private String testfile1 = "D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/AppTest/Source Data - 20160210-TESTa.csv";
+	private String testfile2 = "D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/AppTest/Source Data - 20160210-TESTb.csv";
 
 	private Closeable closeable;
 
@@ -114,7 +117,7 @@ public class TestLeagues {
 		ProjectionProfile p1_r = getProjectionProfileService().get(p1_id);
 		
 		// Parser
-		Reader in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210a.csv");
+		Reader in = new FileReader(testfile1);
 
 		getPlayerProjectedService().updatePlayerProjections(parseProjections(in), p1_r, usr1.getUsername());
 	
@@ -464,7 +467,7 @@ public class TestLeagues {
 		// Parser
 		Reader in = null;
 		try {
-			in = new FileReader("D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/Source Data - 20160210b.csv");
+			in = new FileReader(testfile2);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
