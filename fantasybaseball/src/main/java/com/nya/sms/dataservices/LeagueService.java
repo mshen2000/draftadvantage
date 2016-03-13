@@ -605,13 +605,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		int iroster_of_wRes = (int) Math.round(roster_of_wRes);
 		int iroster_p_wRes = (int) Math.round(roster_p_wRes);
 		
-//		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
-//		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
-//		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
-//		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
-//		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
-//		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
-//		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
+		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
+		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
+		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
+		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
+		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
+		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
+		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
 		
 		// Sort players by descending Z
 		Collections.sort(playeroutput, new Comparator<LeaguePlayerOutput>() {
@@ -638,6 +638,9 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				+ posz_3b.getTotalvalue() + posz_ss.getTotalvalue() + posz_of.getTotalvalue() + posz_p.getTotalvalue();
 		
 		double coef = (league.getTeam_salary()*league.getNum_of_teams())/posz_total;
+		
+		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
+		System.out.println("Coef: " + coef);
 		
 		// Update auction value
 		for (LeaguePlayerOutput po : playeroutput){
@@ -1168,7 +1171,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		avgz = avgz/2;
 		totalz = totalz - repl_level*avgz;
 		
-		// System.out.println(position + "-TOTAL: " + totalz);
+		System.out.println(position + "-TOTAL: " + totalz);
+		System.out.println(position + "-AVG REPL Z: " + avgz);
 		
 		p.setTotalvalue(totalz);
 		p.setReplacementvalue(avgz);

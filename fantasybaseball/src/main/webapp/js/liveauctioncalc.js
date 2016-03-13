@@ -2,7 +2,7 @@
 
 function calcLiveAuctionValue(){
 	
-	console.log("Get Player Output Data: BEGIN");
+	console.log("Calc Live Auction Values: BEGIN");
 
 	var t1 = new Date().getTime();
 	
@@ -61,8 +61,6 @@ function calcLiveAuctionValue(){
 	
 	var t2 = new Date().getTime();
 	
-	console.log("T1 Time, sort: " + (t2-t1));
-	
 //	var i = 0;
 //	$.each( data_rows, function( index, value ){
 //		console.log("Player: " + value.full_name + ", Z: " + value.total_z);
@@ -70,11 +68,6 @@ function calcLiveAuctionValue(){
 //		i++;
 //	});
 
-	
-	// Live auction calc requires that "playeroutput" takes the full list of players but only calculates
-	// total z value based on undrafted players.
-	
-	
 	// Get total z values
 	var posz_c = getPositionalZ(data_rows, "C", iroster_c);
 	var posz_1b = getPositionalZ(data_rows, "1B", iroster_1b);
@@ -91,7 +84,7 @@ function calcLiveAuctionValue(){
 	var total_league_salary = 0;
 	
 	$.each( teamlist, function( index, value ){
-		console.log("Team: " + value.team_name + ", adj_sal: " + value.adj_starting_salary);
+		// console.log("Team: " + value.team_name + ", adj_sal: " + value.adj_starting_salary);
 		total_league_salary += value.adj_starting_salary;
 	});
 	
@@ -105,8 +98,6 @@ function calcLiveAuctionValue(){
 	console.log("Coeff: " + coef);
 	
 	var t3 = new Date().getTime();
-	
-	console.log("T3 coef: " + (t3-t2));
 	
 	// Update auction value
 	$.each( data_rows, function( index, value ){
@@ -128,7 +119,7 @@ function calcLiveAuctionValue(){
 		if ((value.player_position.toLowerCase().indexOf("p") > -1))
 			auct = Math.max(auct,(value.total_z - posz_p["avgreplz"])*coef);
 		if ((value.player_position.toLowerCase().indexOf("dh") > -1))
-			auct = Math.max(auct,(value.total_z - replval_dh["avgreplz"])*coef);
+			auct = Math.max(auct,(value.total_z - replval_dh)*coef);
 		
 		if (auct < 0) auct = 0;
 		
@@ -139,11 +130,7 @@ function calcLiveAuctionValue(){
 	});
 	
 	var t4 = new Date().getTime();
-	
-	console.log("T4 calc z: " + (t4-t3));
-	
-	console.log("Get Player Output Data: Updating with League Player data...");
-	
+
 //	var j=0;
 //	$.each( data_rows, function( index, value ){
 //		console.log("Player: " + value.full_name + ", live $: " + value.live_auction_value);
@@ -153,13 +140,9 @@ function calcLiveAuctionValue(){
 	
 	data_table.draw( 'page' );
 	
-	console.log("Get Player Output Data: COMPLETE");
+	console.log("Calc Live Auction Values: COMPLETE");
 	
 	var t5 = new Date().getTime();
-	
-	console.log("T5 draw: " + (t5-t4));
-	
-	console.log("Total time: " + (t5-t1));
 	
 }
 
@@ -210,9 +193,9 @@ function getPositionalZ(playertablerows, position, position_num){
 			// Add Z value only if player is undrafted
 			if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
 				totalz = totalz + value.total_z;
-				// console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+				// if (position == "C")  console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
 			} else {
-				
+				// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
 			}
 				
 			i++;
@@ -226,7 +209,7 @@ function getPositionalZ(playertablerows, position, position_num){
 			// System.out.println(position + "-AVG1: " + lp.getTotal_z());
 			
 		} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
-				&& (i < position_num + 1)){
+				&& (i == position_num + 1)){
 			
 			avgz = avgz + value.total_z;
 			i++;

@@ -925,6 +925,9 @@ function loadPlayerGridTable(data, isInitialLoad)
 		
 		// Update the team info tab
 		updateTeamInfoTab();
+		
+		// Update live auction values
+		calcLiveAuctionValue();
 	}
 
 	// On Click of the Draft button in the Player Grid Table
@@ -1036,6 +1039,7 @@ function showUndraftPlayerDialog(playergridundraftrow){
         		$("#team-select").val(originalteam_id);
         		updateTeamInfoTab();
         		dialogItself.close();
+        		calcLiveAuctionValue();
             }
         }, {
             label: 'Cancel',
