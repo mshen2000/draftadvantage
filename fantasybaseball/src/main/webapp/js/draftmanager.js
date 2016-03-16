@@ -202,6 +202,31 @@ $(document).ready(function()
 	    $(this).siblings().removeClass('active');
 	    $('#btn-grp1 button').removeClass('active');
 	});
+//    $('#btn-grp-gridview button').click(function() {
+//	    $(this).addClass('active');
+//	    $(this).siblings().removeClass('active');
+//	});
+    
+    $('#btn-gridviewstats').click(function() {
+	    $(this).addClass('active');
+	    $(this).siblings().removeClass('active');
+	    
+	    var table = $('#playergrid_table').DataTable();
+	    var columns_stat = table.columns('.dm_stat');
+	    var columns_z = table.columns('.dm_zscore');
+	    columns_stat.visible(true);
+	    columns_z.visible(false);
+	});
+    $('#btn-gridviewz').click(function() {
+	    $(this).addClass('active');
+	    $(this).siblings().removeClass('active');
+	    
+	    var table = $('#playergrid_table').DataTable();
+	    var columns_stat = table.columns('.dm_stat');
+	    var columns_z = table.columns('.dm_zscore');
+	    columns_stat.visible(false);
+	    columns_z.visible(true);
+	});
 	
 	$('#btn-allplayers').click(function() 
 	{
@@ -223,7 +248,7 @@ $(document).ready(function()
     $('#toggle-draftedplayers').change(function() {
         if ($(this).prop('checked') == true) regex_drafted = '(^$)|(\s+$)'; 
         else regex_drafted = '';  
-        $('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true ).draw();	
+        $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();	
       })
 	
 	
@@ -311,6 +336,8 @@ $(document).ready(function()
     	$('#lbl-draftprevteam').text(teamname);
     	$('#lbl-draftprevamt').text('$' + roster_row.salary);
     	$('#lbl-draftprevpos').text(roster_row.position);
+    	
+    	$("#btn-draftplayer").removeAttr("disabled");
     	
     	$("#draftplayer-modal").modal("show");
         
@@ -823,7 +850,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         },
         rowId: 'id',
         "paging": true,
-        "order": [[ 16, "desc" ]],
+        "order": [[ 26, "desc" ]],
         "iDisplayLength": 15,
         "language": {
             "lengthMenu": "Display <select  style='width:auto;' class='form-control'><option value='10'>10</option>" +
@@ -843,70 +870,131 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "visible": false, "title": "Team", "mData": "team"},
             { "title": "Pos", "mData": "player_position", "sDefaultContent": ""},
             { "title": "St", "mData": "dc_status", "sDefaultContent": ""},
-            { "title": "Avg", "mData": "hitter_avg", "render": function ( data, type, row ) {
+            { "title": "Avg", className: "dm_stat", "mData": "hitter_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ 
             		var avgnum = data.toFixed(3);
                     return avgnum.toString().substr(avgnum.length - 4);
             	} else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
-                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_avg)}
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_avg, 1)}
                 },
                 "sDefaultContent": ""},
-            { "title": "HR", "mData": "hitter_hr", "render": function ( data, type, row ) {
+            { "title": "HR", className: "dm_stat", "mData": "hitter_hr", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0); } else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_hr, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "SB", "mData": "hitter_sb", "render": function ( data, type, row ) {
+            { "title": "SB", className: "dm_stat", "mData": "hitter_sb", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0); } else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_sb, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "R", "mData": "hitter_runs", "render": function ( data, type, row ) {
+            { "title": "R", className: "dm_stat", "mData": "hitter_runs", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0); } else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_runs, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "RBI", "mData": "hitter_rbi", "render": function ( data, type, row ) {
+            { "title": "RBI", className: "dm_stat", "mData": "hitter_rbi", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0) } else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "W", "mData": "pitcher_w", "render": function ( data, type, row ) {
+            { "title": "W", className: "dm_stat", "mData": "pitcher_w", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_wins, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "SV", "mData": "pitcher_sv", "render": function ( data, type, row ) {
+            { "title": "SV", className: "dm_stat", "mData": "pitcher_sv", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_saves, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "SO", "mData": "pitcher_k", "render": function ( data, type, row ) {
+            { "title": "SO", className: "dm_stat", "mData": "pitcher_k", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_so, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "ERA", "mData": "pitcher_era", "render": function ( data, type, row ) {
+            { "title": "ERA", className: "dm_stat", "mData": "pitcher_era", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(2) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_era, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "WHIP", "mData": "pitcher_whip", "render": function ( data, type, row ) {
+            { "title": "WHIP", className: "dm_stat", "mData": "pitcher_whip", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(2) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_whip, 1)}
                 }, "sDefaultContent": ""},
+                
+            { "visible": false, className: "dm_zscore", "title": "zAVG", "mData": "hitter_z_avg", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
+                },
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_avg, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zHR", "mData": "hitter_z_hr", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
+                }, 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_hr, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zSB", "mData": "hitter_z_sb", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
+                },"createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_sb, 1)}
+                },  "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zR", "mData": "hitter_z_runs", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
+                },
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_runs, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zRBI", "mData": "hitter_z_rbi", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
+                },
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zW", "mData": "pitcher_z_wins", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
+                },
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_wins, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zSV", "mData": "pitcher_z_saves", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
+                }, 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_saves, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zSO", "mData": "pitcher_z_so", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
+                }, 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_so, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zWHIP", "mData": "pitcher_z_whip", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
+                }, 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_whip, 1)}
+                }, "sDefaultContent": "" },
+            { "visible": false, className: "dm_zscore", "title": "zERA", "mData": "pitcher_z_era", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
+                }, 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_era, 1)}
+                }, "sDefaultContent": "" },
+                
             { "title": "NPV", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ),
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": ""},
             { "title": "$", "mData": "init_auction_value", "render": function ( data, type, row ) {
@@ -926,33 +1014,6 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
             { "visible": false, "title": "zAVG", "mData": "hitter_z_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zHR", "mData": "hitter_z_hr", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zSB", "mData": "hitter_z_sb", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zR", "mData": "hitter_z_runs", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zRBI", "mData": "hitter_z_rbi", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zW", "mData": "pitcher_z_wins", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zSV", "mData": "pitcher_z_saves", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zSO", "mData": "pitcher_z_so", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zWHIP", "mData": "pitcher_z_whip", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
-                }, "sDefaultContent": "" },
-            { "visible": false, "title": "zERA", "mData": "pitcher_z_era", "render": function ( data, type, row ) {
-            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, "sDefaultContent": "" },
             
         ]
@@ -983,6 +1044,8 @@ function loadPlayerGridTable(data, isInitialLoad)
         playerdraftrow = data;
         
         resetDraftPlayerModal();
+        $("#btn-draftplayer").attr("disabled","disabled");
+    	// $("#btn-draftplayer").removeAttr("disabled");
         $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
         $("#header-draftplayer").val(data.id);
         $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
@@ -1038,16 +1101,16 @@ function loadPlayerGridTable(data, isInitialLoad)
 
 function setStatCellColor(td, zscore, sd){
     if ( zscore <= (-1)*(sd/2) ) {
-    	$(td).css({"background-color": "rgb(255, 26, 26)", "font-weight": "bold"})
+    	$(td).css({"background-color": "rgb(255, 77, 77)", "font-weight": "bold"}) // Red 65%
     } else if ( zscore < 0 ) {
-    	$(td).css({"background-color": "rgb(255, 179, 179)", "font-weight": "bold"})
+    	$(td).css({"background-color": "rgb(255, 179, 179)", "font-weight": "bold"}) // Red 85%
     } else if ( zscore < (sd/2) ) {
     	$(td).css("font-weight", "normal");
     	$(td).removeProp("background-color");
     } else if ( zscore < sd ) {
-    	$(td).css({"background-color": "rgb(102, 255, 102)", "font-weight": "bold"})
+    	$(td).css({"background-color": "rgb(174, 234, 174)", "font-weight": "bold"}) // Green 80%
     } else {
-    	$(td).css({"background-color": "rgb(0, 204, 0)", "font-weight": "bold"})
+    	$(td).css({"background-color": "rgb(93, 213, 93)", "font-weight": "bold"}) // Green 60%
     }
 }
 

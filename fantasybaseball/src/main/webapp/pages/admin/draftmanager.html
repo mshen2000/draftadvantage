@@ -183,7 +183,6 @@ td { font-size: 12px; }
 	</nav>
 		
 	<div class="container" >
-	
 		<div >
 			  <div style="float:right;">
 				<select style="width:auto;margin-top:10px;" class="form-control" id="league-select">
@@ -191,12 +190,10 @@ td { font-size: 12px; }
 					  <option value="newleague">Add New League...</option>
 				</select>
 			 </div>		
-	    </div>
-			
+	    </div>	
 	  <h2 id="pagetitle">
 	    Auction Draft Manager
 	  </h2>
-	
 	</div>
 	
 	<div class="container" id="intro-container">
@@ -218,12 +215,27 @@ td { font-size: 12px; }
 		  <div id="maintab1" class="tab-pane fade in active">
 			<div class="row">
 			  <div class="col-md-9">
-				  <h3>Player Grid</h3>
+			  	<div class="row">
+			  		<div class="col-md-8">
+			  			<h3>Player Grid</h3>
+			  		</div>
+			  		<div class="col-md-4">
+					  <form class="form-inline" style="margin-top:20px;float:right;">
+						<div class="form-group">
+						    <label>Grid View:</label>
+							<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="...">
+							  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button>
+							  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button>
+							</div>
+						</div>
+					 </form>	
+					</div>
+			  	</div>
 				  <form class="form-inline">
 				  	<div class="form-group">
 					  <div class="btn-toolbar" role="toolbar" aria-label="...">
 						  <div class="btn-group btn-group-sm" role="group" id="btn-grp1" aria-label="...">
-						    <button type="button" class="btn btn-default" id="btn-allplayers">All Players</button>
+						    <button type="button" class="btn btn-default active" id="btn-allplayers">All Players</button>
 							<button type="button" class="btn btn-default" id="btn-pitchers">Pitchers</button>
 							<button type="button" class="btn btn-default" id="btn-hitters">Hitters</button>
 						  </div>
@@ -245,6 +257,10 @@ td { font-size: 12px; }
 					    <label for="toggle-draftedplayers">Un-Drafted Only:</label>
 						<input type="checkbox" data-toggle="toggle" id="toggle-draftedplayers" data-size="small">
 					</div>
+<!-- 					<div class="btn-group btn-group-sm" style="float:right;" role="group" aria-label="..."> -->
+<!-- 					  <button type="button" class="btn btn-default">Stat View</button> -->
+<!-- 					  <button type="button" class="btn btn-default">Z View</button> -->
+<!-- 					</div> -->
 				  </form>
 				  <div style="margin-top:5px"></div>
 				  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
