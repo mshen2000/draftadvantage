@@ -13,6 +13,12 @@ public class LeaguePlayerInputDraftContainer {
 	long team_roster_position_num;
 	
 	double team_player_salary;
+	
+	boolean UnknownPlayer = false;
+	
+	String unknown_player_name;
+	
+	String unknown_player_pitcher_hitter;
 
 	public LeaguePlayerInputDraftContainer() {
 		// TODO Auto-generated constructor stub
@@ -65,7 +71,29 @@ public class LeaguePlayerInputDraftContainer {
 	public void setTeam_roster_position(String team_roster_position) {
 		this.team_roster_position = team_roster_position;
 	}
-	
-	
+
+	public boolean isUnknownPlayer() {
+		return UnknownPlayer;
+	}
+
+	public void setUnknownPlayer(boolean unknownPlayer) {
+		UnknownPlayer = unknownPlayer;
+	}
+
+	public String getUnknown_player_name() {
+		return unknown_player_name;
+	}
+
+	public void setUnknown_player_name(String unknown_player_name) {
+		this.unknown_player_name = unknown_player_name;
+	}
+
+	public String getUnknown_player_pitcher_hitter() {
+		return unknown_player_pitcher_hitter;
+	}
+
+	public void setUnknown_player_pitcher_hitter(String unknown_player_pitcher_hitter) {
+		this.unknown_player_pitcher_hitter = unknown_player_pitcher_hitter;
+	}
 
 }

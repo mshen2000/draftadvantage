@@ -565,6 +565,36 @@ public class TestLeagues {
 		cont_castro.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_2B);
 		cont_castro.setTeam_player_salary(10);
 		
+		// Container for testing drafting unknown player (hitter)
+		LeaguePlayerInputDraftContainer cont_unknown_h = new LeaguePlayerInputDraftContainer();
+		cont_unknown_h.setLeague_id(l1_id);
+		cont_unknown_h.setLeague_team_id(lt1_id);
+		cont_unknown_h.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_2B);
+		cont_unknown_h.setTeam_player_salary(12);
+		cont_unknown_h.setUnknownPlayer(true);
+		cont_unknown_h.setUnknown_player_pitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_HITTER);
+		cont_unknown_h.setUnknown_player_name("Unknown PlayerH");
+		
+		// Container for testing drafting unknown player (pitcher)
+		LeaguePlayerInputDraftContainer cont_unknown_p1 = new LeaguePlayerInputDraftContainer();
+		cont_unknown_p1.setLeague_id(l1_id);
+		cont_unknown_p1.setLeague_team_id(lt1_id);
+		cont_unknown_p1.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_P);
+		cont_unknown_p1.setTeam_player_salary(9);
+		cont_unknown_p1.setUnknownPlayer(true);
+		cont_unknown_p1.setUnknown_player_pitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_PITCHER);
+		cont_unknown_p1.setUnknown_player_name("Unknown PlayerP1");
+		
+		// Container for testing drafting unknown player (pitcher)
+		LeaguePlayerInputDraftContainer cont_unknown_p2 = new LeaguePlayerInputDraftContainer();
+		cont_unknown_p2.setLeague_id(l1_id);
+		cont_unknown_p2.setLeague_team_id(lt1_id);
+		cont_unknown_p2.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_P);
+		cont_unknown_p2.setTeam_player_salary(19);
+		cont_unknown_p2.setUnknownPlayer(true);
+		cont_unknown_p2.setUnknown_player_pitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_PITCHER);
+		cont_unknown_p2.setUnknown_player_name("Unknown PlayerP2");
+		
 		String player_note = "This is a test player note. This will test the player note capability";
 		LeaguePlayerInputDraftContainer cont_chapman = new LeaguePlayerInputDraftContainer();
 		cont_chapman.setLeague_id(l1_id);
@@ -591,12 +621,15 @@ public class TestLeagues {
 		long chapman_id = getLeaguePlayerService().updateLeaguePlayerNote(ncont_chapman, uname);
 		chapman_id = getLeaguePlayerService().draftLeaguePlayer(cont_chapman, uname);
 		long trout_id = getLeaguePlayerService().updateLeaguePlayerNote(ncont_trout, uname);
+		long unknown_h_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_h, uname);
+		long unknown_p1_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_p1, uname);
+		long unknown_p2_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_p2, uname);
 		
 		// Test getLeaguePlayersbyLeague
-		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 6);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 9);
 		
 		// Test getLeaguePlayersbyTeam
-		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 4);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 7);
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 1);
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt3_id, uname).size() == 0);
 		
@@ -611,14 +644,39 @@ public class TestLeagues {
 		Assert.assertTrue(chapman.getLeague_team().getId() == lt2_id);
 		Assert.assertTrue(chapman.getTeam_player_note().equals(player_note));
 		
+		// Test unknown player attributes
+		LeaguePlayer unknown_h = getLeaguePlayerService().get(unknown_h_id);
+		Assert.assertTrue(unknown_h.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_2B));
+		Assert.assertTrue(unknown_h.getTeam_player_salary() == 12);
+		Assert.assertTrue(unknown_h.getLeague_team().getId() == lt1_id);
+		
+		// Test update existing drafted unknown player
+		cont_unknown_h.setTeam_player_salary(8);
+		cont_unknown_h.setLeague_team_id(lt2_id);
+		cont_unknown_h.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_3B);
+		unknown_h_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_h, uname);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 2);
+		unknown_h  = getLeaguePlayerService().get(unknown_h_id);
+		Assert.assertTrue(unknown_h.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_3B));
+		Assert.assertTrue(unknown_h.getTeam_player_salary() == 8);
+		Assert.assertTrue(unknown_h.getLeague_team().getId() == lt2_id);
+		
 		// Test update existing drafted player
 		cont_chapman.setTeam_player_salary(7);
 		chapman_id = getLeaguePlayerService().draftLeaguePlayer(cont_chapman, uname);
-		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 1);
-		chapman = getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).get(0);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 2);
+		chapman = getLeaguePlayerService().get(chapman_id);
 		Assert.assertTrue(chapman.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_P));
 		Assert.assertTrue(chapman.getTeam_player_salary() == 7);
 		Assert.assertTrue(chapman.getLeague_team().getId() == lt2_id);
+		
+		// Test undraft unknown player
+		System.out.println("Undrafting unknown playerp1");
+		LeaguePlayerInputDraftContainer ud_unknown_container = new LeaguePlayerInputDraftContainer();
+		ud_unknown_container.setUnknown_player_name("Unknown PlayerP1");
+		ud_unknown_container.setUnknownPlayer(true);
+		ud_unknown_container.setLeague_id(l1_id);
+		getLeaguePlayerService().undraftLeaguePlayer(ud_unknown_container, uname);
 		
 		// Test undraft player
 		LeaguePlayerInputDraftContainer ud_container = new LeaguePlayerInputDraftContainer();
@@ -631,10 +689,11 @@ public class TestLeagues {
 		Assert.assertTrue(chapman.getTeam_player_note().equals(player_note));
 		
 		// Test getLeaguePlayersbyLeague
-		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 6);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 8);
 		
 		// Test getLeaguePlayersbyTeam
-		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 0);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 1);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 5);
 		
 		// Get updated playeroutput after draft
 		playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
@@ -649,13 +708,15 @@ public class TestLeagues {
 		}
 		
 		// Test there are 6 players that were drafted or have notes
-		Assert.assertTrue(po_drafted.size() == 6);
+		Assert.assertTrue(po_drafted.size() == 8);
 		
 		LeaguePlayerOutput po_sale = new LeaguePlayerOutput();
 		LeaguePlayerOutput po_davis = new LeaguePlayerOutput();
 		LeaguePlayerOutput po_perez = new LeaguePlayerOutput();
 		LeaguePlayerOutput po_castro = new LeaguePlayerOutput();
 		LeaguePlayerOutput po_chapman = new LeaguePlayerOutput();
+		LeaguePlayerOutput po_unknown_h = new LeaguePlayerOutput();
+		LeaguePlayerOutput po_unknown_p2 = new LeaguePlayerOutput();
 		
 		for (LeaguePlayerOutput po : po_drafted){
 			
@@ -664,6 +725,9 @@ public class TestLeagues {
 			if (po.getFull_name().equals("Salvador Perez")) po_perez = po;
 			if (po.getFull_name().equals("Starlin Castro")) po_castro = po;
 			if (po.getFull_name().equals("Aroldis Chapman")) po_chapman = po;
+			
+			if (po.getFull_name().equals("Unknown PlayerH")) po_unknown_h = po;
+			if (po.getFull_name().equals("Unknown PlayerP2")) po_unknown_p2 = po;
 			
 		}
 		
@@ -674,6 +738,8 @@ public class TestLeagues {
 		Assert.assertTrue(po_perez.getTeam_player_salary() == 10);
 		Assert.assertTrue(po_castro.getTeam_player_salary() == 10);
 		Assert.assertTrue(po_chapman.getTeam_player_note().equals(player_note));
+		Assert.assertTrue(po_unknown_h.getTeam_player_salary() == 8);
+		Assert.assertTrue(po_unknown_p2.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_P));
 		
 		// Test Delete league
 		getLeagueService().deleteLeagueFull(l1_id, uname);

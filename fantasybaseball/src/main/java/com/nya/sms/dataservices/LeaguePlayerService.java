@@ -2,6 +2,7 @@ package com.nya.sms.dataservices;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
@@ -111,28 +112,69 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	
 	public long draftLeaguePlayer (LeaguePlayerInputDraftContainer container, String uname){
 		
+		System.out.println("draftLeaguePlayer: BEGIN");
+		
 		Key<LeagueTeam> teamkey = Key.create(LeagueTeam.class, container.getLeague_team_id());
 		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
-		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
 		
-		// Check to see if LeaguePlayer already exists
-		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
-				.filter("player_projected", playerprojectedkey).list();
-
+		List<LeaguePlayer> leagueplayers = new ArrayList<LeaguePlayer>();
+		
 		LeaguePlayer lp = new LeaguePlayer();
 		
-		// If exists, update existing LeaguePlayer
-		// Otherwise, update new LeaguePlayer with draft information
-		if (leagueplayers.size() > 0) {
-			lp = leagueplayers.get(0);
+		if (container.isUnknownPlayer()){
+			
+			// Check to see if LeaguePlayer already exists
+			leagueplayers = ofy().load().type(LeaguePlayer.class)
+					.filter("league", leaguekey)
+					.filter("unknown_player_name", container.getUnknown_player_name()).list();
+			
+			// If exists, update existing LeaguePlayer
+			// Otherwise, update new LeaguePlayer with draft information
+			if (leagueplayers.size() > 0) {
+				System.out.println("draftLeaguePlayer: found existing unknown LeaguePlayer: " + container.getUnknown_player_name());
+				lp = leagueplayers.get(0);
+			} else {
+				System.out.println("draftLeaguePlayer: Did NOT find existing unknown LeaguePlayer: " + container.getUnknown_player_name());
+				lp.setLeagueRef(Ref.create(leaguekey));
+			}
+			
+			
+			lp.setUnknownPlayer(true);
+			lp.setUnknown_player_name(container.getUnknown_player_name());
+			lp.setUnknown_player_pitcher_hitter(container.getUnknown_player_pitcher_hitter());
+			System.out.println("draftLeaguePlayer: Set unknown player name: " + lp.getUnknown_player_name());
+			
+			lp.setLeague_team(Ref.create(teamkey));
+			lp.setTeam_player_salary(container.getTeam_player_salary());
+			lp.setTeam_roster_position(container.getTeam_roster_position());
+			
+			System.out.println("draftLeaguePlayer: Right before save 1: " + lp.getUnknown_player_name());
+			
+			return this.save(lp, uname);
+			
 		} else {
-			lp.setLeagueRef(Ref.create(leaguekey));
-			lp.setPlayer_projected(Ref.create(playerprojectedkey));
+			System.out.println("draftLeaguePlayer: IN ELSE STATEMENT");
+			Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+			
+			// Check to see if LeaguePlayer already exists
+			leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+					.filter("player_projected", playerprojectedkey).list();
+			
+			// If exists, update existing LeaguePlayer
+			// Otherwise, update new LeaguePlayer with draft information
+			if (leagueplayers.size() > 0) {
+				lp = leagueplayers.get(0);
+			} else {
+				lp.setLeagueRef(Ref.create(leaguekey));
+				lp.setPlayer_projected(Ref.create(playerprojectedkey));
+			}
 		}
 
 		lp.setLeague_team(Ref.create(teamkey));
 		lp.setTeam_player_salary(container.getTeam_player_salary());
 		lp.setTeam_roster_position(container.getTeam_roster_position());
+		
+		System.out.println("draftLeaguePlayer: Right before save 2: " + lp.getUnknown_player_name());
 		
 		return this.save(lp, uname);
 		
@@ -141,7 +183,7 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	
 	/**
 	 * Description: Undrafts league player, only requires league_id and
-	 * player_projected_id from container.
+	 * player_projected_id from container.  Unknown player requires unknown_player_name.
 	 * 
 	 * @param container
 	 * @param uname
@@ -149,22 +191,40 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	public void undraftLeaguePlayer (LeaguePlayerInputDraftContainer container, String uname){
 		
 		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
-		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+		List<LeaguePlayer> leagueplayers = new ArrayList<LeaguePlayer>();
 		
-		// Check to see if LeaguePlayer already exists
-		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
-				.filter("player_projected", playerprojectedkey).list();
-		
-		LeaguePlayer lp = leagueplayers.get(0);
-		
-		Ref<LeagueTeam> r = null;
-		
-		lp.setLeague_team(r);
-		lp.setTeam_roster_position(null);
-		lp.setTeam_player_salary(0);
-		
-		this.save(lp, uname);
-		
+		if (container.isUnknownPlayer()){
+			// Key<LeagueTeam> teamkey = Key.create(LeagueTeam.class, container.getLeague_team_id());
+			
+			// Check to see if LeaguePlayer already exists
+			leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+					.filter("unknown_player_name", container.getUnknown_player_name()).list();
+			
+			if (leagueplayers.size() > 0){
+				System.out.println("undraftLeaguePlayer: Found LeaguePlayer, deleting...");
+				this.delete(leagueplayers.get(0).getId());
+			}
+			else System.out.println("undraftLeaguePlayer: Could not find league player to delete.");
+			
+		} else {
+			
+			Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+			
+			// Check to see if LeaguePlayer already exists
+			leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+					.filter("player_projected", playerprojectedkey).list();
+			
+			LeaguePlayer lp = leagueplayers.get(0);
+			
+			Ref<LeagueTeam> r = null;
+			
+			lp.setLeague_team(r);
+			lp.setTeam_roster_position(null);
+			lp.setTeam_player_salary(0);
+			
+			this.save(lp, uname);
+		}
+
 	}
 	
 	/**
@@ -232,5 +292,10 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		
 	}
 
+	private PlayerProjectedService getPlayerProjectedService(){
+
+		return new PlayerProjectedService();
+
+	}
 
 }

@@ -31,6 +31,12 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	String team_player_note;
 	
 	Date projection_date;
+	
+	boolean UnknownPlayer = false;
+	
+	String unknown_player_name;
+	
+	String unknown_player_pitcher_hitter;
 
 	double hitter_avg_eff;
 	double pitcher_era_eff;
@@ -339,6 +345,28 @@ public class LeaguePlayerOutput extends PlayerProjected{
 		this.live_auction_value = live_auction_value;
 	}
 
+	public boolean isUnknownPlayer() {
+		return UnknownPlayer;
+	}
 
+	public void setUnknownPlayer(boolean unknownPlayer) {
+		UnknownPlayer = unknownPlayer;
+	}
+
+	public String getUnknown_player_name() {
+		return unknown_player_name;
+	}
+
+	public void setUnknown_player_name(String unknown_player_name) {
+		this.unknown_player_name = unknown_player_name;
+	}
+
+	public String getUnknown_player_pitcher_hitter() {
+		return unknown_player_pitcher_hitter;
+	}
+
+	public void setUnknown_player_pitcher_hitter(String unknown_player_pitcher_hitter) {
+		this.unknown_player_pitcher_hitter = unknown_player_pitcher_hitter;
+	}
 
 }
