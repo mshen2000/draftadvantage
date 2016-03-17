@@ -202,10 +202,6 @@ $(document).ready(function()
 	    $(this).siblings().removeClass('active');
 	    $('#btn-grp1 button').removeClass('active');
 	});
-//    $('#btn-grp-gridview button').click(function() {
-//	    $(this).addClass('active');
-//	    $(this).siblings().removeClass('active');
-//	});
     
     $('#btn-gridviewstats').click(function() {
 	    $(this).addClass('active');
@@ -249,9 +245,25 @@ $(document).ready(function()
         if ($(this).prop('checked') == true) regex_drafted = '(^$)|(\s+$)'; 
         else regex_drafted = '';  
         $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();	
-      })
+      });
 	
 	
+    $('#btn-draftunknownplayer').click(function() 
+	{
+//    	var data_table = $('#playergrid_table').DataTable();
+//        var data = data_table.row( $(this).parents('tr') ).data();
+//        playerdraftrow = data;
+//        
+//        resetDraftPlayerModal();
+//        $("#btn-draftplayer").attr("disabled","disabled");
+//        $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
+//        $("#header-draftplayer").val(data.id);
+//        $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
+        $("#draftplayerunk-modal").modal("show");
+        
+        // console.log("Player id: " + $("#header-draftplayer").val());
+	});  
+      
 	$('#btn-draftplayer').click(function() 
 	{
 		var league_id = $("#league-select").find("option:selected").val();

@@ -220,15 +220,16 @@ td { font-size: 12px; }
 			  			<h3>Player Grid</h3>
 			  		</div>
 			  		<div class="col-md-4">
-					  <form class="form-inline" style="margin-top:20px;float:right;">
-						<div class="form-group">
-						    <label>Grid View:</label>
-							<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="...">
-							  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button>
-							  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button>
-							</div>
-						</div>
-					 </form>	
+			  			<button type="button" class="btn btn-primary btn-sm" style="margin-top:20px;float:right;" id="btn-draftunknownplayer">Draft Unknown</button>
+<!-- 					  <form class="form-inline" style="margin-top:20px;float:right;"> -->
+<!-- 						<div class="form-group"> -->
+<!-- 						    <label>Grid View:</label> -->
+<!-- 							<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="..."> -->
+<!-- 							  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button> -->
+<!-- 							  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					 </form>	 -->
 					</div>
 			  	</div>
 				  <form class="form-inline">
@@ -257,6 +258,14 @@ td { font-size: 12px; }
 					    <label for="toggle-draftedplayers">Un-Drafted Only:</label>
 						<input type="checkbox" data-toggle="toggle" id="toggle-draftedplayers" data-size="small">
 					</div>
+					<div class="form-group" style="float:right;">
+					    <label>Grid View:</label>
+						<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="...">
+						  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button>
+						  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button>
+						</div>
+					</div>
+<!-- 					<button type="button" class="btn btn-primary btn-sm" style="float:right;" id="btn-draftunknownplayer">Draft Unknown Player</button> -->
 <!-- 					<div class="btn-group btn-group-sm" style="float:right;" role="group" aria-label="..."> -->
 <!-- 					  <button type="button" class="btn btn-default">Stat View</button> -->
 <!-- 					  <button type="button" class="btn btn-default">Z View</button> -->
@@ -340,7 +349,7 @@ td { font-size: 12px; }
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			        <h4 class="modal-title" id="header-draftplayer">Draft Player: Mike Trout (LAA)</h4>
+			        <h4 class="modal-title" id="header-draftplayer">Draft Player: XXX XXXXX (XXX)</h4>
 			      </div>
 			      <div class="modal-body">
 			        <div class="row">
@@ -378,7 +387,7 @@ td { font-size: 12px; }
 						<div class="col-md-8">
 							<dl class="dl-horizontal" id ="dl-draftpreview">
 							  <dt>Player</dt>
-							  <dd id="lbl-draftprevplayer">Test Player (LAA)</dd>
+							  <dd id="lbl-draftprevplayer">Test Player (XXX)</dd>
 							  <dt>Team</dt>
 							  <dd id="lbl-draftprevteam">[none]</dd>
 							  <dt>Amount</dt>
@@ -399,6 +408,84 @@ td { font-size: 12px; }
 			</div>
 		</div>
 		<!-- Draft Player Modal -->
+	
+		<!-- Draft Unknown Player Modal -->
+		<div id="draftplayerunk-modal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			        <h4 class="modal-title" id="header-draftplayerunk">Draft Unknown Player</h4>
+			      </div>
+			      <div class="modal-body">
+			        <div class="row">
+					  <div class="col-md-6">
+					  	<form>
+					  		<div class="form-group">
+		    					<label for="input-draftplayernameunk">Player</label>
+							  	<input class="form-control" id="input-draftplayernameunk" placeholder="Player Name">
+							</div>
+							<div class="form-group">
+							  	<select  class="form-control" id="select-draftpitcherhitterunk">
+							  		<option value="0">--- Pitcher or Hitter? ---</option>
+					  				<option value="H">Hitter</option>
+					  				<option value="P">Pitcher</option>
+								</select>
+							</div>
+						  	<div class="form-group">
+		    					<label for="select-draftteamunk">Team</label>
+							  	<select  class="form-control" id="select-draftteamunk">
+							  		<option value="0">--- Select Team ---</option>
+								</select>
+							</div>
+						</form>
+					  </div>
+					  <div class="col-md-3">
+					  	<form>
+						  	<div class="form-group">
+		    					<label for="select-draftamtunk">Amount</label>
+							  	<select  class="form-control" id="select-draftamtunk" size="12">
+								</select>
+							</div>
+						</form>
+					  </div>
+					  <div class="col-md-3">
+					  	<form>
+						  	<div class="form-group">
+		    					<label for="select-draftpositionunk">Position</label>
+							  	<select  class="form-control" id="select-draftpositionunk" size="12">
+								</select>
+							</div>
+						</form>
+					  </div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+						</div>
+						<div class="col-md-8">
+							<dl class="dl-horizontal" id ="dl-draftpreviewunk">
+							  <dt>Player</dt>
+							  <dd id="lbl-draftprevplayerunk">Test Player</dd>
+							  <dt>Team</dt>
+							  <dd id="lbl-draftprevteamunk">[none]</dd>
+							  <dt>Amount</dt>
+							  <dd id="lbl-draftprevamtunk">[none]</dd>
+							  <dt>Position</dt>
+							  <dd id="lbl-draftprevposunk">[none]</dd>
+							</dl>
+						</div>
+					</div>
+			        
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-success" disabled="disabled" id="btn-draftplayerunk">Draft Player</button>
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			        
+			      </div>
+			    </div>
+			</div>
+		</div>
+		<!-- Draft Unknown Player Modal -->	
 	
 		<!-- League Wizard Modal -->
 		<div id="createleague-modal" class="modal fade" role="dialog">
