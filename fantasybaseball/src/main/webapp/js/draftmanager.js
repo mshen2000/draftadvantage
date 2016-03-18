@@ -93,6 +93,70 @@ $(document).ready(function()
         }
 
     });
+    $("#select-draftteamunk").change(function(e){
+    	console.log("in select-draftteamunk change");
+    	if ($(this).val() != "0"){
+        	$('#lbl-draftprevteamunk').text($(this).find("option:selected").text());
+        	if ($("#select-draftpitcherhitterunk").val() != "0"){
+        		console.log("before loaddraftplayerselector");
+        		loadDraftPlayerPosSelector();
+        	}
+    	} else {
+        	$('#lbl-draftprevteamunk').text("[none]");
+        	$("#select-draftpositionunk").find('option').remove().end();
+        }
+        
+        if (($("#select-draftteamunk").val() == "0") ||
+        		($("#select-draftpitcherhitterunk").val() == "0") ||
+        		($.trim($("#input-draftplayernameunk").val()) == "") ||
+        		($("#select-draftamtunk").val() == null) ||
+        		($("#select-draftpositionunk").val() == null)){
+        	$("#btn-draftplayerunk").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayerunk").removeAttr("disabled");
+        }
+
+    });
+    $("#input-draftplayernameunk").keyup(function(e){
+        
+    	if ($.trim($("#input-draftplayernameunk").val()) != ""){
+    		$('#lbl-draftprevplayerunk').text($("#input-draftplayernameunk").val());
+    	} else {
+    		$('#lbl-draftprevplayerunk').text("[none]");
+    	}
+    	
+        if (($("#select-draftteamunk").val() == "0") ||
+        		($("#select-draftpitcherhitterunk").val() == "0") ||
+        		($.trim($("#input-draftplayernameunk").val()) == "") ||
+        		($("#select-draftamtunk").val() == null) ||
+        		($("#select-draftpositionunk").val() == null)){
+        	$("#btn-draftplayerunk").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayerunk").removeAttr("disabled");
+        }
+
+    });
+    $("#select-draftpitcherhitterunk").change(function(e){
+    	console.log("in select-draftpitcherhitterunk change");
+    	if (($(this).val() != "0")&&($("#select-draftteamunk").val() != "0")){
+    		console.log("before loaddraftplayerselector");
+    		loadDraftPlayerPosSelector();
+    	}
+    	
+    	if ($(this).val() == "0"){
+        	$("#select-draftpositionunk").find('option').remove().end();
+    	}
+
+        if (($("#select-draftteamunk").val() == "0") ||
+        		($("#select-draftpitcherhitterunk").val() == "0") ||
+        		($.trim($("#input-draftplayernameunk").val()) == "") ||
+        		($("#select-draftamtunk").val() == null) ||
+        		($("#select-draftpositionunk").val() == null)){
+        	$("#btn-draftplayerunk").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayerunk").removeAttr("disabled");
+        }
+    });
     $("#select-draftamt").change(function(e){
 
     	if ($(this).val() != null){
@@ -110,6 +174,25 @@ $(document).ready(function()
         }
 
     });
+    $("#select-draftamtunk").change(function(e){
+
+    	if ($(this).val() != null){
+	        $('#lbl-draftprevamtunk').text($(this).find("option:selected").text());
+    	} else {
+        	$('#lbl-draftprevamtunk').text("[none]");
+        }
+        
+        if (($("#select-draftteamunk").val() == "0") ||
+        		($("#select-draftpitcherhitterunk").val() == "0") ||
+        		($.trim($("#input-draftplayernameunk").val()) == "") ||
+        		($("#select-draftamtunk").val() == null) ||
+        		($("#select-draftpositionunk").val() == null)){
+        	$("#btn-draftplayerunk").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayerunk").removeAttr("disabled");
+        }
+
+    });
     $("#select-draftposition").change(function(e){
     	
     	if ($(this).val() != null){
@@ -124,6 +207,25 @@ $(document).ready(function()
         	$("#btn-draftplayer").attr("disabled","disabled");
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
+        }
+
+    });
+    $("#select-draftpositionunk").change(function(e){
+    	
+    	if ($(this).val() != null){
+	        $('#lbl-draftprevposunk').text($(this).find("option:selected").text().split(" ")[0]);
+    	} else {
+        	$('#lbl-draftprevposunk').text("[none]");
+        }
+        
+        if (($("#select-draftteamunk").val() == "0") ||
+        		($("#select-draftpitcherhitterunk").val() == "0") ||
+        		($.trim($("#input-draftplayernameunk").val()) == "") ||
+        		($("#select-draftamtunk").val() == null) ||
+        		($("#select-draftpositionunk").val() == null)){
+        	$("#btn-draftplayerunk").attr("disabled","disabled");
+        } else {
+        	$("#btn-draftplayerunk").removeAttr("disabled");
         }
 
     });
@@ -259,6 +361,7 @@ $(document).ready(function()
 //        $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
 //        $("#header-draftplayer").val(data.id);
 //        $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
+    	resetDraftUnknownPlayerModal();
         $("#draftplayerunk-modal").modal("show");
         
         // console.log("Player id: " + $("#header-draftplayer").val());
@@ -622,10 +725,13 @@ function updateTeamInfoTab(){
 function loadDraftPlayerAmtSelector(){
 	
 	var amtselector = $("#select-draftamt");
+	var amtselectorunk = $("#select-draftamtunk");
 	amtselector.find('option').remove().end();
+	amtselectorunk.find('option').remove().end();
 
 	for (i = 1; i <= 100; i++) { 
 		amtselector.append($("<option value='" + i + "'/>").text("$" + i));
+		amtselectorunk.append($("<option value='" + i + "'/>").text("$" + i));
 	}
 
 }
@@ -643,14 +749,31 @@ function resetDraftPlayerModal(){
 
 }
 
+function resetDraftUnknownPlayerModal(){
+
+	$("option", "#select-draftteamunk").removeAttr("selected");
+	$("option", "#select-draftamtunk").removeAttr("selected");
+	$("option", "#select-draftpitcherhitterunk").removeAttr("selected");
+	var posselectorunk = $("#select-draftpositionunk");
+	posselectorunk.find('option').remove().end();
+	$('#lbl-draftprevplayerunk').text("[none]");
+	$('#lbl-draftprevteamunk').text("[none]");
+	$('#lbl-draftprevamtunk').text("[none]");
+	$('#lbl-draftprevposunk').text("[none]");
+	
+	$('#input-draftplayernameunk').val("");
+
+}
+
 
 /**
  * Description: Loads selections for the position selector in the draft player
- * modal. Selections are based on available positions based on the player and
- * team. For an initial draft of player, the updateplayerposition parameter is
- * null. For updating an existing drafted player, the parameter is the position
- * string for that player. This makes sure that the position is included in the
- * list even if the team has that position filled.
+ * modal (and draft unknown player modal. Selections are based on available
+ * positions based on the player and team. For an initial draft of player, the
+ * updateplayerposition parameter is null. For updating an existing drafted
+ * player, the parameter is the position string for that player. This makes sure
+ * that the position is included in the list even if the team has that position
+ * filled.
  * 
  * @param updateplayerposition
  */
@@ -659,8 +782,13 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	var teamid = $("#select-draftteam").val();
 	var posselector = $("#select-draftposition");
 	posselector.find('option').remove().end();
+	
+	var teamidunk = $("#select-draftteamunk").val();
+	var posselectorunk = $("#select-draftpositionunk");
+	var selectpitcherhitterunk = $("#select-draftpitcherhitterunk");
+	posselectorunk.find('option').remove().end();
 
-	console.log("TeamID: " + teamid);
+	// console.log("TeamID: " + teamid);
 	
 	var playertable = $('#playergrid_table').DataTable();
 	
@@ -711,7 +839,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	var countp = dm_teamrostercounts["P"];
 	var countres = dm_teamrostercounts["RES"];
 	
-	// Update counts with by subtracting current team roster counts
+	// Update counts by subtracting current team roster counts
 	// Determine if roster position is available based on count
 	$.each( liveteamrostercounts, function( lkey, lvalue ) {
 		
@@ -756,20 +884,38 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		if ((updateplayerposition == "RES")) selres = true;
 	}
 
-	if (playerdraftrow.pitcher_hitter == "H"){
-		if (selc) posselector.append($("<option value='C'/>").text("C (" + countc + ")"));
-		if (sel1b) posselector.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
-		if (sel2b) posselector.append($("<option value='2B'/>").text("2B (" + count2b + ")"));
-		if (selss) posselector.append($("<option value='SS'/>").text("SS (" + countss + ")"));
-		if (sel3b) posselector.append($("<option value='3B'/>").text("3B (" + count3b + ")"));
-		if (selmi) posselector.append($("<option value='MI'/>").text("MI (" + countmi + ")"));
-		if (selci) posselector.append($("<option value='CI'/>").text("CI (" + countci + ")"));
-		if (selof) posselector.append($("<option value='OF'/>").text("OF (" + countof + ")"));
-		if (selutil) posselector.append($("<option value='UT'/>").text("Util (" + countutil + ")"));
-		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
-	} else if (playerdraftrow.pitcher_hitter == "P"){
-		if (selp) posselector.append($("<option value='P'/>").text("P (" + countp + ")"));
-		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
+	if (playerdraftrow != null){
+		if (playerdraftrow.pitcher_hitter == "H"){
+			if (selc) posselector.append($("<option value='C'/>").text("C (" + countc + ")"));
+			if (sel1b) posselector.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
+			if (sel2b) posselector.append($("<option value='2B'/>").text("2B (" + count2b + ")"));
+			if (selss) posselector.append($("<option value='SS'/>").text("SS (" + countss + ")"));
+			if (sel3b) posselector.append($("<option value='3B'/>").text("3B (" + count3b + ")"));
+			if (selmi) posselector.append($("<option value='MI'/>").text("MI (" + countmi + ")"));
+			if (selci) posselector.append($("<option value='CI'/>").text("CI (" + countci + ")"));
+			if (selof) posselector.append($("<option value='OF'/>").text("OF (" + countof + ")"));
+			if (selutil) posselector.append($("<option value='UT'/>").text("Util (" + countutil + ")"));
+			if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
+		} else if (playerdraftrow.pitcher_hitter == "P"){
+			if (selp) posselector.append($("<option value='P'/>").text("P (" + countp + ")"));
+			if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
+	}
+	}
+	
+	if (selectpitcherhitterunk.val() == "H"){
+		if (selc) posselectorunk.append($("<option value='C'/>").text("C (" + countc + ")"));
+		if (sel1b) posselectorunk.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
+		if (sel2b) posselectorunk.append($("<option value='2B'/>").text("2B (" + count2b + ")"));
+		if (selss) posselectorunk.append($("<option value='SS'/>").text("SS (" + countss + ")"));
+		if (sel3b) posselectorunk.append($("<option value='3B'/>").text("3B (" + count3b + ")"));
+		if (selmi) posselectorunk.append($("<option value='MI'/>").text("MI (" + countmi + ")"));
+		if (selci) posselectorunk.append($("<option value='CI'/>").text("CI (" + countci + ")"));
+		if (selof) posselectorunk.append($("<option value='OF'/>").text("OF (" + countof + ")"));
+		if (selutil) posselectorunk.append($("<option value='UT'/>").text("Util (" + countutil + ")"));
+		if (selres) posselectorunk.append($("<option value='RES'/>").text("Res (" + countres + ")"));
+	} else if (selectpitcherhitterunk.val() == "P"){
+		if (selp) posselectorunk.append($("<option value='P'/>").text("P (" + countp + ")"));
+		if (selres) posselectorunk.append($("<option value='RES'/>").text("Res (" + countres + ")"));
 	}
 	
 }
@@ -1352,6 +1498,15 @@ function loadTeamSelect(data){
 	if (undefined !== data){
 		$.each(data, function() {
 			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+		});
+	} else {}
+	
+	var draftteamselectunk = $("#select-draftteamunk");
+	draftteamselectunk.find('option').remove().end();
+	draftteamselectunk.append($("<option value='0'/>").text("--- Select Team ---"));
+	if (undefined !== data){
+		$.each(data, function() {
+			draftteamselectunk.append($("<option value='"+ this.id +"'/>").text(this.team_name));
 		});
 	} else {}
 
