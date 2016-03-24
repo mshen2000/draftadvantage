@@ -121,7 +121,10 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		
 		LeaguePlayer lp = new LeaguePlayer();
 		
-		if (container.isUnknownPlayer()){
+		System.out.println("draftLeaguePlayer: unknown_player_name: " + container.getUnknown_player_name());
+		System.out.println("draftLeaguePlayer: unknownplayer: " + container.isUnknownplayer());
+		
+		if (container.isUnknownplayer()){
 			
 			// Check to see if LeaguePlayer already exists
 			leagueplayers = ofy().load().type(LeaguePlayer.class)
@@ -138,8 +141,7 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 				lp.setLeagueRef(Ref.create(leaguekey));
 			}
 			
-			
-			lp.setUnknownPlayer(true);
+			lp.setUnknownplayer(true);
 			lp.setUnknown_player_name(container.getUnknown_player_name());
 			lp.setUnknown_player_pitcher_hitter(container.getUnknown_player_pitcher_hitter());
 			System.out.println("draftLeaguePlayer: Set unknown player name: " + lp.getUnknown_player_name());
@@ -193,7 +195,7 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
 		List<LeaguePlayer> leagueplayers = new ArrayList<LeaguePlayer>();
 		
-		if (container.isUnknownPlayer()){
+		if (container.isUnknownplayer()){
 			// Key<LeagueTeam> teamkey = Key.create(LeagueTeam.class, container.getLeague_team_id());
 			
 			// Check to see if LeaguePlayer already exists

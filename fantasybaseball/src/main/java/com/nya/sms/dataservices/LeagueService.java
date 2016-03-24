@@ -680,7 +680,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		for (LeaguePlayer lp : lplist){
 			
 			// Set PlayerOutput if LeaguePlayer is an unknown player
-			if (lp.isUnknownPlayer()){
+			if (lp.isUnknownplayer()){
 				LeaguePlayerOutput repl = new LeaguePlayerOutput();
 				
 				if (lp.getUnknown_player_pitcher_hitter().equals(getPlayerProjectedService().PITCHER_HITTER_PITCHER)) 
@@ -694,6 +694,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				repl.setTeam_player_salary(lp.getTeam_player_salary());
 				repl.setUnknown_player_name(lp.getUnknown_player_name());
 				repl.setFull_name(lp.getUnknown_player_name());
+				repl.setLeague_player_id(lp.getId());
+				repl.setUnknownplayer(true);
 				
 				playeroutput.add(repl);
 				
@@ -701,21 +703,28 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				// Find matching PlayerOutput if LeaguePlayer is a known player
 				for (LeaguePlayerOutput po : playeroutput){
 					
-					if (po.getId() == lp.getPlayer_projectedRef().getKey().getId()){
+					if (!po.isUnknownplayer()){
 						
-						// System.out.println("Get Player Output Data: Found matching LeaguePlayer in PO, ID= " + po.getId());
-						
-						if (lp.getLeague_teamRef() != null){
-							po.setLeagueteam_id(lp.getLeague_teamRef().getKey().getId());
-							po.setLeagueteam_name(lp.getLeague_team().getTeam_name());
-							po.setTeam_roster_position(lp.getTeam_roster_position());
-							po.setTeam_player_salary(lp.getTeam_player_salary());
-//							System.out.println("Get Player Output Data: Updated PO, TeamID= " + po.getLeagueteam_id());
-//							System.out.println("Get Player Output Data: Updated PO, TeamRosterPostion= " + po.getTeam_roster_position());
+						if (po.getId() == lp.getPlayer_projectedRef().getKey().getId()){
+							
+							// System.out.println("Get Player Output Data: Found matching LeaguePlayer in PO, ID= " + po.getId());
+							
+							if (lp.getLeague_teamRef() != null){
+								po.setLeagueteam_id(lp.getLeague_teamRef().getKey().getId());
+								po.setLeagueteam_name(lp.getLeague_team().getTeam_name());
+								po.setTeam_roster_position(lp.getTeam_roster_position());
+								po.setTeam_player_salary(lp.getTeam_player_salary());
+//								System.out.println("Get Player Output Data: Updated PO, TeamID= " + po.getLeagueteam_id());
+//								System.out.println("Get Player Output Data: Updated PO, TeamRosterPostion= " + po.getTeam_roster_position());
+							}
+							
+							po.setTeam_player_note(lp.getTeam_player_note());
+							po.setLeague_player_id(lp.getId());
+							po.setUnknownplayer(false);
 						}
 						
-						po.setTeam_player_note(lp.getTeam_player_note());
 					}
+
 				}
 			}
 		}

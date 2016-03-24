@@ -39,7 +39,7 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	Date league_update_date;
 	
 	@Index
-	boolean UnknownPlayer = false;
+	boolean unknownplayer;
 	
 	@Index
 	String unknown_player_name;
@@ -148,12 +148,12 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 		this.player_projected = player_projected;
 	}
 
-	public boolean isUnknownPlayer() {
-		return UnknownPlayer;
+	public boolean isUnknownplayer() {
+		return unknownplayer;
 	}
 
-	public void setUnknownPlayer(boolean unknownPlayer) {
-		UnknownPlayer = unknownPlayer;
+	public void setUnknownplayer(boolean unknownplayer) {
+		this.unknownplayer = unknownplayer;
 	}
 
 	public String getUnknown_player_name() {

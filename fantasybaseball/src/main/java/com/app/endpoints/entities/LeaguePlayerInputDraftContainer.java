@@ -8,13 +8,15 @@ public class LeaguePlayerInputDraftContainer {
 	
 	long player_projected_id;
 	
+	long league_player_id;
+	
 	String team_roster_position;
 	
 	long team_roster_position_num;
 	
 	double team_player_salary;
 	
-	boolean UnknownPlayer = false;
+	boolean unknownplayer;
 	
 	String unknown_player_name;
 	
@@ -48,6 +50,14 @@ public class LeaguePlayerInputDraftContainer {
 		this.player_projected_id = player_projected_id;
 	}
 
+	public long getLeague_player_id() {
+		return league_player_id;
+	}
+
+	public void setLeague_player_id(long league_player_id) {
+		this.league_player_id = league_player_id;
+	}
+
 	public long getTeam_roster_position_num() {
 		return team_roster_position_num;
 	}
@@ -72,12 +82,12 @@ public class LeaguePlayerInputDraftContainer {
 		this.team_roster_position = team_roster_position;
 	}
 
-	public boolean isUnknownPlayer() {
-		return UnknownPlayer;
+	public boolean isUnknownplayer() {
+		return unknownplayer;
 	}
 
-	public void setUnknownPlayer(boolean unknownPlayer) {
-		UnknownPlayer = unknownPlayer;
+	public void setUnknownplayer(boolean unknownplayer) {
+		this.unknownplayer = unknownplayer;
 	}
 
 	public String getUnknown_player_name() {

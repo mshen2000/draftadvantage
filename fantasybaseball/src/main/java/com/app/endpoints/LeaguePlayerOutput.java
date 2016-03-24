@@ -18,6 +18,8 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	long leagueteam_id;
 	
+	long league_player_id;
+	
 	String leagueteam_name;
 	
 	String player_position;
@@ -32,7 +34,7 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	
 	Date projection_date;
 	
-	boolean UnknownPlayer = false;
+	boolean unknownplayer;
 	
 	String unknown_player_name;
 	
@@ -151,6 +153,14 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	public void setLeagueteam_id(long leagueteam_id) {
 		this.leagueteam_id = leagueteam_id;
+	}
+
+	public long getLeague_player_id() {
+		return league_player_id;
+	}
+
+	public void setLeague_player_id(long league_player_id) {
+		this.league_player_id = league_player_id;
 	}
 
 	public String getLeagueteam_name() {
@@ -345,12 +355,12 @@ public class LeaguePlayerOutput extends PlayerProjected{
 		this.live_auction_value = live_auction_value;
 	}
 
-	public boolean isUnknownPlayer() {
-		return UnknownPlayer;
+	public boolean isUnknownplayer() {
+		return unknownplayer;
 	}
 
-	public void setUnknownPlayer(boolean unknownPlayer) {
-		UnknownPlayer = unknownPlayer;
+	public void setUnknownplayer(boolean unknownplayer) {
+		this.unknownplayer = unknownplayer;
 	}
 
 	public String getUnknown_player_name() {

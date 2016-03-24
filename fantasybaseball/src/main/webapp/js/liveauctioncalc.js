@@ -60,13 +60,6 @@ function calcLiveAuctionValue(){
 	});
 	
 	var t2 = new Date().getTime();
-	
-//	var i = 0;
-//	$.each( data_rows, function( index, value ){
-//		console.log("Player: " + value.full_name + ", Z: " + value.total_z);
-//		if (i == 50) return false;
-//		i++;
-//	});
 
 	// Get total z values
 	var posz_c = getPositionalZ(data_rows, "C", iroster_c);
@@ -101,32 +94,37 @@ function calcLiveAuctionValue(){
 	
 	// Update auction value
 	$.each( data_rows, function( index, value ){
-		
-		var auct = 0;
 
-		if ((value.player_position.toLowerCase().indexOf("c") > -1))
-			auct = Math.max(auct,(value.total_z - posz_c["avgreplz"])*coef);
-		if ((value.player_position.toLowerCase().indexOf("1b") > -1))
-			auct = Math.max(auct,(value.total_z - posz_1b["avgreplz"])*coef);
-		if ((value.player_position.toLowerCase().indexOf("2b") > -1))
-			auct = Math.max(auct,(value.total_z - posz_2b["avgreplz"])*coef);
-		if ((value.player_position.toLowerCase().indexOf("ss") > -1))
-			auct = Math.max(auct,(value.total_z - posz_ss["avgreplz"])*coef);
-		if ((value.player_position.toLowerCase().indexOf("3b") > -1))
-			auct = Math.max(auct,(value.total_z - posz_3b["avgreplz"])*coef);
-		if ((value.player_position.toLowerCase().indexOf("of") > -1))
-			auct = Math.max(auct,(value.total_z - posz_of["avgreplz"])*coef);
-		if ((value.player_position.toLowerCase().indexOf("p") > -1))
-			auct = Math.max(auct,(value.total_z - posz_p["avgreplz"])*coef);
-		if ((value.player_position.toLowerCase().indexOf("dh") > -1))
-			auct = Math.max(auct,(value.total_z - replval_dh)*coef);
-		
-		if (auct < 0) auct = 0;
-		
-		value.live_auction_value = Math.round(auct);
-		
-		data_table = $('#playergrid_table').DataTable();
-		data_table.row('#' + this.id + '').data(this);
+		if (value.unknownplayer == false){
+			
+			var auct = 0;
+			
+			if ((value.player_position.toLowerCase().indexOf("c") > -1))
+				auct = Math.max(auct,(value.total_z - posz_c["avgreplz"])*coef);
+			if ((value.player_position.toLowerCase().indexOf("1b") > -1))
+				auct = Math.max(auct,(value.total_z - posz_1b["avgreplz"])*coef);
+			if ((value.player_position.toLowerCase().indexOf("2b") > -1))
+				auct = Math.max(auct,(value.total_z - posz_2b["avgreplz"])*coef);
+			if ((value.player_position.toLowerCase().indexOf("ss") > -1))
+				auct = Math.max(auct,(value.total_z - posz_ss["avgreplz"])*coef);
+			if ((value.player_position.toLowerCase().indexOf("3b") > -1))
+				auct = Math.max(auct,(value.total_z - posz_3b["avgreplz"])*coef);
+			if ((value.player_position.toLowerCase().indexOf("of") > -1))
+				auct = Math.max(auct,(value.total_z - posz_of["avgreplz"])*coef);
+			if ((value.player_position.toLowerCase().indexOf("p") > -1))
+				auct = Math.max(auct,(value.total_z - posz_p["avgreplz"])*coef);
+			if ((value.player_position.toLowerCase().indexOf("dh") > -1))
+				auct = Math.max(auct,(value.total_z - replval_dh)*coef);
+			
+			if (auct < 0) auct = 0;
+			
+			value.live_auction_value = Math.round(auct);
+			
+			data_table = $('#playergrid_table').DataTable();
+			data_table.row('#' + this.id + '').data(this);
+			
+		}
+
 	});
 	
 	var t4 = new Date().getTime();
@@ -186,37 +184,41 @@ function getPositionalZ(playertablerows, position, position_num){
 	var avgz = 0;
 
 	$.each( playertablerows, function( index, value ){
-
-		if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
-				&& (i < position_num)){
+		
+		if (value.unknownplayer == false){
 			
-			// Add Z value only if player is undrafted
-			if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
-				totalz = totalz + value.total_z;
-				// if (position == "C")  console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
-			} else {
-				// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
-			}
+			if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
+					&& (i < position_num)){
 				
-			i++;
+				// Add Z value only if player is undrafted
+				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
+					totalz = totalz + value.total_z;
+					// if (position == "C")  console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+				} else {
+					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
+				}
+					
+				i++;
+					
+			} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
+					&& (i == position_num)){
 				
-		} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
-				&& (i == position_num)){
+				avgz = avgz + value.total_z;
+				i++;
+				
+				// System.out.println(position + "-AVG1: " + lp.getTotal_z());
+				
+			} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
+					&& (i == position_num + 1)){
+				
+				avgz = avgz + value.total_z;
+				i++;
+				
+				// System.out.println(position + "-AVG2: " + lp.getTotal_z());
+				
+			} else if (i > position_num + 1) {return false;}
 			
-			avgz = avgz + value.total_z;
-			i++;
-			
-			// System.out.println(position + "-AVG1: " + lp.getTotal_z());
-			
-		} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
-				&& (i == position_num + 1)){
-			
-			avgz = avgz + value.total_z;
-			i++;
-			
-			// System.out.println(position + "-AVG2: " + lp.getTotal_z());
-			
-		} else if (i > position_num + 1) {return false;}
+		}
 
 	});
 	
@@ -231,6 +233,57 @@ function getPositionalZ(playertablerows, position, position_num){
 	console.log(position + "-AVG REPL Z: " + avgz);
 	
 	return PositionalZOutput;
+	
+}
+
+function getReplPitcher(){
+	
+	var LeaguePlayerOutput = {};
+	
+	LeaguePlayerOutput["pitcher_era"] = 0;
+	LeaguePlayerOutput["pitcher_era_eff"] = 0;
+	LeaguePlayerOutput["pitcher_w"] = 0;
+	LeaguePlayerOutput["pitcher_sv"] = 0;
+	LeaguePlayerOutput["pitcher_whip"] = 0;
+	LeaguePlayerOutput["pitcher_whip_eff"] = 0;
+	LeaguePlayerOutput["pitcher_k"] = 0;
+	LeaguePlayerOutput["pitcher_hitter"] = "P";
+	
+	LeaguePlayerOutput["pitcher_z_wins"] = 0;
+	LeaguePlayerOutput["pitcher_z_saves"] = 0;
+	LeaguePlayerOutput["pitcher_z_so"] = 0;
+	LeaguePlayerOutput["pitcher_z_era"] = 0;
+	LeaguePlayerOutput["pitcher_z_whip"] = 0;
+	
+	LeaguePlayerOutput["init_auction_value"] = 0;
+	LeaguePlayerOutput["live_auction_value"] = 0;
+
+	return LeaguePlayerOutput;
+	
+}
+
+function getReplHitter(){
+	
+	var LeaguePlayerOutput = {};
+	
+	LeaguePlayerOutput["hitter_avg"] = 0;
+	LeaguePlayerOutput["hitter_avg_eff"] = 0;
+	LeaguePlayerOutput["hitter_rbi"] = 0;
+	LeaguePlayerOutput["hitter_runs"] = 0;
+	LeaguePlayerOutput["hitter_sb"] = 0;
+	LeaguePlayerOutput["hitter_hr"] = 0;
+	LeaguePlayerOutput["pitcher_hitter"] = "H";
+	
+	LeaguePlayerOutput["hitter_z_avg"] = 0;
+	LeaguePlayerOutput["hitter_z_hr"] = 0;
+	LeaguePlayerOutput["hitter_z_sb"] = 0;
+	LeaguePlayerOutput["hitter_z_runs"] = 0;
+	LeaguePlayerOutput["hitter_z_rbi"] = 0;
+
+	LeaguePlayerOutput["init_auction_value"] = 0;
+	LeaguePlayerOutput["live_auction_value"] = 0;
+	
+	return LeaguePlayerOutput;
 	
 }
 

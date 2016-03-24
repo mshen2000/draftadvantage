@@ -571,7 +571,7 @@ public class TestLeagues {
 		cont_unknown_h.setLeague_team_id(lt1_id);
 		cont_unknown_h.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_2B);
 		cont_unknown_h.setTeam_player_salary(12);
-		cont_unknown_h.setUnknownPlayer(true);
+		cont_unknown_h.setUnknownplayer(true);
 		cont_unknown_h.setUnknown_player_pitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_HITTER);
 		cont_unknown_h.setUnknown_player_name("Unknown PlayerH");
 		
@@ -581,7 +581,7 @@ public class TestLeagues {
 		cont_unknown_p1.setLeague_team_id(lt1_id);
 		cont_unknown_p1.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_P);
 		cont_unknown_p1.setTeam_player_salary(9);
-		cont_unknown_p1.setUnknownPlayer(true);
+		cont_unknown_p1.setUnknownplayer(true);
 		cont_unknown_p1.setUnknown_player_pitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_PITCHER);
 		cont_unknown_p1.setUnknown_player_name("Unknown PlayerP1");
 		
@@ -591,7 +591,7 @@ public class TestLeagues {
 		cont_unknown_p2.setLeague_team_id(lt1_id);
 		cont_unknown_p2.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_P);
 		cont_unknown_p2.setTeam_player_salary(19);
-		cont_unknown_p2.setUnknownPlayer(true);
+		cont_unknown_p2.setUnknownplayer(true);
 		cont_unknown_p2.setUnknown_player_pitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_PITCHER);
 		cont_unknown_p2.setUnknown_player_name("Unknown PlayerP2");
 		
@@ -674,7 +674,7 @@ public class TestLeagues {
 		System.out.println("Undrafting unknown playerp1");
 		LeaguePlayerInputDraftContainer ud_unknown_container = new LeaguePlayerInputDraftContainer();
 		ud_unknown_container.setUnknown_player_name("Unknown PlayerP1");
-		ud_unknown_container.setUnknownPlayer(true);
+		ud_unknown_container.setUnknownplayer(true);
 		ud_unknown_container.setLeague_id(l1_id);
 		getLeaguePlayerService().undraftLeaguePlayer(ud_unknown_container, uname);
 		
