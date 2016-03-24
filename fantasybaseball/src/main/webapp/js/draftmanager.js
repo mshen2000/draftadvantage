@@ -329,6 +329,7 @@ $(document).ready(function()
 	$('#btn-allplayers').click(function() 
 	{
 		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+		$('#playergrid_table').DataTable().columns( 36 ).search( false );
 		$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true ).draw();
 	});
 	$('#btn-pitchers').click(function() { filterPlayerType('P'); });
@@ -345,7 +346,8 @@ $(document).ready(function()
 	$('#btn-sp').click(function() { filterPlayerPosition('SP'); });
     $('#toggle-draftedplayers').change(function() {
         if ($(this).prop('checked') == true) regex_drafted = '(^$)|(\s+$)'; 
-        else regex_drafted = '';  
+        else regex_drafted = ''; 
+        $('#playergrid_table').DataTable().columns( 36 ).search( false );
         $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();	
       });
 	
@@ -437,14 +439,25 @@ $(document).ready(function()
 		console.log("Draft Unknown Player roster_position: " + unknownplayerrow.team_roster_position);
 		console.log("Draft Unknown Player salary: " + unknownplayerrow.team_player_salary);
 		
-		// playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
-		playertable.row.add(unknownplayerrow).draw(false);
+		// If unknown player doesnt already exist in the playertable, 
+		// add it to the playertable
+		var playercheck = playertable.rows( function ( idx, data, node ) {
+	        return data.full_name == unknown_player_name ?
+	            true : false;
+	    } );
+		if (playercheck.length < 1) {
+			playertable.row.add(unknownplayerrow).draw(false);
+		} else {	
+			playercheck.remove();
+			playertable.row.add(unknownplayerrow).draw(false);
+		}
 		
 		// Draft player
 		mssolutions.fbapp.draftmanager.draftUnknownPlayer(league_id, teamid, unknown_player_name, 
 				pitcher_hitter, position, amount);
 		
 		$('#draftplayerunk-modal').modal('hide');
+		$("#input-draftplayernameunk").prop('disabled', false);
 		
 		// Show the team info tab
 		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
@@ -499,34 +512,82 @@ $(document).ready(function()
 		console.log(roster_row.playerid);
 
     	var player_table = $('#playergrid_table').DataTable();
-        var data = player_table.row('#' + roster_row.playerid).data();
-        playerdraftrow = data;
-        console.log(JSON.stringify(data));
-        
-        // resetDraftPlayerModal(roster_row);
-        $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
-        $("#header-draftplayer").val(data.id);
-        $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
-        
-        loadDraftPlayerAmtSelector();
-        loadDraftPlayerPosSelector(roster_row.position);
-    	$("#select-draftteam").val(teamid);
-    	// $("#select-draftamt").val(roster_row.salary);
-    	$("#select-draftposition").val(roster_row.position);
+    	var data;
+    	var amtselect;
+    	var amtopt;
     	
-    	var amtselect = $('#select-draftamt')[0];
-    	var amtopt = $('#select-draftamt option[value=' + roster_row.salary + ']')[0];
-    	amtopt.selected = true;
-    	selectAndScrollToOption(amtselect, amtopt);
+    	// If player is unknown find player grid row using the player name
+    	// Otherwise, use the playerid
+    	if (roster_row.name.trim().substring(0, 2) == "[U") {
+    		
+    		data = player_table.rows( function ( idx, data, node ) {
+    	        return data.full_name == roster_row.name ?
+    	            true : false;
+    	    } ).data()[0];
+    		
+            playerdraftrow = data;
+            console.log(JSON.stringify(data));
+            
+            var playername = roster_row.name.substring(3, roster_row.name.length).trim()
 
-    	$('#lbl-draftprevteam').text(teamname);
-    	$('#lbl-draftprevamt').text('$' + roster_row.salary);
-    	$('#lbl-draftprevpos').text(roster_row.position);
-    	
-    	$("#btn-draftplayer").removeAttr("disabled");
-    	
-    	$("#draftplayer-modal").modal("show");
-        
+            // $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
+            $("#input-draftplayernameunk").val(playername);
+            $("#input-draftplayernameunk").prop('disabled', true);
+            $("#lbl-draftprevplayerunk").text(playername);
+            
+        	$("#select-draftpitcherhitterunk").val(data.pitcher_hitter);
+        	$("#select-draftteamunk").val(teamid);
+            
+            loadDraftPlayerAmtSelector();
+            loadDraftPlayerPosSelector(roster_row.position);
+
+        	// $("#select-draftamt").val(roster_row.salary);
+        	$("#select-draftpositionunk").val(roster_row.position);
+        	
+        	amtselect = $('#select-draftamtunk')[0];
+        	amtopt = $('#select-draftamtunk option[value=' + roster_row.salary + ']')[0];
+        	amtopt.selected = true;
+        	selectAndScrollToOption(amtselect, amtopt);
+
+        	$('#lbl-draftprevteamunk').text(teamname);
+        	$('#lbl-draftprevamtunk').text('$' + roster_row.salary);
+        	$('#lbl-draftprevposunk').text(roster_row.position);
+        	
+        	$("#btn-draftplayerunk").removeAttr("disabled");
+        	$("#draftplayerunk-modal").modal("show");
+
+    		
+    	} else {
+    		
+            data = player_table.row('#' + roster_row.playerid).data();
+            playerdraftrow = data;
+            console.log(JSON.stringify(data));
+            
+            // resetDraftPlayerModal(roster_row);
+            $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
+            $("#header-draftplayer").val(data.id);
+            $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
+            
+            loadDraftPlayerAmtSelector();
+            loadDraftPlayerPosSelector(roster_row.position);
+        	$("#select-draftteam").val(teamid);
+        	// $("#select-draftamt").val(roster_row.salary);
+        	$("#select-draftposition").val(roster_row.position);
+        	
+        	amtselect = $('#select-draftamt')[0];
+        	amtopt = $('#select-draftamt option[value=' + roster_row.salary + ']')[0];
+        	amtopt.selected = true;
+        	selectAndScrollToOption(amtselect, amtopt);
+
+        	$('#lbl-draftprevteam').text(teamname);
+        	$('#lbl-draftprevamt').text('$' + roster_row.salary);
+        	$('#lbl-draftprevpos').text(roster_row.position);
+        	
+        	$("#btn-draftplayer").removeAttr("disabled");
+        	$("#draftplayer-modal").modal("show");
+    		
+    	}
+
     } );
 	
 	
@@ -711,12 +772,14 @@ $(document).ready(function()
 
 function filterPlayerPosition(position){
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+	$('#playergrid_table').DataTable().columns( 36 ).search( false );
 	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true );	
 	$('#playergrid_table').DataTable().columns( 4 ).search( position , true ).draw();	
 }
 
 function filterPlayerType(pitcherhitter){
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+	$('#playergrid_table').DataTable().columns( 36 ).search( false );
 	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true );	
 	$('#playergrid_table').DataTable().columns( 0 ).search( pitcherhitter , true ).draw();	
 }
@@ -1259,6 +1322,9 @@ function loadPlayerGridTable(data, isInitialLoad)
 		data_table.destroy();
 		table_element.empty();
 		data_table = table_element.dataTable(config);
+		data_table = table_element.DataTable();
+		
+		data_table.columns( 36 ).search( false ).draw();
 		
 		// Update the team info tab
 		updateTeamInfoTab();
