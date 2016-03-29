@@ -1298,12 +1298,15 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "title": "<i class='fa fa-bolt'></i>-$", "mData": "live_auction_value", "render": function ( data, type, row ) {
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
-            { "title": "Draft", "mData": "leagueteam_id", "render": function ( data, type, row ) {
+            { "title": "Action", "mData": "leagueteam_id", "render": function ( data, type, row ) {
+            	var buttons;
             	if (data == 0)
-            		return "<button type='button' class='btn btn-primary btn-xs btn-draft'><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-right'></i></button>";
-            	return "<button type='button' class='btn btn-default btn-xs btn-undraft'><i class='fa fa-chevron-left'></i><i class='fa fa-chevron-left'></i></button>";
+            		buttons = "<button type='button' class='btn btn-primary btn-xs btn-draft' data-toggle='tooltip' title='Draft Player'><i class='fa fa-user-plus'></i></button>";
+            	else buttons = "<button type='button' class='btn btn-default btn-xs btn-undraft' data-toggle='tooltip' title='Undraft Player'><i class='fa fa-user-times'></i></button>";
+            	buttons = buttons + "&nbsp;<button type='button' class='btn btn-success btn-xs btn-playerinfo' data-toggle='tooltip' title='Player Info Page'><i class='fa fa-external-link'></i></button>";
+            	return buttons;
             }}, 
-            { "title": "Team", "mData": "leagueteam_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 5 )},
+            { "title": "Team", "mData": "leagueteam_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 7 )},
             { "visible": false, "title": "id", "mData": "id", "sDefaultContent": "" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
@@ -1336,6 +1339,17 @@ function loadPlayerGridTable(data, isInitialLoad)
 		calcLiveAuctionValue();
 	}
 
+	// On Click of the Info button in the Player Grid Table
+    $('#playergrid_table tbody').on( 'click', '.btn-playerinfo', function () {
+
+    	var data_table = $('#playergrid_table').DataTable();
+        var data = data_table.row( $(this).parents('tr') ).data();
+
+        var win = window.open("http://www.fangraphs.com/players.aspx?lastname=" + data.full_name, '_blank');
+        win.focus();
+        
+    } );
+	
 	// On Click of the Draft button in the Player Grid Table
     $('#playergrid_table tbody').on( 'click', '.btn-draft', function () {
 
