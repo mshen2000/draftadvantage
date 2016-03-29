@@ -1639,6 +1639,14 @@ function loadLeagueSelector(data){
 
 function loadTeamSelect(data){
 	
+	// sort teams alphabetically after my team as first team
+	var myteam = data[0];
+	data.shift();
+	data = data.sort(function(a, b) {
+	    return a.team_name.localeCompare(b.team_name);
+	});
+	data.unshift(myteam);
+	
 	var teamfilterselect = $("#select-draftedplayerfilter");
 	teamfilterselect.find('option').remove().end();
 	teamfilterselect.append($("<option value='-1' selected/>").text('All Players'));
