@@ -232,45 +232,89 @@ td { font-size: 12px; }
 <!-- 					 </form>	 -->
 					</div>
 			  	</div>
-				  <form class="form-inline">
-				  	<div class="form-group">
-					  <div class="btn-toolbar" role="toolbar" aria-label="...">
-						  <div class="btn-group btn-group-sm" role="group" id="btn-grp1" aria-label="...">
-						    <button type="button" class="btn btn-default active" id="btn-allplayers">All Players</button>
-							<button type="button" class="btn btn-default" id="btn-pitchers">Pitchers</button>
-							<button type="button" class="btn btn-default" id="btn-hitters">Hitters</button>
-						  </div>
-						  <div class="btn-group btn-group-sm" role="group" id="btn-grp2" aria-label="...">
-							<button type="button" class="btn btn-default" id="btn-c">C</button>
-							<button type="button" class="btn btn-default" id="btn-1b">1B</button>
-							<button type="button" class="btn btn-default" id="btn-2b">2B</button>
-							<button type="button" class="btn btn-default" id="btn-ss">SS</button>
-							<button type="button" class="btn btn-default" id="btn-3b">3B</button>
-							<button type="button" class="btn btn-default" id="btn-ci">CI</button>
-							<button type="button" class="btn btn-default" id="btn-mi">MI</button>
-							<button type="button" class="btn btn-default" id="btn-of">OF</button>
-							<button type="button" class="btn btn-default" id="btn-sp">SP</button>
-							<button type="button" class="btn btn-default" id="btn-rp">RP</button>
+<!-- 				  <form class="form-inline"> -->
+<!-- 				  	<div class="form-group"> -->
+<!-- 					  <div class="btn-toolbar" role="toolbar" aria-label="..."> -->
+<!-- 						  <div class="btn-group btn-group-sm" role="group" id="btn-grp1" aria-label="..."> -->
+<!-- 						    <button type="button" class="btn btn-default active" id="btn-allplayers">All Players</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-pitchers">Pitchers</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-hitters">Hitters</button> -->
+<!-- 						  </div> -->
+<!-- 						  <div class="btn-group btn-group-sm" role="group" id="btn-grp2" aria-label="..."> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-c">C</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-1b">1B</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-2b">2B</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-ss">SS</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-3b">3B</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-ci">CI</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-mi">MI</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-of">OF</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-sp">SP</button> -->
+<!-- 							<button type="button" class="btn btn-default" id="btn-rp">RP</button> -->
+<!-- 						  </div> -->
+<!-- 					  </div> -->
+<!-- 					</div> -->
+<!-- 					<div class="form-group" id="formgroup-drafttoggle"> -->
+<!-- 					    <label for="select-draftedplayerfilter">Draft Status:</label> -->
+<!-- 						<input type="checkbox" data-toggle="toggle" id="toggle-draftedplayers" data-size="small"> -->
+<!-- 						<select style="width:auto;" class="form-control" id="select-draftedplayerfilter"> -->
+<!-- 							  <option value="-1">All Players</option> -->
+<!-- 							  <option value="0">Undrafted Players</option> -->
+<!-- 						</select> -->
+<!-- 					</div> -->
+<!-- 					<div class="form-group" style="float:right;"> -->
+<!-- 					    <label>Grid View:</label> -->
+<!-- 						<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="..."> -->
+<!-- 						  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button> -->
+<!-- 						  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				  </form> -->
+				  <div class="row">
+					  <div class="col-sm-7">
+						  <div class="form-group">
+						  	  <label>Position Filter</label>
+							  <div class="btn-toolbar" role="toolbar" aria-label="...">
+								  <div class="btn-group btn-group-sm" role="group" id="btn-grp1" aria-label="...">
+								    <button type="button" class="btn btn-default active" id="btn-allplayers">All</button>
+									<button type="button" class="btn btn-default" id="btn-pitchers">Pitchers</button>
+									<button type="button" class="btn btn-default" id="btn-hitters">Hitters</button>
+								  </div>
+								  <div class="btn-group btn-group-sm" role="group" id="btn-grp2" aria-label="...">
+									<button type="button" class="btn btn-default" id="btn-c">C</button>
+									<button type="button" class="btn btn-default" id="btn-1b">1B</button>
+									<button type="button" class="btn btn-default" id="btn-2b">2B</button>
+									<button type="button" class="btn btn-default" id="btn-ss">SS</button>
+									<button type="button" class="btn btn-default" id="btn-3b">3B</button>
+									<button type="button" class="btn btn-default" id="btn-ci">CI</button>
+									<button type="button" class="btn btn-default" id="btn-mi">MI</button>
+									<button type="button" class="btn btn-default" id="btn-of">OF</button>
+									<button type="button" class="btn btn-default" id="btn-sp">SP</button>
+									<button type="button" class="btn btn-default" id="btn-rp">RP</button>
+								  </div>
+							  </div>
 						  </div>
 					  </div>
-					</div>
-					<div class="form-group" id="formgroup-drafttoggle">
-					    <label for="toggle-draftedplayers">Un-Drafted Only:</label>
-						<input type="checkbox" data-toggle="toggle" id="toggle-draftedplayers" data-size="small">
-					</div>
-					<div class="form-group" style="float:right;">
-					    <label>Grid View:</label>
-						<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="...">
-						  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button>
-						  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button>
-						</div>
-					</div>
-<!-- 					<button type="button" class="btn btn-primary btn-sm" style="float:right;" id="btn-draftunknownplayer">Draft Unknown Player</button> -->
-<!-- 					<div class="btn-group btn-group-sm" style="float:right;" role="group" aria-label="..."> -->
-<!-- 					  <button type="button" class="btn btn-default">Stat View</button> -->
-<!-- 					  <button type="button" class="btn btn-default">Z View</button> -->
-<!-- 					</div> -->
-				  </form>
+					  <div class="col-sm-3">
+						  <div class="form-group" id="formgroup-drafttoggle">
+						    <label for="select-draftedplayerfilter">Draft Status</label>
+							<select style="width:auto;" class="form-control" id="select-draftedplayerfilter">
+								  <option value="-1">All Players</option>
+								  <option value="0">Undrafted Players</option>
+							</select>
+						  </div>
+					  </div>
+					  <div class="col-sm-2">
+						  <div class="form-group" style="float:right;">
+						    <label>Column View</label>
+							<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="...">
+							  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button>
+							  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button>
+							</div>
+						  </div>
+					  </div>
+
+				  </div>
 				  <div style="margin-top:5px"></div>
 				  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
 			  </div>

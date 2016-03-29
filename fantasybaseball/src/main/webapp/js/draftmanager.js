@@ -328,9 +328,13 @@ $(document).ready(function()
 	
 	$('#btn-allplayers').click(function() 
 	{
+	    if ($('#select-draftedplayerfilter').val() == '0') regex_drafted = '(^$)|(\s+$)'; 
+	    else if ($('#select-draftedplayerfilter').val() == '-1') regex_drafted = ''; 
+	    else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
 		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
+		console.log('regex_drafted = ' + regex_drafted);
 		$('#playergrid_table').DataTable().columns( 36 ).search( false );
-		$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true ).draw();
+		$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();
 	});
 	$('#btn-pitchers').click(function() { filterPlayerType('P'); });
 	$('#btn-hitters').click(function() { filterPlayerType('H'); });
@@ -344,9 +348,11 @@ $(document).ready(function()
 	$('#btn-of').click(function() { filterPlayerPosition('OF'); });
 	$('#btn-rp').click(function() { filterPlayerPosition('RP');	});
 	$('#btn-sp').click(function() { filterPlayerPosition('SP'); });
-    $('#toggle-draftedplayers').change(function() {
-        if ($(this).prop('checked') == true) regex_drafted = '(^$)|(\s+$)'; 
-        else regex_drafted = ''; 
+    $('#select-draftedplayerfilter').change(function() {
+        if ($(this).val() == '0') regex_drafted = '(^$)|(\s+$)'; 
+        else if ($(this).val() == '-1') regex_drafted = ''; 
+        else regex_drafted = $(this).find("option:selected").text();
+        console.log('regex_drafted = ' + regex_drafted);
         $('#playergrid_table').DataTable().columns( 36 ).search( false );
         $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();	
       });
@@ -354,19 +360,8 @@ $(document).ready(function()
 	
     $('#btn-draftunknownplayermodal').click(function() 
 	{
-//    	var data_table = $('#playergrid_table').DataTable();
-//        var data = data_table.row( $(this).parents('tr') ).data();
-//        playerdraftrow = data;
-//        
-//        resetDraftPlayerModal();
-//        $("#btn-draftplayer").attr("disabled","disabled");
-//        $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
-//        $("#header-draftplayer").val(data.id);
-//        $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
     	resetDraftUnknownPlayerModal();
         $("#draftplayerunk-modal").modal("show");
-        
-        // console.log("Player id: " + $("#header-draftplayer").val());
 	});  
       
 	$('#btn-draftplayer').click(function() 
@@ -771,16 +766,24 @@ $(document).ready(function()
 });
 
 function filterPlayerPosition(position){
+    if ($('#select-draftedplayerfilter').val() == '0') regex_drafted = '(^$)|(\s+$)'; 
+    else if ($('#select-draftedplayerfilter').val() == '-1') regex_drafted = ''; 
+    else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
+    console.log('regex_drafted = ' + regex_drafted);
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
 	$('#playergrid_table').DataTable().columns( 36 ).search( false );
-	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true );	
+	$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true );	
 	$('#playergrid_table').DataTable().columns( 4 ).search( position , true ).draw();	
 }
 
 function filterPlayerType(pitcherhitter){
+    if ($('#select-draftedplayerfilter').val() == '0') regex_drafted = '(^$)|(\s+$)'; 
+    else if ($('#select-draftedplayerfilter').val() == '-1') regex_drafted = ''; 
+    else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
+    console.log('regex_drafted = ' + regex_drafted);
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
 	$('#playergrid_table').DataTable().columns( 36 ).search( false );
-	$('#playergrid_table').DataTable().columns( 20 ).search( regex_drafted , true );	
+	$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true );	
 	$('#playergrid_table').DataTable().columns( 0 ).search( pitcherhitter , true ).draw();	
 }
 
@@ -1635,17 +1638,24 @@ function loadLeagueSelector(data){
 }
 
 function loadTeamSelect(data){
+	
+	var teamfilterselect = $("#select-draftedplayerfilter");
+	teamfilterselect.find('option').remove().end();
+	teamfilterselect.append($("<option value='-1' selected/>").text('All Players'));
+	teamfilterselect.append($("<option value='0'/>").text('Undrafted Players'));
+	
 	var teamselect = $("#team-select");
 	teamselect.find('option').remove().end();
 	if (undefined !== data){
 		$.each(data, function() {
 			// console.log("Loading team selector: ID-" + this.id + " VAL-" + this.team_name);
 			teamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+			teamfilterselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
 		});
 	} else {
 		// console.log("League data is null");
 	}
-	
+
 	var draftteamselect = $("#select-draftteam");
 	draftteamselect.find('option').remove().end();
 	if (undefined !== data){
