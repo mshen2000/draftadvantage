@@ -1148,6 +1148,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         "order": [[ 26, "desc" ]],
         "iDisplayLength": 15,
         "language": {
+        	"search": "Search: _INPUT_ <button type='button' class='btn btn-primary btn-sm' data-toggle='tooltip' title='Download'><i class='fa fa-download'></i></button>",
             "lengthMenu": "Display <select  style='width:auto;' class='form-control'><option value='10'>10</option>" +
             		"<option value='15'>15</option>" +
             		"<option value='20'>20</option>" +
