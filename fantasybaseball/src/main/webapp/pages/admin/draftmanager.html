@@ -105,6 +105,25 @@ td { font-size: 12px; }
 #teamroster_table > thead > tr > th { font-size: 11px; }
 #teamroster_table > tbody > tr > td { font-size: 11px; }
 
+.dm_pos_table > thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
+.dm_pos_table > thead > tr > td.sorting_asc,
+.dm_pos_table > thead > tr > td.sorting_desc,
+.dm_pos_table > thead > tr > td.sorting {
+  padding-right: 3px !important;
+}
+
+.dm_pos_table >tbody>tr>th,
+.dm_pos_table >tbody>tr>td,
+.dm_pos_table >tfoot>tr>td,
+.dm_pos_table >tfoot>tr>th,
+.dm_pos_table >thead>tr>td,
+.dm_pos_table >thead>tr>th{
+	padding-left: 3px !important;
+	padding-right: 3px !important;
+	padding-top: 3px !important;
+	padding-bottom: 3px !important;
+}
+
 @media (min-width: 1000px) {
     .container{
         width: 1340px !important;
@@ -207,7 +226,7 @@ td { font-size: 12px; }
 	<div class="container" id="league-container" hidden>
 		<ul class="nav nav-tabs">
 		  <li class="active"><a data-toggle="tab" href="#maintab1">Draft Analysis</a></li>
-		  <li><a data-toggle="tab" href="#maintab2">Temp</a></li>
+		  <li><a data-toggle="tab" href="#maintab2">Position Availability</a></li>
 		  <li><a data-toggle="tab" href="#maintab3">League Details</a></li>
 		</ul>
 		
@@ -215,61 +234,17 @@ td { font-size: 12px; }
 		  <div id="maintab1" class="tab-pane fade in active">
 			<div class="row">
 			  <div class="col-md-9">
-			  	<div class="row">
-			  		<div class="col-md-8">
-			  			<h3>Player Grid</h3>
-			  		</div>
-			  		<div class="col-md-4">
-			  			<button type="button" class="btn btn-primary btn-sm" style="margin-top:20px;float:right;" id="btn-draftunknownplayermodal">Draft Unknown</button>
-<!-- 					  <form class="form-inline" style="margin-top:20px;float:right;"> -->
-<!-- 						<div class="form-group"> -->
-<!-- 						    <label>Grid View:</label> -->
-<!-- 							<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="..."> -->
-<!-- 							  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button> -->
-<!-- 							  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 					 </form>	 -->
-					</div>
-			  	</div>
-<!-- 				  <form class="form-inline"> -->
-<!-- 				  	<div class="form-group"> -->
-<!-- 					  <div class="btn-toolbar" role="toolbar" aria-label="..."> -->
-<!-- 						  <div class="btn-group btn-group-sm" role="group" id="btn-grp1" aria-label="..."> -->
-<!-- 						    <button type="button" class="btn btn-default active" id="btn-allplayers">All Players</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-pitchers">Pitchers</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-hitters">Hitters</button> -->
-<!-- 						  </div> -->
-<!-- 						  <div class="btn-group btn-group-sm" role="group" id="btn-grp2" aria-label="..."> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-c">C</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-1b">1B</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-2b">2B</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-ss">SS</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-3b">3B</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-ci">CI</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-mi">MI</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-of">OF</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-sp">SP</button> -->
-<!-- 							<button type="button" class="btn btn-default" id="btn-rp">RP</button> -->
-<!-- 						  </div> -->
-<!-- 					  </div> -->
+<!-- 			  	<div class="row"> -->
+<!-- 			  		<div class="col-md-8"> -->
+<!-- 			  			<h3>Player Grid</h3> -->
+<!-- 			  		</div> -->
+<!-- 			  		<div class="col-md-4"> -->
+<!-- 			  			<button type="button" class="btn btn-primary btn-sm" style="margin-top:20px;float:right;" id="btn-draftunknownplayermodal">Draft Unknown</button> -->
 <!-- 					</div> -->
-<!-- 					<div class="form-group" id="formgroup-drafttoggle"> -->
-<!-- 					    <label for="select-draftedplayerfilter">Draft Status:</label> -->
-<!-- 						<input type="checkbox" data-toggle="toggle" id="toggle-draftedplayers" data-size="small"> -->
-<!-- 						<select style="width:auto;" class="form-control" id="select-draftedplayerfilter"> -->
-<!-- 							  <option value="-1">All Players</option> -->
-<!-- 							  <option value="0">Undrafted Players</option> -->
-<!-- 						</select> -->
-<!-- 					</div> -->
-<!-- 					<div class="form-group" style="float:right;"> -->
-<!-- 					    <label>Grid View:</label> -->
-<!-- 						<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="..."> -->
-<!-- 						  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button> -->
-<!-- 						  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				  </form> -->
+<!-- 			  	</div> -->
+			  	
+			  	<h3>Player Grid</h3>
+
 				  <div class="row">
 					  <div class="col-sm-7">
 						  <div class="form-group">
@@ -376,8 +351,44 @@ td { font-size: 12px; }
 			</div>
 		  </div>
 		  <div id="maintab2" class="tab-pane fade">
-		    <h3>Menu 1</h3>
-		    <p>Some content in menu 1.</p>
+		    <div class="row">
+		    	<div class="col-md-4">
+		    		<H4>Catcher</H4>
+				  	<table id="pos_c_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    	<div class="col-md-4">
+		    		<H4>1st Base</H4>
+				  	<table id="pos_1b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    	<div class="col-md-4">
+		    		<H4>2nd Base</H4>
+				  	<table id="pos_2b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-md-4">
+		    		<H4>Shortstop</H4>
+				  	<table id="pos_ss_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    	<div class="col-md-4">
+		    		<H4>3rd Base</H4>
+				  	<table id="pos_3b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    	<div class="col-md-4">
+		    		<H4>Outfield</H4>
+				  	<table id="pos_of_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-md-4">
+		    		<H4>Starting Pitcher</H4>
+				  	<table id="pos_sp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    	<div class="col-md-4">
+		    		<H4>Relief Pitcher</H4>
+				  	<table id="pos_rp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    </div>
 		  </div>
 		  <div id="maintab3" class="tab-pane fade">
 		    <h3>Menu 2</h3>
