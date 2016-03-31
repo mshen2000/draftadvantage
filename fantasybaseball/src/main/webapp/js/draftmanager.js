@@ -1487,8 +1487,10 @@ function loadPlayerGridTable(data, isInitialLoad)
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_era, 1)}
                 }, "sDefaultContent": "0" },
                 
-            { "title": "NPV", className: "dm_export", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ),
-            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},
+            { "title": "NPV", className: "dm_export", "mData": "total_z", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},    
+//            { "title": "NPV", className: "dm_export", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ),
+//            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},
             { "title": "$", className: "dm_export", "mData": "init_auction_value", "render": function ( data, type, row ) {
             		return "$" + data.toFixed(0);
                 }, "sDefaultContent": "0"},
@@ -1698,8 +1700,8 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter)
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
                 }, "sDefaultContent": "0" },
                 
-            { "title": "NPV", className: "dm_export", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ),
-            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},
+            { "title": "NPV", className: "dm_export", "mData": "total_z", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},  
             { "title": "<i class='fa fa-bolt'></i>-$", className: "dm_export", "mData": "live_auction_value", "render": function ( data, type, row ) {
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""}
