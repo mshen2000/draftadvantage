@@ -76,6 +76,14 @@ $(document).ready(function()
 {
 	// Tab change event
 	$("a[href='#maintab2']").on('show.bs.tab', function (e) {
+
+		
+
+	});
+	
+	// Tab change event
+	$("a[href='#maintab2']").on('shown.bs.tab', function (e) {
+		
 		var player_table = $('#playergrid_table').DataTable();
 		var data = player_table.data();
 		var filtered_data = $.grep(data, function(v) {
@@ -93,31 +101,33 @@ $(document).ready(function()
 		// console.log("filtered_data: " + JSON.stringify(filtered_data));
 		
 		var filtered_data_c = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("C") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("C") > -1;}).slice(0,10);
 		var filtered_data_1b = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("1B") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("1B") > -1;}).slice(0,10);
 		var filtered_data_2b = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("2B") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("2B") > -1;}).slice(0,10);
 		var filtered_data_ss = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("SS") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("SS") > -1;}).slice(0,10);
 		var filtered_data_3b = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("3B") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("3B") > -1;}).slice(0,10);
 		var filtered_data_of = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("OF") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("OF") > -1;}).slice(0,10);
 		var filtered_data_sp = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("SP") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("SP") > -1;}).slice(0,10);
 		var filtered_data_rp = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("RP") > -1;}).slice(0,9);
+		    return v.player_position.indexOf("RP") > -1;}).slice(0,10);
 		
-		loadPositionalTable(filtered_data_c, $("#pos_c_table"), false, true);
-		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true);
-		loadPositionalTable(filtered_data_2b, $("#pos_2b_table"), false, true);
-		loadPositionalTable(filtered_data_ss, $("#pos_ss_table"), false, true);
-		loadPositionalTable(filtered_data_3b, $("#pos_3b_table"), false, true);
-		loadPositionalTable(filtered_data_of, $("#pos_of_table"), false, true);
-		loadPositionalTable(filtered_data_sp, $("#pos_sp_table"), false, false);
-		loadPositionalTable(filtered_data_rp, $("#pos_rp_table"), false, false);
+		loadPositionalTable(filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
+		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
+		loadPositionalTable(filtered_data_2b, $("#pos_2b_table"), false, true, "#chart-2b");
+		loadPositionalTable(filtered_data_ss, $("#pos_ss_table"), false, true, "#chart-ss");
+		loadPositionalTable(filtered_data_3b, $("#pos_3b_table"), false, true, "#chart-3b");
+		loadPositionalTable(filtered_data_of, $("#pos_of_table"), false, true, "#chart-of");
+		loadPositionalTable(filtered_data_sp, $("#pos_sp_table"), false, false, "#chart-sp");
+		loadPositionalTable(filtered_data_rp, $("#pos_rp_table"), false, false, "#chart-rp");
+		
 	});
+	
 	
     $("#select-draftteam").change(function(e){
 
@@ -1613,8 +1623,52 @@ function loadPlayerGridTable(data, isInitialLoad)
 
 }
 
-function loadPositionalTable(data, table_element, isInitialLoad, isHitter)
+function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chartid)
 {
+	if (data != null){
+		
+		new Chartist.Bar(chartid, {
+			  labels: [data[0].full_name, data[1].full_name, data[2].full_name, data[3].full_name, data[4].full_name,
+			           data[5].full_name, data[6].full_name, data[7].full_name, data[8].full_name, data[9].full_name],
+			  series: [
+			    [data[0].total_z, data[1].total_z, data[2].total_z, data[3].total_z, data[4].total_z,
+		           data[5].total_z, data[6].total_z, data[7].total_z, data[8].total_z, data[9].total_z]
+			  ]
+			}, {
+			  seriesBarDistance: 10,
+			  reverseData: true,
+			  horizontalBars: true,
+			  axisY: {
+			    offset: 70
+			  }
+			}).on('draw', function(context) {
+			  if(context.type === 'bar') {
+				
+				var stylecolor;
+				
+				console.log("context.value = " + context.value);
+				  
+		        if ( Chartist.getMultiValue(context.value) <= (-1)*(2) ) {
+		        	stylecolor = 'stroke: rgb(255, 77, 77);'  // Red 65%
+		        } else if ( Chartist.getMultiValue(context.value) < 0 ) {
+		        	stylecolor = 'stroke: rgb(255, 179, 179);'  // Red 85%
+		        } else if ( Chartist.getMultiValue(context.value) < 2 ) {
+		        	stylecolor = 'stroke: rgb(242, 242, 242);'  // Grey 95%
+		        } else if ( Chartist.getMultiValue(context.value) < 4 ) {
+		        	stylecolor = 'stroke: rgb(174, 234, 174);'  // Green 80%
+		        } else {
+		        	stylecolor = 'stroke: rgb(93, 213, 93);'  // Green 60%
+		        }
+				  
+		        context.element.attr({
+			      // style: 'stroke-width: 10px'
+			    	style: stylecolor
+			    });
+			  }
+			});
+	}
+	
+	
 	var data_table;
 	var config;
 	if (isHitter) config = {
