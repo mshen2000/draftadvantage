@@ -75,9 +75,9 @@ $(function() {
 $(document).ready(function()
 {
 	// Tab change event
-	$("a[href='#maintab2']").on('show.bs.tab', function (e) {
+	$("a[href='#maintab2']").on('hidden.bs.tab', function (e) {
 
-		
+		$(".dm_poschart").empty();
 
 	});
 	
@@ -1627,43 +1627,64 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 {
 	if (data != null){
 		
-		new Chartist.Bar(chartid, {
+		var maxvalue = Math.max(data[0].total_z, data[1].total_z, data[2].total_z, data[3].total_z, data[4].total_z,
+		           data[5].total_z, data[6].total_z, data[7].total_z, data[8].total_z, data[9].total_z);
+		
+		var options;
+		
+		if (maxvalue < 10){
+			options = {
+			  high: 10,
+			  referenceValue: 0,
+			  seriesBarDistance: 10,
+			  reverseData: true,
+			  horizontalBars: true,
+			  axisY: {
+			    offset: 70
+			}};
+		} else {
+			options = {
+			  referenceValue: 0,
+			  seriesBarDistance: 10,
+			  reverseData: true,
+			  horizontalBars: true,
+			  axisY: {
+			    offset: 70
+			}};
+		}
+		
+		var chart = new Chartist.Bar(chartid, {
 			  labels: [data[0].full_name, data[1].full_name, data[2].full_name, data[3].full_name, data[4].full_name,
 			           data[5].full_name, data[6].full_name, data[7].full_name, data[8].full_name, data[9].full_name],
 			  series: [
 			    [data[0].total_z, data[1].total_z, data[2].total_z, data[3].total_z, data[4].total_z,
 		           data[5].total_z, data[6].total_z, data[7].total_z, data[8].total_z, data[9].total_z]
 			  ]
-			}, {
-			  seriesBarDistance: 10,
-			  reverseData: true,
-			  horizontalBars: true,
-			  axisY: {
-			    offset: 70
-			  }
-			}).on('draw', function(context) {
+			}, options);
+			
+		chart.on('draw', function(context) {
 			  if(context.type === 'bar') {
-				
-				var stylecolor;
-				
-				console.log("context.value = " + context.value);
-				  
-		        if ( Chartist.getMultiValue(context.value) <= (-1)*(2) ) {
-		        	stylecolor = 'stroke: rgb(255, 77, 77);'  // Red 65%
-		        } else if ( Chartist.getMultiValue(context.value) < 0 ) {
-		        	stylecolor = 'stroke: rgb(255, 179, 179);'  // Red 85%
-		        } else if ( Chartist.getMultiValue(context.value) < 2 ) {
-		        	stylecolor = 'stroke: rgb(242, 242, 242);'  // Grey 95%
-		        } else if ( Chartist.getMultiValue(context.value) < 4 ) {
-		        	stylecolor = 'stroke: rgb(174, 234, 174);'  // Green 80%
-		        } else {
-		        	stylecolor = 'stroke: rgb(93, 213, 93);'  // Green 60%
-		        }
-				  
 		        context.element.attr({
-			      // style: 'stroke-width: 10px'
-			    	style: stylecolor
+		        	// style: 'stroke-width: 10px'
+		        	// style: getPosChartColor(Chartist.getMultiValue(context.value))
+			    	style: getPosChartColor(context.value)
 			    });
+		        
+		        context.element.animate({
+		            x2: {
+		              dur: 1000,
+		              from: context.x1,
+		              to: context.x2,
+		              easing: Chartist.Svg.Easing.easeOutQuint
+		            },
+		            opacity: {
+		              dur: 1000,
+		              from: 0,
+		              to: 1,
+		              easing: Chartist.Svg.Easing.easeOutQuint
+		            }
+		          });
+		        
 			  }
 			});
 	}
@@ -1875,6 +1896,29 @@ function setStatCellColor(td, zscore, sd){
     } else {
     	$(td).css({"background-color": "rgb(93, 213, 93)", "font-weight": "bold"}) // Green 60%
     }
+}
+
+function getPosChartColor(value){
+	
+	var stylecolor;
+	
+	console.log("context.value = " + JSON.stringify(value));
+	console.log("context.value-X = " + value['x']);
+	  
+    if ( value['x'] <= (-1)*(2) ) {
+    	stylecolor = 'stroke: rgb(255, 77, 77);'  // Red 65%
+    } else if ( value['x'] < 0 ) {
+    	stylecolor = 'stroke: rgb(255, 179, 179);'  // Red 85%
+    } else if ( value['x'] < 2 ) {
+    	stylecolor = 'stroke: rgb(217, 217, 217);'  // Grey 85%
+    } else if ( value['x'] < 4 ) {
+    	stylecolor = 'stroke: rgb(174, 234, 174);'  // Green 80%
+    } else {
+    	stylecolor = 'stroke: rgb(93, 213, 93);'  // Green 60%
+    }
+    
+    return stylecolor;
+	
 }
 
 function clearPlayerInfoTab(){

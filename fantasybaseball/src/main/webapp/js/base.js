@@ -100,6 +100,10 @@ mssolutions.fbapp.login.authenticate_user = function() {
  */
 mssolutions.fbapp.login.enableButtons = function() {
 
+	$('#submit_button').prop('disabled', false);
+	$('#submit-icon').hide();
+	$('#submit_button').text('Sign In');
+	
 };
 
 

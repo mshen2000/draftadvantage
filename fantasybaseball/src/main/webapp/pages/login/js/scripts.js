@@ -56,6 +56,10 @@ jQuery(document).ready(function() {
     
     $("#submit_button").click(function()
     {
+    	$('#submit_button').prop('disabled', true);
+    	$('#submit-icon').show();
+    	$('#submit_button').text(' Signing in...');
+    	
     	var email = document.querySelector('#email').value;
     	var password = document.querySelector('#password').value;
 
