@@ -1497,7 +1497,10 @@ function loadPlayerGridTable(data, isInitialLoad)
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_era, 1)}
                 }, "sDefaultContent": "0" },
                 
-            { "title": "NPV", className: "dm_export", "mData": "total_z", "render": function ( data, type, row ) {return data.toFixed(1);},
+            { "title": "NPV", className: "dm_export", "mData": "total_z", "render": function ( data, type, row ) {
+            		if (data == null) return 0;
+            		else return data.toFixed(1);
+            	},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},    
 //            { "title": "NPV", className: "dm_export", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ),
 //            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},
@@ -1902,19 +1905,19 @@ function getPosChartColor(value){
 	
 	var stylecolor;
 	
-	console.log("context.value = " + JSON.stringify(value));
-	console.log("context.value-X = " + value['x']);
+	// console.log("context.value = " + JSON.stringify(value));
+	// console.log("context.value-X = " + value['x']);
 	  
     if ( value['x'] <= (-1)*(2) ) {
-    	stylecolor = 'stroke: rgb(255, 77, 77);'  // Red 65%
+    	stylecolor = 'stroke: rgb(255, 0, 0);'  // Red 50%
     } else if ( value['x'] < 0 ) {
-    	stylecolor = 'stroke: rgb(255, 179, 179);'  // Red 85%
+    	stylecolor = 'stroke: rgb(255, 102, 102);'  // Red 70%
     } else if ( value['x'] < 2 ) {
     	stylecolor = 'stroke: rgb(217, 217, 217);'  // Grey 85%
     } else if ( value['x'] < 4 ) {
-    	stylecolor = 'stroke: rgb(174, 234, 174);'  // Green 80%
+    	stylecolor = 'stroke: rgb(77, 255, 77);'  // Green 65%
     } else {
-    	stylecolor = 'stroke: rgb(93, 213, 93);'  // Green 60%
+    	stylecolor = 'stroke: rgb(0, 230, 0);'  // Green 45%
     }
     
     return stylecolor;
