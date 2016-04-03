@@ -2,7 +2,7 @@
 
 function calcLiveAuctionValue(){
 	
-	console.log("Calc Live Auction Values: BEGIN");
+	// console.log("Calc Live Auction Values: BEGIN");
 
 	var t1 = new Date().getTime();
 	
@@ -43,13 +43,13 @@ function calcLiveAuctionValue(){
 	var iroster_of_wRes =  Math.round(roster_of_wRes);
 	var iroster_p_wRes =  Math.round(roster_p_wRes);
 	
-	console.log("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
-	console.log("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
-	console.log("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
-	console.log("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
-	console.log("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
-	console.log("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
-	console.log("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
+	// console.log("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
+	// console.log("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
+	// console.log("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
+	// console.log("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
+	// console.log("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
+	// console.log("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
+	// console.log("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
 	
 	// Sort players by descending Z
 	var data_table = $('#playergrid_table').DataTable();
@@ -83,12 +83,12 @@ function calcLiveAuctionValue(){
 	
 	var total_draftedplayersalary = getTotalDraftedSalary(data_rows);
 	
-	console.log("Total adj Salary: " + total_league_salary);
-	console.log("Total drafted player Salary: " + total_draftedplayersalary);
+	// console.log("Total adj Salary: " + total_league_salary);
+	// console.log("Total drafted player Salary: " + total_draftedplayersalary);
 	
 	var coef = (total_league_salary-total_draftedplayersalary)/posz_total;
 	
-	console.log("Coeff: " + coef);
+	// console.log("Coeff: " + coef);
 	
 	var t3 = new Date().getTime();
 	
@@ -138,7 +138,7 @@ function calcLiveAuctionValue(){
 	
 	data_table.draw( 'page' );
 	
-	console.log("Calc Live Auction Values: COMPLETE");
+	// console.log("Calc Live Auction Values: COMPLETE");
 	
 	var t5 = new Date().getTime();
 	
@@ -193,7 +193,7 @@ function getPositionalZ(playertablerows, position, position_num){
 				// Add Z value only if player is undrafted
 				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
 					totalz = totalz + value.total_z;
-					// if (position == "C")  console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+					// if (position == "C")  // console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
 				} else {
 					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
 				}
@@ -229,8 +229,8 @@ function getPositionalZ(playertablerows, position, position_num){
 	PositionalZOutput["totalz"] = totalz;
 	PositionalZOutput["avgreplz"] = avgz
 	
-	console.log(position + "-TOTAL Z: " + totalz);
-	console.log(position + "-AVG REPL Z: " + avgz);
+	// console.log(position + "-TOTAL Z: " + totalz);
+	// console.log(position + "-AVG REPL Z: " + avgz);
 	
 	return PositionalZOutput;
 	

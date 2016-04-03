@@ -148,11 +148,11 @@ $(document).ready(function()
 
     });
     $("#select-draftteamunk").change(function(e){
-    	console.log("in select-draftteamunk change");
+    	// console.log("in select-draftteamunk change");
     	if ($(this).val() != "0"){
         	$('#lbl-draftprevteamunk').text($(this).find("option:selected").text());
         	if ($("#select-draftpitcherhitterunk").val() != "0"){
-        		console.log("before loaddraftplayerselector");
+        		// console.log("before loaddraftplayerselector");
         		loadDraftUnkPlayerPosSelector();
         	}
     	} else {
@@ -191,9 +191,9 @@ $(document).ready(function()
 
     });
     $("#select-draftpitcherhitterunk").change(function(e){
-    	console.log("in select-draftpitcherhitterunk change");
+    	// console.log("in select-draftpitcherhitterunk change");
     	if (($(this).val() != "0")&&($("#select-draftteamunk").val() != "0")){
-    		console.log("before loaddraftplayerselector");
+    		// console.log("before loaddraftplayerselector");
     		loadDraftUnkPlayerPosSelector();
     	}
     	
@@ -307,9 +307,9 @@ $(document).ready(function()
 
 		playernoterow.team_player_note = playernote;
 		
-		console.log("Note Player: " + playernoterow.full_name);
-		console.log("Note Player ID: " + playernoterow.id);
-		console.log("Note Player team_player_note: " + playernoterow.team_player_note);
+		// console.log("Note Player: " + playernoterow.full_name);
+		// console.log("Note Player ID: " + playernoterow.id);
+		// console.log("Note Player team_player_note: " + playernoterow.team_player_note);
 		
 		playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
 		
@@ -335,7 +335,7 @@ $(document).ready(function()
                   action: function(dialog) {
                 	  $("#btn-confirm-delete-league").prop("disabled",true);
                 	var selected = $("#league-select").find("option:selected").val();
-                	console.log("Selected league id: " + selected);
+                	// console.log("Selected league id: " + selected);
                 	mssolutions.fbapp.draftmanager.deleteLeague(selected);
                   }
               }, {
@@ -386,7 +386,7 @@ $(document).ready(function()
 	    else if ($('#select-draftedplayerfilter').val() == '-1') regex_drafted = ''; 
 	    else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
 		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-		console.log('regex_drafted = ' + regex_drafted);
+		// console.log('regex_drafted = ' + regex_drafted);
 		$('#playergrid_table').DataTable().columns( 35 ).search( false );
 		$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();
 	});
@@ -406,7 +406,7 @@ $(document).ready(function()
         if ($(this).val() == '0') regex_drafted = '(^$)|(\s+$)'; 
         else if ($(this).val() == '-1') regex_drafted = ''; 
         else regex_drafted = $(this).find("option:selected").text();
-        console.log('regex_drafted = ' + regex_drafted);
+        // console.log('regex_drafted = ' + regex_drafted);
         $('#playergrid_table').DataTable().columns( 35 ).search( false );
         $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();	
       });
@@ -434,11 +434,11 @@ $(document).ready(function()
 		playerdraftrow.team_roster_position = position;
 		playerdraftrow.team_player_salary = amount;
 		
-		console.log("Draft Player: " + playerdraftrow.full_name);
-		console.log("Draft Player ID: " + playerdraftrow.id);
-		console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
-		console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
-		console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
+		// console.log("Draft Player: " + playerdraftrow.full_name);
+		// console.log("Draft Player ID: " + playerdraftrow.id);
+		// console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+		// console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
+		// console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
 		
 		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
 		
@@ -483,10 +483,10 @@ $(document).ready(function()
 		unknownplayerrow.team_player_salary = amount;
 		unknownplayerrow.unknownplayer = true;
 		
-		console.log("Draft Unknown Player: " + unknownplayerrow.full_name);
-		console.log("Draft Unknown Player leagueteam_id: " + unknownplayerrow.leagueteam_id);
-		console.log("Draft Unknown Player roster_position: " + unknownplayerrow.team_roster_position);
-		console.log("Draft Unknown Player salary: " + unknownplayerrow.team_player_salary);
+		// console.log("Draft Unknown Player: " + unknownplayerrow.full_name);
+		// console.log("Draft Unknown Player leagueteam_id: " + unknownplayerrow.leagueteam_id);
+		// console.log("Draft Unknown Player roster_position: " + unknownplayerrow.team_roster_position);
+		// console.log("Draft Unknown Player salary: " + unknownplayerrow.team_player_salary);
 		
 		// If unknown player doesnt already exist in the playertable, 
 		// add it to the playertable
@@ -529,7 +529,7 @@ $(document).ready(function()
     	// Otherwise, use the playerid
     	if (roster_row.name.trim().substring(0, 2) == "[U") {
     		
-    		console.log("Undrafting unknown player");
+    		// console.log("Undrafting unknown player");
     		
     		var row = player_table
     	    .rows( function ( idx, data, node ) {
@@ -541,7 +541,7 @@ $(document).ready(function()
     		showUndraftPlayerDialog(row[0]);
 
     	} else {
-    		console.log("Undrafting known player");
+    		// console.log("Undrafting known player");
             data1 = player_table.row('#' + roster_row.playerid).data();
             // console.log(JSON.stringify(data1));
             showUndraftPlayerDialog(data1);
@@ -557,8 +557,8 @@ $(document).ready(function()
 		var teamid = $('#team-select').find("option:selected").val();
 		var teamname = $('#team-select').find("option:selected").text();
 		
-		console.log(roster_row);
-		console.log(roster_row.playerid);
+		// console.log(roster_row);
+		// console.log(roster_row.playerid);
 
     	var player_table = $('#playergrid_table').DataTable();
     	var data;
@@ -575,7 +575,7 @@ $(document).ready(function()
     	    } ).data()[0];
     		
             playerdraftrow = data;
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
             
             var playername = roster_row.name.substring(3, roster_row.name.length).trim()
 
@@ -610,16 +610,17 @@ $(document).ready(function()
     		
             data = player_table.row('#' + roster_row.playerid).data();
             playerdraftrow = data;
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
             
             // resetDraftPlayerModal(roster_row);
             $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
             $("#header-draftplayer").val(data.id);
             $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
+            $("#select-draftteam").val(teamid);
             
             loadDraftPlayerAmtSelector();
             loadDraftPlayerPosSelector(roster_row.position);
-        	$("#select-draftteam").val(teamid);
+        	
         	// $("#select-draftamt").val(roster_row.salary);
         	$("#select-draftposition").val(roster_row.position);
         	
@@ -832,7 +833,7 @@ function filterPlayerPosition(position){
     if ($('#select-draftedplayerfilter').val() == '0') regex_drafted = '(^$)|(\s+$)'; 
     else if ($('#select-draftedplayerfilter').val() == '-1') regex_drafted = ''; 
     else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
-    console.log('regex_drafted = ' + regex_drafted);
+    // console.log('regex_drafted = ' + regex_drafted);
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
 	$('#playergrid_table').DataTable().columns( 35 ).search( false );
 	$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true );	
@@ -843,7 +844,7 @@ function filterPlayerType(pitcherhitter){
     if ($('#select-draftedplayerfilter').val() == '0') regex_drafted = '(^$)|(\s+$)'; 
     else if ($('#select-draftedplayerfilter').val() == '-1') regex_drafted = ''; 
     else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
-    console.log('regex_drafted = ' + regex_drafted);
+    // console.log('regex_drafted = ' + regex_drafted);
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
 	$('#playergrid_table').DataTable().columns( 35 ).search( false );
 	$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true );	
@@ -861,7 +862,7 @@ function updateTeamInfoTab(){
 		loadTeamRosterTable(liveteamrostertemplate, false);
 		
 		var teamid = $("#team-select").find("option:selected").val();
-		console.log("TeamID: " + teamid);
+		// console.log("TeamID: " + teamid);
 		var playertable = $('#playergrid_table').DataTable();
 		var teamrostertable = $('#teamroster_table').DataTable();
 		
@@ -895,9 +896,9 @@ function updateTeamInfoTab(){
 		// Find team in global team list
 		var team;
 		$.each( dm_globalteamlist, function( key, value ) {
-			console.log("Each teamlist: " + value.team_name);
+			// console.log("Each teamlist: " + value.team_name);
 			if (teamid == value.id){
-				console.log("Found team: " + value.team_name);
+				// console.log("Found team: " + value.team_name);
 				team = value;
 				return false;
 			}
@@ -908,8 +909,8 @@ function updateTeamInfoTab(){
 		var spots = liveteamrostertemplate.length - teamplayers.length - dm_rescount;
 		var perplayer = balance / spots;
 		
-		console.log("Team salary: " + teamstartingsalary);
-		console.log("Sum of salaries: " + teamrostertable.column( 4 ).data().sum());
+		// console.log("Team salary: " + teamstartingsalary);
+		// console.log("Sum of salaries: " + teamrostertable.column( 4 ).data().sum());
 		
 		$('#lbl-teambalance').text("Balance: $" + balance + "  ");
 		$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
@@ -978,11 +979,15 @@ function resetDraftUnknownPlayerModal(){
  */
 function loadDraftPlayerPosSelector(updateplayerposition){
 	
+	// console.log("In loadDraftPlayerPosSelector");
+	
 	var teamid = $("#select-draftteam").val();
+	var teamname = $("#select-draftteam").find("option:selected").text();
 	var posselector = $("#select-draftposition");
 	posselector.find('option').remove().end();
 
 	// console.log("TeamID: " + teamid);
+	// console.log("TeamName: " + teamname);
 	
 	var playertable = $('#playergrid_table').DataTable();
 	
@@ -1261,12 +1266,12 @@ function loadTeamRosterTable(data, isInitialLoad)
         };
 	
 	if (isInitialLoad) 	{
-		console.log("window height: " + calcDataTableHeight());
+		// console.log("window height: " + calcDataTableHeight());
 		data_table = table_element.dataTable(config);
 		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
 		
 	} else {
-		console.log("window height: " + calcDataTableHeight());
+		// console.log("window height: " + calcDataTableHeight());
 		data_table = table_element.DataTable();
 		data_table.destroy();
 		table_element.empty();
@@ -1281,7 +1286,7 @@ function loadTeamRosterTable(data, isInitialLoad)
     	var data_table_b = $('#teamroster_table').DataTable();
         var rows = data_table_b.rows( indexes ).data();
         // console.log("Select: " + rowData[0].name);
-        console.log("Select: " + JSON.stringify(rows[0]));
+        // console.log("Select: " + JSON.stringify(rows[0]));
         if ((rows[0].name == null)||(rows[0].name == "")){
         	data_table_b.rows( indexes ).deselect();
         } else {
@@ -1533,10 +1538,10 @@ function loadPlayerGridTable(data, isInitialLoad)
         };
 	
 	if (isInitialLoad) 	{
-		console.log("window height: " + calcDataTableHeight());
+		// console.log("window height: " + calcDataTableHeight());
 		data_table = table_element.dataTable(config);
 	} else {
-		console.log("window height: " + calcDataTableHeight());
+		// console.log("window height: " + calcDataTableHeight());
 		data_table = table_element.DataTable();
 		data_table.destroy();
 		table_element.empty();
@@ -1908,14 +1913,14 @@ function getPosChartColor(value){
 	// console.log("context.value = " + JSON.stringify(value));
 	// console.log("context.value-X = " + value['x']);
 	  
-    if ( value['x'] <= (-1)*(2) ) {
+    if ( value['x'] <= (-1)*(2.5) ) {
     	stylecolor = 'stroke: rgb(255, 0, 0);'  // Red 50%
     } else if ( value['x'] < 0 ) {
     	stylecolor = 'stroke: rgb(255, 102, 102);'  // Red 70%
-    } else if ( value['x'] < 2 ) {
+    } else if ( value['x'] < 2.5 ) {
     	stylecolor = 'stroke: rgb(217, 217, 217);'  // Grey 85%
-    } else if ( value['x'] < 4 ) {
-    	stylecolor = 'stroke: rgb(77, 255, 77);'  // Green 65%
+    } else if ( value['x'] < 5 ) {
+    	stylecolor = 'stroke: rgb(102, 255, 102);'  // Green 70%
     } else {
     	stylecolor = 'stroke: rgb(0, 230, 0);'  // Green 45%
     }
@@ -1961,11 +1966,11 @@ function showUndraftPlayerDialog(playergridundraftrow){
             		playerdraftrow.team_roster_position = "";
             		playerdraftrow.team_player_salary = 0;
             		
-            		console.log("Undraft Player: " + playerdraftrow.full_name);
-            		console.log("Undraft Player ID: " + playerdraftrow.id);
-            		console.log("Undraft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
-            		console.log("Undraft Player roster_position: " + playerdraftrow.team_roster_position);
-            		console.log("Undraft Player salary: " + playerdraftrow.team_player_salary);
+            		// console.log("Undraft Player: " + playerdraftrow.full_name);
+            		// console.log("Undraft Player ID: " + playerdraftrow.id);
+            		// console.log("Undraft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+            		// console.log("Undraft Player roster_position: " + playerdraftrow.team_roster_position);
+            		// console.log("Undraft Player salary: " + playerdraftrow.team_player_salary);
             		
             		data_table.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
             		
@@ -2137,7 +2142,7 @@ function loadLeagueSelector(data){
 	
 	if (undefined !== data){
 		$.each(data, function() {
-			console.log("Loading league selector: ID-" + this.id + " VAL-" + this.league_name);
+			// console.log("Loading league selector: ID-" + this.id + " VAL-" + this.league_name);
 			options.append($("<option value='"+ this.id +"'/>").text(this.league_name + "(" + this.league_year + ")"));
 		});
 	} else {
@@ -2200,7 +2205,7 @@ function loadTeamSelect(data){
 mssolutions.fbapp.draftmanager.updatePlayerNote = function(league_id, 
 		player_projected_id, team_player_note) {
 	
-	console.log("In updatePlayerNote...");
+	// console.log("In updatePlayerNote...");
 	
 	gapi.client.draftapp.league.updateplayernote({
 		'league_id' : league_id,
@@ -2224,7 +2229,7 @@ mssolutions.fbapp.draftmanager.updatePlayerNote = function(league_id,
 mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id, 
 		player_projected_id, team_roster_position, team_player_salary) {
 	
-	console.log("In draftPlayer...");
+	// console.log("In draftPlayer...");
 	
 	gapi.client.draftapp.league.draftplayer({
 		'league_id' : league_id,
@@ -2248,7 +2253,7 @@ mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id,
 mssolutions.fbapp.draftmanager.draftUnknownPlayer = function(league_id, league_team_id, 
 		unknown_player_name, pitcher_hitter, team_roster_position, team_player_salary) {
 	
-	console.log("In draftUnknownPlayer...");
+	// console.log("In draftUnknownPlayer...");
 	
 	gapi.client.draftapp.league.draftplayer({
 		'league_id' : league_id,
@@ -2273,7 +2278,7 @@ mssolutions.fbapp.draftmanager.draftUnknownPlayer = function(league_id, league_t
  */
 mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, player_projected_id) {
 	
-	console.log("In undraftPlayer...");
+	// console.log("In undraftPlayer...");
 	
 	gapi.client.draftapp.league.undraftplayer({
 		'league_id' : league_id,
@@ -2293,7 +2298,7 @@ mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, player_projec
  */
 mssolutions.fbapp.draftmanager.undraftUnknownPlayer = function(league_id, unknown_player_name) {
 	
-	console.log("In undraftUnknownPlayer...");
+	// console.log("In undraftUnknownPlayer...");
 	
 	gapi.client.draftapp.league.undraftplayer({
 		'league_id' : league_id,
@@ -2337,7 +2342,7 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
  * Get league roster via the API.
  */
 mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
-	console.log("getLeagueRoster, leagueid: " + leagueid);
+	// console.log("getLeagueRoster, leagueid: " + leagueid);
 	gapi.client.draftapp.league.getleagueroster({
 		'id' : leagueid}).execute(
       function(resp) {
@@ -2362,8 +2367,8 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         	
         	dm_teamrostercounts = counts;
         	dm_rescount = counts["RES"];
-        	console.log("Roster Counts: " + JSON.stringify(dm_teamrostercounts));
-        	console.log("RES Count: " + dm_rescount);
+        	// console.log("Roster Counts: " + JSON.stringify(dm_teamrostercounts));
+        	// console.log("RES Count: " + dm_rescount);
         	
         	// Load the blank roster template into a datatable
         	loadTeamRosterTable(resp.items, false);
@@ -2378,7 +2383,7 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
  * Get league teams via the API.
  */
 mssolutions.fbapp.draftmanager.getLeagueTeams = function(leagueid) {
-	console.log("getLeagueTeams, leagueid: " + leagueid);
+	// console.log("getLeagueTeams, leagueid: " + leagueid);
 	gapi.client.draftapp.league.getleagueteams({
 		'id' : leagueid}).execute(
       function(resp) {
@@ -2397,7 +2402,7 @@ mssolutions.fbapp.draftmanager.getLeagueTeams = function(leagueid) {
  * Get league player data via the API.
  */
 mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
-	console.log("getLeaguePlayerData, leagueid: " + leagueid);
+	// console.log("getLeaguePlayerData, leagueid: " + leagueid);
 	gapi.client.draftapp.league.getleagueplayerdata({
 		'id' : leagueid}).execute(
       function(resp) {
@@ -2416,7 +2421,7 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
  * Delete a league via the API.
  */
 mssolutions.fbapp.draftmanager.deleteLeague = function(leagueid) {
-	console.log("Deleting League id..." + leagueid);
+	// console.log("Deleting League id..." + leagueid);
 	gapi.client.draftapp.league.deleteleague({
 		'id' : leagueid}).execute(
       function(resp) {
