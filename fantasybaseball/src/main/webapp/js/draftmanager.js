@@ -1391,7 +1391,7 @@ function loadLeagueStandingsTable(data, isInitialLoad)
             	{return data.toFixed(2) + " (" + row.team_pitcher_whip_score + ")";},
                 "sDefaultContent": ""},
             { "visible": false, "title": "WHIP S", "mData": "team_pitcher_whip_score", "sDefaultContent": ""},
-            { "title": "Total Score", "mData": "total_score", "sDefaultContent": ""},
+            { "title": "Total", "mData": "total_score", "sDefaultContent": ""},
 
         ]
         };
@@ -1477,7 +1477,9 @@ function loadPlayerGridTable(data, isInitialLoad)
             		return data + " (" + row.team + ")";
             	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
                 }},
-            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "" },
+            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "", 
+                	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
+                },
             { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
             { "title": "Pos", className: "dm_export", "mData": "player_position", "sDefaultContent": ""},
             { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},
@@ -1822,7 +1824,9 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
             		return data + " (" + row.team + ")";
             	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
                 }},
-            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "" },
+            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "", 
+                	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
+                },
             { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
             { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},
             { "title": "Avg", className: "dm_stat dm_export", "mData": "hitter_avg", "render": function ( data, type, row ) {
@@ -1996,6 +2000,16 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 		data_table = table_element.DataTable();
 	}
 
+}
+
+function setAgeCellColor(td, age){
+    if ( age <= 27 ) {
+    	$(td).css("background-color", "rgb(153, 235, 255)"); // Light Blue 80%
+    }  else if ( age < 33 ) {
+    	$(td).removeProp("background-color");
+    } else {
+    	$(td).css("background-color", "rgb(255, 153, 153)"); // Red 80%
+    }
 }
 
 function setStatCellColor(td, zscore, sd){
