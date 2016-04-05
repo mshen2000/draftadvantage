@@ -1910,13 +1910,15 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 	    	"processing": true,
 	        data: data,
 	        "order": [[ 14, "desc" ]],
-	        "columns": [
+	        "columns": [ 
 	            { "title": "Name", className: "dm_export", "mData": "full_name",  "render": function ( data, type, row ) {
 	            	if ((row.team_player_note == null)||(row.team_player_note.trim() == ""))
 	            		return data + " (" + row.team + ")";
 	            	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
 	                }},
-	            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "" },
+	            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "",
+	                	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
+	                },
 	            { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
 	            { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},
 	         
