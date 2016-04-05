@@ -946,7 +946,7 @@ function loadDraftPlayerAmtSelector(){
 	amtselector.find('option').remove().end();
 	amtselectorunk.find('option').remove().end();
 
-	for (i = 1; i <= 100; i++) { 
+	for (i = 0; i <= 100; i++) { 
 		amtselector.append($("<option value='" + i + "'/>").text("$" + i));
 		amtselectorunk.append($("<option value='" + i + "'/>").text("$" + i));
 	}
