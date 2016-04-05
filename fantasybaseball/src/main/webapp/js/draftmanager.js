@@ -50,6 +50,12 @@ var dm_globalteamlist;
 // Regex definition for filtering undrafted vs all players
 var regex_drafted = '';
 
+// League definition from server
+var dm_leagueinfo;
+
+// Array of estimated team standings data
+var dm_teamstandings;
+
 // League selector listener
 $(function() {
 	  $('#league-select').on('change', function(){
@@ -82,6 +88,13 @@ $(document).ready(function()
 	});
 	
 	// Tab change event
+	$("a[href='#maintab3']").on('shown.bs.tab', function (e) {
+
+		calcStandings(); 
+
+	});
+	
+	// Tab change event
 	$("a[href='#maintab2']").on('shown.bs.tab', function (e) {
 		
 		var player_table = $('#playergrid_table').DataTable();
@@ -94,6 +107,7 @@ $(document).ready(function()
 		    return v.unknownplayer == false && isdrafted == false;
 		});
 		
+		// Sort by descending Z
 		filtered_data.sort(function(a, b) {
 		    return parseFloat(b.total_z) - parseFloat(a.total_z);
 		});
@@ -827,6 +841,8 @@ $(document).ready(function()
 	loadPositionalTable(null, $("#pos_sp_table"), true, false);
 	loadPositionalTable(null, $("#pos_rp_table"), true, false);
 	
+	loadLeagueStandingsTable(null, true);
+	
 });
 
 function filterPlayerPosition(position){
@@ -1304,6 +1320,94 @@ function loadTeamRosterTable(data, isInitialLoad)
 }
 
 
+function loadLeagueStandingsTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#league_standings_table');
+	var config = {
+        "bSort" : true,
+        "searching": false,
+        "paging": false,
+        "info": false,
+        "order": [[ 23, "desc" ]],
+		responsive: true,
+    	"processing": true,
+        data: data,
+        select: {
+            style:    'single'
+        },
+        rowId: 'id',
+        "createdRow": function ( row, data, index ) {
+        	console.log("data.isMyTeam: " + data.isMyTeam)
+            if ( data.isMyTeam ) {
+//                $('td', row).eq(2).addClass('highlight');
+//                $('td', row).eq(3).addClass('highlight');
+//                $('td', row).eq(4).addClass('highlight');
+//                $('td', row).addClass('highlight');
+                $('td', row).css("font-weight", "bold");
+            }
+        },
+        "columns": [
+            { "visible": false, "title": "Team ID", "mData": "team_id", "sDefaultContent": ""},	
+            { "visible": false, "title": "isMyTeam", "mData": "isMyTeam", "sDefaultContent": ""},	
+            { "title": "Team", "mData": "team_name", "sDefaultContent": ""},	
+            { "title": "Avg", "mData": "team_hitter_avg", "render": function ( data, type, row ) {
+            		var avgnum = data.toFixed(3);
+                    return avgnum.toString().substr(avgnum.length - 4) + " (" + row.team_hitter_avg_score +")";
+                },
+                "sDefaultContent": ""},
+            { "visible": false, "title": "Avg S", "mData": "team_hitter_avg_score", "sDefaultContent": ""},
+            { "title": "HR", "mData": "team_hitter_hr", "render": function ( data, type, row ) 
+            	{return data.toFixed(0) + " (" + row.team_hitter_hr_score + ")";}, "sDefaultContent": ""},
+            { "visible": false, "title": "HR S", "mData": "team_hitter_hr_score", "sDefaultContent": ""},
+            { "title": "SB", "mData": "team_hitter_sb", "render": function ( data, type, row ) 
+            	{return data.toFixed(0) + " (" + row.team_hitter_sb_score + ")";}, "sDefaultContent": ""},
+            { "visible": false, "title": "SB S", "mData": "team_hitter_sb_score", "sDefaultContent": ""},
+            { "title": "R", "mData": "team_hitter_runs", "render": function ( data, type, row ) 
+            	{return data.toFixed(0) + " (" + row.team_hitter_runs_score + ")";}, "sDefaultContent": ""},
+            { "visible": false, "title": "R S", "mData": "team_hitter_runs_score", "sDefaultContent": ""},
+            { "title": "RBI", "mData": "team_hitter_rbi", "render": function ( data, type, row ) 
+            	{return data.toFixed(0) + " (" + row.team_hitter_rbi_score + ")";},
+                "sDefaultContent": ""},
+            { "visible": false, "title": "RBI S", "mData": "team_hitter_rbi_score", "sDefaultContent": ""},
+            
+            { "title": "W", "mData": "team_pitcher_w", "render": function ( data, type, row ) 
+            	{return data.toFixed(0) + " (" + row.team_pitcher_w_score + ")";},
+                "sDefaultContent": ""},
+            { "visible": false, "title": "W S", "mData": "team_pitcher_w_score", "sDefaultContent": ""},
+            { "title": "SV", "mData": "team_pitcher_sv", "render": function ( data, type, row ) 
+            	{return data.toFixed(0) + " (" + row.team_pitcher_sv_score + ")";},
+                "sDefaultContent": ""},
+            { "visible": false, "title": "SV S", "mData": "team_pitcher_sv_score", "sDefaultContent": ""},
+            { "title": "SO", "mData": "team_pitcher_k", "render": function ( data, type, row ) 
+            	{return data.toFixed(0) + " (" + row.team_pitcher_k_score + ")";},
+                "sDefaultContent": ""},
+            { "visible": false, "title": "SO S", "mData": "team_pitcher_k_score", "sDefaultContent": ""},
+            { "title": "ERA", "mData": "team_pitcher_era", "render": function ( data, type, row ) 
+            	{return data.toFixed(2) + " (" + row.team_pitcher_era_score + ")";},
+                "sDefaultContent": ""},
+            { "visible": false, "title": "ERA S", "mData": "team_pitcher_era_score", "sDefaultContent": ""},
+            { "title": "WHIP", "mData": "team_pitcher_whip", "render": function ( data, type, row ) 
+            	{return data.toFixed(2) + " (" + row.team_pitcher_whip_score + ")";},
+                "sDefaultContent": ""},
+            { "visible": false, "title": "WHIP S", "mData": "team_pitcher_whip_score", "sDefaultContent": ""},
+            { "title": "Total Score", "mData": "total_score", "sDefaultContent": ""},
+
+        ]
+        };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+		data_table = table_element.DataTable();
+	}
+
+}
+
 function loadPlayerGridTable(data, isInitialLoad)
 {
     var calcDataTableHeight = function() {
@@ -1527,12 +1631,15 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "visible": false, "title": "id", "mData": "id", "sDefaultContent": "" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
-//            { "visible": false, "title": "zAVG", "mData": "hitter_z_avg", "render": function ( data, type, row ) {
-//            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
-//                }, "sDefaultContent": "" },
             { "visible": false, "title": "LP ID", "mData": "league_player_id", "sDefaultContent": "" },
             { "visible": false, "title": "unk", "mData": "unknownplayer", "sDefaultContent": "" },
             { "visible": false, className: "dm_export", "title": "note", "mData": "team_player_note", "sDefaultContent": "" },
+            { "visible": false, "title": "hitter_hits", "mData": "hitter_hits", "sDefaultContent": "" },
+            { "visible": false, "title": "hitter_ab", "mData": "hitter_ab", "sDefaultContent": "" },
+            { "visible": false, "title": "pitcher_er", "mData": "pitcher_er", "sDefaultContent": "" },
+            { "visible": false, "title": "pitcher_ip", "mData": "pitcher_ip", "sDefaultContent": "" },
+            { "visible": false, "title": "pitcher_bb", "mData": "pitcher_bb", "sDefaultContent": "" },
+            { "visible": false, "title": "pitcher_hits", "mData": "pitcher_hits", "sDefaultContent": "" },
             
         ]
         };
@@ -2121,12 +2228,14 @@ function loadLeagueContent(leagueid){
 	
 	$("#intro-container").hide();
 	$("#league-container").show();
-	
+
 	mssolutions.fbapp.draftmanager.getLeaguePlayerData(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueTeams(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueRoster(leagueid);
 	updateTeamInfoTab();
 	clearPlayerInfoTab();
+	
+	mssolutions.fbapp.draftmanager.getLeagueInfo(leagueid);
 }
 
 function loadLeagueIntro(){
@@ -2412,6 +2521,25 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
         }
         else {
         	console.log("Failed to get league player data: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * Get league info via the API.
+ */
+mssolutions.fbapp.draftmanager.getLeagueInfo = function(leagueid) {
+	// console.log("getLeaguePlayerData, leagueid: " + leagueid);
+	gapi.client.draftapp.league.getleagueinfo({
+		'id' : leagueid}).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("League info get complete.");
+        	// console.log("League Info: " + JSON.stringify(resp));
+        	dm_leagueinfo = resp;
+        }
+        else {
+        	console.log("Failed to get league info: ", resp.code + " : " + resp.message);
         }
       });
 };

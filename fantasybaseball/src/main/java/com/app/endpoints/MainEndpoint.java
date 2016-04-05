@@ -171,6 +171,15 @@ public class MainEndpoint {
 //
 //	}
 	
+	@ApiMethod(name = "league.getleagueinfo", httpMethod = HttpMethod.GET)
+	public League getLeagueInfo(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
+		System.out.println("In getLeagueInfo, id: " + id);
+		validateUserToken(req);
+
+		return new League(getLeagueService().get(id));
+
+	}
+	
 	@ApiMethod(name = "league.getleagueplayerdata", httpMethod = HttpMethod.GET)
 	public List<LeaguePlayerOutput> getLeaguePlayerData(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
 		System.out.println("In getLeaguePlayerData, id: " + id);

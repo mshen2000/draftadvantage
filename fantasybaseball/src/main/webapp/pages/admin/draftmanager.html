@@ -52,14 +52,19 @@
 	margin-top: 10px !important;
 }
 
-.dataTable > thead > tr > th[class*="sort"]:after{
+#playergrid_table > thead > tr > th[class*="sort"]:after,
+#teamroster_table > thead > tr > th[class*="sort"]:after {
     content: "" !important;
 }
 
-table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
-table.dataTable thead > tr > td.sorting_asc,
-table.dataTable thead > tr > td.sorting_desc,
-table.dataTable thead > tr > td.sorting {
+#playergrid_table thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
+#playergrid_table thead > tr > td.sorting_asc,
+#playergrid_table thead > tr > td.sorting_desc,
+#playergrid_table thead > tr > td.sorting,
+#teamroster_table thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
+#teamroster_table thead > tr > td.sorting_asc,
+#teamroster_table thead > tr > td.sorting_desc,
+#teamroster_table thead > tr > td.sorting {
   padding-right: 6px !important;
 }
 
@@ -230,21 +235,14 @@ td { font-size: 12px; }
 		<ul class="nav nav-tabs">
 		  <li class="active"><a data-toggle="tab" href="#maintab1">Draft Analysis</a></li>
 		  <li><a data-toggle="tab" href="#maintab2">Position Availability</a></li>
-		  <li><a data-toggle="tab" href="#maintab3">League Details</a></li>
+		  <li><a data-toggle="tab" href="#maintab3">Standings</a></li>
+		  <li><a data-toggle="tab" href="#maintablast">League Details</a></li>
 		</ul>
 		
 		<div class="tab-content">
 		  <div id="maintab1" class="tab-pane fade in active">
 			<div class="row">
 			  <div class="col-md-9">
-<!-- 			  	<div class="row"> -->
-<!-- 			  		<div class="col-md-8"> -->
-<!-- 			  			<h3>Player Grid</h3> -->
-<!-- 			  		</div> -->
-<!-- 			  		<div class="col-md-4"> -->
-<!-- 			  			<button type="button" class="btn btn-primary btn-sm" style="margin-top:20px;float:right;" id="btn-draftunknownplayermodal">Draft Unknown</button> -->
-<!-- 					</div> -->
-<!-- 			  	</div> -->
 			  	
 			  	<h3>Player Grid</h3>
 
@@ -402,9 +400,19 @@ td { font-size: 12px; }
 		    </div>
 		  </div>
 		  <div id="maintab3" class="tab-pane fade">
-		    <h3>Menu 2</h3>
+		    <h3>Live Estimated Standings</h3>
+		    <div class="row">
+		    	<div class="col-md-8">
+		    		<table id="league_standings_table" class="table table-striped dm_standings_table" cellspacing="0" width="100%"></table>
+		    	</div>
+		    	<div class="col-md-4">
+		    	</div>
+		    </div>
+		    
+		  </div>
+		  <div id="maintablast" class="tab-pane fade">
+		    <h3>League Details Page</h3>
 		    <button type="button" class="btn btn-default" id="btn-deleteleague">Delete League</button>
-		    <p>Some content in menu 2.</p>
 		  </div>
 		</div>
 	</div>

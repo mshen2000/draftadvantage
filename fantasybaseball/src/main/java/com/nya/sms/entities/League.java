@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
@@ -98,6 +100,48 @@ public class League extends BaseEntity implements Serializable {
 		this.cat_pitcher_era = false;
 		this.cat_pitcher_whip = false;
 	}
+	
+	// Create a copy of a league "l" for export
+	// (removes user and projection profile)
+	public League (League l){
+		this.league_name = l.league_name ;
+		this.league_site = l.league_site ;
+		this.league_year = l.league_year ;
+		this.num_of_teams = l.num_of_teams ;
+		this.mlb_leagues = l.mlb_leagues ;
+		this.league_teams = l.league_teams ;
+		this.team_salary = l.team_salary ;
+		this.avg_hitter_ba = l.avg_hitter_ba ;
+		this.avg_hitter_ab = l.avg_hitter_ab ;
+		this.avg_hitter_hits = l.avg_hitter_hits ;
+		this.avg_pitcher_era = l.avg_pitcher_era ;
+		this.avg_pitcher_ip = l.avg_pitcher_ip ;
+		this.avg_pitcher_er = l.avg_pitcher_er ;
+		this.avg_pitcher_whip = l.avg_pitcher_whip ;
+		this.avg_pitcher_bbplushits = l.avg_pitcher_bbplushits ;
+		this.cat_hitter_hr = l.cat_hitter_hr ;
+		this.cat_hitter_rbi = l.cat_hitter_rbi ;
+		this.cat_hitter_r = l.cat_hitter_r ;
+		this.cat_hitter_sb = l.cat_hitter_sb ;
+		this.cat_hitter_avg = l.cat_hitter_avg ;
+		this.cat_pitcher_wins = l.cat_pitcher_wins ;
+		this.cat_pitcher_saves = l.cat_pitcher_saves ;
+		this.cat_pitcher_so = l.cat_pitcher_so ;
+		this.cat_pitcher_era = l.cat_pitcher_era ;
+		this.cat_pitcher_whip = l.cat_pitcher_whip ;
+		this.num_1b = l.num_1b ;
+		this.num_2b = l.num_2b ;
+		this.num_3b = l.num_3b ;
+		this.num_ss = l.num_ss ;
+		this.num_c = l.num_c ;
+		this.num_of = l.num_of ;
+		this.num_p = l.num_p ;
+		this.num_util = l.num_util ;
+		this.num_res = l.num_res ;
+		this.num_mi = l.num_mi ;
+		this.num_ci = l.num_ci ;
+		
+	}
 
 	public String getLeague_name() {
 		return league_name;
@@ -116,7 +160,8 @@ public class League extends BaseEntity implements Serializable {
 	}
 
 	public User getUser() {
-		return user.get();
+		if (this.user == null) return new User("no-user","no-user");
+		else return user.get();
 	}
 
 	public void setUser(User user) {
@@ -161,6 +206,7 @@ public class League extends BaseEntity implements Serializable {
 	}
 
 	public ProjectionProfile getProjection_profile() {
+		if (this.projection_profile == null) return new ProjectionProfile();
 		return projection_profile.get();
 	}
 
