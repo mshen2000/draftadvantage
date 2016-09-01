@@ -16,6 +16,7 @@ import com.app.endpoints.LeaguePlayerOutput;
 import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.LeagueRosterItem;
+import com.app.endpoints.entities.PositionZPriorityContainer;
 import com.app.endpoints.entities.PositionalZContainer;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
@@ -624,15 +625,18 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		        return 0;
 		    }
 		});
+		
+		PositionZPriorityContainer priority = new PositionZPriorityContainer();
+		
+		System.out.println("Position Z Priority INITIAL C: " + priority.getPriority_c());
 
-		// make a test change
-		PositionalZContainer posz_c = getPositionalZ(playeroutput, "C", iroster_c);
-		PositionalZContainer posz_1b = getPositionalZ(playeroutput, "1B", iroster_1b);
-		PositionalZContainer posz_2b = getPositionalZ(playeroutput, "2B", iroster_2b);
-		PositionalZContainer posz_3b = getPositionalZ(playeroutput, "3B", iroster_3b);
-		PositionalZContainer posz_ss = getPositionalZ(playeroutput, "SS", iroster_ss);
-		PositionalZContainer posz_of = getPositionalZ(playeroutput, "OF", iroster_of);
-		PositionalZContainer posz_p = getPositionalZ(playeroutput, "P", iroster_p);
+		PositionalZContainer posz_c = getPositionalZ(playeroutput, "C", iroster_c, true, priority);
+		PositionalZContainer posz_1b = getPositionalZ(playeroutput, "1B", iroster_1b, true, priority);
+		PositionalZContainer posz_2b = getPositionalZ(playeroutput, "2B", iroster_2b, true, priority);
+		PositionalZContainer posz_3b = getPositionalZ(playeroutput, "3B", iroster_3b, true, priority);
+		PositionalZContainer posz_ss = getPositionalZ(playeroutput, "SS", iroster_ss, true, priority);
+		PositionalZContainer posz_of = getPositionalZ(playeroutput, "OF", iroster_of, true, priority);
+		PositionalZContainer posz_p = getPositionalZ(playeroutput, "P", iroster_p, true, priority);
 		double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
 
 		double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
@@ -784,9 +788,11 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param leagueplayers
 	 * @param position
 	 * @param repl_level
+	 * @param priority
 	 * @return 
 	 */
-	private PositionalZContainer getPositionalZ(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level){
+	private PositionalZContainer getPositionalZ(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level,
+			boolean isInitialPriority, PositionZPriorityContainer priority){
 		
 		int i = 0;
 		double totalz = 0;
