@@ -1,5 +1,12 @@
 package com.app.endpoints.entities;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import com.app.endpoints.utilities.Pair;
+
 public class PositionZPriorityContainer {
 
 	int priority_c;
@@ -10,8 +17,50 @@ public class PositionZPriorityContainer {
 	int priority_of;
 	int priority_p;
 	int priority_dh;
+	
+	List<String> pos_priority;
+	
+
 
 	public PositionZPriorityContainer() {
+		
+		this.priority_c = -1;
+		this.priority_1b = -1;
+		this.priority_2b = -1;
+		this.priority_ss = -1;
+		this.priority_3b = -1;
+		this.priority_of = -1;
+		this.priority_p = -1;
+		this.priority_dh = -1;
+
+	}
+	
+	public PositionZPriorityContainer(double zc, double z1b, double z2b, double zss, 
+			double z3b, double zof, double zp, double zdh) {
+		
+		List<Pair<String,Double>> listpair = new ArrayList<Pair<String,Double>>();
+		
+		listpair.add(Pair.of("c", zc));
+		listpair.add(Pair.of("1b", z1b));
+		listpair.add(Pair.of("2b", z2b));
+		listpair.add(Pair.of("ss", zss));
+		listpair.add(Pair.of("3b", z3b));
+		listpair.add(Pair.of("of", zof));
+		listpair.add(Pair.of("p", zp));
+		
+	    Comparator<Pair<String, Double>> comparator = new Comparator<Pair<String, Double>>()
+	    	    {
+
+	    	        public int compare(Pair<String, Double> tupleA,
+	    	        		Pair<String, Double> tupleB)
+	    	        {
+	    	            return tupleA.getSecond().compareTo(tupleB.getSecond());
+	    	        }
+
+	    	    };
+
+	    Collections.sort(listpair, comparator);
+		
 		
 		this.priority_c = -1;
 		this.priority_1b = -1;

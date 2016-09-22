@@ -629,14 +629,23 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		PositionZPriorityContainer priority = new PositionZPriorityContainer();
 		
 		System.out.println("Position Z Priority INITIAL C: " + priority.getPriority_c());
+		
+		PositionalZContainer posz_c = getPositionalZpass1(playeroutput, "C", iroster_c, true, priority);
+		PositionalZContainer posz_1b = getPositionalZpass1(playeroutput, "1B", iroster_1b, true, priority);
+		PositionalZContainer posz_2b = getPositionalZpass1(playeroutput, "2B", iroster_2b, true, priority);
+		PositionalZContainer posz_3b = getPositionalZpass1(playeroutput, "3B", iroster_3b, true, priority);
+		PositionalZContainer posz_ss = getPositionalZpass1(playeroutput, "SS", iroster_ss, true, priority);
+		PositionalZContainer posz_of = getPositionalZpass1(playeroutput, "OF", iroster_of, true, priority);
+		PositionalZContainer posz_p = getPositionalZpass1(playeroutput, "P", iroster_p, true, priority);
+		
 
-		PositionalZContainer posz_c = getPositionalZ(playeroutput, "C", iroster_c, true, priority);
-		PositionalZContainer posz_1b = getPositionalZ(playeroutput, "1B", iroster_1b, true, priority);
-		PositionalZContainer posz_2b = getPositionalZ(playeroutput, "2B", iroster_2b, true, priority);
-		PositionalZContainer posz_3b = getPositionalZ(playeroutput, "3B", iroster_3b, true, priority);
-		PositionalZContainer posz_ss = getPositionalZ(playeroutput, "SS", iroster_ss, true, priority);
-		PositionalZContainer posz_of = getPositionalZ(playeroutput, "OF", iroster_of, true, priority);
-		PositionalZContainer posz_p = getPositionalZ(playeroutput, "P", iroster_p, true, priority);
+//		PositionalZContainer posz_c = getPositionalZ(playeroutput, "C", iroster_c, true, priority);
+//		PositionalZContainer posz_1b = getPositionalZ(playeroutput, "1B", iroster_1b, true, priority);
+//		PositionalZContainer posz_2b = getPositionalZ(playeroutput, "2B", iroster_2b, true, priority);
+//		PositionalZContainer posz_3b = getPositionalZ(playeroutput, "3B", iroster_3b, true, priority);
+//		PositionalZContainer posz_ss = getPositionalZ(playeroutput, "SS", iroster_ss, true, priority);
+//		PositionalZContainer posz_of = getPositionalZ(playeroutput, "OF", iroster_of, true, priority);
+//		PositionalZContainer posz_p = getPositionalZ(playeroutput, "P", iroster_p, true, priority);
 		double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
 
 		double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
@@ -783,7 +792,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	
 	
 	/**
-	 * Description:	Calculate the total Z value for the given position up to the replacement level.
+	 * Description:	(Pass 1) Calculate the total Z value for the given position up to the replacement level, 
+	 * 				regardless if player has multiple positions.
 	 * 				Also determines the avg replacement value. 
 	 * @param leagueplayers
 	 * @param position
@@ -791,7 +801,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param priority
 	 * @return 
 	 */
-	private PositionalZContainer getPositionalZ(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level,
+	private PositionalZContainer getPositionalZpass1(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level,
 			boolean isInitialPriority, PositionZPriorityContainer priority){
 		
 		int i = 0;
