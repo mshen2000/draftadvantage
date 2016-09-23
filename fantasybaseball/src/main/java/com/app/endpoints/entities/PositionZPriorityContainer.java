@@ -39,6 +39,7 @@ public class PositionZPriorityContainer {
 			double z3b, double zof, double zp, double zdh) {
 		
 		List<Pair<String,Double>> listpair = new ArrayList<Pair<String,Double>>();
+		pos_priority = new ArrayList<String>();
 		
 		listpair.add(Pair.of("c", zc));
 		listpair.add(Pair.of("1b", z1b));
@@ -60,6 +61,12 @@ public class PositionZPriorityContainer {
 	    	    };
 
 	    Collections.sort(listpair, comparator);
+	    
+	    // Collections.reverse(listpair);
+	    
+	    for (Pair p : listpair){
+	    	pos_priority.add((String) p.getFirst());
+	    }
 		
 		
 		this.priority_c = -1;
@@ -71,6 +78,14 @@ public class PositionZPriorityContainer {
 		this.priority_p = -1;
 		this.priority_dh = -1;
 
+	}
+
+	public List<String> getPos_priority() {
+		return pos_priority;
+	}
+
+	public void setPos_priority(List<String> pos_priority) {
+		this.pos_priority = pos_priority;
 	}
 
 	public int getPriority_c() {

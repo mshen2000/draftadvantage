@@ -27,6 +27,7 @@ import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
 import com.app.endpoints.entities.LeaguePlayerInputNoteContainer;
 import com.app.endpoints.entities.LeagueRosterItem;
+import com.app.endpoints.entities.PositionZPriorityContainer;
 import com.app.endpoints.entities.ProjectionPeriod;
 import com.app.endpoints.entities.ProjectionService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
@@ -399,6 +400,38 @@ public class TestLeagues {
 		List<LeagueRosterItem> items = getLeagueService().getLeagueRoster(league_id, uname);
 		Assert.assertTrue(items.size() == 26);
 
+	}
+	
+	@Test
+	public void testPositionZPriorityContainer() {
+		
+		// KEY
+		//
+		// Position		Z-score		Priority
+		// c			44.56		1
+		// 1b			105.2		5
+		// 2b			88.5		3
+		// ss			80.666		2
+		// 3b			95.12		4
+		// of			120			7
+		// p			110.1		6
+		
+		PositionZPriorityContainer c = new PositionZPriorityContainer(44.56, 105.2,88.5,80.666,95.12,120.0,110.1,1000.0);
+		System.out.println(c.getPos_priority().get(0));
+		System.out.println(c.getPos_priority().get(1));
+		System.out.println(c.getPos_priority().get(2));
+		System.out.println(c.getPos_priority().get(3));
+		System.out.println(c.getPos_priority().get(4));
+		System.out.println(c.getPos_priority().get(5));
+		System.out.println(c.getPos_priority().get(6));
+		Assert.assertTrue(c.getPos_priority().get(0) == "c");
+		Assert.assertTrue(c.getPos_priority().get(4) == "1b");
+		Assert.assertTrue(c.getPos_priority().get(2) == "2b");
+		Assert.assertTrue(c.getPos_priority().get(1) == "ss");
+		Assert.assertTrue(c.getPos_priority().get(3) == "3b");
+		Assert.assertTrue(c.getPos_priority().get(6) == "of");
+		Assert.assertTrue(c.getPos_priority().get(5) == "p");
+		
 	}
 	
 	@Test

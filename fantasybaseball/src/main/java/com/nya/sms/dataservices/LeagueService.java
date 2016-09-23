@@ -3,6 +3,7 @@ package com.nya.sms.dataservices;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -626,26 +627,42 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		    }
 		});
 		
-		PositionZPriorityContainer priority = new PositionZPriorityContainer();
+		PositionalZContainer posz_c = getPositionalZpass1(playeroutput, "C", iroster_c);
+		PositionalZContainer posz_1b = getPositionalZpass1(playeroutput, "1B", iroster_1b);
+		PositionalZContainer posz_2b = getPositionalZpass1(playeroutput, "2B", iroster_2b);
+		PositionalZContainer posz_3b = getPositionalZpass1(playeroutput, "3B", iroster_3b);
+		PositionalZContainer posz_ss = getPositionalZpass1(playeroutput, "SS", iroster_ss);
+		PositionalZContainer posz_of = getPositionalZpass1(playeroutput, "OF", iroster_of);
+		PositionalZContainer posz_p = getPositionalZpass1(playeroutput, "P", iroster_p);
 		
-		System.out.println("Position Z Priority INITIAL C: " + priority.getPriority_c());
+		PositionZPriorityContainer priority = new PositionZPriorityContainer(
+				posz_c.getTotalvalue(),
+				posz_1b.getTotalvalue(),
+				posz_2b.getTotalvalue(),
+				posz_ss.getTotalvalue(),
+				posz_3b.getTotalvalue(),
+				posz_of.getTotalvalue(),
+				posz_p.getTotalvalue(), 1000
+				);
 		
-		PositionalZContainer posz_c = getPositionalZpass1(playeroutput, "C", iroster_c, true, priority);
-		PositionalZContainer posz_1b = getPositionalZpass1(playeroutput, "1B", iroster_1b, true, priority);
-		PositionalZContainer posz_2b = getPositionalZpass1(playeroutput, "2B", iroster_2b, true, priority);
-		PositionalZContainer posz_3b = getPositionalZpass1(playeroutput, "3B", iroster_3b, true, priority);
-		PositionalZContainer posz_ss = getPositionalZpass1(playeroutput, "SS", iroster_ss, true, priority);
-		PositionalZContainer posz_of = getPositionalZpass1(playeroutput, "OF", iroster_of, true, priority);
-		PositionalZContainer posz_p = getPositionalZpass1(playeroutput, "P", iroster_p, true, priority);
+		for (String p: priority.getPos_priority()){
+			
+			System.out.println(p);
+			
+		}
+		
+		// TODO: Z sum to feed the priority calculation should be the average player z based on 
+		//       above replacement!!!
 		
 
-//		PositionalZContainer posz_c = getPositionalZ(playeroutput, "C", iroster_c, true, priority);
-//		PositionalZContainer posz_1b = getPositionalZ(playeroutput, "1B", iroster_1b, true, priority);
-//		PositionalZContainer posz_2b = getPositionalZ(playeroutput, "2B", iroster_2b, true, priority);
-//		PositionalZContainer posz_3b = getPositionalZ(playeroutput, "3B", iroster_3b, true, priority);
-//		PositionalZContainer posz_ss = getPositionalZ(playeroutput, "SS", iroster_ss, true, priority);
-//		PositionalZContainer posz_of = getPositionalZ(playeroutput, "OF", iroster_of, true, priority);
-//		PositionalZContainer posz_p = getPositionalZ(playeroutput, "P", iroster_p, true, priority);
+		posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
+		posz_1b = getPositionalZpass2(playeroutput, "1B", iroster_1b, priority);
+		posz_2b = getPositionalZpass2(playeroutput, "2B", iroster_2b, priority);
+		posz_3b = getPositionalZpass2(playeroutput, "3B", iroster_3b, priority);
+		posz_ss = getPositionalZpass2(playeroutput, "SS", iroster_ss, priority);
+		posz_of = getPositionalZpass2(playeroutput, "OF", iroster_of, priority);
+		posz_p = getPositionalZpass2(playeroutput, "P", iroster_p, priority);
+		
 		double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
 
 		double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
@@ -801,8 +818,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param priority
 	 * @return 
 	 */
-	private PositionalZContainer getPositionalZpass1(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level,
-			boolean isInitialPriority, PositionZPriorityContainer priority){
+	private PositionalZContainer getPositionalZpass1(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level){
 		
 		int i = 0;
 		double totalz = 0;
@@ -853,6 +869,114 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 	}
 	
+	/**
+	 * Description:	(Pass 2) Calculate the total Z value for the given position up to the replacement level.
+	 * 				A player may be included only once, even if they have multiple positions.  Position is decided based
+	 * 				On the PositionZPriorityContainer priority of positions.
+	 * 				Also determines the avg replacement value. 
+	 * @param leagueplayers
+	 * @param position
+	 * @param repl_level
+	 * @param priority
+	 * @return 
+	 */
+	private PositionalZContainer getPositionalZpass2(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level,
+			PositionZPriorityContainer priority){
+		
+		int i = 0;
+		double totalz = 0;
+		double avgz = 0;
+		
+		PositionalZContainer p = new PositionalZContainer();
+		
+		for (LeaguePlayerOutput po : leagueplayers){
+			
+			if (isPlayerPositionPriority(position, po.getPlayer_position(), priority)
+				&& (i < repl_level)){
+				
+				totalz = totalz + po.getTotal_z();
+				i++;
+				
+				// System.out.println(position + ": " + lp.getTotal_z());
+				
+			} else if (isPlayerPositionPriority(position, po.getPlayer_position(), priority)
+					&& (i == repl_level)){
+				
+				avgz = avgz + po.getTotal_z();
+				i++;
+				
+				// System.out.println(position + "-AVG1: " + lp.getTotal_z());
+				
+			} else if (isPlayerPositionPriority(position, po.getPlayer_position(), priority)
+					&& (i == repl_level + 1)){
+				
+				avgz = avgz + po.getTotal_z();
+				i++;
+				
+				// System.out.println(position + "-AVG2: " + lp.getTotal_z());
+				
+			} else if (i > repl_level + 1) {break;}
+
+		}
+		
+		avgz = avgz/2;
+		totalz = totalz - repl_level*avgz;
+		
+		System.out.println(position + "-TOTAL: " + totalz);
+		System.out.println(position + "-AVG REPL Z: " + avgz);
+		
+		p.setTotalvalue(totalz);
+		p.setReplacementvalue(avgz);
+		
+		return p;
+		
+	}
+	
+	
+	/**
+	 * Description:	Determine if the given position (1) matches to the player position string and
+	 * 				(2) is the highest priority position in the player position string
+	 * @param position
+	 * @param playerposition
+	 * @param priority
+	 * @return boolean
+	 */
+	private boolean isPlayerPositionPriority(String position, String playerposition, PositionZPriorityContainer priority){
+
+		// Does the player position string contain the position being looked for?
+		if (playerposition.toLowerCase().contains(position.toLowerCase())){
+
+			if (playerposition.contains(",")){
+				System.out.println("Checking isPlayerPositionPriority");
+				System.out.println("-- Player with position elig '" + playerposition + "' has position '" + position + "'");
+				
+				// For each position in the position priority list (starting from highest priority)
+				for (String p : priority.getPos_priority()){
+					System.out.println("-- Checking position priority '" + p);
+					if (position.toLowerCase().contains(p.toLowerCase())){
+						System.out.println("-- Position '" + position + "' is the highest priority for player eligibility '" + playerposition + "'");
+						return true;
+					}
+					else if (playerposition.toLowerCase().contains(p.toLowerCase())){
+						System.out.println("-- Position '" + position + "' is the NOT THE HIGHEST priority for player eligibility '" + playerposition + "'");
+						return false;
+					}
+					
+				}
+				
+				return false;
+				
+			} else return true;
+
+			
+			
+		} 
+		else {
+			// System.out.println("-- Player with position elig '" + playerposition + "' DOES NOT HAVE position '" + position + "'");
+			return false;
+		}
+		
+	}
 	
 	/**
 	 * Description:	Calculates z score
