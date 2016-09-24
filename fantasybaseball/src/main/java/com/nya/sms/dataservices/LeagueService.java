@@ -456,26 +456,32 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_hitter_hr()){
 			hitter_hr_mean = StatUtils.mean(toPrimitive(hitter_hrs));
 			hitter_hr_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_hrs)));
-			// System.out.println("Hitter HR Mean: " + hitter_hr_mean);
-			// System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
+//			 System.out.println("Hitter HR Mean: " + hitter_hr_mean);
+//			 System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
 		}
 		if (league.isCat_hitter_rbi()){
 			hitter_rbi_mean = StatUtils.mean(toPrimitive(hitter_rbis));
 			hitter_rbi_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_rbis)));
+//			 System.out.println("Hitter rbi Mean: " + hitter_rbi_mean);
+//			 System.out.println("Hitter rbi Std Dev: " + hitter_rbi_sd);
 		}
 		if (league.isCat_hitter_r()){
 			hitter_r_mean = StatUtils.mean(toPrimitive(hitter_runs));
 			hitter_r_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_runs)));
+//			 System.out.println("Hitter r Mean: " + hitter_r_mean);
+//			 System.out.println("Hitter r Std Dev: " + hitter_r_sd);
 		}
 		if (league.isCat_hitter_sb()){
 			hitter_sb_mean = StatUtils.mean(toPrimitive(hitter_sbs));
 			hitter_sb_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_sbs)));
+//			 System.out.println("Hitter sb Mean: " + hitter_sb_mean);
+//			 System.out.println("Hitter sb Std Dev: " + hitter_sb_sd);
 		}
 		if (league.isCat_hitter_avg()) {
 			hitter_avgeff_mean = StatUtils.mean(toPrimitive(hitter_avgeff));
 			hitter_avgeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_avgeff)));
-			// System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
-			// System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
+//			 System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
+//			 System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
 		}
 		
 		if (league.isCat_pitcher_wins()){
@@ -636,13 +642,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		PositionalZContainer posz_p = getPositionalZpass1(playeroutput, "P", iroster_p);
 		
 		PositionZPriorityContainer priority = new PositionZPriorityContainer(
-				posz_c.getTotalvalue(),
-				posz_1b.getTotalvalue(),
-				posz_2b.getTotalvalue(),
-				posz_ss.getTotalvalue(),
-				posz_3b.getTotalvalue(),
-				posz_of.getTotalvalue(),
-				posz_p.getTotalvalue(), 1000
+				posz_c.getAvgplayervalue(),
+				posz_1b.getAvgplayervalue(),
+				posz_2b.getAvgplayervalue(),
+				posz_ss.getAvgplayervalue(),
+				posz_3b.getAvgplayervalue(),
+				posz_of.getAvgplayervalue(),
+				posz_p.getAvgplayervalue(), 1000
 				);
 		
 		for (String p: priority.getPos_priority()){
@@ -651,8 +657,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			
 		}
 		
-		// TODO: Z sum to feed the priority calculation should be the average player z based on 
-		//       above replacement!!!
+		// TODO: Priority list needs to be based on replace average NOT average Z!!!!
+		//		 Need to update the spreadsheet as well!!!!
 		
 
 		posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
@@ -822,7 +828,9 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		int i = 0;
 		double totalz = 0;
+		double totalzaboverepl = 0;
 		double avgz = 0;
+		double avgplayerz = 0;
 		
 		PositionalZContainer p = new PositionalZContainer();
 		
@@ -834,7 +842,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				totalz = totalz + po.getTotal_z();
 				i++;
 				
-				// System.out.println(position + ": " + lp.getTotal_z());
+				// System.out.println(position + ": " + po.getTotal_z());
 				
 			} else if ((po.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
 					&& (i == repl_level)){
@@ -857,13 +865,17 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		}
 		
 		avgz = avgz/2;
-		totalz = totalz - repl_level*avgz;
+		avgplayerz = totalz/repl_level;
+		totalzaboverepl = totalz - repl_level*avgz;
 		
-		System.out.println(position + "-TOTAL: " + totalz);
+		System.out.println(position + "-CUM TOTAL ABOVE REPL: " + totalzaboverepl);
+		System.out.println(position + "-SUM of Z: " + totalz);
+		System.out.println(position + "-AVG PLAYER Z: " + avgplayerz);
 		System.out.println(position + "-AVG REPL Z: " + avgz);
 		
-		p.setTotalvalue(totalz);
+		p.setTotalvalue(totalzaboverepl);
 		p.setReplacementvalue(avgz);
+		p.setAvgplayervalue(avgplayerz);
 		
 		return p;
 		
@@ -885,6 +897,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		int i = 0;
 		double totalz = 0;
+		double totalzaboverepl = 0;
 		double avgz = 0;
 		
 		PositionalZContainer p = new PositionalZContainer();
@@ -920,12 +933,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		}
 		
 		avgz = avgz/2;
-		totalz = totalz - repl_level*avgz;
+		totalzaboverepl = totalz - repl_level*avgz;
 		
-		System.out.println(position + "-TOTAL: " + totalz);
+		System.out.println(position + "-TOTAL: " + totalzaboverepl);
 		System.out.println(position + "-AVG REPL Z: " + avgz);
 		
-		p.setTotalvalue(totalz);
+		p.setTotalvalue(totalzaboverepl);
 		p.setReplacementvalue(avgz);
 		
 		return p;
@@ -947,18 +960,18 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (playerposition.toLowerCase().contains(position.toLowerCase())){
 
 			if (playerposition.contains(",")){
-				System.out.println("Checking isPlayerPositionPriority");
-				System.out.println("-- Player with position elig '" + playerposition + "' has position '" + position + "'");
+//				System.out.println("Checking isPlayerPositionPriority");
+//				System.out.println("-- Player with position elig '" + playerposition + "' has position '" + position + "'");
 				
 				// For each position in the position priority list (starting from highest priority)
 				for (String p : priority.getPos_priority()){
-					System.out.println("-- Checking position priority '" + p);
+					// System.out.println("-- Checking position priority '" + p);
 					if (position.toLowerCase().contains(p.toLowerCase())){
-						System.out.println("-- Position '" + position + "' is the highest priority for player eligibility '" + playerposition + "'");
+						// System.out.println("-- Position '" + position + "' is the highest priority for player eligibility '" + playerposition + "'");
 						return true;
 					}
 					else if (playerposition.toLowerCase().contains(p.toLowerCase())){
-						System.out.println("-- Position '" + position + "' is the NOT THE HIGHEST priority for player eligibility '" + playerposition + "'");
+						// System.out.println("-- Position '" + position + "' is the NOT THE HIGHEST priority for player eligibility '" + playerposition + "'");
 						return false;
 					}
 					

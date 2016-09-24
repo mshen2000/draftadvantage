@@ -526,12 +526,26 @@ public class TestLeagues {
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Ian Kinsler").get(0).getDc_status() == null);   //  Checks if update worked
 		
 		// Test Auction Values
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value() == 54);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Davis").get(0).getInit_auction_value() == 18);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value() == 17);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value() == 43);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Aroldis Chapman").get(0).getInit_auction_value() == 28);
+		// Original commented out tests were before 2 pass system was set up
+//		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value() == 54);
+//		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Davis").get(0).getInit_auction_value() == 18);
+//		Assert.assertTrue(this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value() == 17);
+//		Assert.assertTrue(this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value() == 43);
+//		Assert.assertTrue(this.findPlayerByName(playeroutput, "Aroldis Chapman").get(0).getInit_auction_value() == 28);
+//		Assert.assertTrue(this.findPlayerByName(playeroutput, "Salvador Perez").get(0).getInit_auction_value() == 18);
+		
+		System.out.println("Starlin Castro Auction Value: " + this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value());
+		System.out.println("Starlin Castro Z Value: " + this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getTotal_z());
+		
+		System.out.println("Mike Trout Auction Value: " + this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value());
+		System.out.println("Mike Trout Z Value: " + this.findPlayerByName(playeroutput, "Mike Trout").get(0).getTotal_z());
+		
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value() == 51);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Davis").get(0).getInit_auction_value() == 19);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value() == 42);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Aroldis Chapman").get(0).getInit_auction_value() == 27);
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Salvador Perez").get(0).getInit_auction_value() == 18);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value() == 13);
 		
 		// Create teams in league
 		LeagueTeam lt1 = new LeagueTeam();
