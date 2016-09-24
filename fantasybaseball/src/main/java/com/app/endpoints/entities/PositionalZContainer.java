@@ -5,8 +5,6 @@ public class PositionalZContainer {
 	double replacementvalue;  // Average of the two highest replacement players
 	
 	double totalvalue;  // Total z value above replacement average
-	
-	double avgplayervalue;   // Average z score of players above replacement
 
 	public PositionalZContainer() {
 
@@ -26,14 +24,6 @@ public class PositionalZContainer {
 
 	public void setTotalvalue(double totalvalue) {
 		this.totalvalue = totalvalue;
-	}
-
-	public double getAvgplayervalue() {
-		return avgplayervalue;
-	}
-
-	public void setAvgplayervalue(double avgplayervalue) {
-		this.avgplayervalue = avgplayervalue;
 	}
 
 

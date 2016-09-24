@@ -642,13 +642,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		PositionalZContainer posz_p = getPositionalZpass1(playeroutput, "P", iroster_p);
 		
 		PositionZPriorityContainer priority = new PositionZPriorityContainer(
-				posz_c.getAvgplayervalue(),
-				posz_1b.getAvgplayervalue(),
-				posz_2b.getAvgplayervalue(),
-				posz_ss.getAvgplayervalue(),
-				posz_3b.getAvgplayervalue(),
-				posz_of.getAvgplayervalue(),
-				posz_p.getAvgplayervalue(), 1000
+				posz_c.getReplacementvalue(),
+				posz_1b.getReplacementvalue(),
+				posz_2b.getReplacementvalue(),
+				posz_ss.getReplacementvalue(),
+				posz_3b.getReplacementvalue(),
+				posz_of.getReplacementvalue(),
+				posz_p.getReplacementvalue(), 1000
 				);
 		
 		for (String p: priority.getPos_priority()){
@@ -657,8 +657,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			
 		}
 		
-		// TODO: Priority list needs to be based on replace average NOT average Z!!!!
-		//		 Need to update the spreadsheet as well!!!!
+		// TODO: Need to update the spreadsheet so that auction value is the highest of the ones calculated
+		//       for each position available to the player.
 		
 
 		posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
@@ -830,7 +830,6 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		double totalz = 0;
 		double totalzaboverepl = 0;
 		double avgz = 0;
-		double avgplayerz = 0;
 		
 		PositionalZContainer p = new PositionalZContainer();
 		
@@ -865,17 +864,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		}
 		
 		avgz = avgz/2;
-		avgplayerz = totalz/repl_level;
 		totalzaboverepl = totalz - repl_level*avgz;
 		
 		System.out.println(position + "-CUM TOTAL ABOVE REPL: " + totalzaboverepl);
-		System.out.println(position + "-SUM of Z: " + totalz);
-		System.out.println(position + "-AVG PLAYER Z: " + avgplayerz);
 		System.out.println(position + "-AVG REPL Z: " + avgz);
 		
 		p.setTotalvalue(totalzaboverepl);
 		p.setReplacementvalue(avgz);
-		p.setAvgplayervalue(avgplayerz);
 		
 		return p;
 		
