@@ -534,14 +534,14 @@ public class TestLeagues {
 //		Assert.assertTrue(this.findPlayerByName(playeroutput, "Aroldis Chapman").get(0).getInit_auction_value() == 28);
 //		Assert.assertTrue(this.findPlayerByName(playeroutput, "Salvador Perez").get(0).getInit_auction_value() == 18);
 		
-//		System.out.println("Starlin Castro Auction Value: " + this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value());
-//		System.out.println("Starlin Castro Z Value: " + this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getTotal_z());
-//		
-//		System.out.println("Mike Trout Auction Value: " + this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value());
-//		System.out.println("Mike Trout Z Value: " + this.findPlayerByName(playeroutput, "Mike Trout").get(0).getTotal_z());
-//		
-//		System.out.println("Danny Valencia Auction Value: " + this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getInit_auction_value());
-//		System.out.println("Danny Valencia Z Value: " + this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getTotal_z());
+		System.out.println("Starlin Castro Auction Value: " + this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value());
+		System.out.println("Starlin Castro Z Value: " + this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getTotal_z());
+		
+		System.out.println("Mike Trout Auction Value: " + this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value());
+		System.out.println("Mike Trout Z Value: " + this.findPlayerByName(playeroutput, "Mike Trout").get(0).getTotal_z());
+		
+		System.out.println("Danny Valencia Auction Value: " + this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getInit_auction_value());
+		System.out.println("Danny Valencia Z Value: " + this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getTotal_z());
 		
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value() == 50);
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Davis").get(0).getInit_auction_value() == 18);
