@@ -138,7 +138,19 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		league.setProjection_profile(p);
 		
-		return this.save(league, username);
+		Long id = this.save(league, username);
+		
+		League update = this.get(id);
+		
+		// *******************Update League with Position Priority****************************
+		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(p, update);
+		calcPlayerZScores(playeroutput, update);
+		calcPositionCounts(update);
+		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
+		update.setPosition_priority_list(priority.getPos_priority());
+		// ***********************************************************************************
+		
+		return id;
 		
 	}
 	
@@ -359,16 +371,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	public List<LeaguePlayerOutput> getLeaguePlayerData(long league_id, String username) {
 		
 		System.out.println("Get Player Output Data: BEGIN");
-
 		League league = this.get(league_id);
-		
 		ProjectionProfile profile = league.getProjection_profile();
 
 		System.out.println("Get Player Output Data: Convert player projections to output...");
-		
 		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(profile, league);
-		
-		// Calculate player Z scores
+
+		System.out.println("Get Player Output Data: Calculating league means and std deviations...");
 		calcPlayerZScores(playeroutput, league);
 		
 		System.out.println("Get Player Output Data: Calculating static auction values...");
@@ -379,6 +388,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		calcPositionCounts(league);
 		
 		// Determine position priority list
+		//  TODO:  Don't need to calculate it anymore, just pull it from league
 		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
 		
 		// for (String p: priority.getPos_priority())  System.out.println(p);
@@ -735,7 +745,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	
 	
 	private void calcPlayerZScores(List<LeaguePlayerOutput> playeroutput, League league){
-		System.out.println("Get Player Output Data: Calculating league means and std deviations...");
+		
 		
 		// Calculate league means and std deviations
 		List<Double> hitter_hrs = new ArrayList<Double>();

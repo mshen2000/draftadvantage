@@ -40,6 +40,8 @@ public class League extends BaseEntity implements Serializable {
 	@Index
 	Ref<ProjectionProfile> projection_profile;
 	
+	List<String> position_priority_list;
+	
 	double team_salary;
 	double avg_hitter_ba;
 	double avg_hitter_ab;
@@ -212,6 +214,14 @@ public class League extends BaseEntity implements Serializable {
 
 	public void setProjection_profile(ProjectionProfile projection_profile) {
 		this.projection_profile = Ref.create(projection_profile);
+	}
+
+	public List<String> getPosition_priority_list() {
+		return position_priority_list;
+	}
+
+	public void setPosition_priority_list(List<String> position_priority_list) {
+		this.position_priority_list = position_priority_list;
 	}
 
 	public double getTeam_salary() {
