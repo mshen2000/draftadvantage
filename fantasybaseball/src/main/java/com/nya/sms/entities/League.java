@@ -40,7 +40,7 @@ public class League extends BaseEntity implements Serializable {
 	@Index
 	Ref<ProjectionProfile> projection_profile;
 	
-	List<String> position_priority_list;
+	List<String> position_priority_list = new ArrayList<String>();
 	
 	double team_salary;
 	double avg_hitter_ba;
@@ -86,6 +86,13 @@ public class League extends BaseEntity implements Serializable {
 		this.cat_pitcher_so = false;
 		this.cat_pitcher_era = false;
 		this.cat_pitcher_whip = false;
+		
+		if (this.position_priority_list.isEmpty()){
+			List<String> plist = new ArrayList<String>();
+			plist.add("DEFAULT");
+			this.position_priority_list = plist;
+		}
+
 	}
 
 	public League(String league_name, User user) {
@@ -101,6 +108,13 @@ public class League extends BaseEntity implements Serializable {
 		this.cat_pitcher_so = false;
 		this.cat_pitcher_era = false;
 		this.cat_pitcher_whip = false;
+		
+		if (this.position_priority_list.isEmpty()){
+			List<String> plist = new ArrayList<String>();
+			plist.add("DEFAULT");
+			this.position_priority_list = plist;
+		}
+
 	}
 	
 	// Create a copy of a league "l" for export
@@ -142,6 +156,8 @@ public class League extends BaseEntity implements Serializable {
 		this.num_res = l.num_res ;
 		this.num_mi = l.num_mi ;
 		this.num_ci = l.num_ci ;
+		
+		this.position_priority_list = l.position_priority_list;
 		
 	}
 

@@ -138,19 +138,21 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		league.setProjection_profile(p);
 		
-		Long id = this.save(league, username);
-		
-		League update = this.get(id);
-		
+		// Long id = this.save(league, username);
+
 		// *******************Update League with Position Priority****************************
+		League update = new League(league);
+		update.setId(new Long(1));
+		update.setProjection_profile(league.getProjection_profile());
+		update.setUser(league.getUser());
 		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(p, update);
 		calcPlayerZScores(playeroutput, update);
 		calcPositionCounts(update);
 		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
-		update.setPosition_priority_list(priority.getPos_priority());
+		league.setPosition_priority_list(priority.getPos_priority());
 		// ***********************************************************************************
 		
-		return id;
+		return this.save(league, username);
 		
 	}
 	

@@ -2,6 +2,7 @@ function calcStandings(){
 	
 	var num_teams = dm_leagueinfo.league_teams.length;
 	var teamlist = dm_leagueinfo.league_teams;
+
 	var data_table = $('#playergrid_table').DataTable();
 	var data_rows = data_table.rows().data();
 	
@@ -204,7 +205,7 @@ function addRankScore(teamstandingslist, statcategory, isAscending){
 
 function calcLiveAuctionValue(){
 	
-	// console.log("Calc Live Auction Values: BEGIN");
+	console.log("Calc Live Auction Values: BEGIN");
 
 	var t1 = new Date().getTime();
 	
@@ -212,6 +213,12 @@ function calcLiveAuctionValue(){
 	var num_teams = dm_globalteamlist.length;
 	var rostercounts = dm_teamrostercounts;
 	var teamlist = dm_globalteamlist;
+	var position_priority_list = dm_leagueinfo.position_priority_list;
+	
+	console.log("-- Position priority list: " + position_priority_list);
+	
+	// VERIFIED that priority list comes over correctly
+	// TODO: Use priority list to calc live auction values.
 	
 	var roster_c = num_teams * rostercounts["C"];
 	var roster_1b = num_teams * (rostercounts["1B"] + rostercounts["CI"]/2.0 + rostercounts["UT"]/5.0);
