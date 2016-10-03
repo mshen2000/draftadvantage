@@ -46,6 +46,12 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	
 	@Index
 	String unknown_player_pitcher_hitter;
+	
+	@Index
+	boolean custom_position_flag;
+	
+	@Index
+	String custom_position;
 
 	public LeaguePlayer() {
 	}
@@ -172,5 +178,22 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 		this.unknown_player_pitcher_hitter = unknown_player_pitcher_hitter;
 	}
 
+	public boolean isCustom_position_flag() {
+		return custom_position_flag;
+	}
 
+	public void setCustom_position_flag(boolean custom_position_flag) {
+		this.custom_position_flag = custom_position_flag;
+	}
+
+	public String getCustom_position() {
+		return custom_position;
+	}
+
+	public void setCustom_position(String custom_position) {
+		this.custom_position = custom_position;
+	}
+
+
+	
 }

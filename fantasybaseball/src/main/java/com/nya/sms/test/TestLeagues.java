@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import com.app.endpoints.LeaguePlayerOutput;
 import com.app.endpoints.entities.LeagueCreateContainer;
+import com.app.endpoints.entities.LeaguePlayerInputCustPosContainer;
 import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
 import com.app.endpoints.entities.LeaguePlayerInputNoteContainer;
 import com.app.endpoints.entities.LeagueRosterItem;
@@ -669,16 +670,28 @@ public class TestLeagues {
 		ncont_trout.setPlayer_projected_id(mike_trout.getId());
 		ncont_trout.setTeam_player_note(player_note);
 		
+		LeaguePlayerInputCustPosContainer pcont_chapman = new LeaguePlayerInputCustPosContainer();
+		pcont_chapman.setLeague_id(l1_id);
+		pcont_chapman.setPlayer_projected_id(aroldis_chapman.getId());
+		pcont_chapman.setCustom_position_eligibility("1B,P");
+		
+		LeaguePlayerInputCustPosContainer pcont_trout = new LeaguePlayerInputCustPosContainer();
+		pcont_trout.setLeague_id(l1_id);
+		pcont_trout.setPlayer_projected_id(mike_trout.getId());
+		pcont_trout.setCustom_position_eligibility("OF,C");
+
 		long sale_id = getLeaguePlayerService().draftLeaguePlayer(cont_sale, uname);
 		long davis_id = getLeaguePlayerService().draftLeaguePlayer(cont_davis, uname);
 		long perez_id = getLeaguePlayerService().draftLeaguePlayer(cont_perez, uname);
 		long castro_id = getLeaguePlayerService().draftLeaguePlayer(cont_castro, uname);
-		long chapman_id = getLeaguePlayerService().updateLeaguePlayerNote(ncont_chapman, uname);
+		long chapman_id = getLeaguePlayerService().updateLeaguePlayerCustomPosition(pcont_chapman, uname);
+		chapman_id = getLeaguePlayerService().updateLeaguePlayerNote(ncont_chapman, uname);
 		chapman_id = getLeaguePlayerService().draftLeaguePlayer(cont_chapman, uname);
 		long trout_id = getLeaguePlayerService().updateLeaguePlayerNote(ncont_trout, uname);
 		long unknown_h_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_h, uname);
 		long unknown_p1_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_p1, uname);
 		long unknown_p2_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_p2, uname);
+		trout_id = getLeaguePlayerService().updateLeaguePlayerCustomPosition(pcont_trout, uname);
 		
 		// Test getLeaguePlayersbyLeague
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 9);
@@ -688,9 +701,11 @@ public class TestLeagues {
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 1);
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt3_id, uname).size() == 0);
 		
-		// Test league player note
+		// Test league player note and custom eligibility
 		LeaguePlayer trout = getLeaguePlayerService().get(trout_id);
 		Assert.assertTrue(trout.getTeam_player_note().equals(player_note));
+		Assert.assertTrue(trout.isCustom_position_flag());
+		Assert.assertTrue(trout.getCustom_position().equals("OF,C"));
 		
 		// Test drafted player attributes and note
 		LeaguePlayer chapman = getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).get(0);
@@ -698,6 +713,8 @@ public class TestLeagues {
 		Assert.assertTrue(chapman.getTeam_player_salary() == 5);
 		Assert.assertTrue(chapman.getLeague_team().getId() == lt2_id);
 		Assert.assertTrue(chapman.getTeam_player_note().equals(player_note));
+		Assert.assertTrue(chapman.isCustom_position_flag());
+		Assert.assertTrue(chapman.getCustom_position().equals("1B,P"));
 		
 		// Test unknown player attributes
 		LeaguePlayer unknown_h = getLeaguePlayerService().get(unknown_h_id);
@@ -739,9 +756,19 @@ public class TestLeagues {
 		ud_container.setLeague_id(l1_id);
 		getLeaguePlayerService().undraftLeaguePlayer(ud_container, uname);
 		
-		// Test league player note after undraft
+		// Test league player note and custom elig after undraft
 		chapman = getLeaguePlayerService().get(chapman_id);
 		Assert.assertTrue(chapman.getTeam_player_note().equals(player_note));
+		Assert.assertTrue(chapman.isCustom_position_flag());
+		Assert.assertTrue(chapman.getCustom_position().equals("1B,P"));
+		
+		// Test remove custom eligibility
+		pcont_chapman = new LeaguePlayerInputCustPosContainer();
+		pcont_chapman.setLeague_id(l1_id);
+		pcont_chapman.setPlayer_projected_id(aroldis_chapman.getId());
+		chapman_id = getLeaguePlayerService().removeLeaguePlayerCustomPosition(pcont_chapman, uname);
+		chapman = getLeaguePlayerService().get(chapman_id);
+		Assert.assertTrue(!chapman.isCustom_position_flag());
 		
 		// Test getLeaguePlayersbyLeague
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 8);

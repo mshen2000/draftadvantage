@@ -5,6 +5,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.endpoints.entities.LeaguePlayerInputCustPosContainer;
 import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
 import com.app.endpoints.entities.LeaguePlayerInputNoteContainer;
 import com.googlecode.objectify.Key;
@@ -262,6 +263,82 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		System.out.println("Saving player note for: " + lp.getPlayer_projected().getFull_name());
 		System.out.println("Player note: " + lp.getTeam_player_note());
 		
+		return this.save(lp, uname);
+		
+	}
+	
+	/**
+	 * Description: Updates custom position eligibility for league player, only requires league_id,
+	 * player_projected_id and custom_position_eligibility from container.
+	 * 
+	 * @param container
+	 * @param uname
+	 * @return Long, id of saved LeaguePlayer
+	 */
+	public Long updateLeaguePlayerCustomPosition (LeaguePlayerInputCustPosContainer container, String uname){
+		
+		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
+		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+		
+		// Check to see if LeaguePlayer already exists
+		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+				.filter("player_projected", playerprojectedkey).list();
+
+		LeaguePlayer lp = new LeaguePlayer();
+		
+		// If exists, update existing LeaguePlayer custom position
+		// Otherwise, update new LeaguePlayer with custom position
+		if (leagueplayers.size() > 0) {
+			lp = leagueplayers.get(0);
+		} else {
+			lp.setLeagueRef(Ref.create(leaguekey));
+			lp.setPlayer_projected(Ref.create(playerprojectedkey));
+		}
+
+		lp.setCustom_position(container.getCustom_position_eligibility());
+		lp.setCustom_position_flag(true);
+		
+		System.out.println("Saving player custom position for: " + lp.getPlayer_projected().getFull_name());
+		System.out.println("Custom position: " + lp.getCustom_position());
+		
+		return this.save(lp, uname);
+		
+	}
+	
+	/**
+	 * Description: Removes custom position eligibility for league player, only requires league_id,
+	 * player_projected_id and custom_position_eligibility from container.  Returns -1 if player not found.
+	 * 
+	 * @param container
+	 * @param uname
+	 * @return Long, id of saved LeaguePlayer
+	 */
+	public Long removeLeaguePlayerCustomPosition (LeaguePlayerInputCustPosContainer container, String uname){
+		
+		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
+		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+		
+		// Check to see if LeaguePlayer already exists
+		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+				.filter("player_projected", playerprojectedkey).list();
+
+		LeaguePlayer lp = new LeaguePlayer();
+		
+		// If exists, remove existing LeaguePlayer custom position
+		// Otherwise, return -1
+		if (leagueplayers.size() > 0) {
+			lp = leagueplayers.get(0);
+			lp.setCustom_position("");
+			lp.setCustom_position_flag(false);
+			
+			System.out.println("Removing player custom position for: " + lp.getPlayer_projected().getFull_name());
+			System.out.println("Cusotm position flag: " + lp.isCustom_position_flag());
+		} else {
+			System.out.println("Could NOT remove custom position for: " + lp.getPlayer_projected().getFull_name());
+			System.out.println("Could not find player.");
+			return Long.valueOf(-1);
+		}
+
 		return this.save(lp, uname);
 		
 	}

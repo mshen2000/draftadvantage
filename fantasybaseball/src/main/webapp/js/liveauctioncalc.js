@@ -217,9 +217,6 @@ function calcLiveAuctionValue(){
 	
 	console.log("-- Position priority list: " + position_priority_list);
 	
-	// VERIFIED that priority list comes over correctly
-	// TODO: Use priority list to calc live auction values.
-	
 	var roster_c = num_teams * rostercounts["C"];
 	var roster_1b = num_teams * (rostercounts["1B"] + rostercounts["CI"]/2.0 + rostercounts["UT"]/5.0);
 	var roster_2b = num_teams * (rostercounts["2B"] + rostercounts["MI"]/2.0 + rostercounts["UT"]/5.0);
@@ -407,9 +404,9 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				// Add Z value only if player is undrafted
 				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
 					totalz = totalz + value.total_z;
-					if (position == "C")  console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+					// if (position == "C")  console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
 				} else {
-					console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
+					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
 				}
 					
 				i++;
@@ -480,8 +477,8 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 	PositionalZOutput["totalz"] = totalz;
 	PositionalZOutput["avgreplz"] = avgz
 	
-	 console.log(position + "-TOTAL Z: " + totalz);
-	 console.log(position + "-AVG REPL Z: " + avgz);
+//	 console.log(position + "-TOTAL Z: " + totalz);
+//	 console.log(position + "-AVG REPL Z: " + avgz);
 	
 	return PositionalZOutput;
 	
@@ -501,19 +498,19 @@ function isPlayerPositionPriority(position, playerposition, priority){
 	if (playerposition.toLowerCase().indexOf(position.toLowerCase()) > -1){
 
 		if (playerposition.indexOf(",") > -1){
-			console.log("Checking isPlayerPositionPriority");
-			console.log("-- Player with position elig '" + playerposition + "' has position '" + position + "'");
+//			console.log("Checking isPlayerPositionPriority");
+//			console.log("-- Player with position elig '" + playerposition + "' has position '" + position + "'");
 			
 			// For each position in the position priority list (starting from highest priority)
 			var arrayLength = priority.length;
 			for (var i = 0; i < arrayLength; i++){
-				console.log("-- Checking position priority '" + priority[i] + "'");
+				// console.log("-- Checking position priority '" + priority[i] + "'");
 				if (position.toLowerCase().indexOf(priority[i].toLowerCase()) > -1){
-					console.log("-- Position '" + position + "' is the highest priority for player eligibility '" + playerposition + "'");
+					// console.log("-- Position '" + position + "' is the highest priority for player eligibility '" + playerposition + "'");
 					return true;
 				}
 				else if (playerposition.toLowerCase().indexOf(priority[i].toLowerCase()) > -1){
-					console.log("-- Position '" + position + "' is the NOT THE HIGHEST priority for player eligibility '" + playerposition + "'");
+					// console.log("-- Position '" + position + "' is the NOT THE HIGHEST priority for player eligibility '" + playerposition + "'");
 					return false;
 				}
 				
