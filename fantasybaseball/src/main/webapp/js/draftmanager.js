@@ -842,6 +842,7 @@ $(document).ready(function()
 	loadPositionalTable(null, $("#pos_rp_table"), true, false);
 	
 	loadLeagueStandingsTable(null, true);
+	loadCustomPlayerPositionTable(null, true);
 	
 });
 
@@ -1317,6 +1318,49 @@ function loadTeamRosterTable(data, isInitialLoad)
         $("#btn-editdraftplayer").attr("disabled", "disabled");
         $("#btn-undraftplayer").attr("disabled", "disabled");
     } );
+}
+
+
+function loadCustomPlayerPositionTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#customplayerposition_table');
+	var config = {
+        "bSort" : true,
+        "searching": false,
+        "paging": true,
+        "info": false,
+        "order": [[ 1, "asc" ]],
+		responsive: true,
+    	"processing": true,
+        data: data,
+        select: {
+            style:    'single'
+        },
+        rowId: 'id',
+        "columns": [
+                { "title": "Name", className: "dm_export", "mData": "full_name",  "render": function ( data, type, row ) {
+                	if ((row.team_player_note == null)||(row.team_player_note.trim() == ""))
+                		return data + " (" + row.team + ")";
+                	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
+                    }},
+
+                { "visible": true, "title": "Team", "mData": "team", "sDefaultContent": ""},
+                { "title": "Pos", className: "dm_export", "mData": "player_position", "sDefaultContent": ""},
+
+        ]
+        };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+		data_table = table_element.DataTable();
+	}
+
 }
 
 
