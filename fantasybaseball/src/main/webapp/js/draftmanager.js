@@ -1323,6 +1323,17 @@ function loadTeamRosterTable(data, isInitialLoad)
 
 function loadCustomPlayerPositionTable(data, isInitialLoad)
 {
+	// Filter data for DH only
+	filtered_data = [];
+	
+	if (data != null){
+		$.each( data, function( index, value ){
+			if (value.player_position == 'DH'){
+				filtered_data.push(value);
+			}
+		});
+	}
+
 	var data_table;
 	var table_element = $('#customplayerposition_table');
 	var config = {
@@ -1333,7 +1344,7 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
         "order": [[ 1, "asc" ]],
 		responsive: true,
     	"processing": true,
-        data: data,
+        data: filtered_data,
         select: {
             style:    'single'
         },
@@ -1347,6 +1358,7 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 
                 { "visible": true, "title": "Team", "mData": "team", "sDefaultContent": ""},
                 { "title": "Pos", className: "dm_export", "mData": "player_position", "sDefaultContent": ""},
+                { "title": "Updated Pos", className: "dm_export", "mData": "custom_position", "sDefaultContent": ""},
 
         ]
         };
@@ -1360,6 +1372,23 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 		data_table = table_element.dataTable(config);
 		data_table = table_element.DataTable();
 	}
+	
+    // On Select of the Custom Player Position Table
+	var select_data_table = $('#customplayerposition_table').DataTable();
+	select_data_table
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	var select_data_table_b = $('#customplayerposition_table').DataTable();
+        var row = select_data_table_b.rows( indexes ).data()[0];
+		
+		$("#lbl-custompositionplayername").val(row.id);
+		$("#lbl-custompositionplayername").text(row.full_name);
+		// $("#lbl-playerinfoelig").text(row.player_position);
+			
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+		$("#lbl-custompositionplayername").val(0);
+		$("#lbl-custompositionplayername").text('Player Name');
+    } );
 
 }
 
@@ -2577,7 +2606,10 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
       function(resp) {
         if (!resp.code) { 
         	console.log("League player get complete.");
+        	// Load player data into main player grid
         	loadPlayerGridTable(resp.items, false);
+        	// Load player data into custom position editor
+        	loadCustomPlayerPositionTable(resp.items, false);
         }
         else {
         	console.log("Failed to get league player data: ", resp.code + " : " + resp.message);
