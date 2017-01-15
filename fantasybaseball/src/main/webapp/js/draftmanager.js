@@ -1332,6 +1332,12 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 				filtered_data.push(value);
 			}
 		});
+		
+		$.each( dm_leagueinfo.position_priority_list, function( index, value ){
+			$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+					"<label><input type='checkbox' value=''>" + value + "</label> </div>");
+		});
+		
 	}
 
 	var data_table;
@@ -1383,6 +1389,9 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 		$("#lbl-custompositionplayername").val(row.id);
 		$("#lbl-custompositionplayername").text(row.full_name);
 		// $("#lbl-playerinfoelig").text(row.player_position);
+
+		console.log("-- Position priority list: " + dm_leagueinfo.position_priority_list);
+		console.log("-- Position priority list size: " + dm_leagueinfo.position_priority_list.length);
 			
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
