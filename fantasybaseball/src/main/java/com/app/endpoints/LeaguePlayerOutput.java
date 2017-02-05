@@ -6,6 +6,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.api.server.spi.config.AnnotationBoolean;
 import com.google.api.server.spi.config.ApiResourceProperty;
+import com.googlecode.objectify.annotation.Index;
 import com.nya.sms.entities.PlayerProjected;
 import com.nya.sms.entities.ProjectionProfile;
 
@@ -58,6 +59,9 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	int rank_z;
 	int init_auction_value;
 	int live_auction_value;
+
+	boolean custom_position_flag;
+	String custom_position;
 
 	public LeaguePlayerOutput() {
 	}
@@ -378,5 +382,23 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	public void setUnknown_player_pitcher_hitter(String unknown_player_pitcher_hitter) {
 		this.unknown_player_pitcher_hitter = unknown_player_pitcher_hitter;
 	}
+
+	public boolean isCustom_position_flag() {
+		return custom_position_flag;
+	}
+
+	public void setCustom_position_flag(boolean custom_position_flag) {
+		this.custom_position_flag = custom_position_flag;
+	}
+
+	public String getCustom_position() {
+		return custom_position;
+	}
+
+	public void setCustom_position(String custom_position) {
+		this.custom_position = custom_position;
+	}
+	
+	
 
 }

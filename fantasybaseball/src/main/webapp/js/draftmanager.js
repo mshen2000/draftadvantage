@@ -1341,20 +1341,20 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 		});
 		*/
 		
-		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
-			"<label><input type='checkbox' value=''>DH</label> </div>");
-		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
-			"<label><input type='checkbox' value=''>C</label> </div>");
-		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
-			"<label><input type='checkbox' value=''>OF</label> </div>");
-		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
-			"<label><input type='checkbox' value=''>3B</label> </div>");
-		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
-			"<label><input type='checkbox' value=''>SS</label> </div>");
-		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
-			"<label><input type='checkbox' value=''>2B</label> </div>");
-		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
-			"<label><input type='checkbox' value=''>1B</label> </div>");
+		$("#form-custpos").prepend("<div class='checkbox'> " +
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-1B' type='checkbox' value='1B'>1B</label></div>"
+		+ "<div class='checkbox'> " +
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-2B' type='checkbox' value='2B'>2B</label></div>"
+		+ "<div class='checkbox'> " +
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-SS' type='checkbox' value='SS'>SS</label></div>"
+		+ "<div class='checkbox'> " +
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-3B' type='checkbox' value='3B'>3B</label></div>"
+		+ "<div class='checkbox'> " +
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-OF' type='checkbox' value='OF'>OF</label></div>"
+		+ "<div class='checkbox'> " +
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-C' type='checkbox' value='C'>C</label></div>"
+		+ "<div class='checkbox'> " +
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-DH' type='checkbox' value='DH'>DH</label></div>");
 		
 	}
 
@@ -1382,6 +1382,7 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 
                 { "visible": true, "title": "Team", "mData": "team", "sDefaultContent": ""},
                 { "title": "Pos", className: "dm_export", "mData": "player_position", "sDefaultContent": ""},
+                { "title": "Custom Pos Flag", className: "dm_export", "mData": "custom_position_flag", "sDefaultContent": ""},
                 { "title": "Updated Pos", className: "dm_export", "mData": "custom_position", "sDefaultContent": ""},
 
         ]
@@ -1401,6 +1402,9 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 	var select_data_table = $('#customplayerposition_table').DataTable();
 	select_data_table
     .on( 'select', function ( e, dt, type, indexes ) {
+    	
+    	$("#btn-save-custpos").removeClass('disabled');
+    	
     	var select_data_table_b = $('#customplayerposition_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
 		
@@ -1410,11 +1414,33 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 
 		console.log("-- Position priority list: " + dm_leagueinfo.position_priority_list);
 		console.log("-- Position priority list size: " + dm_leagueinfo.position_priority_list.length);
-			
+		
+		jQuery('.checkbox-custpos').each(function() {
+		    var currentElement = $(this);
+	        var $label = $("label[for='"+currentElement.id+"']")
+	        // console.log("-- Current element label text5: " + currentElement.val());
+	        // console.log("-- Current row player position: " + row.player_position);
+	        if(row.player_position.indexOf(currentElement.val()) != -1){
+	        	currentElement.prop('checked', true);
+	        } else {
+	        	currentElement.prop('checked', false);
+	        }
+	        
+		});
+
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
+    	
+    	$("#btn-save-custpos").addClass('disabled');
+    	
 		$("#lbl-custompositionplayername").val(0);
-		$("#lbl-custompositionplayername").text('Player Name');
+		$("#lbl-custompositionplayername").text('Select Player');
+		
+		jQuery('.checkbox-custpos').each(function() {
+		    var currentElement = $(this);
+		    currentElement.prop('checked', false);
+		});
+		
     } );
 
 }

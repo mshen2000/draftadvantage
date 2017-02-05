@@ -494,6 +494,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 							
 							po.setTeam_player_note(lp.getTeam_player_note());
 							po.setLeague_player_id(lp.getId());
+							po.setCustom_position(lp.getCustom_position());
+							po.setCustom_position_flag(lp.isCustom_position_flag());
 							po.setUnknownplayer(false);
 						}
 						
