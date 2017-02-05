@@ -134,7 +134,10 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		ProjectionProfile p = getProjectionProfileService().get(container.getProfile().getProjection_service(),
 				container.getProfile().getProjection_period(), container.getProfile().getProjected_year());
 		
-		if (p == null) throw new IllegalArgumentException("Projection profile does not exist, cannot create a new league.");
+		if (p == null) throw new IllegalArgumentException("Projection profile does not exist, cannot create a new league. " 
+				+ "(Service: " + container.getProfile().getProjection_service()
+				+ ", Period: " + container.getProfile().getProjection_period()
+				+ ", Year: " + container.getProfile().getProjected_year());
 
 		league.setProjection_profile(p);
 		

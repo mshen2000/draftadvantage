@@ -814,7 +814,8 @@ $(document).ready(function()
 		
 		profile["projection_service"] = "Steamer";
 		profile["projection_period"] = "Pre-Season";
-		profile["projected_year"] = (new Date).getFullYear();
+		// profile["projected_year"] = (new Date).getFullYear();
+		profile["projected_year"] = $("#select-leagueyear").find("option:selected").val();
 
 		leaguecontainer["league"] = league;
 		leaguecontainer["league_teams"] = teamlist;
@@ -1333,10 +1334,27 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 			}
 		});
 		
+		/*
 		$.each( dm_leagueinfo.position_priority_list, function( index, value ){
 			$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
 					"<label><input type='checkbox' value=''>" + value + "</label> </div>");
 		});
+		*/
+		
+		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+			"<label><input type='checkbox' value=''>DH</label> </div>");
+		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+			"<label><input type='checkbox' value=''>C</label> </div>");
+		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+			"<label><input type='checkbox' value=''>OF</label> </div>");
+		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+			"<label><input type='checkbox' value=''>3B</label> </div>");
+		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+			"<label><input type='checkbox' value=''>SS</label> </div>");
+		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+			"<label><input type='checkbox' value=''>2B</label> </div>");
+		$("#lbl-custompositionplayername").after(" <div class='checkbox'> " +
+			"<label><input type='checkbox' value=''>1B</label> </div>");
 		
 	}
 
@@ -2695,8 +2713,10 @@ mssolutions.fbapp.draftmanager.loadLeagueModal = function() {
         if (!resp.code) { 
         	var yearselect = $("#select-leagueyear");
         	var year = (new Date).getFullYear();
+        	var yearprev = (new Date).getFullYear()-1;
         	var yearnext = (new Date).getFullYear()+1;
         	yearselect.find('option').remove().end();
+        	yearselect.append($('<option>', { value : yearprev }).text(yearprev)); 
         	yearselect.append($('<option>', { value : year }).text(year)); 
         	yearselect.append($('<option>', { value : yearnext }).text(yearnext)); 
         	
