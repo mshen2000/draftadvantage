@@ -331,6 +331,23 @@ $(document).ready(function()
 				playerid, playernote);
 	});
 
+	// Button to save custom position for a player
+	$('#btn-save-custpos').click(function() 
+		{
+		// var selectedtext = $("#league-select").find("option:selected").text();
+		
+		console.log("Positions 1B: " + $('#checkbox-custpos-1B').value);  
+		console.log("Positions DH: " + $('#checkbox-custpos-DH').value);  
+		
+
+		$('#form-custpos').children('input').each(function () {
+			console.log("Positions: " + this.value);
+		    // alert(this.value); // "this" is the current element in the loop
+		});
+
+	    	
+		});
+	
 	$('#btn-deleteleague').click(function() 
 		{
 		var selectedtext = $("#league-select").find("option:selected").text();
