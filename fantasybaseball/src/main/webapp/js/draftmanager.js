@@ -35,6 +35,9 @@ var playerdraftrow;
 //Saves the selected player from the player grid for note update
 var playernoterow;
 
+//Saves the selected player from the player custom position grid
+var playercustomposrow;
+
 // A blank template of a team roster (includes positions)
 var teamrostertemplate;
 
@@ -334,18 +337,32 @@ $(document).ready(function()
 	// Button to save custom position for a player
 	$('#btn-save-custpos').click(function() 
 		{
-		// var selectedtext = $("#league-select").find("option:selected").text();
+		var customposstring = []; 
+		var league_id = $("#league-select").find("option:selected").val();
+		var playerid = $("#lbl-custompositionplayername").val();
+		var playertable = $('#playergrid_table').DataTable();
+		var playercustpostable = $('#customplayerposition_table').DataTable();
+		var flag = false;
 		
-		console.log("Positions 1B: " + $('#checkbox-custpos-1B').value);  
-		console.log("Positions DH: " + $('#checkbox-custpos-DH').value);  
-		
-
-		$('#form-custpos').children('input').each(function () {
-			console.log("Positions: " + this.value);
-		    // alert(this.value); // "this" is the current element in the loop
+		$('input', $('#form-custpos')).each(function () {
+			if ($(this).prop('checked')){
+				// console.log("Positions: " +  $(this).val()); 
+				if (!$(this).prop('disabled')) flag = true;
+				customposstring.push($(this).val().toUpperCase());
+			}
+				
 		});
+		
+		console.log("Position String: " +  customposstring); 
+		playercustomposrow.custom_position_flag = flag;
+		if (flag){
+			playercustomposrow.custom_position = customposstring;
+		} else {
+			playercustomposrow.custom_position = '';
+		}
 
-	    	
+		playertable.row('#' + playercustomposrow.id + '').data(playercustomposrow).draw();
+		playercustpostable.row('#' + playercustomposrow.id + '').data(playercustomposrow).draw();
 		});
 	
 	$('#btn-deleteleague').click(function() 
@@ -1359,19 +1376,19 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 		*/
 		
 		$("#form-custpos").prepend("<div class='checkbox'> " +
-			"<label><input class='checkbox-custpos' id='checkbox-custpos-1B' type='checkbox' value='1B'>1B</label></div>"
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-1B' type='checkbox' disabled='true' value='1B'>1B</label></div>"
 		+ "<div class='checkbox'> " +
-			"<label><input class='checkbox-custpos' id='checkbox-custpos-2B' type='checkbox' value='2B'>2B</label></div>"
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-2B' type='checkbox' disabled='true' value='2B'>2B</label></div>"
 		+ "<div class='checkbox'> " +
-			"<label><input class='checkbox-custpos' id='checkbox-custpos-SS' type='checkbox' value='SS'>SS</label></div>"
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-SS' type='checkbox' disabled='true' value='SS'>SS</label></div>"
 		+ "<div class='checkbox'> " +
-			"<label><input class='checkbox-custpos' id='checkbox-custpos-3B' type='checkbox' value='3B'>3B</label></div>"
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-3B' type='checkbox' disabled='true' value='3B'>3B</label></div>"
 		+ "<div class='checkbox'> " +
-			"<label><input class='checkbox-custpos' id='checkbox-custpos-OF' type='checkbox' value='OF'>OF</label></div>"
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-OF' type='checkbox' disabled='true' value='OF'>OF</label></div>"
 		+ "<div class='checkbox'> " +
-			"<label><input class='checkbox-custpos' id='checkbox-custpos-C' type='checkbox' value='C'>C</label></div>"
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-C' type='checkbox' disabled='true' value='C'>C</label></div>"
 		+ "<div class='checkbox'> " +
-			"<label><input class='checkbox-custpos' id='checkbox-custpos-DH' type='checkbox' value='DH'>DH</label></div>");
+			"<label><input class='checkbox-custpos' id='checkbox-custpos-DH' type='checkbox' disabled='true' value='DH'>DH</label></div>");
 		
 	}
 
@@ -1424,6 +1441,7 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
     	
     	var select_data_table_b = $('#customplayerposition_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
+        playercustomposrow = row;
 		
 		$("#lbl-custompositionplayername").val(row.id);
 		$("#lbl-custompositionplayername").text(row.full_name);
@@ -1439,8 +1457,10 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 	        // console.log("-- Current row player position: " + row.player_position);
 	        if(row.player_position.indexOf(currentElement.val()) != -1){
 	        	currentElement.prop('checked', true);
+	        	currentElement.prop('disabled', true);
 	        } else {
 	        	currentElement.prop('checked', false);
+	        	currentElement.prop('disabled', false);
 	        }
 	        
 		});
@@ -1456,6 +1476,7 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 		jQuery('.checkbox-custpos').each(function() {
 		    var currentElement = $(this);
 		    currentElement.prop('checked', false);
+		    currentElement.prop('disabled', true);
 		});
 		
     } );
@@ -1624,7 +1645,11 @@ function loadPlayerGridTable(data, isInitialLoad)
                 	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
                 },
             { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
-            { "title": "Pos", className: "dm_export", "mData": "player_position", "sDefaultContent": ""},
+            { "title": "Pos", className: "dm_export", "mData": "player_position", "render": function ( data, type, row ) {
+            	if (row.custom_position_flag){  return row.custom_position;} 
+            	else {return row.player_position;}
+                },
+                "sDefaultContent": ""},
             { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},
             { "title": "Avg", className: "dm_stat dm_export", "mData": "hitter_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ 
