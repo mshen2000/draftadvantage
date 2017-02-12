@@ -330,8 +330,8 @@ $(document).ready(function()
 		
 		playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
 		
-		mssolutions.fbapp.draftmanager.updatePlayerNote(league_id, 
-				playerid, playernote);
+		// mssolutions.fbapp.draftmanager.updatePlayerNote(league_id, playerid, playernote);
+		mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
 	});
 
 	// Button to save custom position for a player
@@ -363,6 +363,8 @@ $(document).ready(function()
 
 		playertable.row('#' + playercustomposrow.id + '').data(playercustomposrow).draw();
 		playercustpostable.row('#' + playercustomposrow.id + '').data(playercustomposrow).draw();
+		mssolutions.fbapp.draftmanager.updatePlayerInfo(playercustomposrow);
+		
 		});
 	
 	$('#btn-deleteleague').click(function() 
@@ -2495,22 +2497,28 @@ function loadTeamSelect(data){
 /**
  * Update player note via the API.
  */
-mssolutions.fbapp.draftmanager.updatePlayerNote = function(league_id, 
-		player_projected_id, team_player_note) {
+mssolutions.fbapp.draftmanager.updatePlayerInfo = function(playerrowdata) {
 	
-	// console.log("In updatePlayerNote...");
+	console.log("In updatePlayerNote...");
+	console.log("--League ID: " + playerrowdata.league_id);
+	console.log("--Player ID: " + playerrowdata.id);
+	console.log("--Note: " + playerrowdata.team_player_note);
+	console.log("--Cust Pos: " + playerrowdata.custom_position);
 	
-	gapi.client.draftapp.league.updateplayernote({
-		'league_id' : league_id,
-		'player_projected_id' : player_projected_id,
-		'team_player_note' : team_player_note}).execute(
+	gapi.client.draftapp.league.updateplayerinfo({
+		'league_id' : playerrowdata.league_id,
+		'player_projected_id' : playerrowdata.id,
+		'team_player_note' : playerrowdata.team_player_note,
+		'custom_position_flag' : playerrowdata.custom_position_flag,
+		'custom_position' : playerrowdata.custom_position.toString()
+		}).execute(
       function(resp) {
         if (!resp.code) { 
-        	console.log("Update player note complete. League Player ID: " + resp.longdescription);
+        	console.log("Update player info complete. League Player ID: " + resp.longdescription);
         	// $("#btn-playerinfosavenote").removeAttr("disabled");
         }
         else {
-        	console.log("Failed to update player note: ", resp.code + " : " + resp.message);
+        	console.log("Failed to update player info: ", resp.code + " : " + resp.message);
         	// $("#btn-playerinfosavenote").removeAttr("disabled");
         }
       });

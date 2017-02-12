@@ -1,6 +1,6 @@
 package com.app.endpoints.entities;
 
-public class LeaguePlayerInputNoteContainer {
+public class LeaguePlayerInputInfoContainer {
 	
 	long league_id;
 	
@@ -9,8 +9,12 @@ public class LeaguePlayerInputNoteContainer {
 	long player_projected_id;
 	
 	String team_player_note;
+	
+	String custom_position;
+	
+	boolean custom_position_flag;
 
-	public LeaguePlayerInputNoteContainer() {
+	public LeaguePlayerInputInfoContainer() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -45,5 +49,22 @@ public class LeaguePlayerInputNoteContainer {
 	public void setTeam_player_note(String team_player_note) {
 		this.team_player_note = team_player_note;
 	}
+
+	public String getCustom_position() {
+		return custom_position;
+	}
+
+	public void setCustom_position(String custom_position) {
+		this.custom_position = custom_position;
+	}
+
+	public boolean isCustom_position_flag() {
+		return custom_position_flag;
+	}
+
+	public void setCustom_position_flag(boolean custom_position_flag) {
+		this.custom_position_flag = custom_position_flag;
+	}
+	
 	
 }

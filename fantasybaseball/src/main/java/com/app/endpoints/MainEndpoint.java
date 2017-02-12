@@ -3,7 +3,7 @@ package com.app.endpoints;
 import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
-import com.app.endpoints.entities.LeaguePlayerInputNoteContainer;
+import com.app.endpoints.entities.LeaguePlayerInputInfoContainer;
 import com.app.endpoints.entities.LeagueRosterItem;
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
@@ -149,10 +149,10 @@ public class MainEndpoint {
 
 	}
 	
-	@ApiMethod(name = "league.updateplayernote", httpMethod = HttpMethod.PUT)
-	public APIGeneralResult updatePlayerNote(LeaguePlayerInputNoteContainer playercontainer,HttpServletRequest req) throws UnauthorizedException {
+	@ApiMethod(name = "league.updateplayerinfo", httpMethod = HttpMethod.PUT)
+	public APIGeneralResult updatePlayerInfo(LeaguePlayerInputInfoContainer playercontainer,HttpServletRequest req) throws UnauthorizedException {
 		
-		long leagueplayer_id = getLeaguePlayerService().updateLeaguePlayerNote(playercontainer, validateUserToken(req).getUsername());
+		long leagueplayer_id = getLeaguePlayerService().updateLeaguePlayerInfo(playercontainer, validateUserToken(req).getUsername());
 		
 		APIGeneralResult result = new APIGeneralResult("OK", leagueplayer_id);
 		

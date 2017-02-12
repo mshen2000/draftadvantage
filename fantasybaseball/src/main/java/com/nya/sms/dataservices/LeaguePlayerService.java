@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.app.endpoints.entities.LeaguePlayerInputCustPosContainer;
 import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
-import com.app.endpoints.entities.LeaguePlayerInputNoteContainer;
+import com.app.endpoints.entities.LeaguePlayerInputInfoContainer;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.nya.sms.entities.League;
@@ -231,14 +231,17 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	}
 	
 	/**
-	 * Description: Updates note for league player, only requires league_id,
-	 * player_projected_id and team_player_note from container.
+	 * Description: Updates information for league player, only requires league_id,
+	 * player_projected_id, and fields to update from container.
+	 * Currently only updating player note, custom position and custom position flag.
 	 * 
 	 * @param container
 	 * @param uname
 	 * @return Long, id of saved LeaguePlayer
 	 */
-	public Long updateLeaguePlayerNote (LeaguePlayerInputNoteContainer container, String uname){
+	public Long updateLeaguePlayerInfo (LeaguePlayerInputInfoContainer container, String uname){
+		
+		System.out.println("In updateLeaguePlayerInfo, player ID: " + container.getPlayer_projected_id());
 		
 		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
 		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
@@ -249,8 +252,8 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 
 		LeaguePlayer lp = new LeaguePlayer();
 		
-		// If exists, update existing LeaguePlayer note
-		// Otherwise, update new LeaguePlayer with note
+		// If exists, update existing LeaguePlayer info
+		// Otherwise, update new LeaguePlayer with info
 		if (leagueplayers.size() > 0) {
 			lp = leagueplayers.get(0);
 		} else {
@@ -259,9 +262,13 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		}
 
 		lp.setTeam_player_note(container.getTeam_player_note());
+		lp.setCustom_position_flag(container.isCustom_position_flag());
+		lp.setCustom_position(container.getCustom_position());
 		
-		System.out.println("Saving player note for: " + lp.getPlayer_projected().getFull_name());
+		System.out.println("Saving player info for: " + lp.getPlayer_projected().getFull_name());
 		System.out.println("Player note: " + lp.getTeam_player_note());
+		System.out.println("Player custom pos flag: " + lp.isCustom_position_flag());
+		System.out.println("Player custom position: " + lp.getCustom_position());
 		
 		return this.save(lp, uname);
 		
@@ -275,35 +282,35 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	 * @param uname
 	 * @return Long, id of saved LeaguePlayer
 	 */
-	public Long updateLeaguePlayerCustomPosition (LeaguePlayerInputCustPosContainer container, String uname){
-		
-		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
-		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
-		
-		// Check to see if LeaguePlayer already exists
-		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
-				.filter("player_projected", playerprojectedkey).list();
-
-		LeaguePlayer lp = new LeaguePlayer();
-		
-		// If exists, update existing LeaguePlayer custom position
-		// Otherwise, update new LeaguePlayer with custom position
-		if (leagueplayers.size() > 0) {
-			lp = leagueplayers.get(0);
-		} else {
-			lp.setLeagueRef(Ref.create(leaguekey));
-			lp.setPlayer_projected(Ref.create(playerprojectedkey));
-		}
-
-		lp.setCustom_position(container.getCustom_position_eligibility());
-		lp.setCustom_position_flag(true);
-		
-		System.out.println("Saving player custom position for: " + lp.getPlayer_projected().getFull_name());
-		System.out.println("Custom position: " + lp.getCustom_position());
-		
-		return this.save(lp, uname);
-		
-	}
+//	public Long updateLeaguePlayerCustomPosition (LeaguePlayerInputCustPosContainer container, String uname){
+//		
+//		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
+//		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+//		
+//		// Check to see if LeaguePlayer already exists
+//		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+//				.filter("player_projected", playerprojectedkey).list();
+//
+//		LeaguePlayer lp = new LeaguePlayer();
+//		
+//		// If exists, update existing LeaguePlayer custom position
+//		// Otherwise, update new LeaguePlayer with custom position
+//		if (leagueplayers.size() > 0) {
+//			lp = leagueplayers.get(0);
+//		} else {
+//			lp.setLeagueRef(Ref.create(leaguekey));
+//			lp.setPlayer_projected(Ref.create(playerprojectedkey));
+//		}
+//
+//		lp.setCustom_position(container.getCustom_position_eligibility());
+//		lp.setCustom_position_flag(true);
+//		
+//		System.out.println("Saving player custom position for: " + lp.getPlayer_projected().getFull_name());
+//		System.out.println("Custom position: " + lp.getCustom_position());
+//		
+//		return this.save(lp, uname);
+//		
+//	}
 	
 	/**
 	 * Description: Removes custom position eligibility for league player, only requires league_id,
@@ -313,35 +320,35 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 	 * @param uname
 	 * @return Long, id of saved LeaguePlayer
 	 */
-	public Long removeLeaguePlayerCustomPosition (LeaguePlayerInputCustPosContainer container, String uname){
-		
-		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
-		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
-		
-		// Check to see if LeaguePlayer already exists
-		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
-				.filter("player_projected", playerprojectedkey).list();
-
-		LeaguePlayer lp = new LeaguePlayer();
-		
-		// If exists, remove existing LeaguePlayer custom position
-		// Otherwise, return -1
-		if (leagueplayers.size() > 0) {
-			lp = leagueplayers.get(0);
-			lp.setCustom_position("");
-			lp.setCustom_position_flag(false);
-			
-			System.out.println("Removing player custom position for: " + lp.getPlayer_projected().getFull_name());
-			System.out.println("Cusotm position flag: " + lp.isCustom_position_flag());
-		} else {
-			System.out.println("Could NOT remove custom position for: " + lp.getPlayer_projected().getFull_name());
-			System.out.println("Could not find player.");
-			return Long.valueOf(-1);
-		}
-
-		return this.save(lp, uname);
-		
-	}
+//	public Long removeLeaguePlayerCustomPosition (LeaguePlayerInputCustPosContainer container, String uname){
+//		
+//		Key<League> leaguekey = Key.create(League.class, container.getLeague_id());
+//		Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
+//		
+//		// Check to see if LeaguePlayer already exists
+//		List<LeaguePlayer> leagueplayers = ofy().load().type(LeaguePlayer.class).filter("league", leaguekey)
+//				.filter("player_projected", playerprojectedkey).list();
+//
+//		LeaguePlayer lp = new LeaguePlayer();
+//		
+//		// If exists, remove existing LeaguePlayer custom position
+//		// Otherwise, return -1
+//		if (leagueplayers.size() > 0) {
+//			lp = leagueplayers.get(0);
+//			lp.setCustom_position("");
+//			lp.setCustom_position_flag(false);
+//			
+//			System.out.println("Removing player custom position for: " + lp.getPlayer_projected().getFull_name());
+//			System.out.println("Cusotm position flag: " + lp.isCustom_position_flag());
+//		} else {
+//			System.out.println("Could NOT remove custom position for: " + lp.getPlayer_projected().getFull_name());
+//			System.out.println("Could not find player.");
+//			return Long.valueOf(-1);
+//		}
+//
+//		return this.save(lp, uname);
+//		
+//	}
 	
 	public void undraftAllLeaguePlayersInLeague (Long leagueid, String uname){
 		
