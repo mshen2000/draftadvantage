@@ -398,6 +398,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		// for (String p: priority.getPos_priority())  System.out.println(p);
 
+		// Calculate total z and replacement z for each position
 		PositionalZContainer posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
 		PositionalZContainer posz_1b = getPositionalZpass2(playeroutput, "1B", iroster_1b, priority);
 		PositionalZContainer posz_2b = getPositionalZpass2(playeroutput, "2B", iroster_2b, priority);
@@ -416,26 +417,40 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
 		System.out.println("Coef: " + coef);
 		
+		String calculated_position;
+		
 		// Update auction value
 		for (LeaguePlayerOutput po : playeroutput){
+
+			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
+			else calculated_position = po.getPlayer_position();
+			
+			if (po.getFull_name().equals("Mike Trout")) {
+				System.out.println("Mike Trout cust position: " + po.getCustom_position());
+				System.out.println("Mike Trout calc position: " + calculated_position);
+			}
 			
 			double auct = 0;
 			
-			if (po.getPlayer_position().toLowerCase().contains("c")) 
+			if (calculated_position.toLowerCase().contains("c")) 
 				auct = Math.max(auct,(po.getTotal_z()-posz_c.getReplacementvalue())*coef);
-			if (po.getPlayer_position().toLowerCase().contains("1b")) 
+			if (calculated_position.toLowerCase().contains("1b")) 
 				auct = Math.max(auct,(po.getTotal_z()-posz_1b.getReplacementvalue())*coef);
-			if (po.getPlayer_position().toLowerCase().contains("2b")) 
+			if (calculated_position.toLowerCase().contains("2b")) 
 				auct = Math.max(auct,(po.getTotal_z()-posz_2b.getReplacementvalue())*coef);
-			if (po.getPlayer_position().toLowerCase().contains("3b")) 
+			if (calculated_position.toLowerCase().contains("3b")) 
 				auct = Math.max(auct,(po.getTotal_z()-posz_3b.getReplacementvalue())*coef);
-			if (po.getPlayer_position().toLowerCase().contains("ss")) 
+			if (calculated_position.toLowerCase().contains("ss")) {
 				auct = Math.max(auct,(po.getTotal_z()-posz_ss.getReplacementvalue())*coef);
-			if (po.getPlayer_position().toLowerCase().contains("of")) 
+				if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout SS Auction val: " + auct);
+			}
+			if (calculated_position.toLowerCase().contains("of")) {
 				auct = Math.max(auct,(po.getTotal_z()-posz_of.getReplacementvalue())*coef);
-			if (po.getPlayer_position().toLowerCase().contains("p")) 
+				if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout OF Auction val: " + auct);
+			}
+			if (calculated_position.toLowerCase().contains("p")) 
 				auct = Math.max(auct,(po.getTotal_z()-posz_p.getReplacementvalue())*coef);
-			if (po.getPlayer_position().toLowerCase().contains("dh")) 
+			if (calculated_position.toLowerCase().contains("dh")) 
 				auct = Math.max(auct,(po.getTotal_z()-replval_dh)*coef);
 			
 			if (auct < 0) auct = 0;
@@ -631,12 +646,16 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		double totalz = 0;
 		double totalzaboverepl = 0;
 		double avgz = 0;
+		String calculated_position;
 		
 		PositionalZContainer p = new PositionalZContainer();
 		
 		for (LeaguePlayerOutput po : leagueplayers){
 			
-			if (isPlayerPositionPriority(position, po.getPlayer_position(), priority)
+			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
+			else calculated_position = po.getPlayer_position();
+			
+			if (isPlayerPositionPriority(position, calculated_position, priority)
 				&& (i < repl_level)){
 				
 				totalz = totalz + po.getTotal_z();
@@ -644,7 +663,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				
 				// System.out.println(position + ": " + lp.getTotal_z());
 				
-			} else if (isPlayerPositionPriority(position, po.getPlayer_position(), priority)
+			} else if (isPlayerPositionPriority(position, calculated_position, priority)
 					&& (i == repl_level)){
 				
 				avgz = avgz + po.getTotal_z();
@@ -652,7 +671,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				
 				// System.out.println(position + "-AVG1: " + lp.getTotal_z());
 				
-			} else if (isPlayerPositionPriority(position, po.getPlayer_position(), priority)
+			} else if (isPlayerPositionPriority(position, calculated_position, priority)
 					&& (i == repl_level + 1)){
 				
 				avgz = avgz + po.getTotal_z();

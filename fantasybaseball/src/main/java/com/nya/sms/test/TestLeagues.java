@@ -676,14 +676,12 @@ public class TestLeagues {
 		LeaguePlayerInputInfoContainer pcont_chapman = new LeaguePlayerInputInfoContainer();
 		pcont_chapman.setLeague_id(l1_id);
 		pcont_chapman.setPlayer_projected_id(aroldis_chapman.getId());
-		pcont_chapman.setCustom_position("1B,P");
-		pcont_chapman.setCustom_position_flag(true);
 		pcont_chapman.setTeam_player_note(player_note);
 		
 		LeaguePlayerInputInfoContainer pcont_trout = new LeaguePlayerInputInfoContainer();
 		pcont_trout.setLeague_id(l1_id);
 		pcont_trout.setPlayer_projected_id(mike_trout.getId());
-		pcont_trout.setCustom_position("OF,C");
+		pcont_trout.setCustom_position("OF,SS");
 		pcont_trout.setCustom_position_flag(true);
 		pcont_trout.setTeam_player_note(player_note);
 
@@ -700,6 +698,17 @@ public class TestLeagues {
 		long unknown_p2_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_p2, uname);
 		trout_id = getLeaguePlayerService().updateLeaguePlayerInfo(pcont_trout, uname);
 		
+		
+		// Test updated auction values due to custom position change
+		List<LeaguePlayerOutput> playeroutput2 = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
+		System.out.println("Mike Trout Updated Auction Value: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value());
+		System.out.println("Mike Trout Cust Pos Flag: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isCustom_position_flag());
+		System.out.println("Mike Trout Cust Position: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getCustom_position());
+		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Chris Sale").get(0).getInit_auction_value() == 50);
+		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Chris Davis").get(0).getInit_auction_value() == 18);
+		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value() == 45);
+		
+		
 		// Test getLeaguePlayersbyLeague
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 9);
 		
@@ -712,7 +721,7 @@ public class TestLeagues {
 		LeaguePlayer trout = getLeaguePlayerService().get(trout_id);
 		Assert.assertTrue(trout.getTeam_player_note().equals(player_note));
 		Assert.assertTrue(trout.isCustom_position_flag());
-		Assert.assertTrue(trout.getCustom_position().equals("OF,C"));
+		Assert.assertTrue(trout.getCustom_position().equals("OF,SS"));
 		
 		// Test drafted player attributes and note
 		LeaguePlayer chapman = getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).get(0);
@@ -720,8 +729,7 @@ public class TestLeagues {
 		Assert.assertTrue(chapman.getTeam_player_salary() == 5);
 		Assert.assertTrue(chapman.getLeague_team().getId() == lt2_id);
 		Assert.assertTrue(chapman.getTeam_player_note().equals(player_note));
-		Assert.assertTrue(chapman.isCustom_position_flag());
-		Assert.assertTrue(chapman.getCustom_position().equals("1B,P"));
+		Assert.assertTrue(!chapman.isCustom_position_flag());
 		
 		// Test unknown player attributes
 		LeaguePlayer unknown_h = getLeaguePlayerService().get(unknown_h_id);
@@ -766,8 +774,7 @@ public class TestLeagues {
 		// Test league player note and custom elig after undraft
 		chapman = getLeaguePlayerService().get(chapman_id);
 		Assert.assertTrue(chapman.getTeam_player_note().equals(player_note));
-		Assert.assertTrue(chapman.isCustom_position_flag());
-		Assert.assertTrue(chapman.getCustom_position().equals("1B,P"));
+		Assert.assertTrue(!chapman.isCustom_position_flag());
 		
 		// Test remove custom eligibility
 		pcont_chapman = new LeaguePlayerInputInfoContainer();
