@@ -418,13 +418,13 @@ public class TestLeagues {
 		// p			110.1		6
 		
 		PositionZPriorityContainer c = new PositionZPriorityContainer(44.56, 105.2,88.5,80.666,95.12,120.0,110.1,1000.0);
-		System.out.println(c.getPos_priority().get(0));
-		System.out.println(c.getPos_priority().get(1));
-		System.out.println(c.getPos_priority().get(2));
-		System.out.println(c.getPos_priority().get(3));
-		System.out.println(c.getPos_priority().get(4));
-		System.out.println(c.getPos_priority().get(5));
-		System.out.println(c.getPos_priority().get(6));
+//		System.out.println(c.getPos_priority().get(0));
+//		System.out.println(c.getPos_priority().get(1));
+//		System.out.println(c.getPos_priority().get(2));
+//		System.out.println(c.getPos_priority().get(3));
+//		System.out.println(c.getPos_priority().get(4));
+//		System.out.println(c.getPos_priority().get(5));
+//		System.out.println(c.getPos_priority().get(6));
 		Assert.assertTrue(c.getPos_priority().get(0) == "c");
 		Assert.assertTrue(c.getPos_priority().get(4) == "1b");
 		Assert.assertTrue(c.getPos_priority().get(2) == "2b");
@@ -681,7 +681,7 @@ public class TestLeagues {
 		LeaguePlayerInputInfoContainer pcont_trout = new LeaguePlayerInputInfoContainer();
 		pcont_trout.setLeague_id(l1_id);
 		pcont_trout.setPlayer_projected_id(mike_trout.getId());
-		pcont_trout.setCustom_position("OF,SS");
+		pcont_trout.setCustom_position("OF,2B");
 		pcont_trout.setCustom_position_flag(true);
 		pcont_trout.setTeam_player_note(player_note);
 
@@ -721,7 +721,7 @@ public class TestLeagues {
 		LeaguePlayer trout = getLeaguePlayerService().get(trout_id);
 		Assert.assertTrue(trout.getTeam_player_note().equals(player_note));
 		Assert.assertTrue(trout.isCustom_position_flag());
-		Assert.assertTrue(trout.getCustom_position().equals("OF,SS"));
+		Assert.assertTrue(trout.getCustom_position().equals("OF,2B"));
 		
 		// Test drafted player attributes and note
 		LeaguePlayer chapman = getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).get(0);

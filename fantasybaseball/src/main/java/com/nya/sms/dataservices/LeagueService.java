@@ -381,114 +381,15 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		System.out.println("Get Player Output Data: Convert player projections to output...");
 		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(profile, league);
-
-		System.out.println("Get Player Output Data: Calculating league means and std deviations...");
-		calcPlayerZScores(playeroutput, league);
 		
-		System.out.println("Get Player Output Data: Calculating static auction values...");
-		
-		// CALCULATE STATIC AUCTION VALUE
-		
-		// Calculate counts for each position based on league info
-		calcPositionCounts(league);
-		
-		// Determine position priority list
-		//  TODO:  Don't need to calculate it anymore, just pull it from league
-		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
-		
-		// for (String p: priority.getPos_priority())  System.out.println(p);
-
-		// Calculate total z and replacement z for each position
-		PositionalZContainer posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
-		PositionalZContainer posz_1b = getPositionalZpass2(playeroutput, "1B", iroster_1b, priority);
-		PositionalZContainer posz_2b = getPositionalZpass2(playeroutput, "2B", iroster_2b, priority);
-		PositionalZContainer posz_3b = getPositionalZpass2(playeroutput, "3B", iroster_3b, priority);
-		PositionalZContainer posz_ss = getPositionalZpass2(playeroutput, "SS", iroster_ss, priority);
-		PositionalZContainer posz_of = getPositionalZpass2(playeroutput, "OF", iroster_of, priority);
-		PositionalZContainer posz_p = getPositionalZpass2(playeroutput, "P", iroster_p, priority);
-		
-		double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
-
-		double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
-				+ posz_3b.getTotalvalue() + posz_ss.getTotalvalue() + posz_of.getTotalvalue() + posz_p.getTotalvalue();
-		
-		double coef = (league.getTeam_salary()*league.getNum_of_teams())/posz_total;
-		
-		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
-		System.out.println("Coef: " + coef);
-		
-		String calculated_position;
-		
-		// Update auction value
-		for (LeaguePlayerOutput po : playeroutput){
-
-			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
-			else calculated_position = po.getPlayer_position();
-			
-			if (po.getFull_name().equals("Mike Trout")) {
-				System.out.println("Mike Trout cust position: " + po.getCustom_position());
-				System.out.println("Mike Trout calc position: " + calculated_position);
-			}
-			
-			double auct = 0;
-			
-			if (calculated_position.toLowerCase().contains("c")) 
-				auct = Math.max(auct,(po.getTotal_z()-posz_c.getReplacementvalue())*coef);
-			if (calculated_position.toLowerCase().contains("1b")) 
-				auct = Math.max(auct,(po.getTotal_z()-posz_1b.getReplacementvalue())*coef);
-			if (calculated_position.toLowerCase().contains("2b")) 
-				auct = Math.max(auct,(po.getTotal_z()-posz_2b.getReplacementvalue())*coef);
-			if (calculated_position.toLowerCase().contains("3b")) 
-				auct = Math.max(auct,(po.getTotal_z()-posz_3b.getReplacementvalue())*coef);
-			if (calculated_position.toLowerCase().contains("ss")) {
-				auct = Math.max(auct,(po.getTotal_z()-posz_ss.getReplacementvalue())*coef);
-				if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout SS Auction val: " + auct);
-			}
-			if (calculated_position.toLowerCase().contains("of")) {
-				auct = Math.max(auct,(po.getTotal_z()-posz_of.getReplacementvalue())*coef);
-				if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout OF Auction val: " + auct);
-			}
-			if (calculated_position.toLowerCase().contains("p")) 
-				auct = Math.max(auct,(po.getTotal_z()-posz_p.getReplacementvalue())*coef);
-			if (calculated_position.toLowerCase().contains("dh")) 
-				auct = Math.max(auct,(po.getTotal_z()-replval_dh)*coef);
-			
-			if (auct < 0) auct = 0;
-			
-			po.setInit_auction_value((int)Math.round(auct));
-
-		}
-
 		System.out.println("Get Player Output Data: Updating with League Player data...");
-		
-//		LeaguePlayerOutput repl_p_base = getReplPitcher();
-//		LeaguePlayerOutput repl_h_base = getReplHitter();
-		
 		List<LeaguePlayer> lplist = getLeaguePlayerService().getLeaguePlayersByLeague(league_id, username);
-			
+		
 		for (LeaguePlayer lp : lplist){
 			
 			// Set PlayerOutput if LeaguePlayer is an unknown player
-			if (lp.isUnknownplayer()){
-				LeaguePlayerOutput repl = new LeaguePlayerOutput();
-				
-				if (lp.getUnknown_player_pitcher_hitter().equals(getPlayerProjectedService().PITCHER_HITTER_PITCHER)) 
-					repl = getReplPitcher();
-				if (lp.getUnknown_player_pitcher_hitter().equals(getPlayerProjectedService().PITCHER_HITTER_HITTER)) 
-					repl = getReplHitter();
-				
-				repl.setLeagueteam_id(lp.getLeague_teamRef().getKey().getId());
-				repl.setLeagueteam_name(lp.getLeague_team().getTeam_name());
-				repl.setTeam_roster_position(lp.getTeam_roster_position());
-				repl.setTeam_player_salary(lp.getTeam_player_salary());
-				repl.setUnknown_player_name(lp.getUnknown_player_name());
-				repl.setFull_name(lp.getUnknown_player_name());
-				repl.setLeague_player_id(lp.getId());
-				repl.setUnknownplayer(true);
-				
-				playeroutput.add(repl);
-				
-			} else {
+			if (!lp.isUnknownplayer()){
+
 				// Find matching PlayerOutput if LeaguePlayer is a known player
 				for (LeaguePlayerOutput po : playeroutput){
 					
@@ -520,7 +421,117 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			}
 		}
 
+		System.out.println("Get Player Output Data: Calculating league means and std deviations...");
+		calcPlayerZScores(playeroutput, league);
+		
+		System.out.println("Get Player Output Data: Calculating static auction values...");
+		
+		// CALCULATE STATIC AUCTION VALUE
+		
+		// Calculate counts for each position based on league info
+		calcPositionCounts(league);
+		
+		// Determine position priority list
+		//  TODO:  Don't need to calculate it anymore, just pull it from league
+		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
+
+		// Calculate total z and replacement z for each position
+		PositionalZContainer posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
+		PositionalZContainer posz_1b = getPositionalZpass2(playeroutput, "1B", iroster_1b, priority);
+		PositionalZContainer posz_2b = getPositionalZpass2(playeroutput, "2B", iroster_2b, priority);
+		PositionalZContainer posz_3b = getPositionalZpass2(playeroutput, "3B", iroster_3b, priority);
+		PositionalZContainer posz_ss = getPositionalZpass2(playeroutput, "SS", iroster_ss, priority);
+		PositionalZContainer posz_of = getPositionalZpass2(playeroutput, "OF", iroster_of, priority);
+		PositionalZContainer posz_p = getPositionalZpass2(playeroutput, "P", iroster_p, priority);
+		
+		double replval_dh = (posz_1b.getReplacementvalue() + posz_of.getReplacementvalue())/2;
+
+		double posz_total = posz_c.getTotalvalue() + posz_1b.getTotalvalue() + posz_2b.getTotalvalue()
+				+ posz_3b.getTotalvalue() + posz_ss.getTotalvalue() + posz_of.getTotalvalue() + posz_p.getTotalvalue();
+		
+		double coef = (league.getTeam_salary()*league.getNum_of_teams())/posz_total;
+		
+		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
+		System.out.println("Coef: " + coef);
+		
+		String calculated_position;
+		
+		// Update auction value
+		for (LeaguePlayerOutput po : playeroutput){
+
+			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
+			else calculated_position = po.getPlayer_position();
+			
+//			if (po.getFull_name().equals("Mike Trout")) {
+//				System.out.println("Mike Trout cust position: " + po.getCustom_position());
+//				System.out.println("Mike Trout calc position: " + calculated_position);
+//			}
+			
+			double auct = 0;
+			
+			if (calculated_position.toLowerCase().contains("c")) 
+				auct = Math.max(auct,(po.getTotal_z()-posz_c.getReplacementvalue())*coef);
+			if (calculated_position.toLowerCase().contains("1b")) 
+				auct = Math.max(auct,(po.getTotal_z()-posz_1b.getReplacementvalue())*coef);
+			if (calculated_position.toLowerCase().contains("2b")) 
+				auct = Math.max(auct,(po.getTotal_z()-posz_2b.getReplacementvalue())*coef);
+			if (calculated_position.toLowerCase().contains("3b")) 
+				auct = Math.max(auct,(po.getTotal_z()-posz_3b.getReplacementvalue())*coef);
+			if (calculated_position.toLowerCase().contains("ss")) {
+				auct = Math.max(auct,(po.getTotal_z()-posz_ss.getReplacementvalue())*coef);
+				// if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout SS Auction val: " + auct);
+			}
+			if (calculated_position.toLowerCase().contains("of")) {
+				auct = Math.max(auct,(po.getTotal_z()-posz_of.getReplacementvalue())*coef);
+				// if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout OF Auction val: " + auct);
+			}
+			if (calculated_position.toLowerCase().contains("p")) 
+				auct = Math.max(auct,(po.getTotal_z()-posz_p.getReplacementvalue())*coef);
+			if (calculated_position.toLowerCase().contains("dh")) 
+				auct = Math.max(auct,(po.getTotal_z()-replval_dh)*coef);
+			
+			if (auct < 0) auct = 0;
+			
+			po.setInit_auction_value((int)Math.round(auct));
+
+		}
+
+		
+
+		System.out.println("Get Player Output Data: Adding unknown players from League Player data...");
+		
+//		LeaguePlayerOutput repl_p_base = getReplPitcher();
+//		LeaguePlayerOutput repl_h_base = getReplHitter();
+		
+		// lplist = getLeaguePlayerService().getLeaguePlayersByLeague(league_id, username);
+			
+		for (LeaguePlayer lp : lplist){
+			
+			// Set PlayerOutput if LeaguePlayer is an unknown player
+			if (lp.isUnknownplayer()){
+				LeaguePlayerOutput repl = new LeaguePlayerOutput();
+				
+				if (lp.getUnknown_player_pitcher_hitter().equals(getPlayerProjectedService().PITCHER_HITTER_PITCHER)) 
+					repl = getReplPitcher();
+				if (lp.getUnknown_player_pitcher_hitter().equals(getPlayerProjectedService().PITCHER_HITTER_HITTER)) 
+					repl = getReplHitter();
+				
+				repl.setLeagueteam_id(lp.getLeague_teamRef().getKey().getId());
+				repl.setLeagueteam_name(lp.getLeague_team().getTeam_name());
+				repl.setTeam_roster_position(lp.getTeam_roster_position());
+				repl.setTeam_player_salary(lp.getTeam_player_salary());
+				repl.setUnknown_player_name(lp.getUnknown_player_name());
+				repl.setFull_name(lp.getUnknown_player_name());
+				repl.setLeague_player_id(lp.getId());
+				repl.setUnknownplayer(true);
+				
+				playeroutput.add(repl);
+				
+			} 
+		}
+
 		System.out.println("Get Player Output Data: " + lplist.size() + " LeaguePlayers found and updated.");
+
 		
 //		for (int out = 0; out < 150; out++) {
 //			System.out.println("--Player Test: " + playeroutput.get(out).getFull_name() + ", "
@@ -582,10 +593,14 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		double totalz = 0;
 		double totalzaboverepl = 0;
 		double avgz = 0;
+		String calculated_position;
 		
 		PositionalZContainer p = new PositionalZContainer();
 		
 		for (LeaguePlayerOutput po : leagueplayers){
+			
+			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
+			else calculated_position = po.getPlayer_position();
 			
 			if ((po.getPlayer_position().toLowerCase().contains(position.toLowerCase())) 
 				&& (i < repl_level)){
@@ -618,8 +633,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		avgz = avgz/2;
 		totalzaboverepl = totalz - repl_level*avgz;
 		
-		System.out.println(position + "-CUM TOTAL ABOVE REPL: " + totalzaboverepl);
-		System.out.println(position + "-AVG REPL Z: " + avgz);
+		// System.out.println(position + "-CUM TOTAL ABOVE REPL: " + totalzaboverepl);
+		// System.out.println(position + "-AVG REPL Z: " + avgz);
 		
 		p.setTotalvalue(totalzaboverepl);
 		p.setReplacementvalue(avgz);
@@ -686,8 +701,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		avgz = avgz/2;
 		totalzaboverepl = totalz - repl_level*avgz;
 		
-		System.out.println(position + "-TOTAL: " + totalzaboverepl);
-		System.out.println(position + "-AVG REPL Z: " + avgz);
+		// System.out.println(position + "-TOTAL: " + totalzaboverepl);
+		// System.out.println(position + "-AVG REPL Z: " + avgz);
 		
 		p.setTotalvalue(totalzaboverepl);
 		p.setReplacementvalue(avgz);
@@ -732,8 +747,6 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				
 			} else return true;
 
-			
-			
 		} 
 		else {
 			// System.out.println("-- Player with position elig '" + playerposition + "' DOES NOT HAVE position '" + position + "'");
@@ -1058,7 +1071,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				posz_p.getReplacementvalue(), 1000
 				);
 		
-		for (String p: priority.getPos_priority())  System.out.println(p);
+		// for (String p: priority.getPos_priority())  System.out.println(p);
 		
 		return priority;
 		
