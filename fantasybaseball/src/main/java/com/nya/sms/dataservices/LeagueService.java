@@ -410,8 +410,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 							
 							po.setTeam_player_note(lp.getTeam_player_note());
 							po.setLeague_player_id(lp.getId());
-							po.setCustom_position(lp.getCustom_position());
 							po.setCustom_position_flag(lp.isCustom_position_flag());
+							// po.setCustom_position(lp.getCustom_position());
+							
+							// Calculate player position
+							if (lp.isCustom_position_flag()) po.setCustom_position(lp.getCustom_position());
+							else po.setCustom_position(po.getPlayer_position());
 							po.setUnknownplayer(false);
 						}
 						
@@ -771,8 +775,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			LeaguePlayerOutput po = new LeaguePlayerOutput(p);
 			po.setLeague_id(league.getId());
 			po.setProjection_date(profile.getProjection_date());
+			po.setCustom_position_flag(false);
+			po.setCustom_position(po.getPlayer_position());
 			playeroutput.add(po);
 			i++;
+			
+			// System.out.println("Get Player Output Data: Player= " + po.getFull_name() + ", pos: " + po.getCustom_position());
 		}
 
 		System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");

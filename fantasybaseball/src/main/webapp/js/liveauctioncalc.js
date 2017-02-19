@@ -304,28 +304,28 @@ function calcLiveAuctionValue(){
 
 		if (value.unknownplayer == false){
 			
-			if (value.custom_position_flag) calculatedpos = value.custom_position;
-			else calculatedpos = value.player_position;
+			// if (value.custom_position_flag) calculatedpos = value.custom_position;
+			// else calculatedpos = value.player_position;
 			
 			var auct = 0;
 			
 			// If a player is multi-position, these if statements ensure the 
 			// position with the highest auction value is used.
-			if ((calculatedpos.toLowerCase().indexOf("c") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("c") > -1))
 				auct = Math.max(auct,(value.total_z - posz_c["avgreplz"])*coef);
-			if ((calculatedpos.toLowerCase().indexOf("1b") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("1b") > -1))
 				auct = Math.max(auct,(value.total_z - posz_1b["avgreplz"])*coef);
-			if ((calculatedpos.toLowerCase().indexOf("2b") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("2b") > -1))
 				auct = Math.max(auct,(value.total_z - posz_2b["avgreplz"])*coef);
-			if ((calculatedpos.toLowerCase().indexOf("ss") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("ss") > -1))
 				auct = Math.max(auct,(value.total_z - posz_ss["avgreplz"])*coef);
-			if ((calculatedpos.toLowerCase().indexOf("3b") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("3b") > -1))
 				auct = Math.max(auct,(value.total_z - posz_3b["avgreplz"])*coef);
-			if ((calculatedpos.toLowerCase().indexOf("of") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("of") > -1))
 				auct = Math.max(auct,(value.total_z - posz_of["avgreplz"])*coef);
-			if ((calculatedpos.toLowerCase().indexOf("p") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("p") > -1))
 				auct = Math.max(auct,(value.total_z - posz_p["avgreplz"])*coef);
-			if ((calculatedpos.toLowerCase().indexOf("dh") > -1))
+			if ((value.custom_position.toLowerCase().indexOf("dh") > -1))
 				auct = Math.max(auct,(value.total_z - replval_dh)*coef);
 			
 			if (auct < 0) auct = 0;
@@ -400,13 +400,13 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 		
 		if (value.unknownplayer == false){
 			
-			if (value.custom_position_flag) calculatedpos = value.custom_position;
-			else calculatedpos = value.player_position;
+			// if (value.custom_position_flag) calculatedpos = value.custom_position;
+			// else calculatedpos = value.player_position;
 			
 			// Check if player is eligible for position, and if player has multi-position
 			// then also check if position is the highest priority position that the player holds.
 			// AND check if the count of players at that position is still less than the replacement level
-			if ((isPlayerPositionPriority(position, calculatedpos, priority))
+			if ((isPlayerPositionPriority(position, value.custom_position, priority))
 					&& (i < position_num)){
 				
 				// Add Z value only if player is undrafted
@@ -419,7 +419,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 					
 				i++;
 					
-			} else if ((isPlayerPositionPriority(position, calculatedpos, priority))
+			} else if ((isPlayerPositionPriority(position, value.custom_position, priority))
 					&& (i == position_num)){
 				
 				avgz = avgz + value.total_z;
@@ -427,7 +427,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				
 				//  System.out.println(position + "-AVG1: " + lp.getTotal_z());
 				
-			} else if ((isPlayerPositionPriority(position, calculatedpos, priority))
+			} else if ((isPlayerPositionPriority(position, value.custom_position, priority))
 					&& (i == position_num + 1)){
 				
 				avgz = avgz + value.total_z;

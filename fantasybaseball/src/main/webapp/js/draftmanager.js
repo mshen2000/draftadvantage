@@ -118,21 +118,21 @@ $(document).ready(function()
 		// console.log("filtered_data: " + JSON.stringify(filtered_data));
 		
 		var filtered_data_c = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("C") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("C") > -1;}).slice(0,10);
 		var filtered_data_1b = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("1B") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("1B") > -1;}).slice(0,10);
 		var filtered_data_2b = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("2B") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("2B") > -1;}).slice(0,10);
 		var filtered_data_ss = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("SS") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("SS") > -1;}).slice(0,10);
 		var filtered_data_3b = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("3B") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("3B") > -1;}).slice(0,10);
 		var filtered_data_of = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("OF") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("OF") > -1;}).slice(0,10);
 		var filtered_data_sp = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("SP") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("SP") > -1;}).slice(0,10);
 		var filtered_data_rp = $.grep(filtered_data, function(v) {
-		    return v.player_position.indexOf("RP") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("RP") > -1;}).slice(0,10);
 		
 		loadPositionalTable(filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
 		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
@@ -1647,11 +1647,13 @@ function loadPlayerGridTable(data, isInitialLoad)
                 	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
                 },
             { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
+            /*
             { "title": "Pos", className: "dm_export", "mData": "player_position", "render": function ( data, type, row ) {
             	if (row.custom_position_flag){  return row.custom_position;} 
             	else {return row.player_position;}
                 },
-                "sDefaultContent": ""},
+                "sDefaultContent": ""}, */
+	        { "title": "Pos", className: "dm_export", "mData": "custom_position", "sDefaultContent": ""},
             { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},
             { "title": "Avg", className: "dm_stat dm_export", "mData": "hitter_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ 
@@ -1890,7 +1892,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 		$("#lbl-playerinfoname").text(row.full_name);
 		$("#lbl-playerinfoteam").text(row.team);
 		$("#lbl-playerinfoage").text(row.age);
-		$("#lbl-playerinfoelig").text(row.player_position);
+		$("#lbl-playerinfoelig").text(row.custom_position);
 		
 		if ((row.leagueteam_name == null)||(row.leagueteam_name == ""))
 			$("#lbl-playerinfoowner").text("[available]");
