@@ -356,14 +356,16 @@ $(document).ready(function()
 		console.log("Position String: " +  customposstring); 
 		playercustomposrow.custom_position_flag = flag;
 		if (flag){
-			playercustomposrow.custom_position = customposstring;
+			playercustomposrow.custom_position = customposstring.toString();
 		} else {
-			playercustomposrow.custom_position = '';
+			playercustomposrow.custom_position = playercustomposrow.player_position;
 		}
 
 		playertable.row('#' + playercustomposrow.id + '').data(playercustomposrow).draw();
 		playercustpostable.row('#' + playercustomposrow.id + '').data(playercustomposrow).draw();
 		mssolutions.fbapp.draftmanager.updatePlayerInfo(playercustomposrow);
+		
+		calcLiveAuctionValue();
 		
 		});
 	
@@ -1457,9 +1459,11 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 	        var $label = $("label[for='"+currentElement.id+"']")
 	        // console.log("-- Current element label text5: " + currentElement.val());
 	        // console.log("-- Current row player position: " + row.player_position);
-	        if(row.player_position.indexOf(currentElement.val()) != -1){
+	        if(row.custom_position.indexOf(currentElement.val()) != -1){
 	        	currentElement.prop('checked', true);
-	        	currentElement.prop('disabled', true);
+	        	if(row.player_position.indexOf(currentElement.val()) != -1) 
+	        		currentElement.prop('disabled', true);
+	        	else currentElement.prop('disabled', false);
 	        } else {
 	        	currentElement.prop('checked', false);
 	        	currentElement.prop('disabled', false);
