@@ -116,23 +116,24 @@ $(document).ready(function()
 		});
 		
 		// console.log("filtered_data: " + JSON.stringify(filtered_data));
+		var slice_size = 8
 		
 		var filtered_data_c = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("C") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("C") > -1;}).slice(0,slice_size);
 		var filtered_data_1b = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("1B") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("1B") > -1;}).slice(0,slice_size);
 		var filtered_data_2b = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("2B") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("2B") > -1;}).slice(0,slice_size);
 		var filtered_data_ss = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("SS") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("SS") > -1;}).slice(0,slice_size);
 		var filtered_data_3b = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("3B") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("3B") > -1;}).slice(0,slice_size);
 		var filtered_data_of = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("OF") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("OF") > -1;}).slice(0,slice_size);
 		var filtered_data_sp = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("SP") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("SP") > -1;}).slice(0,slice_size);
 		var filtered_data_rp = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("RP") > -1;}).slice(0,10);
+		    return v.custom_position.indexOf("RP") > -1;}).slice(0,slice_size);
 		
 		loadPositionalTable(filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
 		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
@@ -1921,7 +1922,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 	if (data != null){
 		
 		var maxvalue = Math.max(data[0].total_z, data[1].total_z, data[2].total_z, data[3].total_z, data[4].total_z,
-		           data[5].total_z, data[6].total_z, data[7].total_z, data[8].total_z, data[9].total_z);
+		           data[5].total_z, data[6].total_z, data[7].total_z);
 		
 		var options;
 		
@@ -1933,7 +1934,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 			  reverseData: true,
 			  horizontalBars: true,
 			  axisY: {
-			    offset: 70
+			    offset: 70,
 			}};
 		} else {
 			options = {
@@ -1942,16 +1943,16 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 			  reverseData: true,
 			  horizontalBars: true,
 			  axisY: {
-			    offset: 70
+			    offset: 70,
 			}};
 		}
 		
 		var chart = new Chartist.Bar(chartid, {
 			  labels: [data[0].full_name, data[1].full_name, data[2].full_name, data[3].full_name, data[4].full_name,
-			           data[5].full_name, data[6].full_name, data[7].full_name, data[8].full_name, data[9].full_name],
+			           data[5].full_name, data[6].full_name, data[7].full_name],
 			  series: [
 			    [data[0].total_z, data[1].total_z, data[2].total_z, data[3].total_z, data[4].total_z,
-		           data[5].total_z, data[6].total_z, data[7].total_z, data[8].total_z, data[9].total_z]
+		           data[5].total_z, data[6].total_z, data[7].total_z]
 			  ]
 			}, options);
 			

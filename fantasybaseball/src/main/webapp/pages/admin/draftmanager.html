@@ -52,6 +52,8 @@
 	margin-top: 10px !important;
 }
 
+.top-buffer { margin-top:20px; }
+
 #playergrid_table > thead > tr > th[class*="sort"]:after,
 #teamroster_table > thead > tr > th[class*="sort"]:after {
     content: "" !important;
@@ -352,52 +354,112 @@ td { font-size: 12px; }
 			</div>
 		  </div>
 		  <div id="maintab2" class="tab-pane fade">
-		    <div class="row">
+		  	<div class="row top-buffer">
 		    	<div class="col-md-4">
-		    		<H4>Catcher</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-c"></div>
-				  	<table id="pos_c_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    	<div class="col-md-4">
-		    		<H4>1st Base</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-1b"></div>
-				  	<table id="pos_1b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    	<div class="col-md-4">
-		    		<H4>2nd Base</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-2b"></div>
-				  	<table id="pos_2b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    </div>
-		    <div class="row">
-		    	<div class="col-md-4">
-		    		<H4>Shortstop</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-ss"></div>
-				  	<table id="pos_ss_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    	<div class="col-md-4">
-		    		<H4>3rd Base</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-3b"></div>
-				  	<table id="pos_3b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    	<div class="col-md-4">
-		    		<H4>Outfield</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-of"></div>
-				  	<table id="pos_of_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    </div>
-		    <div class="row">
-		    	<div class="col-md-4">
-		    		<H4>Starting Pitcher</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-sp"></div>
-				  	<table id="pos_sp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    	<div class="col-md-4">
-		    		<H4>Relief Pitcher</H4>
-		    		<div class="ct-chart ct-golden-section dm_poschart" id="chart-rp"></div>
-				  	<table id="pos_rp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-		    	</div>
-		    </div>
+		    		<div class="panel panel-default">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">Team Overview</h3>
+					  </div>
+					  <div class="panel-body">
+					    Panel content
+					  </div>
+					</div>
+		    	</div>	
+		    	<div class="col-md-8">
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>C</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_c_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-c"></div>
+					  	</div>	   		
+		    		</div>
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>1B</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_1b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-1b"></div>
+					  	</div>	 		
+		    		</div>
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>2B</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_2b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-2b"></div>
+					  	</div>	   		
+		    		</div>
+		    		
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>SS</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_ss_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-ss"></div>
+					  	</div>	   		
+		    		</div>
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>3B</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_3b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-3b"></div>
+					  	</div>	 		
+		    		</div>
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>OF</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_of_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-of"></div>
+					  	</div>	   		
+		    		</div>	
+		    		
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>SP</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_sp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-sp"></div>
+					  	</div>	 		
+		    		</div>
+		    		<div class="row">
+		    			<div class="col-md-1">
+		    				<H1>RP</H1>
+		    			</div>
+	    				<div class="col-md-6">
+			    			<table id="pos_rp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+			    		</div>
+			    		<div class="col-md-5">
+					  		<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-rp"></div>
+					  	</div>	   		
+		    		</div>			    			    		
+		    		
+		    	</div>	  	
+		  	</div>
+
 		  </div>
 		  <div id="maintab3" class="tab-pane fade">
 		    <h3>Live Estimated Standings</h3>
