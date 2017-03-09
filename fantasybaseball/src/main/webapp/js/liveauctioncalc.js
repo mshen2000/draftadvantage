@@ -1,3 +1,61 @@
+
+function calcTeamOvwList(){
+	
+	var teamlist = dm_globalteamlist;
+	var teamid;
+	var playertable = $('#playergrid_table').DataTable();
+	var totalsalary;
+	liveteamrostertemplate = JSON.parse(JSON.stringify(teamrostertemplate));
+	var teamovwlist = [];
+	
+	// For each team, get overview data
+	$.each( teamlist, function( teamkey, teamvalue ) {
+		
+		totalsalary = 0;
+		teamid = teamvalue.id;
+		var teamovw = [];
+		console.log("TeamID: " + teamid);
+		
+		teamovw.id = teamid;
+		teamovw.team_name = teamvalue.team_name;
+		teamovw.isuserowner = teamvalue.isuserowner;
+		
+		// Get players from table that have been drafted by selected team
+		var teamplayers = playertable.rows( function ( idx, data, node ) {
+	        return data.leagueteam_id == teamid ?
+	            true : false;
+	    } )
+	    .data();
+	
+		// For each drafted player on a team, fill them into the team roster grid
+		$.each( teamplayers, function( key, value ) {
+			totalsalary = totalsalary + value.team_player_salary;
+		});
+		
+		var teamstartingsalary = teamvalue.adj_starting_salary;
+		var balance = teamstartingsalary - totalsalary;
+		var spots = liveteamrostertemplate.length - teamplayers.length - dm_rescount;
+		var perplayer = balance / spots;
+		
+		teamovw.currentsalary = totalsalary;
+		teamovw.adj_starting_salary = teamstartingsalary;
+		teamovw.balance = balance;
+		teamovw.remainingspots = spots;
+		teamovw.perplayeramt = perplayer;
+		if (spots == 0) {
+			teamovw.maxbid = 0
+		} else {
+			teamovw.maxbid = balance - (spots - 1)
+		};
+		
+		teamovwlist.push(teamovw);
+	
+	});
+	
+	loadTeamOvwTable(teamovwlist, false);
+}
+
+
 function calcStandings(){
 	
 	var num_teams = dm_leagueinfo.league_teams.length;

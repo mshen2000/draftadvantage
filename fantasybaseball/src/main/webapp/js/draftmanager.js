@@ -135,6 +135,9 @@ $(document).ready(function()
 		var filtered_data_rp = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("RP") > -1;}).slice(0,slice_size);
 		
+		calcTeamOvwList();
+		
+		
 		loadPositionalTable(filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
 		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
 		loadPositionalTable(filtered_data_2b, $("#pos_2b_table"), false, true, "#chart-2b");
@@ -872,6 +875,8 @@ $(document).ready(function()
 	loadTeamRosterTable(null, true);
 	loadDraftPlayerAmtSelector();
 	
+	loadTeamOvwTable(null, true);
+	
 	loadPositionalTable(null, $("#pos_c_table"), true, true);
 	loadPositionalTable(null, $("#pos_1b_table"), true, true);
 	loadPositionalTable(null, $("#pos_2b_table"), true, true);
@@ -1490,6 +1495,61 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 
 }
 
+
+function loadTeamOvwTable(data, isInitialLoad)
+{
+	var data_table;
+	var table_element = $('#team_ovw_table');
+	var config = {
+        "bSort" : true,
+        "searching": false,
+        "paging": false,
+        "info": false,
+        // "order": [[ 23, "desc" ]],
+		responsive: true,
+    	"processing": true,
+        data: data,
+        select: {
+            style:    'single'
+        },
+        rowId: 'id',
+        "createdRow": function ( row, data, index ) {
+        	// console.log("data.isMyTeam: " + data.isMyTeam)
+            if ( data.isuserowner ) {
+//                $('td', row).eq(2).addClass('highlight');
+//                $('td', row).eq(3).addClass('highlight');
+//                $('td', row).eq(4).addClass('highlight');
+//                $('td', row).addClass('highlight');
+                $('td', row).css("font-weight", "bold");
+            }
+        },
+        "columns": [
+            { "visible": false, "title": "Team ID", "mData": "id", "sDefaultContent": ""},	
+            { "visible": false, "title": "isMyTeam", "mData": "isuserowner", "sDefaultContent": ""},	
+            { "title": "Team", "mData": "team_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 10 )},	
+            { "title": "Bal", "mData": "balance", "render": function ( data, type, row ) 
+            	{return "$" + data.toFixed(0);},"sDefaultContent": ""},
+            { "title": "Spots", "mData": "remainingspots", "sDefaultContent": ""},
+            { "title": "Avg $", "mData": "perplayeramt", "render": function ( data, type, row ) 
+            	{return "$" + data.toFixed(2);},"sDefaultContent": ""},
+            { "title": "Max $", "mData": "maxbid", "render": function ( data, type, row ) {
+        		return "$" + data.toFixed(0);
+            }, "sDefaultContent": ""},
+
+        ]
+        };
+	
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+		data_table = table_element.DataTable();
+	}
+
+}
 
 function loadLeagueStandingsTable(data, isInitialLoad)
 {
