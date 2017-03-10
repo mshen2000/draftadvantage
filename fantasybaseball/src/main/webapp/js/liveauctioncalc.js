@@ -14,12 +14,12 @@ function calcTeamOvwList(){
 		totalsalary = 0;
 		teamid = teamvalue.id;
 		var teamovw = [];
-		console.log("TeamID: " + teamid);
+		// console.log("TeamID: " + teamid);
 		
 		teamovw.id = teamid;
 		teamovw.team_name = teamvalue.team_name;
 		teamovw.isuserowner = teamvalue.isuserowner;
-		
+
 		// Get players from table that have been drafted by selected team
 		var teamplayers = playertable.rows( function ( idx, data, node ) {
 	        return data.leagueteam_id == teamid ?
@@ -27,9 +27,9 @@ function calcTeamOvwList(){
 	    } )
 	    .data();
 	
-		// For each drafted player on a team, fill them into the team roster grid
+		// Add up salary for all players on the team
 		$.each( teamplayers, function( key, value ) {
-			totalsalary = totalsalary + value.team_player_salary;
+			totalsalary = totalsalary + parseInt(value.team_player_salary);
 		});
 		
 		var teamstartingsalary = teamvalue.adj_starting_salary;

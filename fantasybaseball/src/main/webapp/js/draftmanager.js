@@ -1505,7 +1505,7 @@ function loadTeamOvwTable(data, isInitialLoad)
         "searching": false,
         "paging": false,
         "info": false,
-        // "order": [[ 23, "desc" ]],
+        "order": [],
 		responsive: true,
     	"processing": true,
         data: data,
