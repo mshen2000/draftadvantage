@@ -40,6 +40,9 @@ var playercustomposrow;
 
 // A blank template of a team roster (includes positions)
 var teamrostertemplate;
+//A blank template of a team roster (split)
+var dm_teamrostertemplate_1;
+var dm_teamrostertemplate_2;
 
 // The teamrostertemplate converted into just a list of roster positions and counts.
 var dm_teamrostercounts;
@@ -873,6 +876,7 @@ $(document).ready(function()
 	loadTeamTable(null, true);
 	loadPlayerGridTable(null, true);
 	loadTeamRosterTable(null, true);
+	loadTeamOvwRosterTable(true);
 	loadDraftPlayerAmtSelector();
 	
 	loadTeamOvwTable(null, true);
@@ -913,6 +917,63 @@ function filterPlayerType(pitcherhitter){
 	$('#playergrid_table').DataTable().columns( 0 ).search( pitcherhitter , true ).draw();	
 }
 
+function updateTeamOvwRosterTable(teamrow){
+	// create a deep copy of teamrostertemplate
+	var liveteamrostertemplate_1;
+	var liveteamrostertemplate_2;
+	if (dm_teamrostertemplate_1 != null){
+		liveteamrostertemplate_1 = JSON.parse(JSON.stringify(dm_teamrostertemplate_1));
+		liveteamrostertemplate_2 = JSON.parse(JSON.stringify(dm_teamrostertemplate_2));
+
+		// update teamrostertabel with the blank template
+		loadTeamOvwRosterTable(false);
+		
+		var teamid = teamrow.id;
+		// console.log("TeamID: " + teamid);
+		var playertable = $('#playergrid_table').DataTable();
+		var teamovwrostertable_1 = $('#team_ovw_roster_table_1').DataTable();
+		var teamovwrostertable_2 = $('#team_ovw_roster_table_2').DataTable();
+		
+		// Get players from table that have been drafted by selected team
+		var teamplayers = playertable.rows( function ( idx, data, node ) {
+	        return data.leagueteam_id == teamid ?
+	            true : false;
+	    } )
+	    .data();
+
+		// For each drafted player on a team, fill them into the team roster grid
+		$.each( teamplayers, function( key, value ) {
+			// console.log("Each teamplayer: " + value.full_name);
+			$.each( liveteamrostertemplate_1, function( rkey, rvalue ) {
+				// console.log("Each teamrostertemplate: " + rvalue.position);
+				if ((value.team_roster_position == rvalue.position)&&
+						((rvalue.name == null)||(rvalue.name == ""))){
+					rvalue.name = value.full_name;
+					rvalue.salary = value.team_player_salary;
+					rvalue.playerid = value.id;
+					// teamovwrostertable_1.row('#' + rvalue.index + '').data(rvalue).draw();
+					teamovwrostertable_1.row('#' + rvalue.index + '').data(rvalue);
+					return false;
+				}
+			});	
+			$.each( liveteamrostertemplate_2, function( rkey, rvalue ) {
+				// console.log("Each teamrostertemplate: " + rvalue.position);
+				if ((value.team_roster_position == rvalue.position)&&
+						((rvalue.name == null)||(rvalue.name == ""))){
+					rvalue.name = value.full_name;
+					rvalue.salary = value.team_player_salary;
+					rvalue.playerid = value.id;
+					// teamovwrostertable_2.row('#' + rvalue.index + '').data(rvalue).draw();
+					teamovwrostertable_2.row('#' + rvalue.index + '').data(rvalue);
+					return false;
+				}
+			});	
+		});
+		
+		teamovwrostertable_1.columns.adjust().draw();
+		teamovwrostertable_2.columns.adjust().draw();
+	}
+}
 
 function updateTeamInfoTab(){
 	// create a deep copy of teamrostertemplate
@@ -1296,6 +1357,111 @@ function loadDraftUnkPlayerPosSelector(updateplayerposition){
 	
 }
 
+function loadTeamOvwRosterTable(isInitialLoad)
+{	
+	var data_table_1;
+	var data_table_2
+	var table_element_1 = $('#team_ovw_roster_table_1');
+	var table_element_2 = $('#team_ovw_roster_table_2');
+	var config_1 = {
+		responsive: true,
+    	"processing": true,
+        "bSort" : false,
+        rowId: 'index',
+        "searching": false,
+        "info": false,
+    	select: 'single',
+        data: dm_teamrostertemplate_1,
+        "paging": false,
+        "order": [[ 0, "asc" ]],
+        "columns": [
+            { "visible": false, "title": "index", "mData": "index" },
+            { "visible": false, "title": "ID", "mData": "playerid", "sDefaultContent": "" },
+            { "title": "Pos", "mData": "position" },
+            { "title": "Player", "mData": "name", "sDefaultContent": ""},
+            { "title": "$", "mData": "salary", "sDefaultContent": "", "render": function ( data, type, row ) {
+            	if ((row.name == null)||(row.name == "")) return "";
+            	return "$" + data;
+            }},
+        ]
+        };
+	var config_2 = {
+			responsive: true,
+	    	"processing": true,
+	        "bSort" : false,
+	        rowId: 'index',
+	        "searching": false,
+	        "info": false,
+	    	select: 'single',
+	        data: dm_teamrostertemplate_2,
+	        "paging": false,
+	        "order": [[ 0, "asc" ]],
+	        "columns": [
+	            { "visible": false, "title": "index", "mData": "index" },
+	            { "visible": false, "title": "ID", "mData": "playerid", "sDefaultContent": "" },
+	            { "title": "Pos", "mData": "position" },
+	            { "title": "Player", "mData": "name", "sDefaultContent": ""},
+	            { "title": "$", "mData": "salary", "sDefaultContent": "", "render": function ( data, type, row ) {
+	            	if ((row.name == null)||(row.name == "")) return "";
+	            	return "$" + data;
+	            }},
+	        ]
+	        };
+	
+	if (isInitialLoad) 	{
+		// console.log("window height: " + calcDataTableHeight());
+		data_table_1 = table_element_1.dataTable(config_1);
+		data_table_2 = table_element_2.dataTable(config_2);
+	} else {
+		data_table_1 = table_element_1.DataTable();
+		data_table_1.destroy();
+		table_element_1.empty();
+		data_table_1 = table_element_1.dataTable(config_1);
+		
+		data_table_2 = table_element_2.DataTable();
+		data_table_2.destroy();
+		table_element_2.empty();
+		data_table_2 = table_element_2.dataTable(config_2);
+	}
+	
+	var data_table_1 = $('#team_ovw_roster_table_1').DataTable();
+	data_table_1
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	var data_table_1_b = $('#team_ovw_roster_table_1').DataTable();
+        var rows = data_table_1_b.rows( indexes ).data();
+        // console.log("Select: " + rowData[0].name);
+        // console.log("Select: " + JSON.stringify(rows[0]));
+        if ((rows[0].name == null)||(rows[0].name == "")){
+        	data_table_1_b.rows( indexes ).deselect();
+        } else {
+
+        }
+
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+        // var rowData = data_table.rows( indexes ).data().toArray();
+        // console.log("De-Select: " + rowData[0].name);
+    } );
+	
+	var data_table_2 = $('#team_ovw_roster_table_2').DataTable();
+	data_table_2
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	var data_table_2_b = $('#team_ovw_roster_table_2').DataTable();
+        var rows = data_table_2_b.rows( indexes ).data();
+        // console.log("Select: " + rowData[0].name);
+        // console.log("Select: " + JSON.stringify(rows[0]));
+        if ((rows[0].name == null)||(rows[0].name == "")){
+        	data_table_2_b.rows( indexes ).deselect();
+        } else {
+
+        }
+
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+        // var rowData = data_table.rows( indexes ).data().toArray();
+        // console.log("De-Select: " + rowData[0].name);
+    } );
+}
 
 function loadTeamRosterTable(data, isInitialLoad)
 {
@@ -1548,6 +1714,21 @@ function loadTeamOvwTable(data, isInitialLoad)
 		data_table = table_element.dataTable(config);
 		data_table = table_element.DataTable();
 	}
+	
+	var data_table = $('#team_ovw_table').DataTable();
+	data_table
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	
+    	var data_table_b = $('#team_ovw_table').DataTable();
+    	var row = data_table_b.rows( indexes ).data()[0];
+
+    	console.log("team row: " + JSON.stringify(row));
+    	updateTeamOvwRosterTable(row);
+
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+
+    } );
 
 }
 
@@ -1972,6 +2153,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 			
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
+    	$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
     	clearPlayerInfoTab();
     } );
 
@@ -2719,6 +2901,21 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         	
         	// Save blank roster to global var
         	teamrostertemplate = resp.items;
+        	dm_teamrostertemplate_1 = [];
+        	dm_teamrostertemplate_2 = [];
+        	
+        	$.each( resp.items, function( key, value ) {
+      		  
+        		if (value.position == "P" || value.position == "RES"){
+        			dm_teamrostertemplate_2.push(value);
+        		} else {
+        			dm_teamrostertemplate_1.push(value);
+        		}
+        		
+      		});
+        	
+        	console.log("dm_teamrostertemplate_1: " + dm_teamrostertemplate_1);
+        	console.log("dm_teamrostertemplate_2: " + dm_teamrostertemplate_2);
 
         	// Convert roster template into just a list of roster positions and counts.
         	var arr = [];
@@ -2739,7 +2936,8 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         	// console.log("RES Count: " + dm_rescount);
         	
         	// Load the blank roster template into a datatable
-        	loadTeamRosterTable(resp.items, false);
+        	loadTeamRosterTable(teamrostertemplate, false);
+        	loadTeamOvwRosterTable(false);
         }
         else {
         	console.log("Failed to get league roster: ", resp.code + " : " + resp.message);
