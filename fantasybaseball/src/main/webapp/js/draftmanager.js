@@ -142,6 +142,8 @@ $(document).ready(function()
 		
 		
 		loadPositionalTable(filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
+		
+		/*
 		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
 		loadPositionalTable(filtered_data_2b, $("#pos_2b_table"), false, true, "#chart-2b");
 		loadPositionalTable(filtered_data_ss, $("#pos_ss_table"), false, true, "#chart-ss");
@@ -149,7 +151,7 @@ $(document).ready(function()
 		loadPositionalTable(filtered_data_of, $("#pos_of_table"), false, true, "#chart-of");
 		loadPositionalTable(filtered_data_sp, $("#pos_sp_table"), false, false, "#chart-sp");
 		loadPositionalTable(filtered_data_rp, $("#pos_rp_table"), false, false, "#chart-rp");
-		
+		*/
 	});
 	
 	
@@ -872,6 +874,7 @@ $(document).ready(function()
 		
 	});
 
+	loadPositionalAnlaysisTable(true);
     loadTeamPreviewTable(null, true);
 	loadTeamTable(null, true);
 	loadPlayerGridTable(null, true);
@@ -882,6 +885,8 @@ $(document).ready(function()
 	loadTeamOvwTable(null, true);
 	
 	loadPositionalTable(null, $("#pos_c_table"), true, true);
+	
+	/*
 	loadPositionalTable(null, $("#pos_1b_table"), true, true);
 	loadPositionalTable(null, $("#pos_2b_table"), true, true);
 	loadPositionalTable(null, $("#pos_ss_table"), true, true);
@@ -889,6 +894,7 @@ $(document).ready(function()
 	loadPositionalTable(null, $("#pos_of_table"), true, true);
 	loadPositionalTable(null, $("#pos_sp_table"), true, false);
 	loadPositionalTable(null, $("#pos_rp_table"), true, false);
+	*/
 	
 	loadLeagueStandingsTable(null, true);
 	loadCustomPlayerPositionTable(null, true);
@@ -2159,6 +2165,70 @@ function loadPlayerGridTable(data, isInitialLoad)
 
 }
 
+function loadPositionalAnlaysisTable(isInitialLoad)
+{
+	var data;
+	
+	data = null;
+	
+	if (!isInitialLoad){
+		
+	}
+	
+	
+	var table_element = $('#pos_analysis_table');
+	var data_table;
+	var config;
+	config = {
+        "bSort" : false,
+        "searching": false,
+        "paging": false,
+        "info": false,
+        select: {
+            style:    'single'
+        },
+		responsive: true,
+    	"processing": true,
+        data: data,
+        // "order": [[ 14, "desc" ]],
+        "columns": [
+            { "title": "Pos", className: "dm_export", "mData": "position", "sDefaultContent": ""},
+            { "title": "1", className: "dm_export", "mData": "total_z_1", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "2", className: "dm_export", "mData": "total_z_2", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "3", className: "dm_export", "mData": "total_z_3", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "4", className: "dm_export", "mData": "total_z_4", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "5", className: "dm_export", "mData": "total_z_5", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "6", className: "dm_export", "mData": "total_z_6", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "7", className: "dm_export", "mData": "total_z_7", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "8", className: "dm_export", "mData": "total_z_8", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "9", className: "dm_export", "mData": "total_z_9", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            { "title": "10", className: "dm_export", "mData": "total_z_10", "render": function ( data, type, row ) {return data.toFixed(1);},
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}
+
+        ]
+        };
+
+	if (isInitialLoad) 	{
+		data_table = table_element.dataTable(config);
+	} else {
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+		data_table = table_element.DataTable();
+	}
+
+}
+
 function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chartid)
 {
 	if (data != null){
@@ -2243,11 +2313,11 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
             		return data + " (" + row.team + ")";
             	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
                 }},
-            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "", 
+            { "title": "Ag", className: "dm_export", "mData": "age", "sDefaultContent": "", 
                 	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
                 },
             { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
-            { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},
+            { "title": "S", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},
             { "title": "Avg", className: "dm_stat dm_export", "mData": "hitter_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ 
             		var avgnum = data.toFixed(3);
@@ -2276,7 +2346,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_runs, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "RBI", className: "dm_stat dm_export", "mData": "hitter_rbi", "render": function ( data, type, row ) {
+            { "title": "BI", className: "dm_stat dm_export", "mData": "hitter_rbi", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0) } else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
@@ -2313,7 +2383,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
                 }, "sDefaultContent": "0" },
                 
-            { "title": "NPV", className: "dm_export", "mData": "total_z", "render": function ( data, type, row ) {return data.toFixed(1);},
+            { "title": "Z", className: "dm_export", "mData": "total_z", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},  
             { "title": "<i class='fa fa-bolt'></i>-$", className: "dm_export", "mData": "live_auction_value", "render": function ( data, type, row ) {
         		return "$" + data.toFixed(0);

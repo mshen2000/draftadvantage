@@ -409,8 +409,8 @@ public class PlayerProjectedService implements Serializable {
 		profile.setPitchers(countPitcherProjections(profile));
 		getProjectionProfileService().save(profile, uname);
 		
-//		System.out.println("--Hitters: " + profile.getHitters());
-//		System.out.println("--Pitchers: " + profile.getPitchers());
+		System.out.println("--Hitters: " + profile.getHitters());
+		System.out.println("--Pitchers: " + profile.getPitchers());
 		
 		return keylist.size();
 
