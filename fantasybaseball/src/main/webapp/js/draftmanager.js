@@ -120,6 +120,7 @@ $(document).ready(function()
 		
 		// console.log("filtered_data: " + JSON.stringify(filtered_data));
 		var slice_size = 8
+		var ovw_size = 10
 		
 		var filtered_data_c = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("C") > -1;}).slice(0,slice_size);
@@ -137,6 +138,28 @@ $(document).ready(function()
 		    return v.custom_position.indexOf("SP") > -1;}).slice(0,slice_size);
 		var filtered_data_rp = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("RP") > -1;}).slice(0,slice_size);
+		
+		var ovw_data = [];
+		
+		var element_C = [];
+		element_C["position"] = "C";
+		
+		jQuery.each(filtered_data_c, function(index, item) {
+		    // do something with `item` (or `this` is also `item` if you like)
+			var e = "total_z_" + (index + 1).toString();
+			element_C[e] = item.total_z;
+			if (index >= 10) return false;
+			 
+		});
+		
+		
+		console.log("ovw_data_1: " + JSON.stringify(element_C["position"]));
+		console.log("ovw_data_2: " + JSON.stringify(element_C["total_z_7"]));
+		console.log("ovw_data_3: " + JSON.stringify(element_C["total_z_8"]));
+		
+		ovw_data.push(element_C);
+		
+		loadPositionalAnlaysisTable(ovw_data, false);
 		
 		calcTeamOvwList();
 		
@@ -874,7 +897,7 @@ $(document).ready(function()
 		
 	});
 
-	loadPositionalAnlaysisTable(true);
+	loadPositionalAnlaysisTable(null, true);
     loadTeamPreviewTable(null, true);
 	loadTeamTable(null, true);
 	loadPlayerGridTable(null, true);
@@ -2165,11 +2188,8 @@ function loadPlayerGridTable(data, isInitialLoad)
 
 }
 
-function loadPositionalAnlaysisTable(isInitialLoad)
+function loadPositionalAnlaysisTable(data, isInitialLoad)
 {
-	var data;
-	
-	data = null;
 	
 	if (!isInitialLoad){
 		
@@ -2208,11 +2228,13 @@ function loadPositionalAnlaysisTable(isInitialLoad)
             { "title": "7", className: "dm_export", "mData": "total_z_7", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "8", className: "dm_export", "mData": "total_z_8", "render": function ( data, type, row ) {return data.toFixed(1);},
-            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}
+            /*
             { "title": "9", className: "dm_export", "mData": "total_z_9", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "10", className: "dm_export", "mData": "total_z_10", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}
+            	*/
 
         ]
         };
