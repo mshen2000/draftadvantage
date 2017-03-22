@@ -119,7 +119,7 @@ $(document).ready(function()
 		});
 		
 		// console.log("filtered_data: " + JSON.stringify(filtered_data));
-		var slice_size = 8
+		var slice_size = 10
 		var ovw_size = 10
 		
 		var filtered_data_c = $.grep(filtered_data, function(v) {
@@ -142,22 +142,71 @@ $(document).ready(function()
 		var ovw_data = [];
 		
 		var element_C = [];
+		var element_1B = [];
+		var element_2B = [];
+		var element_SS = [];
+		var element_3B = [];
+		var element_OF = [];
+		var element_RP = [];
+		var element_SP = [];
 		element_C["position"] = "C";
+		element_1B["position"] = "1B";
+		element_2B["position"] = "2B";
+		element_SS["position"] = "SS";
+		element_3B["position"] = "3B";
+		element_OF["position"] = "OF";
+		element_RP["position"] = "RP";
+		element_SP["position"] = "SP";
 		
 		jQuery.each(filtered_data_c, function(index, item) {
-		    // do something with `item` (or `this` is also `item` if you like)
 			var e = "total_z_" + (index + 1).toString();
 			element_C[e] = item.total_z;
-			if (index >= 10) return false;
-			 
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(filtered_data_1b, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_1B[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(filtered_data_2b, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_2B[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(filtered_data_ss, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_SS[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(filtered_data_3b, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_3B[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(filtered_data_of, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_OF[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(filtered_data_rp, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_RP[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(filtered_data_sp, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_SP[e] = item.total_z;
+			if (index >= 10) return false;	 
 		});
 		
-		
-		console.log("ovw_data_1: " + JSON.stringify(element_C["position"]));
-		console.log("ovw_data_2: " + JSON.stringify(element_C["total_z_7"]));
-		console.log("ovw_data_3: " + JSON.stringify(element_C["total_z_8"]));
-		
 		ovw_data.push(element_C);
+		ovw_data.push(element_1B);
+		ovw_data.push(element_2B);
+		ovw_data.push(element_SS);
+		ovw_data.push(element_3B);
+		ovw_data.push(element_OF);
+		ovw_data.push(element_SP);
+		ovw_data.push(element_RP);
 		
 		loadPositionalAnlaysisTable(ovw_data, false);
 		
@@ -2212,7 +2261,10 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
         data: data,
         // "order": [[ 14, "desc" ]],
         "columns": [
-            { "title": "Pos", className: "dm_export", "mData": "position", "sDefaultContent": ""},
+            { "title": "Pos", className: "dm_export", "mData": "position", 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	$(td).css({"font-size": "20px"})
+                }, "sDefaultContent": ""},
             { "title": "1", className: "dm_export", "mData": "total_z_1", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "2", className: "dm_export", "mData": "total_z_2", "render": function ( data, type, row ) {return data.toFixed(1);},
@@ -2228,13 +2280,13 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
             { "title": "7", className: "dm_export", "mData": "total_z_7", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "8", className: "dm_export", "mData": "total_z_8", "render": function ( data, type, row ) {return data.toFixed(1);},
-            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}
-            /*
+            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},
+            
             { "title": "9", className: "dm_export", "mData": "total_z_9", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "10", className: "dm_export", "mData": "total_z_10", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}
-            	*/
+            	
 
         ]
         };
@@ -2256,7 +2308,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 	if (data != null){
 		
 		var maxvalue = Math.max(data[0].total_z, data[1].total_z, data[2].total_z, data[3].total_z, data[4].total_z,
-		           data[5].total_z, data[6].total_z, data[7].total_z);
+		           data[5].total_z, data[6].total_z, data[7].total_z, data[8].total_z, data[9].total_z);
 		
 		var options;
 		
@@ -2281,12 +2333,17 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 			}};
 		}
 		
+		console.log("data name 8: " + data[8].full_name);
+		console.log("data name 9: " + data[9].full_name);
+		console.log("data z 8: " + data[8].total_z);
+		console.log("data z 9: " + data[9].total_z);
+		
 		var chart = new Chartist.Bar(chartid, {
 			  labels: [data[0].full_name, data[1].full_name, data[2].full_name, data[3].full_name, data[4].full_name,
-			           data[5].full_name, data[6].full_name, data[7].full_name],
+			           data[5].full_name, data[6].full_name, data[7].full_name, data[8].full_name, data[9].full_name],
 			  series: [
 			    [data[0].total_z, data[1].total_z, data[2].total_z, data[3].total_z, data[4].total_z,
-		           data[5].total_z, data[6].total_z, data[7].total_z]
+		           data[5].total_z, data[6].total_z, data[7].total_z, data[8].total_z, data[9].total_z]
 			  ]
 			}, options);
 			
