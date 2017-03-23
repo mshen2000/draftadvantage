@@ -149,9 +149,9 @@ td { font-size: 12px; }
 #team_ovw_roster_table_2 > tbody > tr > td { font-size: 11px; }
 #team_ovw_roster_table_1 > thead > tr > th { font-size: 11px; }
 #team_ovw_roster_table_1 > tbody > tr > td { font-size: 11px; }
-.dm_pos_table > tbody > tr > td { font-size: 11px; }
-.dm_pos_table > thead > tr > th { font-size: 11px; }
-#pos_analysis_table > thead > tr > th { font-size: 18px; text-align: center; }
+.dm_pos_table > tbody > tr > td { font-size: 12px; }
+.dm_pos_table > thead > tr > th { font-size: 12px; }
+#pos_analysis_table > thead > tr > th { font-size: 16px; text-align: center; }
 #pos_analysis_table > tbody > tr > td { font-size: 14px; text-align: center;}
 
 .dm_pos_table > thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
@@ -426,17 +426,43 @@ td { font-size: 12px; }
 					  </div>
 					</div>
 		    	</div>	
-		    	<div class="col-md-5">
-		    		<H3>Position Analysis</H3>
-		    		<table id="pos_analysis_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-		    	</div>
-		    	<div class="col-md-3">
-					<div class="row">
-		    				<H3>All Players</H3>
-		    				<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-c"></div>
-			    			<table id="pos_c_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+		    	<div class="col-md-8">
+		    		<div class="panel panel-default">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">Position Breakdown</h3>
+					  </div>
+					  <div class="panel-body">
+			    		<div class="row">
+			    			<div class="col-md-12">
+			    				<table id="pos_analysis_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+			    			</div>
+			    		</div>
+			    		<div class="row">
+			    			<div class="col-md-6">
+		    					<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-c"></div>
+		    				</div>
+		    				<div class="col-md-6">
+			    				<table id="pos_c_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+	
+	<!-- 			    			<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-1b"></div> -->
+	<!-- 			    			<table id="pos_1b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table> -->
+	<!-- 			    			<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-2b"></div> -->
+	<!-- 			    			<table id="pos_2b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table> -->
+	<!-- 			    			<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-ss"></div> -->
+	<!-- 			    			<table id="pos_ss_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table> -->
+	<!-- 			    			<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-3b"></div> -->
+	<!-- 			    			<table id="pos_3b_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table> -->
+	<!-- 			    			<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-of"></div> -->
+	<!-- 			    			<table id="pos_of_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table> -->
+	<!-- 			    			<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-sp"></div> -->
+	<!-- 			    			<table id="pos_sp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table> -->
+	<!-- 			    			<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-rp"></div> -->
+	<!-- 			    			<table id="pos_rp_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table> -->
+							</div>
+			    		</div>
 		    		</div>
-		    	</div>	  	
+ 					</div>
+				</div>
 		  	</div>
 
 		  </div>

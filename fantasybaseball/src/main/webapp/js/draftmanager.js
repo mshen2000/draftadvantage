@@ -62,6 +62,17 @@ var dm_leagueinfo;
 // Array of estimated team standings data
 var dm_teamstandings;
 
+// Filtered player data by position
+var dm_filtered_data_c;
+var dm_filtered_data_1b;
+var dm_filtered_data_2b;
+var dm_filtered_data_ss;
+var dm_filtered_data_3b;
+var dm_filtered_data_of;
+var dm_filtered_data_sp;
+var dm_filtered_data_rp;
+var dm_filtered_data_all;
+
 // League selector listener
 $(function() {
 	  $('#league-select').on('change', function(){
@@ -122,22 +133,23 @@ $(document).ready(function()
 		var slice_size = 10
 		var ovw_size = 10
 		
-		var filtered_data_c = $.grep(filtered_data, function(v) {
+		dm_filtered_data_c = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("C") > -1;}).slice(0,slice_size);
-		var filtered_data_1b = $.grep(filtered_data, function(v) {
+		dm_filtered_data_1b = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("1B") > -1;}).slice(0,slice_size);
-		var filtered_data_2b = $.grep(filtered_data, function(v) {
+		dm_filtered_data_2b = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("2B") > -1;}).slice(0,slice_size);
-		var filtered_data_ss = $.grep(filtered_data, function(v) {
+		dm_filtered_data_ss = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("SS") > -1;}).slice(0,slice_size);
-		var filtered_data_3b = $.grep(filtered_data, function(v) {
+		dm_filtered_data_3b = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("3B") > -1;}).slice(0,slice_size);
-		var filtered_data_of = $.grep(filtered_data, function(v) {
+		dm_filtered_data_of = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("OF") > -1;}).slice(0,slice_size);
-		var filtered_data_sp = $.grep(filtered_data, function(v) {
+		dm_filtered_data_sp = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("SP") > -1;}).slice(0,slice_size);
-		var filtered_data_rp = $.grep(filtered_data, function(v) {
+		dm_filtered_data_rp = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("RP") > -1;}).slice(0,slice_size);
+		dm_filtered_data_all = filtered_data.slice(0,slice_size);
 		
 		var ovw_data = [];
 		
@@ -158,42 +170,42 @@ $(document).ready(function()
 		element_RP["position"] = "RP";
 		element_SP["position"] = "SP";
 		
-		jQuery.each(filtered_data_c, function(index, item) {
+		jQuery.each(dm_filtered_data_c, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_C[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
-		jQuery.each(filtered_data_1b, function(index, item) {
+		jQuery.each(dm_filtered_data_1b, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_1B[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
-		jQuery.each(filtered_data_2b, function(index, item) {
+		jQuery.each(dm_filtered_data_2b, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_2B[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
-		jQuery.each(filtered_data_ss, function(index, item) {
+		jQuery.each(dm_filtered_data_ss, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_SS[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
-		jQuery.each(filtered_data_3b, function(index, item) {
+		jQuery.each(dm_filtered_data_3b, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_3B[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
-		jQuery.each(filtered_data_of, function(index, item) {
+		jQuery.each(dm_filtered_data_of, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_OF[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
-		jQuery.each(filtered_data_rp, function(index, item) {
+		jQuery.each(dm_filtered_data_rp, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_RP[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
-		jQuery.each(filtered_data_sp, function(index, item) {
+		jQuery.each(dm_filtered_data_sp, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
 			element_SP[e] = item.total_z;
 			if (index >= 10) return false;	 
@@ -211,9 +223,8 @@ $(document).ready(function()
 		loadPositionalAnlaysisTable(ovw_data, false);
 		
 		calcTeamOvwList();
-		
-		
-		loadPositionalTable(filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
+
+		loadPositionalTable(dm_filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
 		
 		/*
 		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
@@ -224,6 +235,7 @@ $(document).ready(function()
 		loadPositionalTable(filtered_data_sp, $("#pos_sp_table"), false, false, "#chart-sp");
 		loadPositionalTable(filtered_data_rp, $("#pos_rp_table"), false, false, "#chart-rp");
 		*/
+
 	});
 	
 	
@@ -966,7 +978,7 @@ $(document).ready(function()
 	loadPositionalTable(null, $("#pos_of_table"), true, true);
 	loadPositionalTable(null, $("#pos_sp_table"), true, false);
 	loadPositionalTable(null, $("#pos_rp_table"), true, false);
-	*/
+	 */
 	
 	loadLeagueStandingsTable(null, true);
 	loadCustomPlayerPositionTable(null, true);
@@ -2263,7 +2275,7 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
         "columns": [
             { "title": "Pos", className: "dm_export", "mData": "position", 
                 "createdCell": function (td, cellData, rowData, row, col) {
-                	$(td).css({"font-size": "20px"})
+                	$(td).css({"font-size": "18px"})
                 }, "sDefaultContent": ""},
             { "title": "1", className: "dm_export", "mData": "total_z_1", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
@@ -2281,13 +2293,10 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "8", className: "dm_export", "mData": "total_z_8", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},
-            
             { "title": "9", className: "dm_export", "mData": "total_z_9", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "10", className: "dm_export", "mData": "total_z_10", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}
-            	
-
         ]
         };
 
@@ -2300,6 +2309,26 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
 		data_table = table_element.dataTable(config);
 		data_table = table_element.DataTable();
 	}
+	
+    // On Select of the Positional Analysis Table
+	var select_data_table = $('#pos_analysis_table').DataTable();
+	select_data_table
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	var select_data_table_b = $('#pos_analysis_table').DataTable();
+        var row = select_data_table_b.rows( indexes ).data()[0];
+        if (row.position == "C") loadPositionalTable(dm_filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
+        if (row.position == "1B") loadPositionalTable(dm_filtered_data_1b, $("#pos_c_table"), false, true, "#chart-c");
+        if (row.position == "2B") loadPositionalTable(dm_filtered_data_2b, $("#pos_c_table"), false, true, "#chart-c");
+        if (row.position == "SS") loadPositionalTable(dm_filtered_data_ss, $("#pos_c_table"), false, true, "#chart-c");
+        if (row.position == "3B") loadPositionalTable(dm_filtered_data_3b, $("#pos_c_table"), false, true, "#chart-c");
+        if (row.position == "OF") loadPositionalTable(dm_filtered_data_of, $("#pos_c_table"), false, true, "#chart-c");
+        if (row.position == "SP") loadPositionalTable(dm_filtered_data_sp, $("#pos_c_table"), false, false, "#chart-c");
+        if (row.position == "RP") loadPositionalTable(dm_filtered_data_rp, $("#pos_c_table"), false, false, "#chart-c");
+			
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+    	
+    } );
 
 }
 
