@@ -8,6 +8,21 @@ function calcTeamOvwList(){
 	liveteamrostertemplate = JSON.parse(JSON.stringify(teamrostertemplate));
 	var teamovwlist = [];
 	
+	var pitchercount = 0;
+	var reservecount = 0;
+	var hittercount = 0;
+	
+	// Count pitchers and reserves
+	$.each( liveteamrostertemplate, function( rkey, rvalue ) {
+		// console.log("Each teamrostertemplate: " + rvalue.position);
+		if (rvalue.position == "P"){pitchercount++;}
+		else if (rvalue.position == "RES"){reservecount++;}
+		else {hittercount++;}
+	});
+	console.log("Pitcher count: " + pitchercount);
+	console.log("Reserve count: " + reservecount);
+	console.log("Hitter count: " + hittercount);
+	
 	// For each team, get overview data
 	$.each( teamlist, function( teamkey, teamvalue ) {
 		
@@ -26,21 +41,38 @@ function calcTeamOvwList(){
 	            true : false;
 	    } )
 	    .data();
+		
+		var teampitchers = 0;
+		var teamreserves = 0;
+		var teamhitters = 0;
 	
 		// Add up salary for all players on the team
 		$.each( teamplayers, function( key, value ) {
 			totalsalary = totalsalary + parseInt(value.team_player_salary);
+			if (value.team_roster_position == "P"){teampitchers++;}
+			else if (value.team_roster_position == "RES"){teamreserves++;}
+			else {teamhitters++;}
 		});
+		
+		console.log("Team pitcher count: " + teamovw.team_name + " - "+ teampitchers);
+		console.log("Team reserve count: " + teamovw.team_name + " - "+ teamreserves);
+		console.log("Team hitter count: " + teamovw.team_name + " - "+ teamhitters);
 		
 		var teamstartingsalary = teamvalue.adj_starting_salary;
 		var balance = teamstartingsalary - totalsalary;
 		var spots = liveteamrostertemplate.length - teamplayers.length - dm_rescount;
+		var pitcherspots = pitchercount - teampitchers;
+		var hitterspots = hittercount - teamhitters;
+		var reservespots = reservecount - teamreserves;
 		var perplayer = balance / spots;
 		
 		teamovw.currentsalary = totalsalary;
 		teamovw.adj_starting_salary = teamstartingsalary;
 		teamovw.balance = balance;
 		teamovw.remainingspots = spots;
+		teamovw.pitcherspots = pitcherspots;
+		teamovw.hitterspots = hitterspots;
+		teamovw.reservespots = reservespots;
 		teamovw.perplayeramt = perplayer;
 		if (spots == 0) {
 			teamovw.maxbid = 0

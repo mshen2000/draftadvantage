@@ -1785,7 +1785,9 @@ function loadTeamOvwTable(data, isInitialLoad)
             { "title": "Team", "mData": "team_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 10 )},	
             { "title": "Bal", "mData": "balance", "render": function ( data, type, row ) 
             	{return "$" + data.toFixed(0);},"sDefaultContent": ""},
-            { "title": "Spots", "mData": "remainingspots", "sDefaultContent": ""},
+            // { "title": "Spots", "mData": "remainingspots", "sDefaultContent": ""},
+            { "title": "H", "mData": "hitterspots", "sDefaultContent": ""},
+            { "title": "P", "mData": "pitcherspots", "sDefaultContent": ""},
             { "title": "Avg $", "mData": "perplayeramt", "render": function ( data, type, row ) 
             	{return "$" + data.toFixed(2);},"sDefaultContent": ""},
             { "title": "Max $", "mData": "maxbid", "render": function ( data, type, row ) {
@@ -2217,12 +2219,16 @@ function loadPlayerGridTable(data, isInitialLoad)
 	var select_data_table = $('#playergrid_table').DataTable();
 	select_data_table
     .on( 'select', function ( e, dt, type, indexes ) {
+    	console.log("Begin Select");
+    	
+    	$('#section-teaminfo').hide();
+    	
+        // Show the player info tab
+		$('#info-tabs a[href="#tab-playerinfo"]').tab('show');
+    	
     	var select_data_table_b = $('#playergrid_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
         playernoterow = row;
-        
-        // Show the player info tab
-		$('#info-tabs a[href="#tab-playerinfo"]').tab('show');
 		
 		$("#lbl-playerinfoname").val(row.id);
 		$("#lbl-playerinfoname").text(row.full_name);
@@ -2240,11 +2246,16 @@ function loadPlayerGridTable(data, isInitialLoad)
 				$("#textarea-playernote").val(row.team_player_note);
 			} else $("#textarea-playernote").val("");
 		}else $("#textarea-playernote").val("");
+		
+		console.log("End Select 3");
 			
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
+    	console.log("Begin DeSelect");
+    	$('#section-teaminfo').show();
     	$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
-    	clearPlayerInfoTab();
+    	// clearPlayerInfoTab();
+    	console.log("End DeSelect");
     } );
 
 }
