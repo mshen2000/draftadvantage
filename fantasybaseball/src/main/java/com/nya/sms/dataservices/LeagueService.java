@@ -803,8 +803,10 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		int pitchercount = 0;
 		int hittercount = 0;
+		int leaguesize = league.getNum_of_teams();
 		
 		System.out.println("Original All player count: " + playeroutput.size());
+		System.out.println("League size: " + leaguesize);
 
 		if (!isFirstPass){
 			// This if statement calculates the correct count of pitchers or hitters to use when 
@@ -821,6 +823,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				
 			}
 			
+			
+			
 			System.out.println("Original Pitcher count: " + pitchercount);
 			System.out.println("Original Hitter count: " + hittercount);
 			
@@ -829,13 +833,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			System.out.println("Roster Reserve count: " + iroster_totalreserves);
 			
 			// Calculate based on ratios, whether there are too many hitters or pitchers
-			float p_ratio = (float) pitchercount / iroster_totalpitchers;
-			float h_ratio = (float) hittercount / iroster_totalhitters;
+			float p_ratio = (float) pitchercount / (iroster_totalpitchers * leaguesize);
+			float h_ratio = (float) hittercount / (iroster_totalhitters * leaguesize);
 			
 			if (p_ratio > h_ratio){
-				pitchercount = (int) (iroster_totalpitchers * h_ratio);
+				pitchercount = (int) (iroster_totalpitchers * leaguesize * h_ratio);
 			} else {
-				hittercount = (int) (iroster_totalhitters * p_ratio);
+				hittercount = (int) (iroster_totalhitters * leaguesize * p_ratio);
 			}
 			
 			System.out.println("Updated Pitcher count: " + pitchercount);
