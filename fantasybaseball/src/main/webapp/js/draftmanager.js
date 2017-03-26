@@ -238,6 +238,19 @@ $(document).ready(function()
 
 	});
 	
+	$("#fav-icon").click(function(ev){
+		  
+		if ($("#fav-icon").hasClass("fa-star-o")){
+			$("#fav-icon").removeClass("fa-star-o");
+			$("#fav-icon").addClass("fa-star");
+		}
+		else if ($("#fav-icon").hasClass("fa-star")){
+			$("#fav-icon").removeClass("fa-star");
+			$("#fav-icon").addClass("fa-star-o");
+		}
+		
+	})
+	
 	
     $("#select-draftteam").change(function(e){
 

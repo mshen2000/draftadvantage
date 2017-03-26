@@ -222,6 +222,16 @@ td { font-size: 12px; }
   color: #FFD700;
 }
 
+/*
+.favorite:hover .fa-star-o,
+.favorite .fa-star {
+    display: none;
+}
+.favorite:hover .fa-star {
+    display: inline;
+}
+*/
+
 </style>
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -364,7 +374,9 @@ td { font-size: 12px; }
 					<div class="tab-content">
 					  <div id="tab-playerinfo" class="tab-pane fade">
 					    <h3><span id="lbl-playerinfoname">Player Name</span> 
-					    	<i class="fa fa-star-o"></i><i class="fa fa-star"></i>
+					    	<small class="favorite">
+					    		<i id="fav-icon" class="fa fa-star-o"></i>
+					    	</small>
 					    </h3>
 					    <ul class="list-unstyled">
 						  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
