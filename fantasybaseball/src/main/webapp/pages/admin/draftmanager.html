@@ -218,6 +218,10 @@ td { font-size: 12px; }
     font-size: 10px;
 }
 
+.fa-star {
+  color: #FFD700;
+}
+
 </style>
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -359,7 +363,9 @@ td { font-size: 12px; }
 					
 					<div class="tab-content">
 					  <div id="tab-playerinfo" class="tab-pane fade">
-					    <h3 id="lbl-playerinfoname">Player Name</h3>
+					    <h3><span id="lbl-playerinfoname">Player Name</span> 
+					    	<i class="fa fa-star-o"></i><i class="fa fa-star"></i>
+					    </h3>
 					    <ul class="list-unstyled">
 						  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
 						  <li><b>Age:</b> <span id="lbl-playerinfoage">99</span></li>
