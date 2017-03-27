@@ -495,10 +495,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			}
 			if (calculated_position.toLowerCase().contains("of")) {
 				auct = Math.max(auct,(po.getTotal_z()-posz_of.getReplacementvalue())*coef);
-				// if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout OF Auction val: " + auct);
+				if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout OF Auction val: " + auct);
 			}
-			if (calculated_position.toLowerCase().contains("p")) 
+			if (calculated_position.toLowerCase().contains("p")) {
 				auct = Math.max(auct,(po.getTotal_z()-posz_p.getReplacementvalue())*coef);
+				if (po.getFull_name().equals("Aroldis Chapman")) System.out.println("Aroldis Chapman Auction val: " + auct);
+			}
 			if (calculated_position.toLowerCase().contains("dh")) 
 				auct = Math.max(auct,(po.getTotal_z()-replval_dh)*coef);
 			
@@ -713,8 +715,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		avgz = avgz/2;
 		totalzaboverepl = totalz - repl_level*avgz;
 		
-		// System.out.println(position + "-TOTAL: " + totalzaboverepl);
-		// System.out.println(position + "-AVG REPL Z: " + avgz);
+		System.out.println(position + "-TOTAL: " + totalzaboverepl);
+		System.out.println(position + "-AVG REPL Z: " + avgz);
 		
 		p.setTotalvalue(totalzaboverepl);
 		p.setReplacementvalue(avgz);
@@ -823,8 +825,6 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				
 			}
 			
-			
-			
 			System.out.println("Original Pitcher count: " + pitchercount);
 			System.out.println("Original Hitter count: " + hittercount);
 			
@@ -832,6 +832,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			System.out.println("Roster Hitter count: " + iroster_totalhitters);
 			System.out.println("Roster Reserve count: " + iroster_totalreserves);
 			
+			/*
 			// Calculate based on ratios, whether there are too many hitters or pitchers
 			float p_ratio = (float) pitchercount / (iroster_totalpitchers * leaguesize);
 			float h_ratio = (float) hittercount / (iroster_totalhitters * leaguesize);
@@ -841,6 +842,11 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			} else {
 				hittercount = (int) (iroster_totalhitters * leaguesize * p_ratio);
 			}
+			*/
+			
+			// Set the count of players to 1.5 times the drafted pool size (for hitters and pitchers)
+			pitchercount = (int) (iroster_totalpitchers * leaguesize * 2);
+			hittercount = (int) (iroster_totalhitters * leaguesize * 2);
 			
 			System.out.println("Updated Pitcher count: " + pitchercount);
 			System.out.println("Updated Hitter count: " + hittercount);
@@ -947,20 +953,20 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_hitter_hr()){
 			hitter_hr_mean = StatUtils.mean(toPrimitive(hitter_hrs));
 			hitter_hr_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_hrs)));
-//			 System.out.println("Hitter HR Mean: " + hitter_hr_mean);
-//			 System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
+			 System.out.println("Hitter HR Mean: " + hitter_hr_mean);
+			 System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
 		}
 		if (league.isCat_hitter_rbi()){
 			hitter_rbi_mean = StatUtils.mean(toPrimitive(hitter_rbis));
 			hitter_rbi_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_rbis)));
-//			 System.out.println("Hitter rbi Mean: " + hitter_rbi_mean);
-//			 System.out.println("Hitter rbi Std Dev: " + hitter_rbi_sd);
+			 System.out.println("Hitter rbi Mean: " + hitter_rbi_mean);
+			 System.out.println("Hitter rbi Std Dev: " + hitter_rbi_sd);
 		}
 		if (league.isCat_hitter_r()){
 			hitter_r_mean = StatUtils.mean(toPrimitive(hitter_runs));
 			hitter_r_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_runs)));
-//			 System.out.println("Hitter r Mean: " + hitter_r_mean);
-//			 System.out.println("Hitter r Std Dev: " + hitter_r_sd);
+			 System.out.println("Hitter r Mean: " + hitter_r_mean);
+			 System.out.println("Hitter r Std Dev: " + hitter_r_sd);
 		}
 		if (league.isCat_hitter_sb()){
 			hitter_sb_mean = StatUtils.mean(toPrimitive(hitter_sbs));
@@ -971,8 +977,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_hitter_avg()) {
 			hitter_avgeff_mean = StatUtils.mean(toPrimitive(hitter_avgeff));
 			hitter_avgeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_avgeff)));
-//			 System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
-//			 System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
+			 System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
+			 System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
 		}
 		
 		if (league.isCat_pitcher_wins()){
@@ -996,8 +1002,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_pitcher_era()) {
 			pitcher_eraeff_mean = StatUtils.mean(toPrimitive(pitcher_eraeff));
 			pitcher_eraeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_eraeff)));
-			// System.out.println("Pitcher ERA Eff Mean: " + pitcher_eraeff_mean);
-			// System.out.println("Pitcher ERA Eff Std Dev: " + pitcher_eraeff_sd);
+			System.out.println("Pitcher ERA Eff Mean: " + pitcher_eraeff_mean);
+			System.out.println("Pitcher ERA Eff Std Dev: " + pitcher_eraeff_sd);
 		}
 		
 		System.out.println("Get Player Output Data: Calculating LeaguePlayer Z scores...");
