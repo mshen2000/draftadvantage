@@ -32,7 +32,7 @@ mssolutions.fbapp.draftmanager.SCOPES =
 // Saves the selected player from the player grid for draft update
 var playerdraftrow;
 
-//Saves the selected player from the player grid for note update
+//Saves the selected player from the player grid for update
 var playernoterow;
 
 //Saves the selected player from the player custom position grid
@@ -239,16 +239,23 @@ $(document).ready(function()
 	});
 	
 	$("#fav-icon").click(function(ev){
+		var playertable = $('#playergrid_table').DataTable();
+		console.log("Player: " + playernoterow.full_name);
+		console.log("Player ID: " + playernoterow.id);
 		  
 		if ($("#fav-icon").hasClass("fa-star-o")){
+			playernoterow.favorite_flag = true;
 			$("#fav-icon").removeClass("fa-star-o");
 			$("#fav-icon").addClass("fa-star");
 		}
 		else if ($("#fav-icon").hasClass("fa-star")){
+			playernoterow.favorite_flag = false;
 			$("#fav-icon").removeClass("fa-star");
 			$("#fav-icon").addClass("fa-star-o");
 		}
 		
+		playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
+		mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
 	})
 	
 	
@@ -1990,9 +1997,18 @@ function loadPlayerGridTable(data, isInitialLoad)
         "columns": [
             { "visible": false, "title": "pitcher_hitter", "mData": "pitcher_hitter" },
             { "title": "Name", className: "dm_export", "mData": "full_name",  "render": function ( data, type, row ) {
-            	if ((row.team_player_note == null)||(row.team_player_note.trim() == ""))
-            		return data + " (" + row.team + ")";
-            	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
+            	var text = data + " (" + row.team + ")";
+            	if (row.favorite_flag) {
+            		// console.log("Is Favorite: " + row.full_name);
+            		text = text + "&nbsp;&nbsp;<i class='fa fa-star'></i>";
+            		}
+            	if (row.team_player_note != null){
+            		if (row.team_player_note.trim() != ""){
+            			text = text + "&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
+            		}
+            	}
+            		
+            	return text;
                 }},
             { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "", 
                 	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
@@ -2232,7 +2248,6 @@ function loadPlayerGridTable(data, isInitialLoad)
 	var select_data_table = $('#playergrid_table').DataTable();
 	select_data_table
     .on( 'select', function ( e, dt, type, indexes ) {
-    	console.log("Begin Select");
     	
     	$('#section-teaminfo').hide();
     	
@@ -2241,6 +2256,8 @@ function loadPlayerGridTable(data, isInitialLoad)
     	
     	var select_data_table_b = $('#playergrid_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
+        
+        // Set global variable for player row
         playernoterow = row;
 		
 		$("#lbl-playerinfoname").val(row.id);
@@ -2260,7 +2277,13 @@ function loadPlayerGridTable(data, isInitialLoad)
 			} else $("#textarea-playernote").val("");
 		}else $("#textarea-playernote").val("");
 		
-		console.log("End Select 3");
+		if (row.favorite_flag) {
+			$("#fav-icon").removeClass("fa-star-o");
+			$("#fav-icon").addClass("fa-star");
+		} else {
+			$("#fav-icon").removeClass("fa-star");
+			$("#fav-icon").addClass("fa-star-o");
+		}
 			
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
@@ -2443,7 +2466,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
             { "title": "Name", className: "dm_export", "mData": "full_name",  "render": function ( data, type, row ) {
             	if ((row.team_player_note == null)||(row.team_player_note.trim() == ""))
             		return data + " (" + row.team + ")";
-            	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
+            	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>"; 	
                 }},
             { "title": "Ag", className: "dm_export", "mData": "age", "sDefaultContent": "", 
                 	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
@@ -2535,7 +2558,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 	            { "title": "Name", className: "dm_export", "mData": "full_name",  "render": function ( data, type, row ) {
 	            	if ((row.team_player_note == null)||(row.team_player_note.trim() == ""))
 	            		return data + " (" + row.team + ")";
-	            	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
+	            	else return data + " (" + row.team + ")&nbsp;&nbsp;<i class='fa fa-file-text'></i>"; 	
 	                }},
 	            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "",
 	                	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
@@ -2955,13 +2978,15 @@ mssolutions.fbapp.draftmanager.updatePlayerInfo = function(playerrowdata) {
 	console.log("--Player ID: " + playerrowdata.id);
 	console.log("--Note: " + playerrowdata.team_player_note);
 	console.log("--Cust Pos: " + playerrowdata.custom_position);
+	console.log("--Favorite: " + playerrowdata.favorite_flag);
 	
 	gapi.client.draftapp.league.updateplayerinfo({
 		'league_id' : playerrowdata.league_id,
 		'player_projected_id' : playerrowdata.id,
 		'team_player_note' : playerrowdata.team_player_note,
 		'custom_position_flag' : playerrowdata.custom_position_flag,
-		'custom_position' : playerrowdata.custom_position.toString()
+		'custom_position' : playerrowdata.custom_position.toString(),
+		'favorite_flag' : playerrowdata.favorite_flag
 		}).execute(
       function(resp) {
         if (!resp.code) { 

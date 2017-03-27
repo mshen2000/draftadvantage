@@ -690,6 +690,7 @@ public class TestLeagues {
 		pcont_trout.setCustom_position("OF,2B");
 		pcont_trout.setCustom_position_flag(true);
 		pcont_trout.setTeam_player_note(player_note);
+		pcont_trout.setFavorite_flag(true);
 
 		long sale_id = getLeaguePlayerService().draftLeaguePlayer(cont_sale, uname);
 		long davis_id = getLeaguePlayerService().draftLeaguePlayer(cont_davis, uname);
@@ -714,6 +715,8 @@ public class TestLeagues {
 		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Chris Davis").get(0).getInit_auction_value() == 20);
 		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value() == 47);
 		
+		// Test player favorite capability
+		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isFavorite_flag());
 		
 		// Test getLeaguePlayersbyLeague
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 9);

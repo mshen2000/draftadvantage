@@ -13,6 +13,8 @@ public class LeaguePlayerInputInfoContainer {
 	String custom_position;
 	
 	boolean custom_position_flag;
+	
+	boolean favorite_flag;
 
 	public LeaguePlayerInputInfoContainer() {
 		// TODO Auto-generated constructor stub
@@ -65,6 +67,13 @@ public class LeaguePlayerInputInfoContainer {
 	public void setCustom_position_flag(boolean custom_position_flag) {
 		this.custom_position_flag = custom_position_flag;
 	}
-	
+
+	public boolean isFavorite_flag() {
+		return favorite_flag;
+	}
+
+	public void setFavorite_flag(boolean favorite_flag) {
+		this.favorite_flag = favorite_flag;
+	}
 	
 }

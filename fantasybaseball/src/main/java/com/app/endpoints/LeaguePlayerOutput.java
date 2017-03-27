@@ -62,6 +62,7 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	boolean custom_position_flag;
 	String custom_position;
+	boolean favorite_flag;
 
 	public LeaguePlayerOutput() {
 	}
@@ -398,7 +399,13 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	public void setCustom_position(String custom_position) {
 		this.custom_position = custom_position;
 	}
-	
-	
 
+	public boolean isFavorite_flag() {
+		return favorite_flag;
+	}
+
+	public void setFavorite_flag(boolean favorite_flag) {
+		this.favorite_flag = favorite_flag;
+	}
+	
 }

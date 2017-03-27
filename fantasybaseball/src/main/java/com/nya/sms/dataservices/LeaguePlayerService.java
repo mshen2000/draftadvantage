@@ -264,11 +264,14 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		lp.setTeam_player_note(container.getTeam_player_note());
 		lp.setCustom_position_flag(container.isCustom_position_flag());
 		lp.setCustom_position(container.getCustom_position());
-		
+		if (container.isFavorite_flag()) lp.setFavorite_flag(true);;
+			
 		System.out.println("Saving player info for: " + lp.getPlayer_projected().getFull_name());
 		System.out.println("Player note: " + lp.getTeam_player_note());
 		System.out.println("Player custom pos flag: " + lp.isCustom_position_flag());
 		System.out.println("Player custom position: " + lp.getCustom_position());
+		System.out.println("Player isFavorite: " + lp.isFavorite_flag());
+		System.out.println("Player isFavorite cont: " + container.isFavorite_flag());
 		
 		return this.save(lp, uname);
 		

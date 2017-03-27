@@ -52,6 +52,9 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 	
 	@Index
 	String custom_position;
+	
+	@Index
+	boolean favorite_flag;
 
 	public LeaguePlayer() {
 	}
@@ -194,6 +197,12 @@ public class LeaguePlayer extends BaseEntity implements Serializable {
 		this.custom_position = custom_position;
 	}
 
+	public boolean isFavorite_flag() {
+		return favorite_flag;
+	}
 
-	
+	public void setFavorite_flag(boolean favorite_flag) {
+		this.favorite_flag = favorite_flag;
+	}
+
 }
