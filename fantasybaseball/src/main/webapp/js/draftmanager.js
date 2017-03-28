@@ -575,7 +575,13 @@ $(document).ready(function()
         $('#playergrid_table').DataTable().columns( 35 ).search( false );
         $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();	
       });
-	
+    $('#btn-fav').click(function() { 
+    	if ($('#btn-fav').hasClass('active')){
+    		$('#btn-fav').removeClass('active');
+    	} else {
+    		$('#btn-fav').addClass('active');
+    	}
+    });
 	
     $('#btn-draftunknownplayermodal').click(function() 
 	{
@@ -2006,14 +2012,13 @@ function loadPlayerGridTable(data, isInitialLoad)
             		if (row.team_player_note.trim() != ""){
             			text = text + "&nbsp;&nbsp;<i class='fa fa-file-text'></i>";
             		}
-            	}
-            		
+            	}	
             	return text;
                 }},
             { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "", 
                 	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
                 },
-            { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
+            { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},     // Column 4
             /*
             { "title": "Pos", className: "dm_export", "mData": "player_position", "render": function ( data, type, row ) {
             	if (row.custom_position_flag){  return row.custom_position;} 
