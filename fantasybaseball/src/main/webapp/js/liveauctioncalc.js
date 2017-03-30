@@ -379,12 +379,12 @@ function calcLiveAuctionValue(){
 	
 	var total_draftedplayersalary = getTotalDraftedSalary(data_rows);
 	
-	// console.log("Total adj Salary: " + total_league_salary);
-	// console.log("Total drafted player Salary: " + total_draftedplayersalary);
+	console.log("Total adj Salary: " + total_league_salary);
+	console.log("Total drafted player Salary: " + total_draftedplayersalary);
 	
 	var coef = (total_league_salary-total_draftedplayersalary)/posz_total;
 	
-	// console.log("Coeff: " + coef);
+	console.log("Coeff: " + coef);
 	
 	var t3 = new Date().getTime();
 	var calculatedpos = "";
@@ -461,7 +461,7 @@ function getTotalDraftedSalary(playertablerows){
 		// Sum salaries of all drafted players
 		if ((value.leagueteam_name != null)&&(value.leagueteam_name != "")) {
 			draftedplayersalary =  parseInt(draftedplayersalary) + parseInt(value.team_player_salary);
-			// console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
+			console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
 		}
 
 	});
@@ -485,6 +485,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 	var totalz = 0;
 	var avgz = 0;
 	var calculatedpos = "";
+	var remaining_num = position_num;
 
 	$.each( playertablerows, function( index, value ){
 		
@@ -502,9 +503,12 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				// Add Z value only if player is undrafted
 				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
 					totalz = totalz + value.total_z;
-					// if (position == "C")  console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+					if (position == "C")  console.log("C- Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
 				} else {
 					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
+					
+					// Player drafted, update remaining_num
+					remaining_num-- ;
 				}
 					
 				i++;
@@ -515,7 +519,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				avgz = avgz + value.total_z;
 				i++;
 				
-				//  System.out.println(position + "-AVG1: " + lp.getTotal_z());
+				console.log(position + "-AVG1: " + value.total_z);
 				
 			} else if ((isPlayerPositionPriority(position, value.custom_position, priority))
 					&& (i == position_num + 1)){
@@ -523,7 +527,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				avgz = avgz + value.total_z;
 				i++;
 				
-				// System.out.println(position + "-AVG2: " + lp.getTotal_z());
+				console.log(position + "-AVG2: " + value.total_z);
 				
 			} else if (i > position_num + 1) {return false;}
 			
@@ -568,15 +572,18 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 
 	});
 	
+	console.log(position + "-GROSS TOTAL Z: " + totalz);
 	avgz = avgz/2;
-	totalz = totalz - position_num*avgz;
+	totalz = totalz - remaining_num*avgz;
 	
 	var PositionalZOutput = {};
 	PositionalZOutput["totalz"] = totalz;
 	PositionalZOutput["avgreplz"] = avgz
 	
-//	 console.log(position + "-TOTAL Z: " + totalz);
-//	 console.log(position + "-AVG REPL Z: " + avgz);
+	console.log(position + "-NET TOTAL Z: " + totalz);
+	console.log(position + "-AVG REPL Z: " + avgz);
+	console.log(position + "-Position Num: " + position_num);
+	console.log(position + "-Remaining Num: " + remaining_num);
 	
 	return PositionalZOutput;
 	
