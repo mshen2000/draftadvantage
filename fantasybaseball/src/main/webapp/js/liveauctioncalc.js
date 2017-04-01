@@ -19,9 +19,9 @@ function calcTeamOvwList(){
 		else if (rvalue.position == "RES"){reservecount++;}
 		else {hittercount++;}
 	});
-	console.log("Pitcher count: " + pitchercount);
-	console.log("Reserve count: " + reservecount);
-	console.log("Hitter count: " + hittercount);
+	// console.log("Pitcher count: " + pitchercount);
+	// console.log("Reserve count: " + reservecount);
+	// console.log("Hitter count: " + hittercount);
 	
 	// For each team, get overview data
 	$.each( teamlist, function( teamkey, teamvalue ) {
@@ -54,9 +54,9 @@ function calcTeamOvwList(){
 			else {teamhitters++;}
 		});
 		
-		console.log("Team pitcher count: " + teamovw.team_name + " - "+ teampitchers);
-		console.log("Team reserve count: " + teamovw.team_name + " - "+ teamreserves);
-		console.log("Team hitter count: " + teamovw.team_name + " - "+ teamhitters);
+		// console.log("Team pitcher count: " + teamovw.team_name + " - "+ teampitchers);
+		// console.log("Team reserve count: " + teamovw.team_name + " - "+ teamreserves);
+		// console.log("Team hitter count: " + teamovw.team_name + " - "+ teamhitters);
 		
 		var teamstartingsalary = teamvalue.adj_starting_salary;
 		var balance = teamstartingsalary - totalsalary;
@@ -107,7 +107,7 @@ function calcStandings(){
 	    return v.unknownplayer == false && isdrafted == true;
 	});
 	
-	console.log("filtered_data length: " + filtered_data.length);
+	// console.log("filtered_data length: " + filtered_data.length);
 
 	// For each team, filter the player grid to get stat totals
 	$.each( teamlist, function( index, value ){
@@ -257,7 +257,7 @@ function calcStandings(){
 		value['total_score'] = total_score;
 	});
 	
-	console.log("calcStandings teamlist: " + JSON.stringify(teamstandingslist));
+	// console.log("calcStandings teamlist: " + JSON.stringify(teamstandingslist));
 	
 	dm_teamstandings = teamstandingslist;
 	
@@ -267,7 +267,7 @@ function calcStandings(){
 
 function addRankScore(teamstandingslist, statcategory, isAscending){
 	
-	console.log("addRankScore for " + statcategory);
+	// console.log("addRankScore for " + statcategory);
 	
 	var stat_score = statcategory + '_score';
 	
@@ -285,9 +285,9 @@ function addRankScore(teamstandingslist, statcategory, isAscending){
 	
 	// For each team, calculate scoring
 	$.each( teamstandingslist, function( index, value ){
-		console.log("--value.team_name: " + value.team_name);
-		console.log("--stat category: " + value[statcategory]);
-		console.log("--index: " + index);
+		// console.log("--value.team_name: " + value.team_name);
+		// console.log("--stat category: " + value[statcategory]);
+		// console.log("--index: " + index);
 		value[stat_score] = index + 1;
 	});
 }
@@ -305,7 +305,7 @@ function calcLiveAuctionValue(){
 	var teamlist = dm_globalteamlist;
 	var position_priority_list = dm_leagueinfo.position_priority_list;
 	
-	console.log("-- Position priority list: " + position_priority_list);
+	// console.log("-- Position priority list: " + position_priority_list);
 	
 	var roster_c = num_teams * rostercounts["C"];
 	var roster_1b = num_teams * (rostercounts["1B"] + rostercounts["CI"]/2.0 + rostercounts["UT"]/5.0);
@@ -379,12 +379,12 @@ function calcLiveAuctionValue(){
 	
 	var total_draftedplayersalary = getTotalDraftedSalary(data_rows);
 	
-	console.log("Total adj Salary: " + total_league_salary);
-	console.log("Total drafted player Salary: " + total_draftedplayersalary);
+	// console.log("Total adj Salary: " + total_league_salary);
+	// console.log("Total drafted player Salary: " + total_draftedplayersalary);
 	
 	var coef = (total_league_salary-total_draftedplayersalary)/posz_total;
 	
-	console.log("Coeff: " + coef);
+	// console.log("Coeff: " + coef);
 	
 	var t3 = new Date().getTime();
 	var calculatedpos = "";
@@ -461,7 +461,7 @@ function getTotalDraftedSalary(playertablerows){
 		// Sum salaries of all drafted players
 		if ((value.leagueteam_name != null)&&(value.leagueteam_name != "")) {
 			draftedplayersalary =  parseInt(draftedplayersalary) + parseInt(value.team_player_salary);
-			console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
+			// console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
 		}
 
 	});
@@ -503,7 +503,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				// Add Z value only if player is undrafted
 				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
 					totalz = totalz + value.total_z;
-					if (position == "C")  console.log("C- Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+					// if (position == "C")  console.log("C- Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
 				} else {
 					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
 					
@@ -519,7 +519,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				avgz = avgz + value.total_z;
 				i++;
 				
-				console.log(position + "-AVG1: " + value.total_z);
+				// console.log(position + "-AVG1: " + value.total_z);
 				
 			} else if ((isPlayerPositionPriority(position, value.custom_position, priority))
 					&& (i == position_num + 1)){
@@ -527,7 +527,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				avgz = avgz + value.total_z;
 				i++;
 				
-				console.log(position + "-AVG2: " + value.total_z);
+				// console.log(position + "-AVG2: " + value.total_z);
 				
 			} else if (i > position_num + 1) {return false;}
 			
@@ -572,7 +572,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 
 	});
 	
-	console.log(position + "-GROSS TOTAL Z: " + totalz);
+	// console.log(position + "-GROSS TOTAL Z: " + totalz);
 	avgz = avgz/2;
 	totalz = totalz - remaining_num*avgz;
 	
@@ -580,10 +580,10 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 	PositionalZOutput["totalz"] = totalz;
 	PositionalZOutput["avgreplz"] = avgz
 	
-	console.log(position + "-NET TOTAL Z: " + totalz);
-	console.log(position + "-AVG REPL Z: " + avgz);
-	console.log(position + "-Position Num: " + position_num);
-	console.log(position + "-Remaining Num: " + remaining_num);
+	// console.log(position + "-NET TOTAL Z: " + totalz);
+	// console.log(position + "-AVG REPL Z: " + avgz);
+	// console.log(position + "-Position Num: " + position_num);
+	// console.log(position + "-Remaining Num: " + remaining_num);
 	
 	return PositionalZOutput;
 	

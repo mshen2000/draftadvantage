@@ -3192,9 +3192,6 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         		}
         		
       		});
-        	
-        	console.log("dm_teamrostertemplate_1: " + dm_teamrostertemplate_1);
-        	console.log("dm_teamrostertemplate_2: " + dm_teamrostertemplate_2);
 
         	// Convert roster template into just a list of roster positions and counts.
         	var arr = [];
