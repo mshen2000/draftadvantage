@@ -76,6 +76,31 @@ var dm_filtered_data_sp;
 var dm_filtered_data_rp;
 var dm_filtered_data_all;
 
+// Alert function
+bootstrap_alert = function () {}
+
+bootstrap_alert.lostconnection = function () {
+	bootstrap_alert.warning('<strong>Connection Lost!</strong>  Please refresh page.', 'danger', 4000);
+}
+
+bootstrap_alert.warning = function (message, alert, timeout) {
+	
+	 if( !$('#floating_alert').length )         // if element does not exist
+	 {
+		// available: success, info, warning, danger
+	    $('<div id="floating_alert" class="alert alert-' + alert 
+	    		+ ' fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' 
+	    		+ message + '&nbsp;&nbsp;</div>').prependTo('#title-container');
+	 }
+
+    // In case an alert timeout is needed
+    /*
+    setTimeout(function () {
+        $(".alert").alert('close');
+    }, timeout);
+	*/
+}
+
 // League selector listener
 $(function() {
 	  $('#league-select').on('change', function(){
@@ -2339,10 +2364,8 @@ function loadPlayerGridTable(data, isInitialLoad)
 			
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
-    	console.log("Begin DeSelect");
     	$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
     	// clearPlayerInfoTab();
-    	console.log("End DeSelect");
     } );
 
 }
@@ -3046,6 +3069,7 @@ mssolutions.fbapp.draftmanager.updatePlayerInfo = function(playerrowdata) {
         	// $("#btn-playerinfosavenote").removeAttr("disabled");
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to update player info: ", resp.code + " : " + resp.message);
         	// $("#btn-playerinfosavenote").removeAttr("disabled");
         }
@@ -3071,6 +3095,7 @@ mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id,
         	console.log("Draft player complete. League Player ID: " + resp.longdescription);
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to draft player: ", resp.code + " : " + resp.message);
         }
       });
@@ -3097,6 +3122,7 @@ mssolutions.fbapp.draftmanager.draftUnknownPlayer = function(league_id, league_t
         	console.log("Draft unknown player complete. League Player ID: " + resp.longdescription);
         }
         else {
+        	bootstrap_alert.warning('<strong>Connection Lost!</strong>  Please refresh page.', 'danger', 4000);
         	console.log("Failed to draft unknown player: ", resp.code + " : " + resp.message);
         }
       });
@@ -3117,6 +3143,7 @@ mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, player_projec
         	console.log("Undraft player complete.");
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to undraft player: ", resp.code + " : " + resp.message);
         }
       });
@@ -3138,6 +3165,7 @@ mssolutions.fbapp.draftmanager.undraftUnknownPlayer = function(league_id, unknow
         	console.log("Undraft player complete.");
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to undraft player: ", resp.code + " : " + resp.message);
         }
       });
@@ -3161,6 +3189,7 @@ mssolutions.fbapp.draftmanager.createandupdateLeague = function(leaguecontainer)
         	// mssolutions.fbapp.draftmanager.updateLeague(resp.longdescription);
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to create league: ", resp.code + " : " + resp.message);
         }
       });
@@ -3216,6 +3245,7 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         	loadTeamOvwRosterTable(false);
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to get league roster: ", resp.code + " : " + resp.message);
         }
       });
@@ -3256,6 +3286,7 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
         	loadCustomPlayerPositionTable(resp.items, false);
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to get league player data: ", resp.code + " : " + resp.message);
         }
       });
@@ -3314,6 +3345,7 @@ mssolutions.fbapp.draftmanager.loadLeagueList = function(leagueid) {
         	if (leagueid != null) $('#league-select').val(leagueid);
         }
         else {
+        	bootstrap_alert.lostconnection();
         	console.log("Failed to load leagues: ", resp.code + " : " + resp.message);
         }
       });
