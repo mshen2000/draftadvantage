@@ -12,13 +12,49 @@ function calcTeamOvwList(){
 	var reservecount = 0;
 	var hittercount = 0;
 	
-	// Count pitchers and reserves
+	var roster_c = 0;
+	var roster_1b = 0;
+	var roster_2b = 0;
+	var roster_ss = 0;
+	var roster_mi = 0;
+	var roster_3b = 0;
+	var roster_ci = 0;
+	var roster_of = 0;
+	var roster_ut = 0;
+	var roster_p = 0;
+	
+	// Count roster pitchers and reserves
 	$.each( liveteamrostertemplate, function( rkey, rvalue ) {
 		// console.log("Each teamrostertemplate: " + rvalue.position);
 		if (rvalue.position == "P"){pitchercount++;}
 		else if (rvalue.position == "RES"){reservecount++;}
-		else {hittercount++;}
+		else {
+			hittercount++;
+
+			if (rvalue.position == "C"){roster_c++;}
+			else if (rvalue.position == "1B"){roster_1b++;}
+			else if (rvalue.position == "2B"){roster_2b++;}
+			else if (rvalue.position == "3B"){roster_3b++;}
+			else if (rvalue.position == "SS"){roster_ss++;}
+			else if (rvalue.position == "MI"){roster_mi++;}
+			else if (rvalue.position == "CI"){roster_ci++;}
+			else if (rvalue.position == "OF"){roster_of++;}
+			else if (rvalue.position == "UT"){roster_ut++;}
+		}
 	});
+	
+	// Update roster counts for the whole league
+	roster_c = roster_c * teamlist.length;
+	roster_1b = roster_1b * teamlist.length;
+	roster_2b = roster_2b * teamlist.length;
+	roster_ss = roster_ss * teamlist.length;
+	roster_mi = roster_mi * teamlist.length;
+	roster_3b = roster_3b * teamlist.length;
+	roster_ci = roster_ci * teamlist.length;
+	roster_of = roster_of * teamlist.length;
+	roster_ut = roster_ut * teamlist.length;
+	roster_p = pitchercount * teamlist.length;
+	
 	// console.log("Pitcher count: " + pitchercount);
 	// console.log("Reserve count: " + reservecount);
 	// console.log("Hitter count: " + hittercount);
@@ -45,13 +81,34 @@ function calcTeamOvwList(){
 		var teampitchers = 0;
 		var teamreserves = 0;
 		var teamhitters = 0;
+		var team_c = 0;
+		var team_1b = 0;
+		var team_2b = 0;
+		var team_ss = 0;
+		var team_mi = 0;
+		var team_3b = 0;
+		var team_ci = 0;
+		var team_of = 0;
+		var team_ut = 0;
 	
-		// Add up salary for all players on the team
+		// Add up salary and counts for all players on the team
 		$.each( teamplayers, function( key, value ) {
 			totalsalary = totalsalary + parseInt(value.team_player_salary);
 			if (value.team_roster_position == "P"){teampitchers++;}
 			else if (value.team_roster_position == "RES"){teamreserves++;}
-			else {teamhitters++;}
+			else {
+				teamhitters++;
+			
+				if (value.team_roster_position == "C"){team_c++;}
+				else if (value.team_roster_position == "1B"){team_1b++;}
+				else if (value.team_roster_position == "2B"){team_2b++;}
+				else if (value.team_roster_position == "3B"){team_3b++;}
+				else if (value.team_roster_position == "SS"){team_ss++;}
+				else if (value.team_roster_position == "MI"){team_mi++;}
+				else if (value.team_roster_position == "CI"){team_ci++;}
+				else if (value.team_roster_position == "OF"){team_of++;}
+				else if (value.team_roster_position == "UT"){team_ut++;}
+			}
 		});
 		
 		// console.log("Team pitcher count: " + teamovw.team_name + " - "+ teampitchers);
@@ -81,10 +138,34 @@ function calcTeamOvwList(){
 		};
 		
 		teamovwlist.push(teamovw);
+		
+		// Update roster counts, subtract counts from each team
+		roster_c = roster_c - team_c;
+		roster_1b = roster_1b - team_1b;
+		roster_2b = roster_2b - team_2b;
+		roster_ss = roster_ss - team_ss;
+		roster_mi = roster_mi - team_mi;
+		roster_3b = roster_3b - team_3b;
+		roster_ci = roster_ci - team_ci;
+		roster_of = roster_of - team_of;
+		roster_ut = roster_ut - team_ut;
+		roster_p = roster_p - teampitchers;
 	
 	});
 	
 	loadTeamOvwTable(teamovwlist, false);
+	
+	// Update global array with league count of open slots per position
+	dm_teamrostercounts_live.open_slots_c = roster_c;
+	dm_teamrostercounts_live.open_slots_1b = roster_1b;
+	dm_teamrostercounts_live.open_slots_2b = roster_2b;
+	dm_teamrostercounts_live.open_slots_ss = roster_ss;
+	dm_teamrostercounts_live.open_slots_mi = roster_mi;
+	dm_teamrostercounts_live.open_slots_3b = roster_3b;
+	dm_teamrostercounts_live.open_slots_ci = roster_ci;
+	dm_teamrostercounts_live.open_slots_of = roster_of;
+	dm_teamrostercounts_live.open_slots_ut = roster_ut;
+	dm_teamrostercounts_live.open_slots_p = roster_p;
 }
 
 
@@ -532,43 +613,6 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 			} else if (i > position_num + 1) {return false;}
 			
 		}
-		
-		// Original code, before utilizing position priority
-		// to count multi-position players only once.
-//		if (value.unknownplayer == false){
-//			
-//			if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
-//					&& (i < position_num)){
-//				
-//				// Add Z value only if player is undrafted
-//				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
-//					totalz = totalz + value.total_z;
-//					// if (position == "C")  // console.log("Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
-//				} else {
-//					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
-//				}
-//					
-//				i++;
-//					
-//			} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
-//					&& (i == position_num)){
-//				
-//				avgz = avgz + value.total_z;
-//				i++;
-//				
-//				// System.out.println(position + "-AVG1: " + lp.getTotal_z());
-//				
-//			} else if ((value.player_position.toLowerCase().indexOf(position.toLowerCase()) > -1)
-//					&& (i == position_num + 1)){
-//				
-//				avgz = avgz + value.total_z;
-//				i++;
-//				
-//				// System.out.println(position + "-AVG2: " + lp.getTotal_z());
-//				
-//			} else if (i > position_num + 1) {return false;}
-//			
-//		}
 
 	});
 	

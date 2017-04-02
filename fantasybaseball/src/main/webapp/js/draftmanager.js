@@ -47,6 +47,18 @@ var dm_teamrostertemplate_2;
 // The teamrostertemplate converted into just a list of roster positions and counts.
 var dm_teamrostercounts;
 
+// List of team roster positions and counts of open slots:
+//		dm_teamrostercounts_live.open_slots_c
+//		dm_teamrostercounts_live.open_slots_1b 
+//		dm_teamrostercounts_live.open_slots_2b 
+//		dm_teamrostercounts_live.open_slots_ss 
+//		dm_teamrostercounts_live.open_slots_mi 
+//		dm_teamrostercounts_live.open_slots_3b 
+//		dm_teamrostercounts_live.open_slots_ci 
+//		dm_teamrostercounts_live.open_slots_of 
+//		dm_teamrostercounts_live.open_slots_ut 
+var dm_teamrostercounts_live = [];
+
 // Count of RES spots in teamrostercounts
 var dm_rescount;
 
@@ -75,6 +87,8 @@ var dm_filtered_data_of;
 var dm_filtered_data_sp;
 var dm_filtered_data_rp;
 var dm_filtered_data_all;
+var dm_filtered_data_mi;
+var dm_filtered_data_ci;
 
 // Alert function
 bootstrap_alert = function () {}
@@ -178,6 +192,13 @@ $(document).ready(function()
 		dm_filtered_data_rp = $.grep(filtered_data, function(v) {
 		    return v.custom_position.indexOf("RP") > -1;}).slice(0,slice_size);
 		dm_filtered_data_all = filtered_data.slice(0,slice_size);
+
+		dm_filtered_data_mi = $.grep(filtered_data, function(v) {
+		    return v.custom_position.indexOf("2B") > -1 || v.custom_position.indexOf("SS") > -1;
+		}).slice(0,slice_size);
+		dm_filtered_data_ci = $.grep(filtered_data, function(v) {
+		    return v.custom_position.indexOf("3B") > -1 || v.custom_position.indexOf("1B") > -1;
+		}).slice(0,slice_size);
 		
 		var ovw_data = [];
 		
@@ -189,6 +210,8 @@ $(document).ready(function()
 		var element_OF = [];
 		var element_RP = [];
 		var element_SP = [];
+		var element_MI = [];
+		var element_CI = [];
 		element_C["position"] = "C";
 		element_1B["position"] = "1B";
 		element_2B["position"] = "2B";
@@ -197,6 +220,8 @@ $(document).ready(function()
 		element_OF["position"] = "OF";
 		element_RP["position"] = "RP";
 		element_SP["position"] = "SP";
+		element_MI["position"] = "MI";
+		element_CI["position"] = "CI";
 		
 		jQuery.each(dm_filtered_data_c, function(index, item) {
 			var e = "total_z_" + (index + 1).toString();
@@ -238,19 +263,44 @@ $(document).ready(function()
 			element_SP[e] = item.total_z;
 			if (index >= 10) return false;	 
 		});
+		jQuery.each(dm_filtered_data_mi, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_MI[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		jQuery.each(dm_filtered_data_ci, function(index, item) {
+			var e = "total_z_" + (index + 1).toString();
+			element_CI[e] = item.total_z;
+			if (index >= 10) return false;	 
+		});
+		
+		// Calc and load team overview list
+		// Also calculates team open roster slots
+		calcTeamOvwList();
+		
+		element_C["open_slots"] = dm_teamrostercounts_live.open_slots_c;
+		element_1B["open_slots"] = dm_teamrostercounts_live.open_slots_1b;
+		element_2B["open_slots"] = dm_teamrostercounts_live.open_slots_2b;
+		element_SS["open_slots"] = dm_teamrostercounts_live.open_slots_ss;
+		element_3B["open_slots"] = dm_teamrostercounts_live.open_slots_3b;
+		element_OF["open_slots"] = dm_teamrostercounts_live.open_slots_of;
+		element_RP["open_slots"] = dm_teamrostercounts_live.open_slots_p + " (P)";
+		element_SP["open_slots"] = dm_teamrostercounts_live.open_slots_p + " (P)";
+		element_MI["open_slots"] = dm_teamrostercounts_live.open_slots_mi;
+		element_CI["open_slots"] = dm_teamrostercounts_live.open_slots_ci;
 		
 		ovw_data.push(element_C);
 		ovw_data.push(element_1B);
+		ovw_data.push(element_3B);
+		ovw_data.push(element_CI);
 		ovw_data.push(element_2B);
 		ovw_data.push(element_SS);
-		ovw_data.push(element_3B);
+		ovw_data.push(element_MI);
 		ovw_data.push(element_OF);
 		ovw_data.push(element_SP);
 		ovw_data.push(element_RP);
-		
+
 		loadPositionalAnlaysisTable(ovw_data, false);
-		
-		calcTeamOvwList();
 
 		loadPositionalTable(dm_filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
 		
@@ -2372,12 +2422,8 @@ function loadPlayerGridTable(data, isInitialLoad)
 
 function loadPositionalAnlaysisTable(data, isInitialLoad)
 {
-	
-	if (!isInitialLoad){
-		
-	}
-	
-	
+	if (!isInitialLoad){}
+
 	var table_element = $('#pos_analysis_table');
 	var data_table;
 	var config;
@@ -2396,8 +2442,9 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
         "columns": [
             { "title": "Pos", className: "dm_export", "mData": "position", 
                 "createdCell": function (td, cellData, rowData, row, col) {
-                	$(td).css({"font-size": "18px"})
+                	$(td).css({"font-size": "16px"})
                 }, "sDefaultContent": ""},
+            { "title": "Open", className: "dm_export", "mData": "open_slots", "sDefaultContent": ""},
             { "title": "1", className: "dm_export", "mData": "total_z_1", "render": function ( data, type, row ) {return data.toFixed(1);},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"}, 
             { "title": "2", className: "dm_export", "mData": "total_z_2", "render": function ( data, type, row ) {return data.toFixed(1);},
@@ -2438,13 +2485,15 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
     	var select_data_table_b = $('#pos_analysis_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
         if (row.position == "C") loadPositionalTable(dm_filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
-        if (row.position == "1B") loadPositionalTable(dm_filtered_data_1b, $("#pos_c_table"), false, true, "#chart-c");
-        if (row.position == "2B") loadPositionalTable(dm_filtered_data_2b, $("#pos_c_table"), false, true, "#chart-c");
-        if (row.position == "SS") loadPositionalTable(dm_filtered_data_ss, $("#pos_c_table"), false, true, "#chart-c");
-        if (row.position == "3B") loadPositionalTable(dm_filtered_data_3b, $("#pos_c_table"), false, true, "#chart-c");
-        if (row.position == "OF") loadPositionalTable(dm_filtered_data_of, $("#pos_c_table"), false, true, "#chart-c");
-        if (row.position == "SP") loadPositionalTable(dm_filtered_data_sp, $("#pos_c_table"), false, false, "#chart-c");
-        if (row.position == "RP") loadPositionalTable(dm_filtered_data_rp, $("#pos_c_table"), false, false, "#chart-c");
+        else if (row.position == "1B") loadPositionalTable(dm_filtered_data_1b, $("#pos_c_table"), false, true, "#chart-c");
+        else if (row.position == "2B") loadPositionalTable(dm_filtered_data_2b, $("#pos_c_table"), false, true, "#chart-c");
+        else if (row.position == "SS") loadPositionalTable(dm_filtered_data_ss, $("#pos_c_table"), false, true, "#chart-c");
+        else if (row.position == "3B") loadPositionalTable(dm_filtered_data_3b, $("#pos_c_table"), false, true, "#chart-c");
+        else if (row.position == "OF") loadPositionalTable(dm_filtered_data_of, $("#pos_c_table"), false, true, "#chart-c");
+        else if (row.position == "MI") loadPositionalTable(dm_filtered_data_mi, $("#pos_c_table"), false, true, "#chart-c");
+        else if (row.position == "CI") loadPositionalTable(dm_filtered_data_ci, $("#pos_c_table"), false, true, "#chart-c");
+        else if (row.position == "SP") loadPositionalTable(dm_filtered_data_sp, $("#pos_c_table"), false, false, "#chart-c");
+        else if (row.position == "RP") loadPositionalTable(dm_filtered_data_rp, $("#pos_c_table"), false, false, "#chart-c");
 			
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
@@ -2453,6 +2502,7 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
 
 }
 
+// Mini player table for a specific position
 function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chartid)
 {
 	if (data != null){
