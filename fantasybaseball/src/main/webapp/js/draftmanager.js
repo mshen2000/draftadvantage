@@ -1928,7 +1928,7 @@ function loadTeamOvwTable(data, isInitialLoad)
         "columns": [
             { "visible": false, "title": "Team ID", "mData": "id", "sDefaultContent": ""},	
             { "visible": false, "title": "isMyTeam", "mData": "isuserowner", "sDefaultContent": ""},	
-            { "title": "Team", "mData": "team_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 10 )},	
+            { "title": "Team", "mData": "team_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 15 )},	
             { "title": "Bal", "mData": "balance", "render": function ( data, type, row ) 
             	{return "$" + data.toFixed(0);},"sDefaultContent": ""},
             // { "title": "Spots", "mData": "remainingspots", "sDefaultContent": ""},
