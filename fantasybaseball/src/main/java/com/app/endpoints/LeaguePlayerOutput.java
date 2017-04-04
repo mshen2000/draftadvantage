@@ -55,6 +55,11 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	double pitcher_z_so;
 	double pitcher_z_era;
 	double pitcher_z_whip;
+	
+	// New Cats: obp and holds
+	double pitcher_z_holds;
+	double hitter_z_obp;
+	
 	double total_z;
 	int rank_z;
 	int init_auction_value;
@@ -326,6 +331,22 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	public void setPitcher_z_whip(double pitcher_z_whip) {
 		this.pitcher_z_whip = pitcher_z_whip;
+	}
+	
+	public double getPitcher_z_holds() {
+		return pitcher_z_holds;
+	}
+
+	public void setPitcher_z_holds(double pitcher_z_holds) {
+		this.pitcher_z_holds = pitcher_z_holds;
+	}
+
+	public double getHitter_z_obp() {
+		return hitter_z_obp;
+	}
+
+	public void setHitter_z_obp(double hitter_z_obp) {
+		this.hitter_z_obp = hitter_z_obp;
 	}
 
 	public double getTotal_z() {

@@ -376,7 +376,7 @@ function addRankScore(teamstandingslist, statcategory, isAscending){
 
 function calcLiveAuctionValue(){
 	
-	console.log("Calc Live Auction Values: BEGIN");
+	// console.log("Calc Live Auction Values: BEGIN");
 
 	var t1 = new Date().getTime();
 	
@@ -524,6 +524,9 @@ function calcLiveAuctionValue(){
 	// console.log("Calc Live Auction Values: COMPLETE");
 	
 	var t5 = new Date().getTime();
+	
+	data_rows = null;
+	data_table = null;
 	
 }
 

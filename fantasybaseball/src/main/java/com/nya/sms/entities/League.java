@@ -62,6 +62,10 @@ public class League extends BaseEntity implements Serializable {
 	boolean cat_pitcher_so;
 	boolean cat_pitcher_era;
 	boolean cat_pitcher_whip;
+	
+	// New Categories: Holds, OBP
+	boolean cat_pitcher_holds;
+	boolean cat_hitter_obp;
 
 	int num_1b;
 	int num_2b;
@@ -108,6 +112,10 @@ public class League extends BaseEntity implements Serializable {
 		this.cat_pitcher_so = false;
 		this.cat_pitcher_era = false;
 		this.cat_pitcher_whip = false;
+		
+		// New Categories
+		this.cat_pitcher_holds = false;
+		this.cat_hitter_obp = false;
 		
 		if (this.position_priority_list.isEmpty()){
 			List<String> plist = new ArrayList<String>();
@@ -156,6 +164,10 @@ public class League extends BaseEntity implements Serializable {
 		this.num_res = l.num_res ;
 		this.num_mi = l.num_mi ;
 		this.num_ci = l.num_ci ;
+		
+		// New Categories
+		this.cat_pitcher_holds = l.cat_pitcher_holds;
+		this.cat_hitter_obp = l.cat_hitter_obp;
 		
 		this.position_priority_list = l.position_priority_list;
 		
@@ -390,6 +402,22 @@ public class League extends BaseEntity implements Serializable {
 
 	public void setCat_pitcher_whip(boolean cat_pitcher_whip) {
 		this.cat_pitcher_whip = cat_pitcher_whip;
+	}
+
+	public boolean isCat_pitcher_holds() {
+		return cat_pitcher_holds;
+	}
+
+	public void setCat_pitcher_holds(boolean cat_pitcher_holds) {
+		this.cat_pitcher_holds = cat_pitcher_holds;
+	}
+
+	public boolean isCat_hitter_obp() {
+		return cat_hitter_obp;
+	}
+
+	public void setCat_hitter_obp(boolean cat_hitter_obp) {
+		this.cat_hitter_obp = cat_hitter_obp;
 	}
 
 	public int getNum_1b() {

@@ -153,7 +153,7 @@ $(document).ready(function()
 
 	});
 	
-	// Tab change event
+	// Tab change event for positional analysis
 	$("a[href='#maintab2']").on('shown.bs.tab', function (e) {
 		
 		var player_table = $('#playergrid_table').DataTable();
@@ -313,6 +313,8 @@ $(document).ready(function()
 		loadPositionalTable(filtered_data_sp, $("#pos_sp_table"), false, false, "#chart-sp");
 		loadPositionalTable(filtered_data_rp, $("#pos_rp_table"), false, false, "#chart-rp");
 		*/
+		
+		dm_filtered_data_all = null;
 
 	});
 	
@@ -331,8 +333,8 @@ $(document).ready(function()
 	
 	$("#fav-icon").click(function(ev){
 		var playertable = $('#playergrid_table').DataTable();
-		console.log("Player: " + playernoterow.full_name);
-		console.log("Player ID: " + playernoterow.id);
+		// console.log("Player: " + playernoterow.full_name);
+		// console.log("Player ID: " + playernoterow.id);
 		  
 		if ($("#fav-icon").hasClass("fa-star-o")){
 			playernoterow.favorite_flag = true;
@@ -524,7 +526,7 @@ $(document).ready(function()
 		var playernote = $("#textarea-playernote").val();
 		var playertable = $('#playergrid_table').DataTable();
 		
-		console.log("player note textarea: " + playernote);
+		// console.log("player note textarea: " + playernote);
 
 		playernoterow.team_player_note = playernote;
 		
@@ -557,7 +559,7 @@ $(document).ready(function()
 				
 		});
 		
-		console.log("Position String: " +  customposstring); 
+		// console.log("Position String: " +  customposstring); 
 		playercustomposrow.custom_position_flag = flag;
 		if (flag){
 			playercustomposrow.custom_position = customposstring.toString();
@@ -963,6 +965,7 @@ $(document).ready(function()
 			if ($("#cat-hitter-rbi").is(':checked')) hitting = hitting + "RBI, ";
 			if ($("#cat-hitter-sb").is(':checked')) hitting = hitting + "SB, ";
 			if ($("#cat-hitter-avg").is(':checked')) hitting = hitting + "AVG, ";
+			if ($("#cat-hitter-obp").is(':checked')) hitting = hitting + "OBP, ";
 			hitting = hitting.slice(0, -2);
 			
 			if ($("#cat-pitcher-w").is(':checked')) pitching = pitching + "W, ";
@@ -970,6 +973,7 @@ $(document).ready(function()
 			if ($("#cat-pitcher-k").is(':checked')) pitching = pitching + "K, ";
 			if ($("#cat-pitcher-era").is(':checked')) pitching = pitching + "ERA, ";
 			if ($("#cat-pitcher-whip").is(':checked')) pitching = pitching + "WHIP, ";
+			if ($("#cat-pitcher-holds").is(':checked')) pitching = pitching + "Holds, ";
 			pitching = pitching.slice(0, -2);
 			
 			$("#prevhittingcats").text(hitting);
@@ -1048,6 +1052,11 @@ $(document).ready(function()
 		league["cat_pitcher_so"] = $("#cat-hitter-hr").is(':checked');
 		league["cat_pitcher_era"] = $("#cat-hitter-hr").is(':checked');
 		league["cat_pitcher_whip"] = $("#cat-hitter-hr").is(':checked');
+		
+		// New Categories: OBP and Holds
+		league["cat_hitter_obp"] = $("#cat-hitter-obp").is(':checked');
+		league["cat_pitcher_holds"] = $("#cat-hitter-holds").is(':checked');
+		
 		league["num_1b"] = $("#1b-num-select").val();
 		league["num_2b"] = $("#2b-num-select").val();
 		league["num_ss"] = $("#ss-num-select").val();
@@ -1176,6 +1185,7 @@ function updateTeamOvwRosterTable(teamrow){
 	            true : false;
 	    } )
 	    .data();
+		
 
 		// For each drafted player on a team, fill them into the team roster grid
 		$.each( teamplayers, function( key, value ) {
@@ -1279,6 +1289,8 @@ function updateTeamInfoTab(){
         $("#btn-editdraftplayer").attr("disabled", "disabled");
         $("#btn-undraftplayer").attr("disabled", "disabled");
 	}
+	
+	playertable = null;
 }
 
 
@@ -1660,6 +1672,7 @@ function loadTeamOvwRosterTable(isInitialLoad)
 		data_table_2 = table_element_2.dataTable(config_2);
 	}
 	
+	/*
 	var data_table_1 = $('#team_ovw_roster_table_1').DataTable();
 	data_table_1
     .on( 'select', function ( e, dt, type, indexes ) {
@@ -1697,6 +1710,7 @@ function loadTeamOvwRosterTable(isInitialLoad)
         // var rowData = data_table.rows( indexes ).data().toArray();
         // console.log("De-Select: " + rowData[0].name);
     } );
+    */
 }
 
 function loadTeamRosterTable(data, isInitialLoad)
@@ -1859,8 +1873,8 @@ function loadCustomPlayerPositionTable(data, isInitialLoad)
 		$("#lbl-custompositionplayername").text(row.full_name);
 		// $("#lbl-playerinfoelig").text(row.player_position);
 
-		console.log("-- Position priority list: " + dm_leagueinfo.position_priority_list);
-		console.log("-- Position priority list size: " + dm_leagueinfo.position_priority_list.length);
+		// console.log("-- Position priority list: " + dm_leagueinfo.position_priority_list);
+		// console.log("-- Position priority list size: " + dm_leagueinfo.position_priority_list.length);
 		
 		jQuery('.checkbox-custpos').each(function() {
 		    var currentElement = $(this);
@@ -1960,7 +1974,7 @@ function loadTeamOvwTable(data, isInitialLoad)
     	var data_table_b = $('#team_ovw_table').DataTable();
     	var row = data_table_b.rows( indexes ).data()[0];
 
-    	console.log("team row: " + JSON.stringify(row));
+    	// console.log("team row: " + JSON.stringify(row));
     	updateTeamOvwRosterTable(row);
 
     } )
@@ -1988,7 +2002,7 @@ function loadLeagueStandingsTable(data, isInitialLoad)
         },
         rowId: 'id',
         "createdRow": function ( row, data, index ) {
-        	console.log("data.isMyTeam: " + data.isMyTeam)
+        	// console.log("data.isMyTeam: " + data.isMyTeam)
             if ( data.isMyTeam ) {
 //                $('td', row).eq(2).addClass('highlight');
 //                $('td', row).eq(3).addClass('highlight');
@@ -2496,9 +2510,8 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
         else if (row.position == "RP") loadPositionalTable(dm_filtered_data_rp, $("#pos_c_table"), false, false, "#chart-c");
 			
     } )
-    .on( 'deselect', function ( e, dt, type, indexes ) {
-    	
-    } );
+    // .on( 'deselect', function ( e, dt, type, indexes ) { } )
+    ;
 
 }
 
@@ -2533,10 +2546,10 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 			}};
 		}
 		
-		console.log("data name 8: " + data[8].full_name);
-		console.log("data name 9: " + data[9].full_name);
-		console.log("data z 8: " + data[8].total_z);
-		console.log("data z 9: " + data[9].total_z);
+		// console.log("data name 8: " + data[8].full_name);
+		// console.log("data name 9: " + data[9].full_name);
+		// console.log("data z 8: " + data[8].total_z);
+		// console.log("data z 9: " + data[9].total_z);
 		
 		var chart = new Chartist.Bar(chartid, {
 			  labels: [data[0].full_name, data[1].full_name, data[2].full_name, data[3].full_name, data[4].full_name,
@@ -2573,7 +2586,6 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 			  }
 			});
 	}
-	
 	
 	var data_table;
 	var config;
@@ -3098,12 +3110,12 @@ function loadTeamSelect(data){
  */
 mssolutions.fbapp.draftmanager.updatePlayerInfo = function(playerrowdata) {
 	
-	console.log("In updatePlayerNote...");
-	console.log("--League ID: " + playerrowdata.league_id);
-	console.log("--Player ID: " + playerrowdata.id);
-	console.log("--Note: " + playerrowdata.team_player_note);
-	console.log("--Cust Pos: " + playerrowdata.custom_position);
-	console.log("--Favorite: " + playerrowdata.favorite_flag);
+	// console.log("In updatePlayerNote...");
+	// console.log("--League ID: " + playerrowdata.league_id);
+	// console.log("--Player ID: " + playerrowdata.id);
+	// console.log("--Note: " + playerrowdata.team_player_note);
+	// console.log("--Cust Pos: " + playerrowdata.custom_position);
+	// console.log("--Favorite: " + playerrowdata.favorite_flag);
 	
 	gapi.client.draftapp.league.updateplayerinfo({
 		'league_id' : playerrowdata.league_id,
@@ -3454,7 +3466,7 @@ mssolutions.fbapp.draftmanager.init_nav = function(apiRoot) {
 	//  check if endpoints have been intialized
 	if (typeof gapi.client.draftapp !== 'object') {
 		
-		console.log("Loading gapi.client.draftapp");
+		// console.log("Loading gapi.client.draftapp");
 		
 		// Set the token for this app initialization
 		gapi.auth.setToken({
