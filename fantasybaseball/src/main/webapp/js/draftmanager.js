@@ -86,9 +86,13 @@ var dm_filtered_data_3b;
 var dm_filtered_data_of;
 var dm_filtered_data_sp;
 var dm_filtered_data_rp;
-var dm_filtered_data_all;
+// var dm_filtered_data_all;
 var dm_filtered_data_mi;
 var dm_filtered_data_ci;
+
+// Indicator whether the tab should be updated on select
+var update_positional_tab = true;
+var update_standings_tab = true;
 
 // Alert function
 bootstrap_alert = function () {}
@@ -146,175 +150,190 @@ $(document).ready(function()
 
 	});
 	
-	// Tab change event
+	// Tab change event for standings tab
 	$("a[href='#maintab3']").on('shown.bs.tab', function (e) {
-
-		calcStandings(); 
+		if (update_standings_tab){
+			console.log('Updating standings tab...');
+			calcStandings(); 
+			update_standings_tab = false;
+		} else{
+			console.log('No update to standings tab needed.');
+		}
 
 	});
 	
 	// Tab change event for positional analysis
 	$("a[href='#maintab2']").on('shown.bs.tab', function (e) {
 		
-		var player_table = $('#playergrid_table').DataTable();
-		var data = player_table.data();
-		var filtered_data = $.grep(data, function(v) {
-			var isdrafted;
-			if (v.leagueteam_name == null) isdrafted = false;
-			else if (v.leagueteam_name.trim().length < 1) isdrafted = false;
-			else isdrafted = true;
-		    return v.unknownplayer == false && isdrafted == false;
-		});
+		if (update_positional_tab){
+			
+			console.log('Updating Positional Tab...');
 		
-		// Sort by descending Z
-		filtered_data.sort(function(a, b) {
-		    return parseFloat(b.total_z) - parseFloat(a.total_z);
-		});
-		
-		// console.log("filtered_data: " + JSON.stringify(filtered_data));
-		var slice_size = 10
-		var ovw_size = 10
-		
-		dm_filtered_data_c = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("C") > -1;}).slice(0,slice_size);
-		dm_filtered_data_1b = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("1B") > -1;}).slice(0,slice_size);
-		dm_filtered_data_2b = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("2B") > -1;}).slice(0,slice_size);
-		dm_filtered_data_ss = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("SS") > -1;}).slice(0,slice_size);
-		dm_filtered_data_3b = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("3B") > -1;}).slice(0,slice_size);
-		dm_filtered_data_of = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("OF") > -1;}).slice(0,slice_size);
-		dm_filtered_data_sp = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("SP") > -1;}).slice(0,slice_size);
-		dm_filtered_data_rp = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("RP") > -1;}).slice(0,slice_size);
-		dm_filtered_data_all = filtered_data.slice(0,slice_size);
-
-		dm_filtered_data_mi = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("2B") > -1 || v.custom_position.indexOf("SS") > -1;
-		}).slice(0,slice_size);
-		dm_filtered_data_ci = $.grep(filtered_data, function(v) {
-		    return v.custom_position.indexOf("3B") > -1 || v.custom_position.indexOf("1B") > -1;
-		}).slice(0,slice_size);
-		
-		var ovw_data = [];
-		
-		var element_C = [];
-		var element_1B = [];
-		var element_2B = [];
-		var element_SS = [];
-		var element_3B = [];
-		var element_OF = [];
-		var element_RP = [];
-		var element_SP = [];
-		var element_MI = [];
-		var element_CI = [];
-		element_C["position"] = "C";
-		element_1B["position"] = "1B";
-		element_2B["position"] = "2B";
-		element_SS["position"] = "SS";
-		element_3B["position"] = "3B";
-		element_OF["position"] = "OF";
-		element_RP["position"] = "RP";
-		element_SP["position"] = "SP";
-		element_MI["position"] = "MI";
-		element_CI["position"] = "CI";
-		
-		jQuery.each(dm_filtered_data_c, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_C[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_1b, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_1B[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_2b, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_2B[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_ss, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_SS[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_3b, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_3B[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_of, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_OF[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_rp, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_RP[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_sp, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_SP[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_mi, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_MI[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		jQuery.each(dm_filtered_data_ci, function(index, item) {
-			var e = "total_z_" + (index + 1).toString();
-			element_CI[e] = item.total_z;
-			if (index >= 10) return false;	 
-		});
-		
-		// Calc and load team overview list
-		// Also calculates team open roster slots
-		calcTeamOvwList();
-		
-		element_C["open_slots"] = dm_teamrostercounts_live.open_slots_c;
-		element_1B["open_slots"] = dm_teamrostercounts_live.open_slots_1b;
-		element_2B["open_slots"] = dm_teamrostercounts_live.open_slots_2b;
-		element_SS["open_slots"] = dm_teamrostercounts_live.open_slots_ss;
-		element_3B["open_slots"] = dm_teamrostercounts_live.open_slots_3b;
-		element_OF["open_slots"] = dm_teamrostercounts_live.open_slots_of;
-		element_RP["open_slots"] = dm_teamrostercounts_live.open_slots_p + " (P)";
-		element_SP["open_slots"] = dm_teamrostercounts_live.open_slots_p + " (P)";
-		element_MI["open_slots"] = dm_teamrostercounts_live.open_slots_mi;
-		element_CI["open_slots"] = dm_teamrostercounts_live.open_slots_ci;
-		
-		ovw_data.push(element_C);
-		ovw_data.push(element_1B);
-		ovw_data.push(element_3B);
-		ovw_data.push(element_CI);
-		ovw_data.push(element_2B);
-		ovw_data.push(element_SS);
-		ovw_data.push(element_MI);
-		ovw_data.push(element_OF);
-		ovw_data.push(element_SP);
-		ovw_data.push(element_RP);
-
-		loadPositionalAnlaysisTable(ovw_data, false);
-
-		loadPositionalTable(dm_filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
-		
-		/*
-		loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
-		loadPositionalTable(filtered_data_2b, $("#pos_2b_table"), false, true, "#chart-2b");
-		loadPositionalTable(filtered_data_ss, $("#pos_ss_table"), false, true, "#chart-ss");
-		loadPositionalTable(filtered_data_3b, $("#pos_3b_table"), false, true, "#chart-3b");
-		loadPositionalTable(filtered_data_of, $("#pos_of_table"), false, true, "#chart-of");
-		loadPositionalTable(filtered_data_sp, $("#pos_sp_table"), false, false, "#chart-sp");
-		loadPositionalTable(filtered_data_rp, $("#pos_rp_table"), false, false, "#chart-rp");
-		*/
-		
-		dm_filtered_data_all = null;
+			var player_table = $('#playergrid_table').DataTable();
+			var data = player_table.data();
+			var filtered_data = $.grep(data, function(v) {
+				var isdrafted;
+				if (v.leagueteam_name == null) isdrafted = false;
+				else if (v.leagueteam_name.trim().length < 1) isdrafted = false;
+				else isdrafted = true;
+			    return v.unknownplayer == false && isdrafted == false;
+			});
+			
+			// Sort by descending Z
+			filtered_data.sort(function(a, b) {
+			    return parseFloat(b.total_z) - parseFloat(a.total_z);
+			});
+			
+			// console.log("filtered_data: " + JSON.stringify(filtered_data));
+			var slice_size = 10
+			var ovw_size = 10
+			
+			dm_filtered_data_c = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("C") > -1;}).slice(0,slice_size);
+			dm_filtered_data_1b = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("1B") > -1;}).slice(0,slice_size);
+			dm_filtered_data_2b = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("2B") > -1;}).slice(0,slice_size);
+			dm_filtered_data_ss = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("SS") > -1;}).slice(0,slice_size);
+			dm_filtered_data_3b = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("3B") > -1;}).slice(0,slice_size);
+			dm_filtered_data_of = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("OF") > -1;}).slice(0,slice_size);
+			dm_filtered_data_sp = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("SP") > -1;}).slice(0,slice_size);
+			dm_filtered_data_rp = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("RP") > -1;}).slice(0,slice_size);
+			// dm_filtered_data_all = filtered_data.slice(0,slice_size);
+	
+			dm_filtered_data_mi = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("2B") > -1 || v.custom_position.indexOf("SS") > -1;
+			}).slice(0,slice_size);
+			dm_filtered_data_ci = $.grep(filtered_data, function(v) {
+			    return v.custom_position.indexOf("3B") > -1 || v.custom_position.indexOf("1B") > -1;
+			}).slice(0,slice_size);
+			
+			var ovw_data = [];
+			
+			var element_C = [];
+			var element_1B = [];
+			var element_2B = [];
+			var element_SS = [];
+			var element_3B = [];
+			var element_OF = [];
+			var element_RP = [];
+			var element_SP = [];
+			var element_MI = [];
+			var element_CI = [];
+			element_C["position"] = "C";
+			element_1B["position"] = "1B";
+			element_2B["position"] = "2B";
+			element_SS["position"] = "SS";
+			element_3B["position"] = "3B";
+			element_OF["position"] = "OF";
+			element_RP["position"] = "RP";
+			element_SP["position"] = "SP";
+			element_MI["position"] = "MI";
+			element_CI["position"] = "CI";
+			
+			jQuery.each(dm_filtered_data_c, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_C[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_1b, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_1B[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_2b, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_2B[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_ss, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_SS[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_3b, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_3B[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_of, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_OF[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_rp, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_RP[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_sp, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_SP[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_mi, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_MI[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			jQuery.each(dm_filtered_data_ci, function(index, item) {
+				var e = "total_z_" + (index + 1).toString();
+				element_CI[e] = item.total_z;
+				if (index >= 10) return false;	 
+			});
+			
+			// Calc and load team overview list
+			// Also calculates team open roster slots
+			calcTeamOvwList();
+			
+			element_C["open_slots"] = dm_teamrostercounts_live.open_slots_c;
+			element_1B["open_slots"] = dm_teamrostercounts_live.open_slots_1b;
+			element_2B["open_slots"] = dm_teamrostercounts_live.open_slots_2b;
+			element_SS["open_slots"] = dm_teamrostercounts_live.open_slots_ss;
+			element_3B["open_slots"] = dm_teamrostercounts_live.open_slots_3b;
+			element_OF["open_slots"] = dm_teamrostercounts_live.open_slots_of;
+			element_RP["open_slots"] = dm_teamrostercounts_live.open_slots_p + " (P)";
+			element_SP["open_slots"] = dm_teamrostercounts_live.open_slots_p + " (P)";
+			element_MI["open_slots"] = dm_teamrostercounts_live.open_slots_mi;
+			element_CI["open_slots"] = dm_teamrostercounts_live.open_slots_ci;
+			
+			ovw_data.push(element_C);
+			ovw_data.push(element_1B);
+			ovw_data.push(element_3B);
+			ovw_data.push(element_CI);
+			ovw_data.push(element_2B);
+			ovw_data.push(element_SS);
+			ovw_data.push(element_MI);
+			ovw_data.push(element_OF);
+			ovw_data.push(element_SP);
+			ovw_data.push(element_RP);
+	
+			loadPositionalAnlaysisTable(ovw_data, false);
+	
+			loadPositionalTable(dm_filtered_data_c, $("#pos_c_table"), false, true, "#chart-c");
+			
+			/*
+			loadPositionalTable(filtered_data_1b, $("#pos_1b_table"), false, true, "#chart-1b");
+			loadPositionalTable(filtered_data_2b, $("#pos_2b_table"), false, true, "#chart-2b");
+			loadPositionalTable(filtered_data_ss, $("#pos_ss_table"), false, true, "#chart-ss");
+			loadPositionalTable(filtered_data_3b, $("#pos_3b_table"), false, true, "#chart-3b");
+			loadPositionalTable(filtered_data_of, $("#pos_of_table"), false, true, "#chart-of");
+			loadPositionalTable(filtered_data_sp, $("#pos_sp_table"), false, false, "#chart-sp");
+			loadPositionalTable(filtered_data_rp, $("#pos_rp_table"), false, false, "#chart-rp");
+			*/
+			
+			// dm_filtered_data_all = null;
+			
+			update_positional_tab = false;
+			
+		} else {
+			console.log('No update to positional tab needed.');
+		}
 
 	});
 	
@@ -3155,6 +3174,10 @@ mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id,
       function(resp) {
         if (!resp.code) { 
         	console.log("Draft player complete. League Player ID: " + resp.longdescription);
+        	
+        	// Indicator whether the tab should be updated on select
+        	update_positional_tab = true;
+        	update_standings_tab = true;
         }
         else {
         	bootstrap_alert.lostconnection();
@@ -3203,6 +3226,10 @@ mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, player_projec
       function(resp) {
         if (!resp.code) { 
         	console.log("Undraft player complete.");
+        	
+        	// Indicator whether the tab should be updated on select
+        	update_positional_tab = true;
+        	update_standings_tab = true;
         }
         else {
         	bootstrap_alert.lostconnection();
