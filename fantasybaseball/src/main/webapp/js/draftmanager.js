@@ -308,7 +308,7 @@ $(document).ready(function()
 			ovw_data.push(element_CI);
 			ovw_data.push(element_2B);
 			ovw_data.push(element_SS);
-			ovw_data.push(element_MI);
+			ovw_data.push(element_MI); 
 			ovw_data.push(element_OF);
 			ovw_data.push(element_SP);
 			ovw_data.push(element_RP);
