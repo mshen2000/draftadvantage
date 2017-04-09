@@ -329,6 +329,10 @@ $(document).ready(function()
 			
 			// dm_filtered_data_all = null;
 			
+			player_table = null;
+			data = null;
+			filtered_data = null;
+			
 			update_positional_tab = false;
 			
 		} else {
@@ -1237,9 +1241,14 @@ function updateTeamOvwRosterTable(teamrow){
 				}
 			});	
 		});
-		
+
 		teamovwrostertable_1.columns.adjust().draw();
 		teamovwrostertable_2.columns.adjust().draw();
+		
+		teamplayers = null;
+		teamovwrostertable_1 = null;
+		teamovwrostertable_2 = null;
+		playertable = null;
 	}
 }
 
@@ -1657,10 +1666,11 @@ function loadDraftUnkPlayerPosSelector(updateplayerposition){
 function loadTeamOvwRosterTable(isInitialLoad)
 {	
 	var data_table_1;
-	var data_table_2
+	var data_table_2;
 	var table_element_1 = $('#team_ovw_roster_table_1');
 	var table_element_2 = $('#team_ovw_roster_table_2');
 	var config_1 = {
+		"destroy": true,
 		responsive: true,
     	"processing": true,
         "bSort" : false,
@@ -1683,6 +1693,7 @@ function loadTeamOvwRosterTable(isInitialLoad)
         ]
         };
 	var config_2 = {
+			"destroy": true,
 			responsive: true,
 	    	"processing": true,
 	        "bSort" : false,
@@ -1709,6 +1720,10 @@ function loadTeamOvwRosterTable(isInitialLoad)
 		// console.log("window height: " + calcDataTableHeight());
 		data_table_1 = table_element_1.dataTable(config_1);
 		data_table_2 = table_element_2.dataTable(config_2);
+		data_table_1 = null;
+		data_table_2 = null;
+		config_1 = null;
+		config_2 = null;
 	} else {
 		data_table_1 = table_element_1.DataTable();
 		data_table_1.destroy();
@@ -1719,6 +1734,13 @@ function loadTeamOvwRosterTable(isInitialLoad)
 		data_table_2.destroy();
 		table_element_2.empty();
 		data_table_2 = table_element_2.dataTable(config_2);
+		
+		data_table_1 = null;
+		data_table_2 = null;
+		table_element_1 = null;
+		table_element_2 = null;
+		config_1 = null;
+		config_2 = null;
 	}
 	
 	/*
@@ -2025,6 +2047,9 @@ function loadTeamOvwTable(data, isInitialLoad)
 
     	// console.log("team row: " + JSON.stringify(row));
     	updateTeamOvwRosterTable(row);
+    	
+    	data_table_b = null;
+    	row = null;
 
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
