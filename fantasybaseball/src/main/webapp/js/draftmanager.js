@@ -1211,7 +1211,6 @@ function updateTeamOvwRosterTable(teamrow){
 	            true : false;
 	    } )
 	    .data();
-		
 
 		// For each drafted player on a team, fill them into the team roster grid
 		$.each( teamplayers, function( key, value ) {
@@ -2032,6 +2031,8 @@ function loadTeamOvwTable(data, isInitialLoad)
 		data_table = table_element.dataTable(config);
 	} else {
 		data_table = table_element.DataTable();
+		data_table.off('select');
+		data_table.off('deselect');
 		data_table.destroy();
 		table_element.empty();
 		data_table = table_element.dataTable(config);
@@ -2563,6 +2564,7 @@ function loadPositionalAnlaysisTable(data, isInitialLoad)
 		data_table = table_element.dataTable(config);
 	} else {
 		data_table = table_element.DataTable();
+		data_table.off('select');
 		data_table.destroy();
 		table_element.empty();
 		data_table = table_element.dataTable(config);
@@ -2628,7 +2630,11 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 		// console.log("data z 8: " + data[8].total_z);
 		// console.log("data z 9: " + data[9].total_z);
 		
-		var chart = new Chartist.Bar(chartid, {
+		var chart = $(chartid + " .ct-chart");
+		chart.detach();
+		chart.off('draw');
+
+		chart = new Chartist.Bar(chartid, {
 			  labels: [data[0].full_name, data[1].full_name, data[2].full_name, data[3].full_name, data[4].full_name,
 			           data[5].full_name, data[6].full_name, data[7].full_name, data[8].full_name, data[9].full_name],
 			  series: [
