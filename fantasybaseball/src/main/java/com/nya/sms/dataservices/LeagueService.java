@@ -573,6 +573,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		p.setPitcher_whip(0);
 		p.setPitcher_whip_eff(0);
 		p.setPitcher_k(0);
+		p.setPitcher_hld(0);
 		p.setPitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_PITCHER);
 		
 		return p;
@@ -588,6 +589,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		p.setHitter_runs(0);
 		p.setHitter_sb(0);
 		p.setHitter_hr(0);
+		p.setHitter_ops(0);
+		p.setHitter_obp_eff(0);
 		p.setPitcher_hitter(getPlayerProjectedService().PITCHER_HITTER_HITTER);
 		
 		return p;
@@ -863,12 +866,14 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		List<Double> hitter_runs = new ArrayList<Double>();
 		List<Double> hitter_sbs = new ArrayList<Double>();
 		List<Double> hitter_avgeff = new ArrayList<Double>();
+		List<Double> hitter_obpeff = new ArrayList<Double>();
 		
 		List<Double> pitcher_wins = new ArrayList<Double>();
 		List<Double> pitcher_saves = new ArrayList<Double>();
 		List<Double> pitcher_sos = new ArrayList<Double>();
 		List<Double> pitcher_whipeff = new ArrayList<Double>();
 		List<Double> pitcher_eraeff = new ArrayList<Double>();
+		List<Double> pitcher_holds = new ArrayList<Double>();
 		
 		double hitter_hr_mean = 0;
 		double hitter_hr_sd = 0;
@@ -880,6 +885,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		double hitter_sb_sd = 0;
 		double hitter_avgeff_mean = 0;
 		double hitter_avgeff_sd = 0;
+		double hitter_obpeff_mean = 0;
+		double hitter_obpeff_sd = 0;
 		
 		double pitcher_w_mean = 0;
 		double pitcher_w_sd = 0;
@@ -887,6 +894,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		double pitcher_sv_sd = 0;
 		double pitcher_k_mean = 0;
 		double pitcher_k_sd = 0;
+		double pitcher_hld_mean = 0;
+		double pitcher_hld_sd = 0;
 		double pitcher_whipeff_mean = 0;
 		double pitcher_whipeff_sd = 0;
 		double pitcher_eraeff_mean = 0;
@@ -915,6 +924,16 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 						hitter_avgeff.add(h_avgeff);
 						po.setHitter_avg_eff(h_avgeff);
 					}
+					
+					if (league.isCat_hitter_obp()) {
+						double h_obpeff = ((league.getAvg_hitter_hits() + league.getAvg_hitter_bb() + league.getAvg_hitter_hbp() + 
+								po.getHitter_hits() + po.getHitter_bb() + po.getHitter_hbp()) / (league.getAvg_hitter_pa() + 
+								po.getHitter_pa())) - league.getAvg_hitter_obp();
+		
+						hitter_obpeff.add(h_obpeff);
+						po.setHitter_obp_eff(h_obpeff);
+					}
+					
 					new_hcount++;
 				}
 				
@@ -927,7 +946,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 						pitcher_saves.add(po.getPitcher_sv());
 					if (league.isCat_pitcher_so())
 						pitcher_sos.add(po.getPitcher_k());
-		
+					if (league.isCat_pitcher_holds())
+						pitcher_holds.add(po.getPitcher_hld());
 					if (league.isCat_pitcher_whip()) {
 						double p_whipeff = ((league.getAvg_pitcher_bbplushits() + po.getPitcher_bb() + po.getPitcher_hits()) / (league
 								.getAvg_pitcher_ip() + po.getPitcher_ip())) - league.getAvg_pitcher_whip();
@@ -982,12 +1002,24 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			 System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
 			 System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
 		}
+		if (league.isCat_hitter_obp()) {
+			hitter_obpeff_mean = StatUtils.mean(toPrimitive(hitter_obpeff));
+			hitter_obpeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_obpeff)));
+			 System.out.println("Hitter OBP Eff Mean: " + hitter_obpeff_mean);
+			 System.out.println("Hitter OBP Eff Std Dev: " + hitter_obpeff_sd);
+		}
 		
 		if (league.isCat_pitcher_wins()){
 			pitcher_w_mean = StatUtils.mean(toPrimitive(pitcher_wins));
 			pitcher_w_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_wins)));
 			System.out.println("Pitcher Wins Mean: " + pitcher_w_mean);
 			System.out.println("Pitcher Wins Std Dev: " + pitcher_w_sd);
+		}
+		if (league.isCat_pitcher_holds()){
+			pitcher_hld_mean = StatUtils.mean(toPrimitive(pitcher_holds));
+			pitcher_hld_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_holds)));
+			System.out.println("Pitcher Holds Mean: " + pitcher_hld_mean);
+			System.out.println("Pitcher Holds Std Dev: " + pitcher_hld_sd);
 		}
 		if (league.isCat_pitcher_saves()){
 			pitcher_sv_mean = StatUtils.mean(toPrimitive(pitcher_saves));
@@ -1042,11 +1074,21 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 					po.setHitter_z_avg(z);
 					tz = tz + z;
 				}
+				if (league.isCat_hitter_obp()){ 
+					z = calcZ(po.getHitter_obp_eff(),hitter_obpeff_mean,hitter_obpeff_sd);
+					po.setHitter_z_obp(z);
+					tz = tz + z;
+				}
 			}
 			else if (po.getPitcher_hitter().equals(PlayerProjectedService.PITCHER_HITTER_PITCHER)){
 				if (league.isCat_pitcher_wins()){
 					z = calcZ(po.getPitcher_w(),pitcher_w_mean,pitcher_w_sd);
 					po.setPitcher_z_wins(z);
+					tz = tz + z;
+				}
+				if (league.isCat_pitcher_holds()){
+					z = calcZ(po.getPitcher_hld(),pitcher_hld_mean,pitcher_hld_sd);
+					po.setPitcher_z_holds(z);
 					tz = tz + z;
 				}
 				if (league.isCat_pitcher_saves()){

@@ -42,9 +42,9 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	String unknown_player_pitcher_hitter;
 
 	double hitter_avg_eff;
+	
 	double pitcher_era_eff;
 	double pitcher_whip_eff;
-	
 	double hitter_z_hr;
 	double hitter_z_rbi;
 	double hitter_z_runs;
@@ -59,6 +59,7 @@ public class LeaguePlayerOutput extends PlayerProjected{
 	// New Cats: obp and holds
 	double pitcher_z_holds;
 	double hitter_z_obp;
+	double hitter_obp_eff;
 	
 	double total_z;
 	int rank_z;
@@ -347,6 +348,14 @@ public class LeaguePlayerOutput extends PlayerProjected{
 
 	public void setHitter_z_obp(double hitter_z_obp) {
 		this.hitter_z_obp = hitter_z_obp;
+	}
+
+	public double getHitter_obp_eff() {
+		return hitter_obp_eff;
+	}
+
+	public void setHitter_obp_eff(double hitter_obp_eff) {
+		this.hitter_obp_eff = hitter_obp_eff;
 	}
 
 	public double getTotal_z() {

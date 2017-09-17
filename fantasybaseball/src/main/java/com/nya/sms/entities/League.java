@@ -46,6 +46,10 @@ public class League extends BaseEntity implements Serializable {
 	double avg_hitter_ba;
 	double avg_hitter_ab;
 	double avg_hitter_hits;
+	double avg_hitter_obp;
+	double avg_hitter_pa;
+	double avg_hitter_bb;
+	double avg_hitter_hbp;
 	double avg_pitcher_era;
 	double avg_pitcher_ip;
 	double avg_pitcher_er;
@@ -85,11 +89,13 @@ public class League extends BaseEntity implements Serializable {
 		this.cat_hitter_r = false;
 		this.cat_hitter_sb = false;
 		this.cat_hitter_avg = false;
+		this.cat_hitter_obp = false;
 		this.cat_pitcher_wins = false;
 		this.cat_pitcher_saves = false;
 		this.cat_pitcher_so = false;
 		this.cat_pitcher_era = false;
 		this.cat_pitcher_whip = false;
+		this.cat_pitcher_holds = false;
 		
 		if (this.position_priority_list.isEmpty()){
 			List<String> plist = new ArrayList<String>();
@@ -107,11 +113,13 @@ public class League extends BaseEntity implements Serializable {
 		this.cat_hitter_r = false;
 		this.cat_hitter_sb = false;
 		this.cat_hitter_avg = false;
+		this.cat_hitter_obp = false;
 		this.cat_pitcher_wins = false;
 		this.cat_pitcher_saves = false;
 		this.cat_pitcher_so = false;
 		this.cat_pitcher_era = false;
 		this.cat_pitcher_whip = false;
+		this.cat_pitcher_holds = false;
 		
 		// New Categories
 		this.cat_pitcher_holds = false;
@@ -138,6 +146,10 @@ public class League extends BaseEntity implements Serializable {
 		this.avg_hitter_ba = l.avg_hitter_ba ;
 		this.avg_hitter_ab = l.avg_hitter_ab ;
 		this.avg_hitter_hits = l.avg_hitter_hits ;
+		this.avg_hitter_obp = l.avg_hitter_obp;
+		this.avg_hitter_pa = l.avg_hitter_pa;
+		this.avg_hitter_bb = l.avg_hitter_bb;
+		this.avg_hitter_hbp = l.avg_hitter_hbp;
 		this.avg_pitcher_era = l.avg_pitcher_era ;
 		this.avg_pitcher_ip = l.avg_pitcher_ip ;
 		this.avg_pitcher_er = l.avg_pitcher_er ;
@@ -282,6 +294,38 @@ public class League extends BaseEntity implements Serializable {
 
 	public void setAvg_hitter_hits(double avg_hitter_hits) {
 		this.avg_hitter_hits = avg_hitter_hits;
+	}
+	
+	public double getAvg_hitter_obp() {
+		return avg_hitter_obp;
+	}
+
+	public void setAvg_hitter_obp(double avg_hitter_obp) {
+		this.avg_hitter_obp = avg_hitter_obp;
+	}
+
+	public double getAvg_hitter_pa() {
+		return avg_hitter_pa;
+	}
+
+	public void setAvg_hitter_pa(double avg_hitter_pa) {
+		this.avg_hitter_pa = avg_hitter_pa;
+	}
+
+	public double getAvg_hitter_bb() {
+		return avg_hitter_bb;
+	}
+
+	public void setAvg_hitter_bb(double avg_hitter_bb) {
+		this.avg_hitter_bb = avg_hitter_bb;
+	}
+
+	public double getAvg_hitter_hbp() {
+		return avg_hitter_hbp;
+	}
+
+	public void setAvg_hitter_hbp(double avg_hitter_hbp) {
+		this.avg_hitter_hbp = avg_hitter_hbp;
 	}
 
 	public double getAvg_pitcher_era() {
