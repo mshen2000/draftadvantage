@@ -886,10 +886,10 @@ public class TestLeagues {
 		l1.setAvg_hitter_ab(6500);
 		l1.setAvg_hitter_ba(0.258);
 		l1.setAvg_hitter_hits(l1.getAvg_hitter_ab()*l1.getAvg_hitter_ba());
-		l1.setAvg_hitter_obp(0.300);
-		l1.setAvg_hitter_bb(600);
-		l1.setAvg_hitter_hbp(60);
-		l1.setAvg_hitter_pa(7000);
+		l1.setAvg_hitter_obp(0.321);
+		l1.setAvg_hitter_bb(583);
+		l1.setAvg_hitter_hbp(30);
+		l1.setAvg_hitter_pa(7083);
 		
 		l1.setAvg_pitcher_era(3.96);
 		l1.setAvg_pitcher_ip(1500);
