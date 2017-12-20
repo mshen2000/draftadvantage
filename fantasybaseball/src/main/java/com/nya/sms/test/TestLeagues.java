@@ -119,7 +119,7 @@ public class TestLeagues {
 		ProjectionProfile p1_r = getProjectionProfileService().get(p1_id);
 		
 		// Parser
-		Reader in = new FileReader(testfile1);
+		Reader in = new FileReader(testfile2);
 
 		getPlayerProjectedService().updatePlayerProjections(parseProjections(in), p1_r, usr1.getUsername());
 	
@@ -435,8 +435,15 @@ public class TestLeagues {
 		
 	}
 	
+	/**
+	 * Description:	 Test league player auction calculation - 10 cat league
+	 */
 	@Test
 	public void testLeaguePlayerOutput() {
+		// League test 
+		System.out.println("***************************************************************");
+		System.out.println("****************** STARTING PLAYER OUTPUT TEST 1 **************");
+		System.out.println("***************************************************************");
 		
 		User usr1 = getIdentityService().getUser("test1");
 		ProjectionProfile p1 = getProjectionProfileService().get(ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
@@ -496,7 +503,7 @@ public class TestLeagues {
 		List<LeaguePlayerOutput> playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		
 		// Test count of AL and FA league players
-		Assert.assertTrue(playeroutput.size() == 851);
+		Assert.assertTrue(playeroutput.size() == 850);
 		
 		// Parser
 		Reader in = null;
@@ -863,6 +870,9 @@ public class TestLeagues {
 		
 	}	
 	
+	/**
+	 * Description:	 Test league player auction calculation - 12 cat league 
+	 */
 	@Test
 	public void testLeaguePlayerOutput2() {
 		// League test adding holds and obp
@@ -889,7 +899,7 @@ public class TestLeagues {
 		l1.setAvg_hitter_obp(0.321);
 		l1.setAvg_hitter_bb(583);
 		l1.setAvg_hitter_hbp(30);
-		l1.setAvg_hitter_pa(7083);
+		l1.setAvg_hitter_pa(7143);
 		
 		l1.setAvg_pitcher_era(3.96);
 		l1.setAvg_pitcher_ip(1500);
@@ -934,7 +944,7 @@ public class TestLeagues {
 		List<LeaguePlayerOutput> playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		
 		// Test count of AL and FA league players
-		Assert.assertTrue(playeroutput.size() == 851);
+		Assert.assertTrue(playeroutput.size() == 850);
 		
 		// Parser
 		Reader in = null;
@@ -985,17 +995,17 @@ public class TestLeagues {
 		System.out.println("Chris Sale Auction Value: " + this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value());
 		System.out.println("Chris Sale Z Value: " + this.findPlayerByName(playeroutput, "Chris Sale").get(0).getTotal_z());
 		
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value() == 46);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value() == 43);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Aroldis Chapman").get(0).getInit_auction_value() == 21);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Davis").get(0).getInit_auction_value() == 20);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Salvador Perez").get(0).getInit_auction_value() == 18);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value() == 17); // value= 17
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value() == 41);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value() == 65);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Aroldis Chapman").get(0).getInit_auction_value() == 17);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Davis").get(0).getInit_auction_value() == 23);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Salvador Perez").get(0).getInit_auction_value() == 16);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Starlin Castro").get(0).getInit_auction_value() == 16); 
 		
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Logan Forsythe").get(0).getInit_auction_value() == 11);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Stephen Vogt").get(0).getInit_auction_value() == 11);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Brock Holt").get(0).getInit_auction_value() == 6);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getInit_auction_value() == 11);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Logan Forsythe").get(0).getInit_auction_value() == 13);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Stephen Vogt").get(0).getInit_auction_value() == 13);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Brock Holt").get(0).getInit_auction_value() == 9);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getInit_auction_value() == 4);
 		
 		// Create teams in league
 		LeagueTeam lt1 = new LeagueTeam();

@@ -908,6 +908,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 			if (po.getPitcher_hitter().equals(PlayerProjectedService.PITCHER_HITTER_HITTER)){
 				if (new_hcount < hittercount) {
+					// System.out.println("Hitter: " + po.getFull_name());
 					if (league.isCat_hitter_hr())
 						hitter_hrs.add(po.getHitter_hr());
 					if (league.isCat_hitter_rbi())
