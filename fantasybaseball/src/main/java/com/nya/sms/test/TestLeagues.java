@@ -996,7 +996,7 @@ public class TestLeagues {
 		System.out.println("Chris Sale Z Value: " + this.findPlayerByName(playeroutput, "Chris Sale").get(0).getTotal_z());
 		
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Sale").get(0).getInit_auction_value() == 41);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value() == 65);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Mike Trout").get(0).getInit_auction_value() == 60);
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Aroldis Chapman").get(0).getInit_auction_value() == 17);
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Chris Davis").get(0).getInit_auction_value() == 23);
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Salvador Perez").get(0).getInit_auction_value() == 16);
@@ -1004,8 +1004,8 @@ public class TestLeagues {
 		
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Logan Forsythe").get(0).getInit_auction_value() == 13);
 		Assert.assertTrue(this.findPlayerByName(playeroutput, "Stephen Vogt").get(0).getInit_auction_value() == 13);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Brock Holt").get(0).getInit_auction_value() == 9);
-		Assert.assertTrue(this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getInit_auction_value() == 4);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Brock Holt").get(0).getInit_auction_value() == 10);
+		Assert.assertTrue(this.findPlayerByName(playeroutput, "Danny Valencia").get(0).getInit_auction_value() == 7);
 		
 		// Create teams in league
 		LeagueTeam lt1 = new LeagueTeam();
@@ -1156,9 +1156,9 @@ public class TestLeagues {
 		System.out.println("Mike Trout Updated Auction Value: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value());
 		System.out.println("Mike Trout Cust Pos Flag: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isCustom_position_flag());
 		System.out.println("Mike Trout Cust Position: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getCustom_position());
-		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Chris Sale").get(0).getInit_auction_value() == 46);
-		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Chris Davis").get(0).getInit_auction_value() == 20);
-		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value() == 47);
+		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Chris Sale").get(0).getInit_auction_value() == 41);
+		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Chris Davis").get(0).getInit_auction_value() == 23);
+		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value() == 65);
 		
 		// Test player favorite capability
 		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isFavorite_flag());

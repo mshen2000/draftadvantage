@@ -695,8 +695,6 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				totalz = totalz + po.getTotal_z();
 				i++;
 				
-				// System.out.println(position + ": " + lp.getTotal_z());
-				
 			} else if (isPlayerPositionPriority(position, calculated_position, priority)
 					&& (i == repl_level)){
 				
