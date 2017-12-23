@@ -108,6 +108,10 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		league.setAvg_hitter_ab(6500);
 		league.setAvg_hitter_ba(0.258);
 		league.setAvg_hitter_hits(league.getAvg_hitter_ab()*league.getAvg_hitter_ba());
+		league.setAvg_hitter_bb(583);
+		league.setAvg_hitter_hbp(30);
+		league.setAvg_hitter_pa(7143);
+		league.setAvg_hitter_obp(0.321);
 		
 		league.setAvg_pitcher_era(3.96);
 		league.setAvg_pitcher_ip(1500);
@@ -134,7 +138,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		System.out.println("saveNewLeague - Profile Service: " + container.getProfile().getProjection_service());
 		System.out.println("saveNewLeague - Profile Period: " + container.getProfile().getProjection_period());
 		System.out.println("saveNewLeague - Profile Year: " + container.getProfile().getProjected_year());
-
+		
 		ProjectionProfile p = getProjectionProfileService().get(container.getProfile().getProjection_service(),
 				container.getProfile().getProjection_period(), container.getProfile().getProjected_year());
 		
@@ -396,7 +400,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 				// Find matching PlayerOutput if LeaguePlayer is a known player
 				for (LeaguePlayerOutput po : playeroutput){
-					
+
 					if (!po.isUnknownplayer()){
 						
 						if (po.getId() == lp.getPlayer_projectedRef().getKey().getId()){

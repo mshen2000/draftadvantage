@@ -670,8 +670,8 @@ $(document).ready(function()
 	    else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
 		$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
 		// console.log('regex_drafted = ' + regex_drafted);
-		$('#playergrid_table').DataTable().columns( 35 ).search( false );			// Filter unknown player
-		$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();			// Filter league team name
+		$('#playergrid_table').DataTable().columns( 39 ).search( false );			// Filter unknown player
+		$('#playergrid_table').DataTable().columns( 34 ).search( regex_drafted , true ).draw();			// Filter league team name
 	});
 	$('#btn-pitchers').click(function() { filterPlayerType('P', true); });
 	$('#btn-hitters').click(function() { filterPlayerType('H', true); });
@@ -690,8 +690,8 @@ $(document).ready(function()
         else if ($(this).val() == '-1') regex_drafted = ''; 
         else regex_drafted = $(this).find("option:selected").text();
         // console.log('regex_drafted = ' + regex_drafted);
-        $('#playergrid_table').DataTable().columns( 35 ).search( false );				// Filter unknown player 
-        $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true ).draw();		// Filter league team name
+        $('#playergrid_table').DataTable().columns( 39 ).search( false );				// Filter unknown player 
+        $('#playergrid_table').DataTable().columns( 34 ).search( regex_drafted , true ).draw();		// Filter league team name
       });
     $('#btn-fav').click(function() { 
     	if ($('#btn-fav').hasClass('active')){
@@ -701,7 +701,7 @@ $(document).ready(function()
     		$('#btn-fav').removeClass('active');
     	} else {
     		$('#btn-fav').addClass('active');
-    		$('#playergrid_table').DataTable().columns( 43 ).search( true ).draw();		// Filter favorite player
+    		$('#playergrid_table').DataTable().columns( 50 ).search( true ).draw();		// Filter favorite player
     	}
     });
 	
@@ -1069,19 +1069,19 @@ $(document).ready(function()
 		league["team_salary"] = $("#select-teamsalary").find("option:selected").val();
 		
 		league["cat_hitter_hr"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_hitter_rbi"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_hitter_r"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_hitter_sb"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_hitter_avg"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_pitcher_wins"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_pitcher_saves"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_pitcher_so"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_pitcher_era"] = $("#cat-hitter-hr").is(':checked');
-		league["cat_pitcher_whip"] = $("#cat-hitter-hr").is(':checked');
+		league["cat_hitter_rbi"] = $("#cat-hitter-rbi").is(':checked');
+		league["cat_hitter_r"] = $("#cat-hitter-r").is(':checked');
+		league["cat_hitter_sb"] = $("#cat-hitter-sb").is(':checked');
+		league["cat_hitter_avg"] = $("#cat-hitter-avg").is(':checked');
+		league["cat_pitcher_wins"] = $("#cat-pitcher-w").is(':checked');
+		league["cat_pitcher_saves"] = $("#cat-pitcher-sv").is(':checked');
+		league["cat_pitcher_so"] = $("#cat-pitcher-k").is(':checked');
+		league["cat_pitcher_era"] = $("#cat-pitcher-era").is(':checked');
+		league["cat_pitcher_whip"] = $("#cat-pitcher-whip").is(':checked');
 		
 		// New Categories: OBP and Holds
 		league["cat_hitter_obp"] = $("#cat-hitter-obp").is(':checked');
-		league["cat_pitcher_holds"] = $("#cat-hitter-holds").is(':checked');
+		league["cat_pitcher_holds"] = $("#cat-pitcher-holds").is(':checked');
 		
 		league["num_1b"] = $("#1b-num-select").val();
 		league["num_2b"] = $("#2b-num-select").val();
@@ -1170,8 +1170,8 @@ function filterPlayerPosition(position, isdraw){
     else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
     // console.log('regex_drafted = ' + regex_drafted);
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-	$('#playergrid_table').DataTable().columns( 35 ).search( false );
-	$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true );	
+	$('#playergrid_table').DataTable().columns( 39 ).search( false );
+	$('#playergrid_table').DataTable().columns( 34 ).search( regex_drafted , true );	
 	if (isdraw) $('#playergrid_table').DataTable().columns( 4 ).search( position , true ).draw();	
 	else  $('#playergrid_table').DataTable().columns( 4 ).search( position , true );	
 }
@@ -1182,8 +1182,8 @@ function filterPlayerType(pitcherhitter, isdraw){
     else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
     // console.log('regex_drafted = ' + regex_drafted);
 	$('#playergrid_table').DataTable().search( '' ).columns().search( '' );
-	$('#playergrid_table').DataTable().columns( 35 ).search( false );
-	$('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true );	
+	$('#playergrid_table').DataTable().columns( 39 ).search( false );		// Filter unknown player
+	$('#playergrid_table').DataTable().columns( 34 ).search( regex_drafted , true );	// Filter league team name
 	if (isdraw) $('#playergrid_table').DataTable().columns( 0 ).search( pitcherhitter , true ).draw();	
 	else $('#playergrid_table').DataTable().columns( 0 ).search( pitcherhitter , true );	
 }
@@ -2168,7 +2168,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         },
         rowId: 'id',
         "paging": true,
-        "order": [[ 26, "desc" ]],
+        "order": [[ 30, "desc" ]],
         "iDisplayLength": 15,
         "language": {
             "lengthMenu": "Display <select  style='width:auto;' class='form-control'><option value='10'>10</option>" +
@@ -2238,8 +2238,8 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},				// Column 5
             { "title": "Avg", className: "dm_stat dm_export", "mData": "hitter_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ 
-            		var avgnum = data.toFixed(3);
-                    return avgnum.toString().substr(avgnum.length - 4);
+            		var obpnum = data.toFixed(3);
+                    return obpnum.toString().substr(obpnum.length - 4);
             	} else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
@@ -2270,6 +2270,15 @@ function loadPlayerGridTable(data, isInitialLoad)
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
                 }, "sDefaultContent": ""},
+            { "title": "OBP", className: "dm_stat dm_export", "mData": "hitter_obp", "render": function ( data, type, row ) {		// Column 11
+            	if (row.pitcher_hitter == "H"){ 
+            		var avgnum = data.toFixed(3);
+                    return avgnum.toString().substr(avgnum.length - 4);
+            	} else if (row.pitcher_hitter == "P"){return "";}
+                },
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_obp, 1)}
+                }, "sDefaultContent": ""},             
             { "title": "W", className: "dm_stat dm_export", "mData": "pitcher_w", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 },
@@ -2281,6 +2290,12 @@ function loadPlayerGridTable(data, isInitialLoad)
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_saves, 1)}
+                }, "sDefaultContent": ""},
+            { "title": "HLD", className: "dm_stat dm_export", "mData": "pitcher_hld", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
+                }, 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_holds, 1)}
                 }, "sDefaultContent": ""},
             { "title": "SO", className: "dm_stat dm_export", "mData": "pitcher_k", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
@@ -2294,7 +2309,7 @@ function loadPlayerGridTable(data, isInitialLoad)
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_era, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "WHIP", className: "dm_stat dm_export", "mData": "pitcher_whip", "render": function ( data, type, row ) {		// Column 15
+            { "title": "WHIP", className: "dm_stat dm_export", "mData": "pitcher_whip", "render": function ( data, type, row ) {		// Column 17
             	if (row.pitcher_hitter == "P"){ return data.toFixed(2) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
@@ -2324,11 +2339,17 @@ function loadPlayerGridTable(data, isInitialLoad)
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_runs, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export", "title": "zRBI", "mData": "hitter_z_rbi", "render": function ( data, type, row ) {	// Column 20
+            { "visible": false, className: "dm_zscore dm_export", "title": "zRBI", "mData": "hitter_z_rbi", "render": function ( data, type, row ) {	// Column 22
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
+                }, "sDefaultContent": "0" },
+            { "visible": false, className: "dm_zscore dm_export", "title": "zOBP", "mData": "hitter_z_obp", "render": function ( data, type, row ) {	// Column 23
+            	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
+                },
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_obp, 1)}
                 }, "sDefaultContent": "0" },
             { "visible": false, className: "dm_zscore dm_export", "title": "zW", "mData": "pitcher_z_wins", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
@@ -2342,6 +2363,12 @@ function loadPlayerGridTable(data, isInitialLoad)
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_saves, 1)}
                 }, "sDefaultContent": "0" },
+            { "visible": false, className: "dm_zscore dm_export", "title": "zHLDS", "mData": "pitcher_z_holds", "render": function ( data, type, row ) {
+            	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
+                }, 
+                "createdCell": function (td, cellData, rowData, row, col) {
+                	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_holds, 1)}
+                }, "sDefaultContent": "0" },
             { "visible": false, className: "dm_zscore dm_export", "title": "zSO", "mData": "pitcher_z_so", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, 
@@ -2354,7 +2381,7 @@ function loadPlayerGridTable(data, isInitialLoad)
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_whip, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export", "title": "zERA", "mData": "pitcher_z_era", "render": function ( data, type, row ) {	// Column 25	
+            { "visible": false, className: "dm_zscore dm_export", "title": "zERA", "mData": "pitcher_z_era", "render": function ( data, type, row ) {	// Column 29
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
@@ -2382,20 +2409,23 @@ function loadPlayerGridTable(data, isInitialLoad)
             	buttons = buttons + "&nbsp;<button type='button' class='btn btn-success btn-xs btn-playerinfo' data-toggle='tooltip' title='Player Info Page'><i class='fa fa-external-link'></i></button>";
             	return buttons;
             }}, 
-            { "title": "Team", className: "dm_export", "mData": "leagueteam_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 7 )}, 	// Column 30
+            { "title": "Team", className: "dm_export", "mData": "leagueteam_name", "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 7 )}, 	// Column 34
             { "visible": false, "title": "id", "mData": "id", "sDefaultContent": "" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
             { "visible": false, "title": "LP ID", "mData": "league_player_id", "sDefaultContent": "" },
-            { "visible": false, "title": "unk", "mData": "unknownplayer", "sDefaultContent": "" },									// Column 35
+            { "visible": false, "title": "unk", "mData": "unknownplayer", "sDefaultContent": "" },									// Column 39
             { "visible": false, className: "dm_export", "title": "note", "mData": "team_player_note", "sDefaultContent": "" },
             { "visible": false, "title": "hitter_hits", "mData": "hitter_hits", "sDefaultContent": "" },
             { "visible": false, "title": "hitter_ab", "mData": "hitter_ab", "sDefaultContent": "" },
+            { "visible": false, "title": "hitter_pa", "mData": "hitter_pa", "sDefaultContent": "" },
+            { "visible": false, "title": "hitter_bb", "mData": "hitter_bb", "sDefaultContent": "" },
+            { "visible": false, "title": "hitter_hbp", "mData": "hitter_hbp", "sDefaultContent": "" },
             { "visible": false, "title": "pitcher_er", "mData": "pitcher_er", "sDefaultContent": "" },
             { "visible": false, "title": "pitcher_ip", "mData": "pitcher_ip", "sDefaultContent": "" },
             { "visible": false, "title": "pitcher_bb", "mData": "pitcher_bb", "sDefaultContent": "" },
             { "visible": false, "title": "pitcher_hits", "mData": "pitcher_hits", "sDefaultContent": "" },
-            { "visible": false, "title": "favorite_flag", "mData": "favorite_flag", "sDefaultContent": "" },  		// Column 43  
+            { "visible": false, "title": "favorite_flag", "mData": "favorite_flag", "sDefaultContent": "" },  		// Column 50
         ]
         };
 	
@@ -2409,8 +2439,8 @@ function loadPlayerGridTable(data, isInitialLoad)
 		table_element.empty();
 		data_table = table_element.dataTable(config);
 		data_table = table_element.DataTable();
-		
-		data_table.columns( 35 ).search( false ).draw();
+		// Filter out unknown players
+		data_table.columns( 39 ).search( false ).draw();
 		
 		// Update the team info tab
 		updateTeamInfoTab();
