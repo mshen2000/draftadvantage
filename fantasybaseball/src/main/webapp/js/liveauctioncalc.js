@@ -206,6 +206,20 @@ function calcStandings(){
 		
 		console.log("filtered_data_team length: " + filtered_data_team.length);
 		
+		team['team_hitter_hr'] = 0;
+		team['team_hitter_r'] = 0;
+		team['team_hitter_avg'] = 0;
+		team['team_hitter_rbi'] = 0;
+		team['team_hitter_sb'] = 0;
+		team['team_hitter_obp'] = 0;
+		
+		team['team_pitcher_w'] = 0;
+		team['team_pitcher_so'] = 0;
+		team['team_pitcher_era'] = 0;
+		team['team_pitcher_holds'] = 0;
+		team['team_pitcher_whip'] = 0;
+		team['team_pitcher_sv'] = 0;
+		
 		if (filtered_data_team.length > 0){
 			if (dm_leagueinfo.cat_hitter_hr){
 				team['team_hitter_hr'] = filtered_data_team.map(function(b) { return b.hitter_hr; })
@@ -235,6 +249,18 @@ function calcStandings(){
 				team['team_hitter_avg'] = team['team_hitter_hits'] / team['team_hitter_ab'];
 				if (team['team_hitter_avg'] == null) team['team_hitter_avg'] = 0;
 			}
+			if (dm_leagueinfo.cat_hitter_obp){
+				team['team_hitter_hits'] = filtered_data_team.map(function(b) { return b.hitter_hits; })
+	        		.reduce(function(p, c) { return p + c; });
+				team['team_hitter_bb'] = filtered_data_team.map(function(b) { return b.hitter_bb; })
+	        		.reduce(function(p, c) { return p + c; });
+				team['team_hitter_hbp'] = filtered_data_team.map(function(b) { return b.hitter_hbp; })
+        			.reduce(function(p, c) { return p + c; });
+				team['team_hitter_pa'] = filtered_data_team.map(function(b) { return b.hitter_pa; })
+        			.reduce(function(p, c) { return p + c; });
+				team['team_hitter_obp'] = (team['team_hitter_hits'] + team['team_hitter_bb'] + team['team_hitter_hbp']) / team['team_hitter_pa'];
+				if (team['team_hitter_obp'] == null) team['team_hitter_obp'] = 0;
+			}
 
 			if (dm_leagueinfo.cat_pitcher_wins){
 				team['team_pitcher_w'] = filtered_data_team.map(function(b) { return b.pitcher_w; })
@@ -245,6 +271,11 @@ function calcStandings(){
 				team['team_pitcher_sv'] = filtered_data_team.map(function(b) { return b.pitcher_sv; })
     				.reduce(function(p, c) { return p + c; });
 				if (team['team_pitcher_sv'] == null) team['team_pitcher_sv'] = 0;
+			}
+			if (dm_leagueinfo.cat_pitcher_holds){
+				team['team_pitcher_holds'] = filtered_data_team.map(function(b) { return b.pitcher_hld; })
+    				.reduce(function(p, c) { return p + c; });
+				if (team['team_pitcher_holds'] == null) team['team_pitcher_holds'] = 0;
 			}
 			if (dm_leagueinfo.cat_pitcher_so){
 				team['team_pitcher_k'] = filtered_data_team.map(function(b) { return b.pitcher_k; })
@@ -312,9 +343,11 @@ function calcStandings(){
 	if (dm_leagueinfo.cat_hitter_rbi) addRankScore(teamstandingslist, "team_hitter_rbi", true);
 	if (dm_leagueinfo.cat_hitter_r) addRankScore(teamstandingslist, "team_hitter_runs", true);
 	if (dm_leagueinfo.cat_hitter_avg) addRankScore(teamstandingslist, "team_hitter_avg", true);
+	if (dm_leagueinfo.cat_hitter_obp) addRankScore(teamstandingslist, "team_hitter_obp", true);
 		
 	if (dm_leagueinfo.cat_pitcher_wins) addRankScore(teamstandingslist, "team_pitcher_w", true);
 	if (dm_leagueinfo.cat_pitcher_saves) addRankScore(teamstandingslist, "team_pitcher_sv", true);
+	if (dm_leagueinfo.cat_pitcher_holds) addRankScore(teamstandingslist, "team_pitcher_holds", true);
 	if (dm_leagueinfo.cat_pitcher_so) addRankScore(teamstandingslist, "team_pitcher_k", true);
 	if (dm_leagueinfo.cat_pitcher_era) addRankScore(teamstandingslist, "team_pitcher_era", false);
 	if (dm_leagueinfo.cat_pitcher_whip) addRankScore(teamstandingslist, "team_pitcher_whip", false);
@@ -328,12 +361,14 @@ function calcStandings(){
 		if (dm_leagueinfo.cat_hitter_rbi) total_score = total_score + value.team_hitter_rbi_score;
 		if (dm_leagueinfo.cat_hitter_r) total_score = total_score + value.team_hitter_runs_score;
 		if (dm_leagueinfo.cat_hitter_avg) total_score = total_score + value.team_hitter_avg_score;
+		if (dm_leagueinfo.cat_hitter_obp) total_score = total_score + value.team_hitter_obp_score;
 			
 		if (dm_leagueinfo.cat_pitcher_wins) total_score = total_score + value.team_pitcher_w_score;
 		if (dm_leagueinfo.cat_pitcher_saves) total_score = total_score + value.team_pitcher_sv_score;
 		if (dm_leagueinfo.cat_pitcher_so) total_score = total_score + value.team_pitcher_k_score;
 		if (dm_leagueinfo.cat_pitcher_era) total_score = total_score + value.team_pitcher_era_score;
 		if (dm_leagueinfo.cat_pitcher_whip) total_score = total_score + value.team_pitcher_whip_score;
+		if (dm_leagueinfo.cat_pitcher_holds) total_score = total_score + value.team_pitcher_holds_score;
 		
 		value['total_score'] = total_score;
 	});
