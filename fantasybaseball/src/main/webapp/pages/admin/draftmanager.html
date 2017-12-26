@@ -138,13 +138,22 @@ td { font-size: 12px; }
 #teamroster_table>tfoot>tr>td,
 #teamroster_table>tfoot>tr>th,
 #teamroster_table>thead>tr>td,
-#teamroster_table>thead>tr>th{
+#teamroster_table>thead>tr>th,
+#table-selectdraftposition>tbody>tr>th,
+#table-selectdraftposition>tbody>tr>td,
+#table-selectdraftposition>tfoot>tr>td,
+#table-selectdraftposition>tfoot>tr>th,
+#table-selectdraftposition>thead>tr>td,
+#table-selectdraftposition>thead>tr>th
+{
 	padding-left: 6px !important;
 	padding-right: 6px !important;
 	padding-top: 0px !important;
 	padding-bottom: 0px !important;
 }
 
+#table-selectdraftposition > thead > tr > th { font-size: 11px; }
+#table-selectdraftposition > tbody > tr > td { font-size: 11px; }
 #teamroster_table > thead > tr > th { font-size: 11px; }
 #teamroster_table > tbody > tr > td { font-size: 11px; }
 #team_ovw_roster_table_2 > thead > tr > th { font-size: 11px; }
@@ -539,7 +548,7 @@ td { font-size: 12px; }
 	
 		<!-- Draft Player Modal -->
 		<div id="draftplayer-modal" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -547,7 +556,7 @@ td { font-size: 12px; }
 			      </div>
 			      <div class="modal-body">
 			        <div class="row">
-					  <div class="col-md-6">
+					  <div class="col-md-4">
 					  	<form>
 						  	<div class="form-group">
 		    					<label for="select-draftteam">Team (Max Bid)</label>
@@ -556,7 +565,7 @@ td { font-size: 12px; }
 							</div>
 						</form>
 					  </div>
-					  <div class="col-md-3">
+					  <div class="col-md-2">
 					  	<form>
 						  	<div class="form-group">
 		    					<label for="select-draftamt">Amount</label>
@@ -565,7 +574,7 @@ td { font-size: 12px; }
 							</div>
 						</form>
 					  </div>
-					  <div class="col-md-3">
+					  <div class="col-md-2">
 					  	<form>
 						  	<div class="form-group">
 		    					<label for="select-draftposition">Position</label>
@@ -573,6 +582,10 @@ td { font-size: 12px; }
 								</select>
 							</div>
 						</form>
+					  </div>
+					  <div class="col-md-4">
+    					<label>Position 2</label>
+					  	<table id="table-selectdraftposition" class="table table-bordered" cellspacing="0" width="100%"></table>
 					  </div>
 					</div>
 					<div class="row">

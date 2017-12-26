@@ -383,6 +383,7 @@ $(document).ready(function()
     		var pos = text.lastIndexOf("(");
         	$('#lbl-draftprevteam').text(text.substring(0,pos-2));
         	loadDraftPlayerPosSelector();
+        	updateSelectPosTable();
     	} else {
         	$('#lbl-draftprevteam').text("[none]");
         }
@@ -1133,6 +1134,7 @@ $(document).ready(function()
 	loadTeamTable(null, true);
 	// loadPlayerGridTable(null, true);
 	loadTeamRosterTable(null, true);
+	loadSelectPositionTable(null, true);
 	loadTeamOvwRosterTable(true);
 	loadDraftPlayerAmtSelector();
 	
@@ -1263,6 +1265,53 @@ function updateTeamOvwRosterTable(teamrow){
 		teamovwrostertable_2 = null;
 		playertable = null;
 	}
+}
+
+function updateSelectPosTable(){
+	// create a deep copy of teamrostertemplate
+	var liveteamrostertemplate;
+	if (teamrostertemplate != null){
+		liveteamrostertemplate = JSON.parse(JSON.stringify(teamrostertemplate));
+
+		// update SelectPosTable with the blank template
+		loadSelectPositionTable(liveteamrostertemplate, false);
+		
+		var teamid = $("#select-draftteam").find("option:selected").val();
+		// console.log("TeamID: " + teamid);
+		var playertable = $('#playergrid_table').DataTable();
+		var teamrostertable = $('#table-selectdraftposition').DataTable();
+		
+		// Get players from table that have been drafted by selected team
+		var teamplayers = playertable.rows( function ( idx, data, node ) {
+	        return data.leagueteam_id == teamid ?
+	            true : false;
+	    } )
+	    .data();
+
+		// For each drafted player on a team, fill them into the team roster grid
+		$.each( teamplayers, function( key, value ) {
+			// console.log("Each teamplayer: " + value.full_name);
+			$.each( liveteamrostertemplate, function( rkey, rvalue ) {
+				// console.log("Each teamrostertemplate: " + rvalue.position);
+				if ((value.team_roster_position == rvalue.position)&&
+						((rvalue.name == null)||(rvalue.name == ""))){
+					rvalue.name = value.full_name;
+					rvalue.salary = value.team_player_salary;
+					rvalue.playerid = value.id;
+					// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
+					teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
+					return false;
+				}
+
+			});
+			
+		});
+
+        // $("#btn-editdraftplayer").attr("disabled", "disabled");
+        // $("#btn-undraftplayer").attr("disabled", "disabled");
+	}
+	
+	playertable = null;
 }
 
 function updateTeamInfoTab(){
@@ -1797,6 +1846,7 @@ function loadTeamOvwRosterTable(isInitialLoad)
     */
 }
 
+// Team roster table on right side in Draft Analysis Tab
 function loadTeamRosterTable(data, isInitialLoad)
 {
     var calcDataTableHeight = function() {
@@ -1865,6 +1915,80 @@ function loadTeamRosterTable(data, isInitialLoad)
     } );
 }
 
+//Player position table in the draft player modal
+function loadSelectPositionTable(data, isInitialLoad)
+{
+    var calcDataTableHeight = function() {
+        return $(window).height();
+    };
+	var data_table;
+	var table_element = $('#table-selectdraftposition');
+	var config = {
+		responsive: true,
+    	"processing": true,
+        "bSort" : false,
+        rowId: 'index',
+        "searching": false,
+        "info": false,
+    	select: 'single',
+        data: data,
+        // "scrollY":        "440px",
+        // "scrollCollapse": false,
+        "paging": false,
+        "order": [[ 0, "asc" ]],
+        "columns": [
+            { "visible": false, "title": "index", "mData": "index" },
+            { "visible": false, "title": "ID", "mData": "playerid", "sDefaultContent": "" },
+            { "title": "Pos", "mData": "position" },
+            { "title": "Player", "mData": "name", "sDefaultContent": ""},
+            /*
+            { "title": "$", "mData": "salary", "sDefaultContent": "", "render": function ( data, type, row ) {
+            	if ((row.name == null)||(row.name == "")) return "";
+            	return "$" + data;
+            }}, */
+        ],
+        fnDrawCallback: function() {
+            $("#table-selectdraftposition thead").remove();
+          }
+        };
+	
+	if (isInitialLoad) 	{
+		// console.log("window height: " + calcDataTableHeight());
+		data_table = table_element.dataTable(config);
+		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
+		
+	} else {
+		// console.log("window height: " + calcDataTableHeight());
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
+		data_table = table_element.dataTable(config);
+		// data_table.fnSettings().oScroll.sY = $('#maintab1').height()-125;
+		
+	}
+	
+	var data_table = $('#table-selectdraftposition').DataTable();
+	data_table
+    .on( 'select', function ( e, dt, type, indexes ) {
+    	var data_table_b = $('#table-selectdraftposition').DataTable();
+        var rows = data_table_b.rows( indexes ).data();
+        // console.log("Select: " + rowData[0].name);
+        // console.log("Select: " + JSON.stringify(rows[0]));
+        if ((rows[0].name == null)||(rows[0].name == "")){
+        	// data_table_b.rows( indexes ).deselect();
+        } else {
+            // $("#btn-editdraftplayer").removeAttr("disabled");  
+            // $("#btn-undraftplayer").removeAttr("disabled");  
+        }
+
+    } )
+    .on( 'deselect', function ( e, dt, type, indexes ) {
+        // var rowData = data_table.rows( indexes ).data().toArray();
+        // console.log("De-Select: " + rowData[0].name);
+        // $("#btn-editdraftplayer").attr("disabled", "disabled");
+        // $("#btn-undraftplayer").attr("disabled", "disabled");
+    } );
+}
 
 function loadCustomPlayerPositionTable(data, isInitialLoad)
 {
@@ -2523,6 +2647,9 @@ function loadPlayerGridTable(data, isInitialLoad)
         $("#header-draftplayer").val(data.id);
         $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
         $("#draftplayer-modal").modal("show");
+        loadSelectPositionTable(liveteamrostertemplate, false);
+        // var table = $('#table-selectdraftposition').DataTable();
+        // table.columns.adjust().draw();
         
         // console.log("Player id: " + $("#header-draftplayer").val());
         
