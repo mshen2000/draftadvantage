@@ -384,6 +384,7 @@ $(document).ready(function()
         	$('#lbl-draftprevteam').text(text.substring(0,pos-2));
         	loadDraftPlayerPosSelector();
         	updateSelectPosTable();
+        	$("#table-selectdraftposition").show();
     	} else {
         	$('#lbl-draftprevteam').text("[none]");
         }
@@ -462,7 +463,16 @@ $(document).ready(function()
         }
     });
     $("#select-draftamt").change(function(e){
+    	var selectedrows = $('#table-selectdraftposition').DataTable().rows( { selected: true } ).data();
+    	var selectedname = "";
+    	var selected;
+    	if (selectedrows.length > 0){
+    		selected = true;
+    		selectedname = selectedrows[0].name
+    	} else selected = false;
 
+    	console.log("selectedname: " + selectedname)
+    	
     	if ($(this).val() != null){
 	        $('#lbl-draftprevamt').text($(this).find("option:selected").text());
     	} else {
@@ -470,8 +480,8 @@ $(document).ready(function()
         }
         
         if (($("#select-draftteam").val() == null) ||
-        		($("#select-draftamt").val() == null) ||
-        		($("#select-draftposition").val() == null)){
+        		!selected ||
+        		(selectedname.length > 1)){
         	$("#btn-draftplayer").attr("disabled","disabled");
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
@@ -1287,6 +1297,11 @@ function updateSelectPosTable(){
 	            true : false;
 	    } )
 	    .data();
+		
+		$.each( liveteamrostertemplate, function( rkey, rvalue ) {
+				rvalue.name = "[slot open]";
+				teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
+		});
 
 		// For each drafted player on a team, fill them into the team roster grid
 		$.each( teamplayers, function( key, value ) {
@@ -1294,14 +1309,14 @@ function updateSelectPosTable(){
 			$.each( liveteamrostertemplate, function( rkey, rvalue ) {
 				// console.log("Each teamrostertemplate: " + rvalue.position);
 				if ((value.team_roster_position == rvalue.position)&&
-						((rvalue.name == null)||(rvalue.name == ""))){
+						((rvalue.name == null)||(rvalue.name == "")||(rvalue.name == "[slot open]"))){
 					rvalue.name = value.full_name;
 					rvalue.salary = value.team_player_salary;
 					rvalue.playerid = value.id;
 					// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
 					teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
 					return false;
-				}
+				} 
 
 			});
 			
@@ -1309,8 +1324,13 @@ function updateSelectPosTable(){
 
         // $("#btn-editdraftplayer").attr("disabled", "disabled");
         // $("#btn-undraftplayer").attr("disabled", "disabled");
+		$('#table-selectdraftposition').DataTable().search( '' ).columns().search( '' );
+		if (playerdraftrow.pitcher_hitter == "H"){
+			$('#table-selectdraftposition').DataTable().columns( 2 ).search( 'C|1B|2B|3B|SS|MI|CI|OF|UT|RES', true ).draw();
+		} else {
+			$('#table-selectdraftposition').DataTable().columns( 2 ).search( 'P|RES', true ).draw();
+		}
 	}
-	
 	playertable = null;
 }
 
@@ -1924,11 +1944,12 @@ function loadSelectPositionTable(data, isInitialLoad)
 	var data_table;
 	var table_element = $('#table-selectdraftposition');
 	var config = {
+		"dom": 't',
 		responsive: true,
     	"processing": true,
         "bSort" : false,
         rowId: 'index',
-        "searching": false,
+        "searching": true,
         "info": false,
     	select: 'single',
         data: data,
@@ -1975,10 +1996,18 @@ function loadSelectPositionTable(data, isInitialLoad)
         // console.log("Select: " + rowData[0].name);
         // console.log("Select: " + JSON.stringify(rows[0]));
         if ((rows[0].name == null)||(rows[0].name == "")){
-        	// data_table_b.rows( indexes ).deselect();
+            $('#lbl-draftprevpos').text(playerdraftrow.full_name);
+            
+            if (($("#select-draftteam").val() == null) ||
+            		($("#select-draftamt").val() == null)){
+            	$("#btn-draftplayer").attr("disabled","disabled");
+            } else {
+            	$("#btn-draftplayer").removeAttr("disabled");
+            }
         } else {
             // $("#btn-editdraftplayer").removeAttr("disabled");  
             // $("#btn-undraftplayer").removeAttr("disabled");  
+        	$('#lbl-draftprevpos').text("[none]");
         }
 
     } )
@@ -1987,6 +2016,7 @@ function loadSelectPositionTable(data, isInitialLoad)
         // console.log("De-Select: " + rowData[0].name);
         // $("#btn-editdraftplayer").attr("disabled", "disabled");
         // $("#btn-undraftplayer").attr("disabled", "disabled");
+    	$("#btn-draftplayer").attr("disabled","disabled");
     } );
 }
 
@@ -2646,8 +2676,12 @@ function loadPlayerGridTable(data, isInitialLoad)
         $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
         $("#header-draftplayer").val(data.id);
         $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
+        
+		// $("#intro-container").show();
+		$("#table-selectdraftposition").hide();
+        
         $("#draftplayer-modal").modal("show");
-        loadSelectPositionTable(liveteamrostertemplate, false);
+        // loadSelectPositionTable(liveteamrostertemplate, false);
         // var table = $('#table-selectdraftposition').DataTable();
         // table.columns.adjust().draw();
         
