@@ -375,18 +375,21 @@ $(document).ready(function()
 		mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
 	})
 	
-	
     $("#select-draftteam").change(function(e){
 
     	if ($(this).val() != null){
     		var text = $(this).find("option:selected").text();
     		var pos = text.lastIndexOf("(");
         	$('#lbl-draftprevteam').text(text.substring(0,pos-2));
+        	$('#lbl-draftprevpos').text("[none]");
+        	$("#btn-draftposmoveup").hide();
+        	$("#btn-draftposmovedown").hide();
         	loadDraftPlayerPosSelector();
         	updateSelectPosTable();
         	$("#table-selectdraftposition").show();
     	} else {
         	$('#lbl-draftprevteam').text("[none]");
+        	$('#lbl-draftprevpos').text("[none]");
         }
         
         if (($("#select-draftteam").val() == null) ||
@@ -464,14 +467,14 @@ $(document).ready(function()
     });
     $("#select-draftamt").change(function(e){
     	var selectedrows = $('#table-selectdraftposition').DataTable().rows( { selected: true } ).data();
-    	var selectedname = "";
-    	var selected;
+    	var selectedname;
+    	var pos_selected;
     	if (selectedrows.length > 0){
-    		selected = true;
-    		selectedname = selectedrows[0].name
-    	} else selected = false;
+    		pos_selected = false;
+    		if (selectedrows[0].name.startsWith("[")) pos_selected = true;
+    	} else pos_selected = false;
 
-    	console.log("selectedname: " + selectedname)
+    	console.log("pos_selected: " + pos_selected)
     	
     	if ($(this).val() != null){
 	        $('#lbl-draftprevamt').text($(this).find("option:selected").text());
@@ -480,8 +483,7 @@ $(document).ready(function()
         }
         
         if (($("#select-draftteam").val() == null) ||
-        		!selected ||
-        		(selectedname.length > 1)){
+        		!pos_selected ){
         	$("#btn-draftplayer").attr("disabled","disabled");
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
@@ -738,13 +740,15 @@ $(document).ready(function()
       
 	$('#btn-draftplayer').click(function() 
 	{
+    	var selectedposrows = $('#table-selectdraftposition').DataTable().rows( { selected: true } ).data();
 
 		var league_id = $("#league-select").find("option:selected").val();
 		var playertable = $('#playergrid_table').DataTable();
 		var playerid = $("#header-draftplayer").val();
 		var teamid = $("#select-draftteam").find("option:selected").val();
 		var teamname = $("#select-draftteam").find("option:selected").text();
-		var position = $("#select-draftposition").find("option:selected").val();
+		// var position = $("#select-draftposition").find("option:selected").val();
+		var position = selectedposrows[0].position
 		var amount = $("#select-draftamt").find("option:selected").val();
 		
 //		var row = playertable.row('#' + playerid);
@@ -1960,7 +1964,7 @@ function loadSelectPositionTable(data, isInitialLoad)
         "columns": [
             { "visible": false, "title": "index", "mData": "index" },
             { "visible": false, "title": "ID", "mData": "playerid", "sDefaultContent": "" },
-            { "title": "Pos", "mData": "position" },
+            { "title": "Pos", "mData": "position","width": 40 },
             { "title": "Player", "mData": "name", "sDefaultContent": ""},
             /*
             { "title": "$", "mData": "salary", "sDefaultContent": "", "render": function ( data, type, row ) {
@@ -1995,8 +1999,8 @@ function loadSelectPositionTable(data, isInitialLoad)
         var rows = data_table_b.rows( indexes ).data();
         // console.log("Select: " + rowData[0].name);
         // console.log("Select: " + JSON.stringify(rows[0]));
-        if ((rows[0].name == null)||(rows[0].name == "")){
-            $('#lbl-draftprevpos').text(playerdraftrow.full_name);
+        if ((rows[0].name == null)||(rows[0].name.startsWith("["))){
+            $('#lbl-draftprevpos').text(rows[0].position);
             
             if (($("#select-draftteam").val() == null) ||
             		($("#select-draftamt").val() == null)){
@@ -2008,6 +2012,8 @@ function loadSelectPositionTable(data, isInitialLoad)
             // $("#btn-editdraftplayer").removeAttr("disabled");  
             // $("#btn-undraftplayer").removeAttr("disabled");  
         	$('#lbl-draftprevpos').text("[none]");
+        	$("#btn-draftposmoveup").show();
+        	$("#btn-draftposmovedown").show();
         }
 
     } )
@@ -2017,6 +2023,9 @@ function loadSelectPositionTable(data, isInitialLoad)
         // $("#btn-editdraftplayer").attr("disabled", "disabled");
         // $("#btn-undraftplayer").attr("disabled", "disabled");
     	$("#btn-draftplayer").attr("disabled","disabled");
+    	$('#lbl-draftprevpos').text("[none]");
+    	$("#btn-draftposmoveup").hide();
+    	$("#btn-draftposmovedown").hide();
     } );
 }
 
@@ -2654,7 +2663,6 @@ function loadPlayerGridTable(data, isInitialLoad)
 
     	var data_table = $('#playergrid_table').DataTable();
         var data = data_table.row( $(this).parents('tr') ).data();
-
         var win = window.open("http://www.fangraphs.com/players.aspx?lastname=" + data.full_name, '_blank');
         win.focus();
         
@@ -2676,17 +2684,13 @@ function loadPlayerGridTable(data, isInitialLoad)
         $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
         $("#header-draftplayer").val(data.id);
         $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
-        
-		// $("#intro-container").show();
+
 		$("#table-selectdraftposition").hide();
+    	$("#btn-draftposmoveup").hide();
+    	$("#btn-draftposmovedown").hide();
         
         $("#draftplayer-modal").modal("show");
-        // loadSelectPositionTable(liveteamrostertemplate, false);
-        // var table = $('#table-selectdraftposition').DataTable();
-        // table.columns.adjust().draw();
-        
         // console.log("Player id: " + $("#header-draftplayer").val());
-        
     } );
     
     // On Click of the Undraft button in the Player Grid Table
