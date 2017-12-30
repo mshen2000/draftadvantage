@@ -466,12 +466,12 @@ $(document).ready(function()
         }
     });
     $("#select-draftamt").change(function(e){
-    	var selectedrows = $('#table-selectdraftposition').DataTable().rows( { selected: true } ).data();
+    	var selectedcells = $('#table-selectdraftposition').DataTable().cells( { selected: true } ).data();
     	var selectedname;
     	var pos_selected;
-    	if (selectedrows.length > 0){
+    	if (selectedcells.length > 0){
     		pos_selected = false;
-    		if (selectedrows[0].name.startsWith("[")) pos_selected = true;
+    		if (selectedcells[0].startsWith("[")) pos_selected = true;
     	} else pos_selected = false;
 
     	console.log("pos_selected: " + pos_selected)
@@ -1330,9 +1330,9 @@ function updateSelectPosTable(){
         // $("#btn-undraftplayer").attr("disabled", "disabled");
 		$('#table-selectdraftposition').DataTable().search( '' ).columns().search( '' );
 		if (playerdraftrow.pitcher_hitter == "H"){
-			$('#table-selectdraftposition').DataTable().columns( 2 ).search( 'C|1B|2B|3B|SS|MI|CI|OF|UT|RES', true ).draw();
+			$('#table-selectdraftposition').DataTable().columns( 0 ).search( 'C|1B|2B|3B|SS|MI|CI|OF|UT|RES', true ).draw();
 		} else {
-			$('#table-selectdraftposition').DataTable().columns( 2 ).search( 'P|RES', true ).draw();
+			$('#table-selectdraftposition').DataTable().columns( 0 ).search( 'P|RES', true ).draw();
 		}
 	}
 	playertable = null;
@@ -1955,17 +1955,21 @@ function loadSelectPositionTable(data, isInitialLoad)
         rowId: 'index',
         "searching": true,
         "info": false,
-    	select: 'single',
+        select: {
+            style: 'single',
+            items: 'cell'
+        },
+        selector: 'td:not(:first-child)',
         data: data,
         // "scrollY":        "440px",
         // "scrollCollapse": false,
         "paging": false,
-        "order": [[ 0, "asc" ]],
+        "order": [[ 2, "asc" ]],
         "columns": [
+            { "title": "Pos", "mData": "position","width": 40 },
+            { "title": "Player", "mData": "name", "sDefaultContent": "" },
             { "visible": false, "title": "index", "mData": "index" },
             { "visible": false, "title": "ID", "mData": "playerid", "sDefaultContent": "" },
-            { "title": "Pos", "mData": "position","width": 40 },
-            { "title": "Player", "mData": "name", "sDefaultContent": ""},
             /*
             { "title": "$", "mData": "salary", "sDefaultContent": "", "render": function ( data, type, row ) {
             	if ((row.name == null)||(row.name == "")) return "";
@@ -1996,10 +2000,16 @@ function loadSelectPositionTable(data, isInitialLoad)
 	data_table
     .on( 'select', function ( e, dt, type, indexes ) {
     	var data_table_b = $('#table-selectdraftposition').DataTable();
-        var rows = data_table_b.rows( indexes ).data();
-        // console.log("Select: " + rowData[0].name);
-        // console.log("Select: " + JSON.stringify(rows[0]));
-        if ((rows[0].name == null)||(rows[0].name.startsWith("["))){
+    	var rowIdx = data_table_b.cell( indexes ).index().row;
+    	var colIdx = data_table_b.cell( indexes ).index().column;
+        var rows = data_table_b.rows( rowIdx ).data();
+        // console.log("Select colIdx: " + colIdx);
+        if (colIdx == 0) {
+        	data_table_b.cell(indexes).deselect();
+        	$("#btn-draftposmoveup").hide();
+        	$("#btn-draftposmovedown").hide();
+        }
+        else if ((rows[0].name == null)||(rows[0].name.startsWith("["))){
             $('#lbl-draftprevpos').text(rows[0].position);
             
             if (($("#select-draftteam").val() == null) ||
@@ -2008,6 +2018,8 @@ function loadSelectPositionTable(data, isInitialLoad)
             } else {
             	$("#btn-draftplayer").removeAttr("disabled");
             }
+        	$("#btn-draftposmoveup").hide();
+        	$("#btn-draftposmovedown").hide();
         } else {
             // $("#btn-editdraftplayer").removeAttr("disabled");  
             // $("#btn-undraftplayer").removeAttr("disabled");  
@@ -3145,6 +3157,14 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 	    columns_out.visible(false);
 	}
 
+}
+
+function setFilledSlotCellColor(td, value){
+    if ( !value.startsWith("[") ) {
+    	$(td).css("background-color", "rgb(230, 230, 230)"); // Grey 90%
+    }  else {
+    	$(td).removeProp("background-color");
+    } 
 }
 
 function setAgeCellColor(td, age){
