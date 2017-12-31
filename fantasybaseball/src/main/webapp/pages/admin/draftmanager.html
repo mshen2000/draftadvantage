@@ -61,6 +61,11 @@
     content: "" !important;
 }
 
+#otb_heading { 
+	padding-top: 3px !important;
+	padding-bottom: 3px !important;
+}
+
 #playergrid_table thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
 #playergrid_table thead > tr > td.sorting_asc,
 #playergrid_table thead > tr > td.sorting_desc,
@@ -321,11 +326,55 @@ td { font-size: 12px; }
 		  <div id="maintab1" class="tab-pane fade in active">
 			<div class="row">
 			  <div class="col-md-9">
-			  	<div style="margin-top:10px"></div>
+			  	<div style="margin-top:15px"></div>
+			  	<div class="panel panel-default">
+				    <div class="panel-heading" id="otb_heading">
+					    <h3 class="panel-title">On the Block</h3>
+					  </div>
+				  <div class="panel-body">
+			  		<div class="col-md-3">
+			  			<h4 class="modal-title" id="header-ontheblock-draftplayer">Draft Player: XXX XXXXX (XXX)</h4>
+					</div>
+				  	<div class="col-md-3">
+					  	<form>
+						  	<div class="form-group">
+<!-- 		    					<label for="select-ontheblock-draftteam">Team (Max Bid)</label> -->
+							  	<select  class="form-control input-sm" id="select-ontheblock-draftteam">
+								</select>
+							</div>
+						</form>
+				  	</div>
+					<div class="col-md-2">
+						<form>
+						  	<div class="form-group">
+<!-- 		    					<label for="select-ontheblock-draftposition">Position</label> -->
+							  	<select  class="form-control input-sm" id="select-ontheblock-draftposition">
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="col-md-2">
+						<form>
+						  	<div class="form-group">
+<!-- 		    					<label for="select-ontheblock-draftamt">Amount</label> -->
+<!-- 							  	<select  class="form-control input-sm" id="select-ontheblock-draftamt"> -->
+<!-- 								</select> -->
+								<div class="input-group">
+								  <span class="input-group-addon">$</span>
+								  <input type="text" class="form-control input-sm" id="select-ontheblock-draftamt" aria-label="Amount" placeholder="Amount">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="col-md-2">
+						<button type="button" class="btn btn-success" disabled="disabled" id="btn-ontheblock-draftplayer">Draft Player</button>
+					</div>
+				  </div>
+				</div>
 				  <div class="row">
 					  <div class="col-sm-7">
 						  <div class="form-group">
-						  	  <label>Position Filter</label>
+<!-- 						  	  <label>Position Filter</label> -->
 							  <div class="btn-toolbar" role="toolbar" aria-label="...">
 								  <div class="btn-group btn-group-sm" role="group" id="btn-grp1" aria-label="...">
 								    <button type="button" class="btn btn-default active" id="btn-allplayers">All</button>
@@ -352,8 +401,8 @@ td { font-size: 12px; }
 					  </div>
 					  <div class="col-sm-3">
 						  <div class="form-group" id="formgroup-drafttoggle">
-						    <label for="select-draftedplayerfilter">Draft Status</label>
-							<select style="width:auto;" class="form-control" id="select-draftedplayerfilter">
+<!-- 						    <label for="select-draftedplayerfilter">Draft Status</label> -->
+							<select style="width:auto;" class="form-control input-sm" id="select-draftedplayerfilter">
 								  <option value="-1">All Players</option>
 								  <option value="0">Undrafted Players</option>
 							</select>
@@ -361,7 +410,7 @@ td { font-size: 12px; }
 					  </div>
 					  <div class="col-sm-2">
 						  <div class="form-group" style="float:right;">
-						    <label>Column View</label>
+<!-- 						    <label>Column View</label> -->
 							<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="...">
 							  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button>
 							  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button>

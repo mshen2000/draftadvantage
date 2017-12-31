@@ -401,6 +401,23 @@ $(document).ready(function()
         }
 
     });
+    $("#select-ontheblock-draftteam").change(function(e){
+
+    	if ($(this).val() != null){
+    		var text = $(this).find("option:selected").text();
+    		var pos = text.lastIndexOf("(");
+        	loadDraftPlayerPosSelector();
+    	} else {}
+        
+        if (($("#select-ontheblock-draftteam").val() == null) ||
+        		($("#select-ontheblock-draftamt").val() == null) ||
+        		($("#select-ontheblock-draftposition").val() == null)){
+        	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
+        } else {
+        	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+        }
+
+    });
     $("#select-draftteamunk").change(function(e){
     	// console.log("in select-draftteamunk change");
     	if ($(this).val() != "0"){
@@ -1414,12 +1431,15 @@ function updateTeamInfoTab(){
 function loadDraftPlayerAmtSelector(){
 	
 	var amtselector = $("#select-draftamt");
+	var amtselector2 = $("#select-ontheblock-draftamt");
 	var amtselectorunk = $("#select-draftamtunk");
 	amtselector.find('option').remove().end();
+	amtselector2.find('option').remove().end();
 	amtselectorunk.find('option').remove().end();
 
 	for (i = 0; i <= 100; i++) { 
 		amtselector.append($("<option value='" + i + "'/>").text("$" + i));
+		// amtselector2.append($("<option value='" + i + "'/>").text("$" + i));
 		amtselectorunk.append($("<option value='" + i + "'/>").text("$" + i));
 	}
 
@@ -1435,6 +1455,11 @@ function resetDraftPlayerModal(){
 	$('#lbl-draftprevteam').text("[none]");
 	$('#lbl-draftprevamt').text("[none]");
 	$('#lbl-draftprevpos').text("[none]");
+	
+	$("option", "#select-ontheblock-draftteam").removeAttr("selected");
+	$('#select-ontheblock-draftamt').val('');
+	var posselector = $("#select-ontheblock-draftposition");
+	posselector.find('option').remove().end();
 
 }
 
@@ -1473,6 +1498,11 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	var teamname = $("#select-draftteam").find("option:selected").text();
 	var posselector = $("#select-draftposition");
 	posselector.find('option').remove().end();
+	
+	var teamid_otb = $("#select-ontheblock-draftteam").val();
+	var teamname_otb = $("#select-ontheblock-draftteam").find("option:selected").text();
+	var posselector_otb = $("#select-ontheblock-draftposition");
+	posselector_otb.find('option').remove().end();
 
 	// console.log("TeamID: " + teamid);
 	// console.log("TeamName: " + teamname);
@@ -1614,6 +1644,30 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='P'/>").text("P (" + countp + ")"));
 		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='RES'/>").text("Res (" + countres + ")"));
+		
+		posselector_otb.append($("<option value='0'/>").text("-- Position --"));
+		if (selc && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='C'/>").text("C (" + countc + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='C'/>").text("C (" + countc + ")"));
+		if (sel1b && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='1B'/>").text("1B (" + count1b + ")"));
+		if (sel2b && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='2B'/>").text("2B (" + count2b + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='2B'/>").text("2B (" + count2b + ")"));
+		if (selss && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='SS'/>").text("SS (" + countss + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='SS'/>").text("SS (" + countss + ")"));
+		if (sel3b && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='3B'/>").text("3B (" + count3b + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='3B'/>").text("3B (" + count3b + ")"));
+		if (selmi && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='MI'/>").text("MI (" + countmi + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='MI'/>").text("MI (" + countmi + ")"));
+		if (selci && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='CI'/>").text("CI (" + countci + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='CI'/>").text("CI (" + countci + ")"));
+		if (selof && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='OF'/>").text("OF (" + countof + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='OF'/>").text("OF (" + countof + ")"));
+		if (selutil && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='UT'/>").text("Util (" + countutil + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='UT'/>").text("Util (" + countutil + ")"));
+		if (selp && playerdraftrow.pitcher_hitter == "P") posselector_otb.append($("<option value='P'/>").text("P (" + countp + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='P'/>").text("P (" + countp + ")"));
+		if (selres) posselector_otb.append($("<option value='RES'/>").text("Res (" + countres + ")"));
+		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='RES'/>").text("Res (" + countres + ")"));
 	}
 	
 }
@@ -2696,6 +2750,9 @@ function loadPlayerGridTable(data, isInitialLoad)
         $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
         $("#header-draftplayer").val(data.id);
         $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
+        
+        $("#header-ontheblock-draftplayer").text(data.full_name + " (" + data.team + ")");
+        $("#header-ontheblock-draftplayer").val(data.id);
 
 		$("#table-selectdraftposition").hide();
     	$("#btn-draftposmoveup").hide();
@@ -3493,6 +3550,15 @@ function loadTeamSelect(data){
 	// NEED TO FIX THIS
 	var draftteamselect = $("#select-draftteam");
 	draftteamselect.find('option').remove().end();
+	if (undefined !== data){
+		$.each(data, function() {
+			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name + "  ($" + this.maxbid + ")"));
+		});
+	} else {}
+	
+	var draftteamselect = $("#select-ontheblock-draftteam");
+	draftteamselect.find('option').remove().end();
+	draftteamselect.append($("<option value='0'/>").text("--- Select Team ---"));
 	if (undefined !== data){
 		$.each(data, function() {
 			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name + "  ($" + this.maxbid + ")"));
