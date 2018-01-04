@@ -385,7 +385,8 @@ $(document).ready(function()
         	$('#lbl-draftprevpos').text("[none]");
         	// $("#btn-draftposmoveup").hide();
         	// $("#btn-draftposmovedown").hide();
-        	loadDraftPlayerPosSelector();
+        	// load pos selector with "NONE", because it's a draft edit, but no specific position
+        	loadDraftPlayerPosSelector("NONE");
         	resetDraftPanel();
         	// updateSelectPosTable();
         	// $("#table-selectdraftposition").show();
@@ -509,16 +510,17 @@ $(document).ready(function()
     
     //  Part of original draft player modal
     $("#select-draftamt").change(function(e){
-    	var selectedcells = $('#table-selectdraftposition').DataTable().cells( { selected: true } ).data();
-    	var selectedname;
-    	var pos_selected;
+    	// var selectedcells = $('#table-selectdraftposition').DataTable().cells( { selected: true } ).data();
+    	// var selectedname;
+    	// var pos_selected;
+    	
+    	/*
     	if (selectedcells.length > 0){
     		pos_selected = false;
     		if (selectedcells[0].startsWith("[")) pos_selected = true;
     	} else pos_selected = false;
+    	*/
 
-    	console.log("pos_selected: " + pos_selected)
-    	
     	if ($(this).val() != null){
 	        $('#lbl-draftprevamt').text($(this).find("option:selected").text());
     	} else {
@@ -526,7 +528,7 @@ $(document).ready(function()
         }
         
         if (($("#select-draftteam").val() == null) ||
-        		!pos_selected ){
+        		($("#select-draftposition").val() == null) ){
         	$("#btn-draftplayer").attr("disabled","disabled");
         } else {
         	$("#btn-draftplayer").removeAttr("disabled");
@@ -1020,13 +1022,15 @@ $(document).ready(function()
 	
 	$('#btn-editdraftplayer').click(function () {
 		
-		loadTeamSelect(dm_globalteamlist);
-		
-		var roster_table = $('#teamroster_table').DataTable();
-		var roster_row = roster_table.rows('.selected').data()[0];
 		var teamid = $('#team-select').find("option:selected").val();
 		var teamname = $('#team-select').find("option:selected").text();
 		
+		loadTeamSelect(dm_globalteamlist);
+		
+		$("#team-select").val(teamid);
+		var roster_table = $('#teamroster_table').DataTable();
+		var roster_row = roster_table.rows('.selected').data()[0];
+
 		// console.log(roster_row);
 		// console.log(roster_row.playerid);
 
@@ -1083,7 +1087,7 @@ $(document).ready(function()
             // console.log(JSON.stringify(data));
             
             // resetDraftPlayerModal(roster_row);
-            $("#header-draftplayer").text("Draft Player: " + data.full_name + " (" + data.team + ")");
+            $("#header-draftplayer").text("Update Player: " + data.full_name + " (" + data.team + ")");
             $("#header-draftplayer").val(data.id);
             $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
             $("#select-draftteam").val(teamid);
@@ -1644,25 +1648,32 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	
 	// console.log("In loadDraftPlayerPosSelector");
 	
-	 var teamid = $("#select-draftteam").val();
-	 var teamname = $("#select-draftteam").find("option:selected").text();
-	 var posselector = $("#select-draftposition");
-	 posselector.find('option').remove().end();
+	var teamid;
+	var teamname;
+	var posselector;
 	
-	var teamid_otb = $("#select-ontheblock-draftteam").val();
-	var teamname_otb = $("#select-ontheblock-draftteam").find("option:selected").text();
-	var posselector_otb = $("#select-ontheblock-draftposition");
-	posselector_otb.find('option').remove().end();
-	posselector_otb.removeAttr("disabled");
-
-	// console.log("TeamID: " + teamid);
-	// console.log("TeamName: " + teamname);
+	// if initial draft
+	if (updateplayerposition == null){
+		teamid = $("#select-ontheblock-draftteam").val();
+		teamname = $("#select-ontheblock-draftteam").find("option:selected").text();
+		posselector = $("#select-ontheblock-draftposition");
+		posselector.removeAttr("disabled");
+	} else {
+		teamid = $("#select-draftteam").val();
+		teamname = $("#select-draftteam").find("option:selected").text();
+		posselector = $("#select-draftposition");
+	}
+	
+	posselector.find('option').remove().end();
+	
+	console.log("TeamID: " + teamid);
+	console.log("TeamName: " + teamname);
 	
 	var playertable = $('#playergrid_table').DataTable();
 	
 	// Get players from table that have been drafted by selected team
 	var teamplayers = playertable.rows( function ( idx, data, node ) {
-        return data.leagueteam_id == teamid_otb ?
+        return data.leagueteam_id == teamid ?
             true : false;
     } )
     .data();
@@ -1710,7 +1721,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	// Update counts by subtracting current team roster counts
 	// Determine if roster position is available based on count
 	$.each( liveteamrostercounts, function( lkey, lvalue ) {
-		
+		console.log("lkey: " + lkey + ",  lvalue: " + lvalue);
 		if (lkey == "C")  countc = dm_teamrostercounts["C"] - lvalue;
 		if (lkey == "1B")  count1b = dm_teamrostercounts["1B"] - lvalue;
 		if (lkey == "2B")  count2b = dm_teamrostercounts["2B"] - lvalue;
@@ -1774,6 +1785,11 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	
 	if (playerdraftrow != null){
 		
+		console.log("in playerdraftrow if statement");
+		
+		// if initial draft, add this to the 1st position of selector dropdown
+		if (updateplayerposition == null) $("#select-ontheblock-draftposition").append($("<option value='0'/>").text("-- Position --"));
+		
 		if (selc && playerdraftrow.pitcher_hitter == "H") posselector.append($("<option value='C'/>").text("C (" + countc + ")"));
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='C'/>").text("C (" + countc + ")"));
 		if (sel1b && playerdraftrow.pitcher_hitter == "H") posselector.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
@@ -1797,7 +1813,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='RES'/>").text("Res (" + countres + ")"));
 		
-		posselector_otb.append($("<option value='0'/>").text("-- Position --"));
+		/*
 		if (selc && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='C'/>").text("C (" + countc + ")"));
 		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='C'/>").text("C (" + countc + ")"));
 		if (sel1b && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
@@ -1820,6 +1836,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='P'/>").text("P (" + countp + ")"));
 		if (selres) posselector_otb.append($("<option value='RES'/>").text("Res (" + countres + ")"));
 		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='RES'/>").text("Res (" + countres + ")"));
+		*/
 	}
 	
 }
@@ -2809,7 +2826,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "title": "<i class='fa fa-bolt'></i>-$", className: "dm_export", "mData": "live_auction_value", "render": function ( data, type, row ) {
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
-            { "title": "Action", "mData": "leagueteam_id","width": 60, "render": function ( data, type, row ) {			
+            { "title": "Action", "mData": "leagueteam_id","width": 56, "render": function ( data, type, row ) {			
             	var buttons;
             	if (data == 0)
             		buttons = "<button type='button' class='btn btn-primary btn-xs btn-draft' data-toggle='tooltip' title='Draft Player'><i class='fa fa-user-plus'></i></button>";
@@ -2817,7 +2834,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             	buttons = buttons + "&nbsp;<button type='button' class='btn btn-success btn-xs btn-playerinfo' data-toggle='tooltip' title='Player Info Page'><i class='fa fa-external-link'></i></button>";
             	return buttons;
             }}, 
-            { "title": "Team", className: "dm_export", "mData": "leagueteam_name","width": 70, "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 7 )}, 	// Column 34
+            { "title": "Team", className: "dm_export", "mData": "leagueteam_name","width": 74, "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 9 )}, 	// Column 34
             { "visible": false, "title": "id", "mData": "id", "sDefaultContent": "" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
