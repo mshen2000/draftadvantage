@@ -585,30 +585,44 @@ $(document).ready(function()
     });
 
     $("#select-ontheblock-draftamt").keyup(function(e){
+    	var amtval = $(this).val();
+    	var isNum = false;
     	
-    	var posselector = $("#select-ontheblock-draftposition");
-    	var teamselector = $("#select-ontheblock-draftteam");
-    	var teamselected = false;
-    	var posselected = false;
-    	var amtselected = false;
+    	if (Number.isInteger(Number(amtval))) {
+    		if (amtval > 0) isNum = true;
+    	}
     	
-    	if ($(this).val() != "") amtselected = true;
-    	if ((teamselector.val() != null) && (teamselector.val() != 0)) teamselected = true;
-    	if ((posselector.val() != null) && (posselector.val() != 0)) posselected = true;
+    	if (!isNum) $(this).val("");
     	
-    	console.log("teamselected = " + teamselected);
-    	console.log("team value = " + teamselector.val())
-    	console.log("posselected = " + posselected);
-    	console.log("pos value = " + posselector.val());
-    	console.log("amt value = " + $(this).val());
-        
-        if (!teamselected || !posselected || !amtselected){
-        	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
-        } else {
-        	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
-        }
-
+    	checkAmtSelector();
     });
+    
+	$('#btn-draftamt-plus').click(function() 
+	{
+		var amtselector = $("#select-ontheblock-draftamt");
+		var amtvalue = amtselector.val();
+		
+		if (amtvalue == "") amtselector.val("1");
+		else {
+			amtselector.val(Number(amtvalue) + 1);
+		}
+		
+		checkAmtSelector();
+	});
+	
+	$('#btn-draftamt-minus').click(function() 
+	{
+		var amtselector = $("#select-ontheblock-draftamt");
+		var amtvalue = amtselector.val();
+		
+		if (amtvalue == "") amtselector.val("1");
+		else if (amtvalue <= 1) amtselector.val("1");
+		else {
+			amtselector.val(Number(amtvalue) - 1);
+		}
+		
+		checkAmtSelector();
+	});
     
     $("#select-draftposition").change(function(e){
     	if ($(this).val() != null){
@@ -1632,6 +1646,36 @@ function resetDraftPanel(){
 	amtselector.attr("disabled","disabled");
 	
 	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
+	$("#btn-draftamt-plus").attr("disabled","disabled");
+	$("#btn-draftamt-minus").attr("disabled","disabled");
+	
+	$('#header-ontheblock-draftplayer').text("Select a Player to Draft");
+	$('#header2-ontheblock-draftplayer').text("");
+}
+
+function checkAmtSelector(){
+	var posselector = $("#select-ontheblock-draftposition");
+	var teamselector = $("#select-ontheblock-draftteam");
+	var amtselector = $("#select-ontheblock-draftamt");
+	var teamselected = false;
+	var posselected = false;
+	var amtselected = false;
+	
+	if (amtselector.val() != "") amtselected = true;
+	if ((teamselector.val() != null) && (teamselector.val() != 0)) teamselected = true;
+	if ((posselector.val() != null) && (posselector.val() != 0)) posselected = true;
+	
+	console.log("teamselected = " + teamselected);
+	console.log("team value = " + teamselector.val())
+	console.log("posselected = " + posselected);
+	console.log("pos value = " + posselector.val());
+	console.log("amt value = " + amtselector.val());
+    
+    if (!teamselected || !posselected || !amtselected){
+    	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
+    } else {
+    	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+    }
 }
 
 /**
@@ -2920,9 +2964,12 @@ function loadPlayerGridTable(data, isInitialLoad)
      // $("#header-draftplayer").val(data.id);
      // $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
         
-        $("#header-ontheblock-draftplayer").text(data.full_name + " (" + data.team + ")");
+        $("#header-ontheblock-draftplayer").text(data.full_name + ", " + data.team + " " + data.custom_position);
         $("#header-ontheblock-draftplayer").val(data.id);
+        $("#header2-ontheblock-draftplayer").text("Auction Value: $" + data.live_auction_value);
 
+        $("#btn-draftamt-plus").removeAttr("disabled");
+        $("#btn-draftamt-minus").removeAttr("disabled");
         // $("#table-selectdraftposition").hide();
 		// $("#btn-draftposmoveup").hide();
 		// $("#btn-draftposmovedown").hide();
