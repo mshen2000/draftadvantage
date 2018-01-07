@@ -130,6 +130,7 @@ $(function() {
 		} else if (selected == "0") {
 			$("#intro-container").show();
 			$("#league-container").hide();
+			$("#league-top-container").hide();
 		} else {
 
 			loadLeagueContent(selected);
@@ -938,6 +939,9 @@ $(document).ready(function()
 				$("#team-select").val(teamid);
 				updateTeamInfoTab();
 				
+				if ($("#select-ontheblock-draftteam").find("option:selected").val() === "")  {}
+				else loadDraftPlayerPosSelector();
+				
 				calcLiveAuctionValue();
 
 			});
@@ -1039,7 +1043,8 @@ $(document).ready(function()
 		var teamid = $('#team-select').find("option:selected").val();
 		var teamname = $('#team-select').find("option:selected").text();
 		
-		loadTeamSelect(dm_globalteamlist);
+		// loadTeamSelect(dm_globalteamlist);
+		loadEditPlayerTeamSelect(dm_globalteamlist);
 		
 		$("#team-select").val(teamid);
 		var roster_table = $('#teamroster_table').DataTable();
@@ -1108,7 +1113,7 @@ $(document).ready(function()
             
             loadDraftPlayerAmtSelector();
             loadDraftPlayerPosSelector(roster_row.position);
-            resetDraftPanel();
+            // resetDraftPanel();
         	
         	// $("#select-draftamt").val(roster_row.salary);
         	$("#select-draftposition").val(roster_row.position);
@@ -3681,6 +3686,7 @@ function loadLeagueContent(leagueid){
 	
 	$("#intro-container").hide();
 	$("#league-container").show();
+	$("#league-top-container").show();
 	
 	mssolutions.fbapp.draftmanager.getLeaguePlayerData(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueTeams(leagueid);
@@ -3693,6 +3699,7 @@ function loadLeagueContent(leagueid){
 
 function loadLeagueIntro(){
 	$("#league-container").hide();
+	$("#league-top-container").hide();
 	$("#intro-container").show();
 }
 
@@ -3714,8 +3721,7 @@ function loadLeagueSelector(data){
 	options.append($("<option value='newleague'/>").text("Add New League..."));
 }
 
-function loadTeamSelect(data){
-
+function updateTeamList(data){
 	// sort teams alphabetically after my team as first team
 	var myteam = data[0];
 	data.shift();
@@ -3724,14 +3730,12 @@ function loadTeamSelect(data){
 	});
 	data.unshift(myteam);
 	
-	// NEED TO FIX:  Update teams with salary data
 	var data_team_salaries = $('#team_ovw_table').DataTable();
 	var data_team_salaries_rows = data_team_salaries.rows().data();
 	
 	console.log("Length of data_team_salaries_rows: " + data_team_salaries_rows.length);
 	
 	$.each(data, function(index, value) {
-		
 		$.each(data_team_salaries_rows, function(index2, value2) {
 			// console.log("Each team and maxbid: " + value2.team_name + ", " + value2.maxbid);
 			if (value.id == value2.id){
@@ -3739,8 +3743,27 @@ function loadTeamSelect(data){
 				value["maxbid"] = value2.maxbid;
 			}
 		});
-		
 	});
+	return data;
+}
+
+function loadEditPlayerTeamSelect(data){
+	
+	var data = updateTeamList(data);
+	
+	var draftteamselect = $("#select-draftteam");
+	draftteamselect.find('option').remove().end();
+	if (undefined !== data){
+		$.each(data, function() {
+			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name + "  ($" + this.maxbid + ")"));
+		});
+	} else {}
+	
+}
+
+function loadTeamSelect(data){
+
+	var data = updateTeamList(data);
 	
 	var teamfilterselect = $("#select-draftedplayerfilter");
 	teamfilterselect.find('option').remove().end();
@@ -3759,7 +3782,7 @@ function loadTeamSelect(data){
 		// console.log("League data is null");
 	}
 
-	// NEED TO FIX THIS
+	/*
 	var draftteamselect = $("#select-draftteam");
 	draftteamselect.find('option').remove().end();
 	if (undefined !== data){
@@ -3767,6 +3790,7 @@ function loadTeamSelect(data){
 			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name + "  ($" + this.maxbid + ")"));
 		});
 	} else {}
+	*/
 	
 	var draftteamselect = $("#select-ontheblock-draftteam");
 	draftteamselect.find('option').remove().end();
