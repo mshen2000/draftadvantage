@@ -413,8 +413,8 @@ $(document).ready(function()
     	
     	if (($(this).val() != null) && ($(this).val() != 0)) teamselected = true;
     	
-    	console.log("teamselected = " + teamselected);
-    	console.log("team value = " + $(this).val());
+    	// console.log("teamselected = " + teamselected);
+    	// console.log("team value = " + $(this).val());
     	
     	if (teamselected){
     		var text = $(this).find("option:selected").text();
@@ -430,18 +430,23 @@ $(document).ready(function()
     	if ((posselector.val() != null) && 
     			(posselector.val() != 0)) posselected = true;
     	
-    	console.log("posselected = " + posselected);
-    	console.log("pos value = " + posselector.val());
-    	console.log("amt value = " + $("#select-ontheblock-draftamt").val());
+    	// console.log("posselected = " + posselected);
+    	// console.log("pos value = " + posselector.val());
+    	// console.log("amt value = " + $("#select-ontheblock-draftamt").val());
         
         if ((!teamselected) || (!posselected) ||
         		!($("#select-ontheblock-draftamt").val() >= 0)){
-        	console.log("disabling draft button");
+        	// console.log("disabling draft button");
         	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
         } else {
-        	console.log("enabling draft button");
+        	// console.log("enabling draft button");
         	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
         }
+        
+        // ADD: update team select for the new team
+        $('select[id=team-select]').val($(this).val());
+        // $('#team-select').selectpicker('refresh');
+        updateTeamInfoTab();
 
     });
     $("#select-draftteamunk").change(function(e){
@@ -570,12 +575,12 @@ $(document).ready(function()
     	if ((teamselector.val() != null) && 
     			(teamselector.val() != 0)) teamselected = true;
     	
-    	console.log("teamselected = " + teamselected);
-    	console.log("team value = " + teamselector.val())
-    	console.log("posselected = " + posselected);
-    	console.log("pos value = " + $(this).val());
-    	console.log("amtselected = " + amtselected);
-    	console.log("amt value = " + amtselector.val());
+//    	console.log("teamselected = " + teamselected);
+//    	console.log("team value = " + teamselector.val())
+//    	console.log("posselected = " + posselected);
+//    	console.log("pos value = " + $(this).val());
+//    	console.log("amtselected = " + amtselected);
+//    	console.log("amt value = " + amtselector.val());
         
         if (!teamselected || !posselected || !amtselected){
         	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
@@ -853,9 +858,6 @@ $(document).ready(function()
       
 	$('#btn-ontheblock-draftplayer').click(function() 
 	{
-		
-    	// var selectedposrows = $('#table-selectdraftposition').DataTable().rows( { selected: true } ).data();
-
 		var league_id = $("#league-select").find("option:selected").val();
 		var playertable = $('#playergrid_table').DataTable();
 		var playerid = $("#header-ontheblock-draftplayer").val();
@@ -865,17 +867,21 @@ $(document).ready(function()
 		// var position = selectedposrows[0].position
 		var amount = $("#select-ontheblock-draftamt").val();
 		
+		playerdraftrow = playertable.row('#' + playerid).data();
+		
 //		var row = playertable.row('#' + playerid);
+		// playerdraftrow.full_name = $("#header-ontheblock-draftplayer").text();
+		// playerdraftrow.id = playerid;
 		playerdraftrow.leagueteam_id = teamid;
 		playerdraftrow.leagueteam_name = teamname;
 		playerdraftrow.team_roster_position = position;
 		playerdraftrow.team_player_salary = amount;
 		
-		// console.log("Draft Player: " + playerdraftrow.full_name);
-		// console.log("Draft Player ID: " + playerdraftrow.id);
-		// console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
-		// console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
-		// console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
+		 console.log("Draft Player: " + playerdraftrow.full_name);
+		 console.log("Draft Player ID: " + playerdraftrow.id);
+		 console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+		 console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
+		 console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
 		
 		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
 		
@@ -898,53 +904,51 @@ $(document).ready(function()
 	});
 	
 	$('#btn-draftplayer').click(function() 
-			{
-				
-		    	// var selectedposrows = $('#table-selectdraftposition').DataTable().rows( { selected: true } ).data();
-
-				var league_id = $("#league-select").find("option:selected").val();
-				var playertable = $('#playergrid_table').DataTable();
-				var playerid = $("#header-draftplayer").val();
-				var teamid = $("#select-draftteam").find("option:selected").val();
-				var teamname = $("#select-draftteam").find("option:selected").text();
-				var position = $("#select-draftposition").find("option:selected").val();
-				// var position = selectedposrows[0].position
-				var amount = $("#select-draftamt").find("option:selected").val();
-				
+	{
+		var league_id = $("#league-select").find("option:selected").val();
+		var playertable = $('#playergrid_table').DataTable();
+		var playerid = $("#header-draftplayer").val();
+		var teamid = $("#select-draftteam").find("option:selected").val();
+		var teamname = $("#select-draftteam").find("option:selected").text();
+		var position = $("#select-draftposition").find("option:selected").val();
+		// var position = selectedposrows[0].position
+		var amount = $("#select-draftamt").find("option:selected").val();
+		
 //				var row = playertable.row('#' + playerid);
-				playerdraftrow.leagueteam_id = teamid;
-				playerdraftrow.leagueteam_name = teamname;
-				playerdraftrow.team_roster_position = position;
-				playerdraftrow.team_player_salary = amount;
-				
-				// console.log("Draft Player: " + playerdraftrow.full_name);
-				// console.log("Draft Player ID: " + playerdraftrow.id);
-				// console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
-				// console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
-				// console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
-				
-				playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
-				
-				// Draft player
-				mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
-						playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
-				
-				// resetDraftPanel();
-				
-				$('#draftplayer-modal').modal('hide');
-			
-				// Show the team info tab
-				$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
-				// Set the team select to the drafting team
-				$("#team-select").val(teamid);
-				updateTeamInfoTab();
-				
-				if ($("#select-ontheblock-draftteam").find("option:selected").val() === "")  {}
-				else loadDraftPlayerPosSelector();
-				
-				calcLiveAuctionValue();
+		playerdraftrow.leagueteam_id = teamid;
+		playerdraftrow.leagueteam_name = teamname;
+		playerdraftrow.team_roster_position = position;
+		playerdraftrow.team_player_salary = amount;
+		
+		// console.log("Draft Player: " + playerdraftrow.full_name);
+		// console.log("Draft Player ID: " + playerdraftrow.id);
+		// console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+		// console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
+		// console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
+		
+		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
+		
+		// Draft player
+		mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
+				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
+		
+		// resetDraftPanel();
+		
+		$('#draftplayer-modal').modal('hide');
+	
+		// Show the team info tab
+		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
+		// Set the team select to the drafting team
+		$("#team-select").val(teamid);
+		updateTeamInfoTab();
+		
+		var teamselected = false;
+    	if (($("#select-ontheblock-draftteam").val() != null) && ($("#select-ontheblock-draftteam").val() != 0)) teamselected = true;
+		if (teamselected)  {loadDraftPlayerPosSelector()}
+		
+		calcLiveAuctionValue();
 
-			});
+	});
 	
 	$('#btn-draftplayerunk').click(function() 
 	{
@@ -1670,11 +1674,11 @@ function checkAmtSelector(){
 	if ((teamselector.val() != null) && (teamselector.val() != 0)) teamselected = true;
 	if ((posselector.val() != null) && (posselector.val() != 0)) posselected = true;
 	
-	console.log("teamselected = " + teamselected);
-	console.log("team value = " + teamselector.val())
-	console.log("posselected = " + posselected);
-	console.log("pos value = " + posselector.val());
-	console.log("amt value = " + amtselector.val());
+	// console.log("teamselected = " + teamselected);
+	// console.log("team value = " + teamselector.val())
+	// console.log("posselected = " + posselected);
+	// console.log("pos value = " + posselector.val());
+	// console.log("amt value = " + amtselector.val());
     
     if (!teamselected || !posselected || !amtselected){
     	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
@@ -1715,8 +1719,8 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	
 	posselector.find('option').remove().end();
 	
-	console.log("TeamID: " + teamid);
-	console.log("TeamName: " + teamname);
+	// console.log("TeamID: " + teamid);
+	// console.log("TeamName: " + teamname);
 	
 	var playertable = $('#playergrid_table').DataTable();
 	
@@ -1770,7 +1774,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	// Update counts by subtracting current team roster counts
 	// Determine if roster position is available based on count
 	$.each( liveteamrostercounts, function( lkey, lvalue ) {
-		console.log("lkey: " + lkey + ",  lvalue: " + lvalue);
+		// console.log("lkey: " + lkey + ",  lvalue: " + lvalue);
 		if (lkey == "C")  countc = dm_teamrostercounts["C"] - lvalue;
 		if (lkey == "1B")  count1b = dm_teamrostercounts["1B"] - lvalue;
 		if (lkey == "2B")  count2b = dm_teamrostercounts["2B"] - lvalue;
@@ -1833,9 +1837,6 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	*/
 	
 	if (playerdraftrow != null){
-		
-		console.log("in playerdraftrow if statement");
-		
 		// if initial draft, add this to the 1st position of selector dropdown
 		if (updateplayerposition == null) $("#select-ontheblock-draftposition").append($("<option value='0'/>").text("-- Position --"));
 		
@@ -3733,7 +3734,7 @@ function updateTeamList(data){
 	var data_team_salaries = $('#team_ovw_table').DataTable();
 	var data_team_salaries_rows = data_team_salaries.rows().data();
 	
-	console.log("Length of data_team_salaries_rows: " + data_team_salaries_rows.length);
+	// console.log("Length of data_team_salaries_rows: " + data_team_salaries_rows.length);
 	
 	$.each(data, function(index, value) {
 		$.each(data_team_salaries_rows, function(index2, value2) {
