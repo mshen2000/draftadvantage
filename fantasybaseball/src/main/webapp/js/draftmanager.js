@@ -29,6 +29,9 @@ mssolutions.fbapp.draftmanager.CLIENT_ID =
 mssolutions.fbapp.draftmanager.SCOPES =
     'https://www.googleapis.com/auth/userinfo.email';
 
+// timer start for getting player grid
+var timerLoadPlayerGridStart;
+
 // Saves the selected player from the player grid for draft update
 var playerdraftrow;
 
@@ -2635,6 +2638,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
 		responsive: true,
     	"processing": true,
+    	"deferRender": true,
         data: data,
         select: {
             style:    'single',
@@ -3689,6 +3693,8 @@ function loadLeagueContent(leagueid){
 	$("#league-container").show();
 	$("#league-top-container").show();
 	
+	timerLoadPlayerGridStart = performance.now();
+	
 	mssolutions.fbapp.draftmanager.getLeaguePlayerData(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueTeams(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueRoster(leagueid);
@@ -4062,8 +4068,13 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
         if (!resp.code) { 
         	console.log("League player get complete.");
         	
+        	var t0 = performance.now();
+        	console.log("Get player data took " + (t0 - timerLoadPlayerGridStart) + " milliseconds.")
         	// Load player data into main player grid
         	loadPlayerGridTable(resp.items, false);
+        	var t1 = performance.now();
+        	console.log("Call to loadPlayerGridTable took " + (t1 - t0) + " milliseconds.")
+        	
         	// Load player data into custom position editor
         	loadCustomPlayerPositionTable(resp.items, false);
         	

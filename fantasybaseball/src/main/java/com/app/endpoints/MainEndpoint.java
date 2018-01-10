@@ -182,7 +182,7 @@ public class MainEndpoint {
 	
 	@ApiMethod(name = "league.getleagueplayerdata", httpMethod = HttpMethod.GET)
 	public List<LeaguePlayerOutput> getLeaguePlayerData(@Named("id") long id, HttpServletRequest req) throws UnauthorizedException {
-		System.out.println("In getLeaguePlayerData, id: " + id);
+		log.log( Level.FINE, "Getting league player data, league id: {0}", id );
 		return getLeagueService().getLeaguePlayerData(id, validateUserToken(req).getUsername());
 
 	}

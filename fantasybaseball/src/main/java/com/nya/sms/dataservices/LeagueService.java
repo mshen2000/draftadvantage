@@ -9,11 +9,15 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
 
 import com.app.endpoints.LeaguePlayerOutput;
+import com.app.endpoints.MainEndpoint;
 import com.app.endpoints.entities.LeagueCreateContainer;
 import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.LeagueRosterItem;
@@ -34,6 +38,7 @@ import com.nya.sms.entities.User;
  *
  */
 public class LeagueService extends AbstractDataServiceImpl<League>{
+	private static final Logger log =Logger.getLogger(LeagueService.class.getName());
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -382,8 +387,11 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param username 
 	 */
 	public List<LeaguePlayerOutput> getLeaguePlayerData(long league_id, String username) {
-		
-		System.out.println("Get Player Output Data: BEGIN");
+		long begin = System.currentTimeMillis();
+		log.setLevel(Level.FINE);
+		// log.addHandler(new ConsoleHandler());
+		log.log( Level.FINE, "Get Player Output Data: BEGIN");
+		// System.out.println("Get Player Output Data: BEGIN");
 		League league = this.get(league_id);
 		ProjectionProfile profile = league.getProjection_profile();
 
@@ -560,7 +568,10 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 //		+ ", " + playeroutput.get(out).getTeam_player_note());
 //		}
 		
-		System.out.println("Get Player Output Data: COMPLETE");
+		long end = System.currentTimeMillis();
+		long dt = end - begin;
+		// System.out.println("Get Player Output Data: COMPLETE");
+		log.log( Level.FINE, "Get Player Output Data: COMPLETE, {0} MS elapsed", dt);
 		
 		return playeroutput;
 		
