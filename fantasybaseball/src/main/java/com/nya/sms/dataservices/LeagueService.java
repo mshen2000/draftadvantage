@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.util.FastMath;
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
 
 import com.app.endpoints.LeaguePlayerOutput;
 import com.app.endpoints.MainEndpoint;
@@ -39,6 +41,7 @@ import com.nya.sms.entities.User;
  */
 public class LeagueService extends AbstractDataServiceImpl<League>{
 	private static final Logger log =Logger.getLogger(LeagueService.class.getName());
+	private static final Mapper mapper = new DozerBeanMapper();
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -394,12 +397,18 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		// System.out.println("Get Player Output Data: BEGIN");
 		League league = this.get(league_id);
 		ProjectionProfile profile = league.getProjection_profile();
+		
+		long time1 = System.currentTimeMillis();
 
 		System.out.println("Get Player Output Data: Convert player projections to output...");
 		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(profile, league);
 		
+		long time2 = System.currentTimeMillis();
+		
 		System.out.println("Get Player Output Data: Updating with League Player data...");
 		List<LeaguePlayer> lplist = getLeaguePlayerService().getLeaguePlayersByLeague(league_id, username);
+		
+		long time3 = System.currentTimeMillis();
 		
 		for (LeaguePlayer lp : lplist){
 			
@@ -442,6 +451,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				}
 			}
 		}
+		
+		long time4 = System.currentTimeMillis();
 
 		System.out.println("Get Player Output Data: Calculating Z Scores Pass 1, league means and std deviations...");
 		
@@ -451,6 +462,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		calcPlayerZScores(playeroutput, league, true);
  
 		calcPlayerZScores(playeroutput, league, false);
+		
+		long time5 = System.currentTimeMillis();
 		
 		System.out.println("Get Player Output Data: Calculating Z Scores Pass 2...");
 		
@@ -481,6 +494,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		String calculated_position;
 		
+		long time6 = System.currentTimeMillis();
+		
 		System.out.println("Get Player Output Data: Calculating static auction values...");
 		// Update auction value
 		for (LeaguePlayerOutput po : playeroutput){
@@ -509,11 +524,11 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			}
 			if (calculated_position.toLowerCase().contains("of")) {
 				auct = Math.max(auct,(po.getTotal_z()-posz_of.getReplacementvalue())*coef);
-				if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout OF Auction val: " + auct);
+				// if (po.getFull_name().equals("Mike Trout")) System.out.println("Mike Trout OF Auction val: " + auct);
 			}
 			if (calculated_position.toLowerCase().contains("p")) {
 				auct = Math.max(auct,(po.getTotal_z()-posz_p.getReplacementvalue())*coef);
-				if (po.getFull_name().equals("Aroldis Chapman")) System.out.println("Aroldis Chapman Auction val: " + auct);
+				// if (po.getFull_name().equals("Aroldis Chapman")) System.out.println("Aroldis Chapman Auction val: " + auct);
 			}
 			if (calculated_position.toLowerCase().contains("dh")) 
 				auct = Math.max(auct,(po.getTotal_z()-replval_dh)*coef);
@@ -524,7 +539,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		}
 
-		
+		long time7 = System.currentTimeMillis();
 
 		System.out.println("Get Player Output Data: Adding unknown players from League Player data...");
 		
@@ -571,6 +586,14 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		long end = System.currentTimeMillis();
 		long dt = end - begin;
 		// System.out.println("Get Player Output Data: COMPLETE");
+		log.log( Level.FINE, "Get Player Output Data: Step 1, {0} MS elapsed", time1 - begin);
+		log.log( Level.FINE, "Get Player Output Data: Step 2, {0} MS elapsed", time2 - time1);
+		log.log( Level.FINE, "Get Player Output Data: Step 3, {0} MS elapsed", time3 - time2);
+		log.log( Level.FINE, "Get Player Output Data: Step 4, {0} MS elapsed", time4 - time3);
+		log.log( Level.FINE, "Get Player Output Data: Step 5, {0} MS elapsed", time5 - time4);
+		log.log( Level.FINE, "Get Player Output Data: Step 6, {0} MS elapsed", time6 - time5);
+		log.log( Level.FINE, "Get Player Output Data: Step 7, {0} MS elapsed", time7 - time6);
+		log.log( Level.FINE, "Get Player Output Data: Step 8, {0} MS elapsed", end - time7);
 		log.log( Level.FINE, "Get Player Output Data: COMPLETE, {0} MS elapsed", dt);
 		
 		return playeroutput;
@@ -790,14 +813,19 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	
 	private List<LeaguePlayerOutput> getLeaguePlayerOutput(ProjectionProfile profile, League league){
 		
+		log.setLevel(Level.FINE);
+		
+		long time1 = System.currentTimeMillis();
+		
 		List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(
 				league.getProjection_profile(), league.getMlb_leagues());
-		
+
 		List<LeaguePlayerOutput> playeroutput = new ArrayList<LeaguePlayerOutput>();
-		
+
 		int i = 0;
-		int j = 0;
 		
+		long time3 = System.currentTimeMillis();
+
 		// Convert PlayerProjected to LeaguePlayerOutput
 		for (PlayerProjected p : projections){
 			LeaguePlayerOutput po = new LeaguePlayerOutput(p);
@@ -810,9 +838,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			
 			// System.out.println("Get Player Output Data: Player= " + po.getFull_name() + ", pos: " + po.getCustom_position());
 		}
+		
+		long time4 = System.currentTimeMillis();
+		
+		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2a, {0} MS elapsed", time3 - time1);
+		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2b, {0} MS elapsed", time4 - time3);
 
 		System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");
-		if (j > 0) System.out.println("Get Player Output Data: " + j + " PlayerProjected NOT CONVERTED.");
 		
 		return playeroutput;
 		
@@ -843,12 +875,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				
 			}
 			
-			System.out.println("Original Pitcher count: " + pitchercount);
-			System.out.println("Original Hitter count: " + hittercount);
-			
-			System.out.println("Roster Pitcher count: " + iroster_totalpitchers);
-			System.out.println("Roster Hitter count: " + iroster_totalhitters);
-			System.out.println("Roster Reserve count: " + iroster_totalreserves);
+//			System.out.println("Original Pitcher count: " + pitchercount);
+//			System.out.println("Original Hitter count: " + hittercount);
+//			
+//			System.out.println("Roster Pitcher count: " + iroster_totalpitchers);
+//			System.out.println("Roster Hitter count: " + iroster_totalhitters);
+//			System.out.println("Roster Reserve count: " + iroster_totalreserves);
 			
 			/*
 			// Calculate based on ratios, whether there are too many hitters or pitchers
@@ -983,57 +1015,57 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		}
 		
-		System.out.println("Mean Calc Pitcher count: " + new_pcount);
-		System.out.println("Mean Calc Hitter count: " + new_hcount);
+		// System.out.println("Mean Calc Pitcher count: " + new_pcount);
+		// System.out.println("Mean Calc Hitter count: " + new_hcount);
 
 		if (league.isCat_hitter_hr()){
 			hitter_hr_mean = StatUtils.mean(toPrimitive(hitter_hrs));
 			hitter_hr_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_hrs)));
-			 System.out.println("Hitter HR Mean: " + hitter_hr_mean);
-			 System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
+			 // System.out.println("Hitter HR Mean: " + hitter_hr_mean);
+			 // System.out.println("Hitter HR Std Dev: " + hitter_hr_sd);
 		}
 		if (league.isCat_hitter_rbi()){
 			hitter_rbi_mean = StatUtils.mean(toPrimitive(hitter_rbis));
 			hitter_rbi_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_rbis)));
-			 System.out.println("Hitter rbi Mean: " + hitter_rbi_mean);
-			 System.out.println("Hitter rbi Std Dev: " + hitter_rbi_sd);
+			 // System.out.println("Hitter rbi Mean: " + hitter_rbi_mean);
+			 // System.out.println("Hitter rbi Std Dev: " + hitter_rbi_sd);
 		}
 		if (league.isCat_hitter_r()){
 			hitter_r_mean = StatUtils.mean(toPrimitive(hitter_runs));
 			hitter_r_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_runs)));
-			 System.out.println("Hitter r Mean: " + hitter_r_mean);
-			 System.out.println("Hitter r Std Dev: " + hitter_r_sd);
+			// System.out.println("Hitter r Mean: " + hitter_r_mean);
+			//  System.out.println("Hitter r Std Dev: " + hitter_r_sd);
 		}
 		if (league.isCat_hitter_sb()){
 			hitter_sb_mean = StatUtils.mean(toPrimitive(hitter_sbs));
 			hitter_sb_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_sbs)));
-			 System.out.println("Hitter sb Mean: " + hitter_sb_mean);
-			 System.out.println("Hitter sb Std Dev: " + hitter_sb_sd);
+			// System.out.println("Hitter sb Mean: " + hitter_sb_mean);
+			// System.out.println("Hitter sb Std Dev: " + hitter_sb_sd);
 		}
 		if (league.isCat_hitter_avg()) {
 			hitter_avgeff_mean = StatUtils.mean(toPrimitive(hitter_avgeff));
 			hitter_avgeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_avgeff)));
-			 System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
-			 System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
+			// System.out.println("Hitter Avg Eff Mean: " + hitter_avgeff_mean);
+			// System.out.println("Hitter Avg Eff Std Dev: " + hitter_avgeff_sd);
 		}
 		if (league.isCat_hitter_obp()) {
 			hitter_obpeff_mean = StatUtils.mean(toPrimitive(hitter_obpeff));
 			hitter_obpeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(hitter_obpeff)));
-			 System.out.println("Hitter OBP Eff Mean: " + hitter_obpeff_mean);
-			 System.out.println("Hitter OBP Eff Std Dev: " + hitter_obpeff_sd);
+			// System.out.println("Hitter OBP Eff Mean: " + hitter_obpeff_mean);
+			// System.out.println("Hitter OBP Eff Std Dev: " + hitter_obpeff_sd);
 		}
 		
 		if (league.isCat_pitcher_wins()){
 			pitcher_w_mean = StatUtils.mean(toPrimitive(pitcher_wins));
 			pitcher_w_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_wins)));
-			System.out.println("Pitcher Wins Mean: " + pitcher_w_mean);
-			System.out.println("Pitcher Wins Std Dev: " + pitcher_w_sd);
+			// System.out.println("Pitcher Wins Mean: " + pitcher_w_mean);
+			// System.out.println("Pitcher Wins Std Dev: " + pitcher_w_sd);
 		}
 		if (league.isCat_pitcher_holds()){
 			pitcher_hld_mean = StatUtils.mean(toPrimitive(pitcher_holds));
 			pitcher_hld_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_holds)));
-			System.out.println("Pitcher Holds Mean: " + pitcher_hld_mean);
-			System.out.println("Pitcher Holds Std Dev: " + pitcher_hld_sd);
+			// System.out.println("Pitcher Holds Mean: " + pitcher_hld_mean);
+			// System.out.println("Pitcher Holds Std Dev: " + pitcher_hld_sd);
 		}
 		if (league.isCat_pitcher_saves()){
 			pitcher_sv_mean = StatUtils.mean(toPrimitive(pitcher_saves));
@@ -1050,8 +1082,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		if (league.isCat_pitcher_era()) {
 			pitcher_eraeff_mean = StatUtils.mean(toPrimitive(pitcher_eraeff));
 			pitcher_eraeff_sd = FastMath.sqrt(StatUtils.variance(toPrimitive(pitcher_eraeff)));
-			System.out.println("Pitcher ERA Eff Mean: " + pitcher_eraeff_mean);
-			System.out.println("Pitcher ERA Eff Std Dev: " + pitcher_eraeff_sd);
+			// System.out.println("Pitcher ERA Eff Mean: " + pitcher_eraeff_mean);
+			// System.out.println("Pitcher ERA Eff Std Dev: " + pitcher_eraeff_sd);
 		}
 		
 		System.out.println("Get Player Output Data: Calculating LeaguePlayer Z scores...");
@@ -1186,13 +1218,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		iroster_of_wRes = (int) Math.round(roster_of_wRes);
 		iroster_p_wRes = (int) Math.round(roster_p_wRes);
 		
-		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
-		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
-		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
-		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
-		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
-		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
-		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
+//		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
+//		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
+//		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
+//		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
+//		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
+//		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
+//		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
 		
 	}
 	
