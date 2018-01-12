@@ -1,7 +1,11 @@
 package com.nya.sms.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.api.server.spi.config.AnnotationBoolean;
+import com.google.api.server.spi.config.ApiResourceProperty;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
@@ -10,6 +14,7 @@ import com.googlecode.objectify.annotation.Load;
 
 //@Subclass(index = true)
 @Entity
+@JsonIgnoreProperties({"projection_profile"})
 public class PlayerProjected extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1;
@@ -88,6 +93,61 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	public double pitcher_ld_pct;
 	public double pitcher_babip;
 	public double pitcher_whip;
+	
+	// added 1/11/18, additional fields for LeaguePlayerOutput
+	long league_id;
+	long leagueteam_id;
+	
+	long league_player_id;
+	
+	String leagueteam_name;
+	
+	String player_position;
+
+	String team_roster_position;
+	
+	long team_roster_position_num;
+
+	double team_player_salary;
+	
+	String team_player_note;
+	
+	Date projection_date;
+	
+	boolean unknownplayer;
+	
+	String unknown_player_name;
+	
+	String unknown_player_pitcher_hitter;
+
+	double hitter_avg_eff;
+	
+	double pitcher_era_eff;
+	double pitcher_whip_eff;
+	double hitter_z_hr;
+	double hitter_z_rbi;
+	double hitter_z_runs;
+	double hitter_z_sb;
+	double hitter_z_avg;
+	double pitcher_z_wins;
+	double pitcher_z_saves;
+	double pitcher_z_so;
+	double pitcher_z_era;
+	double pitcher_z_whip;
+	
+	// New Cats: obp and holds
+	double pitcher_z_holds;
+	double hitter_z_obp;
+	double hitter_obp_eff;
+	
+	double total_z;
+	int rank_z;
+	int init_auction_value;
+	int live_auction_value;
+
+	boolean custom_position_flag;
+	String custom_position;
+	boolean favorite_flag;
 
 	public PlayerProjected() {
 	}
@@ -100,10 +160,12 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	}
 	
 	// This getter-setter is custom updated to convert Ref to a ProjectionProfile
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public ProjectionProfile getProjection_profile() {
 		return projection_profile.get();
 	}
 
+	@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
 	public void setProjection_profile(ProjectionProfile projection_profile) {
 		this.projection_profile = Ref.create(projection_profile);
 	}
@@ -580,7 +642,301 @@ public class PlayerProjected extends BaseEntity implements Serializable {
 	public void setPitcher_whip(double pitcher_whip) {
 		this.pitcher_whip = pitcher_whip;
 	}
+
 	
+	// getters and setters added 1/11/18, for LeaguePlayerOutput
 	
+	public long getLeagueteam_id() {
+		return leagueteam_id;
+	}
+
+	public void setLeagueteam_id(long leagueteam_id) {
+		this.leagueteam_id = leagueteam_id;
+	}
+
+	public long getLeague_player_id() {
+		return league_player_id;
+	}
+
+	public void setLeague_player_id(long league_player_id) {
+		this.league_player_id = league_player_id;
+	}
+
+	public String getLeagueteam_name() {
+		return leagueteam_name;
+	}
+
+	public void setLeagueteam_name(String leagueteam_name) {
+		this.leagueteam_name = leagueteam_name;
+	}
+
+	public String getPlayer_position() {
+		return player_position;
+	}
+
+	public void setPlayer_position(String player_position) {
+		this.player_position = player_position;
+	}
+
+	public String getTeam_roster_position() {
+		return team_roster_position;
+	}
+
+	public void setTeam_roster_position(String team_roster_position) {
+		this.team_roster_position = team_roster_position;
+	}
+
+	public long getTeam_roster_position_num() {
+		return team_roster_position_num;
+	}
+
+	public void setTeam_roster_position_num(long team_roster_position_num) {
+		this.team_roster_position_num = team_roster_position_num;
+	}
+
+	public double getTeam_player_salary() {
+		return team_player_salary;
+	}
+
+	public void setTeam_player_salary(double team_player_salary) {
+		this.team_player_salary = team_player_salary;
+	}
+
+	public String getTeam_player_note() {
+		return team_player_note;
+	}
+
+	public void setTeam_player_note(String team_player_note) {
+		this.team_player_note = team_player_note;
+	}
+
+	public Date getProjection_date() {
+		return projection_date;
+	}
+
+	public void setProjection_date(Date projection_date) {
+		this.projection_date = projection_date;
+	}
+
+	public boolean isUnknownplayer() {
+		return unknownplayer;
+	}
+
+	public void setUnknownplayer(boolean unknownplayer) {
+		this.unknownplayer = unknownplayer;
+	}
+
+	public String getUnknown_player_name() {
+		return unknown_player_name;
+	}
+
+	public void setUnknown_player_name(String unknown_player_name) {
+		this.unknown_player_name = unknown_player_name;
+	}
+
+	public String getUnknown_player_pitcher_hitter() {
+		return unknown_player_pitcher_hitter;
+	}
+
+	public void setUnknown_player_pitcher_hitter(String unknown_player_pitcher_hitter) {
+		this.unknown_player_pitcher_hitter = unknown_player_pitcher_hitter;
+	}
+
+	public double getHitter_avg_eff() {
+		return hitter_avg_eff;
+	}
+
+	public void setHitter_avg_eff(double hitter_avg_eff) {
+		this.hitter_avg_eff = hitter_avg_eff;
+	}
+
+	public double getPitcher_era_eff() {
+		return pitcher_era_eff;
+	}
+
+	public void setPitcher_era_eff(double pitcher_era_eff) {
+		this.pitcher_era_eff = pitcher_era_eff;
+	}
+
+	public double getPitcher_whip_eff() {
+		return pitcher_whip_eff;
+	}
+
+	public void setPitcher_whip_eff(double pitcher_whip_eff) {
+		this.pitcher_whip_eff = pitcher_whip_eff;
+	}
+
+	public double getHitter_z_hr() {
+		return hitter_z_hr;
+	}
+
+	public void setHitter_z_hr(double hitter_z_hr) {
+		this.hitter_z_hr = hitter_z_hr;
+	}
+
+	public double getHitter_z_rbi() {
+		return hitter_z_rbi;
+	}
+
+	public void setHitter_z_rbi(double hitter_z_rbi) {
+		this.hitter_z_rbi = hitter_z_rbi;
+	}
+
+	public double getHitter_z_runs() {
+		return hitter_z_runs;
+	}
+
+	public void setHitter_z_runs(double hitter_z_runs) {
+		this.hitter_z_runs = hitter_z_runs;
+	}
+
+	public double getHitter_z_sb() {
+		return hitter_z_sb;
+	}
+
+	public void setHitter_z_sb(double hitter_z_sb) {
+		this.hitter_z_sb = hitter_z_sb;
+	}
+
+	public double getHitter_z_avg() {
+		return hitter_z_avg;
+	}
+
+	public void setHitter_z_avg(double hitter_z_avg) {
+		this.hitter_z_avg = hitter_z_avg;
+	}
+
+	public double getPitcher_z_wins() {
+		return pitcher_z_wins;
+	}
+
+	public void setPitcher_z_wins(double pitcher_z_wins) {
+		this.pitcher_z_wins = pitcher_z_wins;
+	}
+
+	public double getPitcher_z_saves() {
+		return pitcher_z_saves;
+	}
+
+	public void setPitcher_z_saves(double pitcher_z_saves) {
+		this.pitcher_z_saves = pitcher_z_saves;
+	}
+
+	public double getPitcher_z_so() {
+		return pitcher_z_so;
+	}
+
+	public void setPitcher_z_so(double pitcher_z_so) {
+		this.pitcher_z_so = pitcher_z_so;
+	}
+
+	public double getPitcher_z_era() {
+		return pitcher_z_era;
+	}
+
+	public void setPitcher_z_era(double pitcher_z_era) {
+		this.pitcher_z_era = pitcher_z_era;
+	}
+
+	public double getPitcher_z_whip() {
+		return pitcher_z_whip;
+	}
+
+	public void setPitcher_z_whip(double pitcher_z_whip) {
+		this.pitcher_z_whip = pitcher_z_whip;
+	}
+
+	public double getPitcher_z_holds() {
+		return pitcher_z_holds;
+	}
+
+	public void setPitcher_z_holds(double pitcher_z_holds) {
+		this.pitcher_z_holds = pitcher_z_holds;
+	}
+
+	public double getHitter_z_obp() {
+		return hitter_z_obp;
+	}
+
+	public void setHitter_z_obp(double hitter_z_obp) {
+		this.hitter_z_obp = hitter_z_obp;
+	}
+
+	public double getHitter_obp_eff() {
+		return hitter_obp_eff;
+	}
+
+	public void setHitter_obp_eff(double hitter_obp_eff) {
+		this.hitter_obp_eff = hitter_obp_eff;
+	}
+
+	public double getTotal_z() {
+		return total_z;
+	}
+
+	public void setTotal_z(double total_z) {
+		this.total_z = total_z;
+	}
+
+	public int getRank_z() {
+		return rank_z;
+	}
+
+	public void setRank_z(int rank_z) {
+		this.rank_z = rank_z;
+	}
+
+	public int getInit_auction_value() {
+		return init_auction_value;
+	}
+
+	public void setInit_auction_value(int init_auction_value) {
+		this.init_auction_value = init_auction_value;
+	}
+
+	public int getLive_auction_value() {
+		return live_auction_value;
+	}
+
+	public void setLive_auction_value(int live_auction_value) {
+		this.live_auction_value = live_auction_value;
+	}
+
+	public boolean isCustom_position_flag() {
+		return custom_position_flag;
+	}
+
+	public void setCustom_position_flag(boolean custom_position_flag) {
+		this.custom_position_flag = custom_position_flag;
+	}
+
+	public String getCustom_position() {
+		return custom_position;
+	}
+
+	public void setCustom_position(String custom_position) {
+		this.custom_position = custom_position;
+	}
+
+	public boolean isFavorite_flag() {
+		return favorite_flag;
+	}
+
+	public void setFavorite_flag(boolean favorite_flag) {
+		this.favorite_flag = favorite_flag;
+	}
+
+	public void setProjection_profile(Ref<ProjectionProfile> projection_profile) {
+		this.projection_profile = projection_profile;
+	}
+
+	public long getLeague_id() {
+		return league_id;
+	}
+
+	public void setLeague_id(long league_id) {
+		this.league_id = league_id;
+	}
+
 
 }

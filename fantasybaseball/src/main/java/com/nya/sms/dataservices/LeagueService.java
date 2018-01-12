@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -164,11 +165,24 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		update.setId(new Long(1));
 		update.setProjection_profile(league.getProjection_profile());
 		update.setUser(league.getUser());
-		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(p, update);
+		List<PlayerProjected> playeroutput = getLeaguePlayerOutput(p, update);
 		calcPlayerZScores(playeroutput, update, true);
 		calcPositionCounts(update);
 		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
 		league.setPosition_priority_list(priority.getPos_priority());
+		// ***********************************************************************************
+		
+		// *******************Update League with Position Priority****************************
+		// Original version, changed 1/11/18
+//		League update = new League(league);
+//		update.setId(new Long(1));
+//		update.setProjection_profile(league.getProjection_profile());
+//		update.setUser(league.getUser());
+//		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(p, update);
+//		calcPlayerZScores(playeroutput, update, true);
+//		calcPositionCounts(update);
+//		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
+//		league.setPosition_priority_list(priority.getPos_priority());
 		// ***********************************************************************************
 		
 		return this.save(league, username);
@@ -389,7 +403,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param league_id
 	 * @param username 
 	 */
-	public List<LeaguePlayerOutput> getLeaguePlayerData(long league_id, String username) {
+	public List<PlayerProjected> getLeaguePlayerData(long league_id, String username) {
 		long begin = System.currentTimeMillis();
 		log.setLevel(Level.FINE);
 		// log.addHandler(new ConsoleHandler());
@@ -401,7 +415,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		long time1 = System.currentTimeMillis();
 
 		System.out.println("Get Player Output Data: Convert player projections to output...");
-		List<LeaguePlayerOutput> playeroutput = getLeaguePlayerOutput(profile, league);
+		List<PlayerProjected> playeroutput = getLeaguePlayerOutput(profile, league);
 		
 		long time2 = System.currentTimeMillis();
 		
@@ -416,7 +430,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			if (!lp.isUnknownplayer()){
 
 				// Find matching PlayerOutput if LeaguePlayer is a known player
-				for (LeaguePlayerOutput po : playeroutput){
+				for (PlayerProjected po : playeroutput){
 
 					if (!po.isUnknownplayer()){
 						
@@ -498,7 +512,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		System.out.println("Get Player Output Data: Calculating static auction values...");
 		// Update auction value
-		for (LeaguePlayerOutput po : playeroutput){
+		for (PlayerProjected po : playeroutput){
 
 			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
 			else calculated_position = po.getPlayer_position();
@@ -644,7 +658,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param repl_level
 	 * @return 
 	 */
-	private PositionalZContainer getPositionalZpass1(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level){
+	private PositionalZContainer getPositionalZpass1(List<PlayerProjected> leagueplayers, String position, int repl_level){
 		
 		int i = 0;
 		double totalz = 0;
@@ -654,7 +668,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		PositionalZContainer p = new PositionalZContainer();
 		
-		for (LeaguePlayerOutput po : leagueplayers){
+		for (PlayerProjected po : leagueplayers){
 			
 			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
 			else calculated_position = po.getPlayer_position();
@@ -711,7 +725,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 * @param priority
 	 * @return 
 	 */
-	private PositionalZContainer getPositionalZpass2(List<LeaguePlayerOutput> leagueplayers, String position, int repl_level,
+	private PositionalZContainer getPositionalZpass2(List<PlayerProjected> leagueplayers, String position, int repl_level,
 			PositionZPriorityContainer priority){
 		
 		int i = 0;
@@ -722,7 +736,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		PositionalZContainer p = new PositionalZContainer();
 		
-		for (LeaguePlayerOutput po : leagueplayers){
+		for (PlayerProjected po : leagueplayers){
 			
 			if (po.isCustom_position_flag()) calculated_position = po.getCustom_position();
 			else calculated_position = po.getPlayer_position();
@@ -811,7 +825,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	}
 	
 	
-	private List<LeaguePlayerOutput> getLeaguePlayerOutput(ProjectionProfile profile, League league){
+	private List<PlayerProjected> getLeaguePlayerOutput(ProjectionProfile profile, League league){
 		
 		log.setLevel(Level.FINE);
 		
@@ -820,20 +834,29 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(
 				league.getProjection_profile(), league.getMlb_leagues());
 
-		List<LeaguePlayerOutput> playeroutput = new ArrayList<LeaguePlayerOutput>();
+		// List<LeaguePlayerOutput> playeroutput = new ArrayList<LeaguePlayerOutput>();
 
 		int i = 0;
+		Long league_id = league.getId();
+		Date projection_date = profile.getProjection_date();
 		
 		long time3 = System.currentTimeMillis();
 
 		// Convert PlayerProjected to LeaguePlayerOutput
 		for (PlayerProjected p : projections){
-			LeaguePlayerOutput po = new LeaguePlayerOutput(p);
-			po.setLeague_id(league.getId());
-			po.setProjection_date(profile.getProjection_date());
-			po.setCustom_position_flag(false);
-			po.setCustom_position(po.getPlayer_position());
-			playeroutput.add(po);
+			// LeaguePlayerOutput po = new LeaguePlayerOutput(p);
+			p.setLeague_id(league_id);
+			p.setProjection_date(projection_date);
+			p.setCustom_position_flag(false);
+			
+			p.pitcher_whip = (p.getPitcher_bb() + p.getPitcher_hits())/p.pitcher_ip;
+			if (p.getPitcher_hitter().equals("P")){
+				p.setPlayer_position(p.getPitcher_pos());  
+			} else {
+				p.setPlayer_position(p.getHitter_pos_elig_espn()); 
+			}
+			p.setCustom_position(p.getPlayer_position());
+			// playeroutput.add(po);
 			i++;
 			
 			// System.out.println("Get Player Output Data: Player= " + po.getFull_name() + ", pos: " + po.getCustom_position());
@@ -846,12 +869,52 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");
 		
-		return playeroutput;
+		return projections;
 		
 	}
 	
+	// Original version: 1/11/18
+//	private List<LeaguePlayerOutput> getLeaguePlayerOutput(ProjectionProfile profile, League league){
+//		
+//		log.setLevel(Level.FINE);
+//		
+//		long time1 = System.currentTimeMillis();
+//		
+//		List<PlayerProjected> projections = getPlayerProjectedService().getPlayerProjections(
+//				league.getProjection_profile(), league.getMlb_leagues());
+//
+//		List<LeaguePlayerOutput> playeroutput = new ArrayList<LeaguePlayerOutput>();
+//
+//		int i = 0;
+//		
+//		long time3 = System.currentTimeMillis();
+//
+//		// Convert PlayerProjected to LeaguePlayerOutput
+//		for (PlayerProjected p : projections){
+//			LeaguePlayerOutput po = new LeaguePlayerOutput(p);
+//			po.setLeague_id(league.getId());
+//			po.setProjection_date(profile.getProjection_date());
+//			po.setCustom_position_flag(false);
+//			po.setCustom_position(po.getPlayer_position());
+//			playeroutput.add(po);
+//			i++;
+//			
+//			// System.out.println("Get Player Output Data: Player= " + po.getFull_name() + ", pos: " + po.getCustom_position());
+//		}
+//		
+//		long time4 = System.currentTimeMillis();
+//		
+//		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2a, {0} MS elapsed", time3 - time1);
+//		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2b, {0} MS elapsed", time4 - time3);
+//
+//		System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");
+//		
+//		return playeroutput;
+//		
+//	}
 	
-	private void calcPlayerZScores(List<LeaguePlayerOutput> playeroutput, League league, boolean isFirstPass){
+	
+	private void calcPlayerZScores(List<PlayerProjected> playeroutput, League league, boolean isFirstPass){
 
 		int pitchercount = 0;
 		int hittercount = 0;
@@ -867,7 +930,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			// when the list of players can be sorted in descending Z value.
 
 			// Count hitters and pitchers in the list of players
-			for (LeaguePlayerOutput po : playeroutput){
+			for (PlayerProjected po : playeroutput){
 	
 				if (po.getPitcher_hitter().equals(getPlayerProjectedService().PITCHER_HITTER_PITCHER))
 					pitchercount++;
@@ -949,7 +1012,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		int new_pcount = 0;
 		int new_hcount = 0;
 		
-		for (LeaguePlayerOutput po : playeroutput) {
+		for (PlayerProjected po : playeroutput) {
 
 			if (po.getPitcher_hitter().equals(PlayerProjectedService.PITCHER_HITTER_HITTER)){
 				if (new_hcount < hittercount) {
@@ -1088,7 +1151,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		System.out.println("Get Player Output Data: Calculating LeaguePlayer Z scores...");
 		// Calculate Z scores
-		for (LeaguePlayerOutput po : playeroutput) {
+		for (PlayerProjected po : playeroutput) {
 			
 			double z = 0;
 			double tz = 0;
@@ -1164,9 +1227,9 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		}
 		
 		// Sort players by descending Z
-		Collections.sort(playeroutput, new Comparator<LeaguePlayerOutput>() {
+		Collections.sort(playeroutput, new Comparator<PlayerProjected>() {
 		    @Override
-		    public int compare(LeaguePlayerOutput z1, LeaguePlayerOutput z2) {
+		    public int compare(PlayerProjected z1, PlayerProjected z2) {
 		        if (z1.getTotal_z() < z2.getTotal_z())
 		            return 1;
 		        if (z1.getTotal_z() > z2.getTotal_z())
@@ -1228,7 +1291,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 	}
 	
-	private PositionZPriorityContainer getPositionPriorityList(List<LeaguePlayerOutput> playeroutput){
+	private PositionZPriorityContainer getPositionPriorityList(List<PlayerProjected> playeroutput){
 
 		PositionalZContainer posz_c = getPositionalZpass1(playeroutput, "C", iroster_c);
 		PositionalZContainer posz_1b = getPositionalZpass1(playeroutput, "1B", iroster_1b);

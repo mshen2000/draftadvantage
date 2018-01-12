@@ -500,7 +500,7 @@ public class TestLeagues {
 		long l1_id = getLeagueService().save(l1, usr1.getUsername());
 		League l1_r = getLeagueService().get(l1_id);
 
-		List<LeaguePlayerOutput> playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
+		List<PlayerProjected> playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		
 		// Test count of AL and FA league players
 		Assert.assertTrue(playeroutput.size() == 850);
@@ -714,7 +714,7 @@ public class TestLeagues {
 		
 		
 		// Test updated auction values due to custom position change
-		List<LeaguePlayerOutput> playeroutput2 = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
+		List<PlayerProjected> playeroutput2 = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		System.out.println("Mike Trout Updated Auction Value: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value());
 		System.out.println("Mike Trout Cust Pos Flag: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isCustom_position_flag());
 		System.out.println("Mike Trout Cust Position: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getCustom_position());
@@ -813,9 +813,9 @@ public class TestLeagues {
 		// Get updated playeroutput after draft
 		playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		
-		List<LeaguePlayerOutput> po_drafted = new ArrayList<LeaguePlayerOutput>();
+		List<PlayerProjected> po_drafted = new ArrayList<PlayerProjected>();
 		
-		for (LeaguePlayerOutput po : playeroutput){
+		for (PlayerProjected po : playeroutput){
 			
 			if (po.getLeagueteam_id() > 0) po_drafted.add(po);
 			else if (po.getTeam_player_note() != null)
@@ -825,15 +825,15 @@ public class TestLeagues {
 		// Test there are 6 players that were drafted or have notes
 		Assert.assertTrue(po_drafted.size() == 8);
 		
-		LeaguePlayerOutput po_sale = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_davis = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_perez = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_castro = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_chapman = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_unknown_h = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_unknown_p2 = new LeaguePlayerOutput();
+		PlayerProjected po_sale = new PlayerProjected();
+		PlayerProjected po_davis = new PlayerProjected();
+		PlayerProjected po_perez = new PlayerProjected();
+		PlayerProjected po_castro = new PlayerProjected();
+		PlayerProjected po_chapman = new PlayerProjected();
+		PlayerProjected po_unknown_h = new PlayerProjected();
+		PlayerProjected po_unknown_p2 = new PlayerProjected();
 		
-		for (LeaguePlayerOutput po : po_drafted){
+		for (PlayerProjected po : po_drafted){
 			
 			if (po.getFull_name().equals("Chris Sale")) po_sale = po;
 			if (po.getFull_name().equals("Chris Davis")) po_davis = po;
@@ -941,7 +941,7 @@ public class TestLeagues {
 		long l1_id = getLeagueService().save(l1, usr1.getUsername());
 		League l1_r = getLeagueService().get(l1_id);
 
-		List<LeaguePlayerOutput> playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
+		List<PlayerProjected> playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		
 		// Test count of AL and FA league players
 		Assert.assertTrue(playeroutput.size() == 850);
@@ -1152,7 +1152,7 @@ public class TestLeagues {
 		
 		
 		// Test updated auction values due to custom position change
-		List<LeaguePlayerOutput> playeroutput2 = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
+		List<PlayerProjected> playeroutput2 = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		System.out.println("Mike Trout Updated Auction Value: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getInit_auction_value());
 		System.out.println("Mike Trout Cust Pos Flag: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isCustom_position_flag());
 		System.out.println("Mike Trout Cust Position: " + this.findPlayerByName(playeroutput2, "Mike Trout").get(0).getCustom_position());
@@ -1251,9 +1251,9 @@ public class TestLeagues {
 		// Get updated playeroutput after draft
 		playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
 		
-		List<LeaguePlayerOutput> po_drafted = new ArrayList<LeaguePlayerOutput>();
+		List<PlayerProjected> po_drafted = new ArrayList<PlayerProjected>();
 		
-		for (LeaguePlayerOutput po : playeroutput){
+		for (PlayerProjected po : playeroutput){
 			
 			if (po.getLeagueteam_id() > 0) po_drafted.add(po);
 			else if (po.getTeam_player_note() != null)
@@ -1263,15 +1263,15 @@ public class TestLeagues {
 		// Test there are 6 players that were drafted or have notes
 		Assert.assertTrue(po_drafted.size() == 8);
 		
-		LeaguePlayerOutput po_sale = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_davis = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_perez = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_castro = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_chapman = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_unknown_h = new LeaguePlayerOutput();
-		LeaguePlayerOutput po_unknown_p2 = new LeaguePlayerOutput();
+		PlayerProjected po_sale = new PlayerProjected();
+		PlayerProjected po_davis = new PlayerProjected();
+		PlayerProjected po_perez = new PlayerProjected();
+		PlayerProjected po_castro = new PlayerProjected();
+		PlayerProjected po_chapman = new PlayerProjected();
+		PlayerProjected po_unknown_h = new PlayerProjected();
+		PlayerProjected po_unknown_p2 = new PlayerProjected();
 		
-		for (LeaguePlayerOutput po : po_drafted){
+		for (PlayerProjected po : po_drafted){
 			
 			if (po.getFull_name().equals("Chris Sale")) po_sale = po;
 			if (po.getFull_name().equals("Chris Davis")) po_davis = po;
@@ -1312,11 +1312,11 @@ public class TestLeagues {
 	}
 
 	
-	private List<LeaguePlayerOutput> findPlayerByName(List<LeaguePlayerOutput> outputlist, String fullname){
+	private List<PlayerProjected> findPlayerByName(List<PlayerProjected> outputlist, String fullname){
 		
-		List<LeaguePlayerOutput> result = new ArrayList<LeaguePlayerOutput>();
+		List<PlayerProjected> result = new ArrayList<PlayerProjected>();
 		
-		for (LeaguePlayerOutput o : outputlist){
+		for (PlayerProjected o : outputlist){
 			if (o.getFull_name().equals(fullname)) {
 				
 				result.add(o);
