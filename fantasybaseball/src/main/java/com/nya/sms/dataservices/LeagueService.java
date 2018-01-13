@@ -838,26 +838,30 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		int i = 0;
 		Long league_id = league.getId();
-		Date projection_date = profile.getProjection_date();
+		// Date projection_date = profile.getProjection_date();
 		
 		long time3 = System.currentTimeMillis();
 
 		// Convert PlayerProjected to LeaguePlayerOutput
 		for (PlayerProjected p : projections){
 			// LeaguePlayerOutput po = new LeaguePlayerOutput(p);
+			// long time_a = System.nanoTime();
 			p.setLeague_id(league_id);
-			p.setProjection_date(projection_date);
-			p.setCustom_position_flag(false);
-			
-			p.pitcher_whip = (p.getPitcher_bb() + p.getPitcher_hits())/p.pitcher_ip;
+			// p.setProjection_date(projection_date);
+			// p.setCustom_position_flag(false);
+			// long time_b = System.nanoTime();
+			// p.pitcher_whip = (p.getPitcher_bb() + p.getPitcher_hits())/p.pitcher_ip;
+			// long time_c = System.nanoTime();
 			if (p.getPitcher_hitter().equals("P")){
 				p.setPlayer_position(p.getPitcher_pos());  
 			} else {
 				p.setPlayer_position(p.getHitter_pos_elig_espn()); 
 			}
+			// long time_d = System.nanoTime();
 			p.setCustom_position(p.getPlayer_position());
+			// long time_e = System.nanoTime();
 			// playeroutput.add(po);
-			i++;
+			// i++;
 			
 			// System.out.println("Get Player Output Data: Player= " + po.getFull_name() + ", pos: " + po.getCustom_position());
 		}
@@ -867,7 +871,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2a, {0} MS elapsed", time3 - time1);
 		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2b, {0} MS elapsed", time4 - time3);
 
-		System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");
+		// System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");
 		
 		return projections;
 		

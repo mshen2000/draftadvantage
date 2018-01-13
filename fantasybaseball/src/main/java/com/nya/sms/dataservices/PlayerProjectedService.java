@@ -310,6 +310,8 @@ public class PlayerProjectedService implements Serializable {
 			element.setProjection_profile(profile);
 			element.setCreatedby(iuname);
 			element.setModifiedby(iuname);
+			
+			element.pitcher_whip = (element.getPitcher_bb() + element.getPitcher_hits())/element.pitcher_ip;
 		}
 
 		final List<PlayerProjected> updateplayerlist = playerlist;
