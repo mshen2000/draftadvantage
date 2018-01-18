@@ -58,6 +58,10 @@ body {
 
 .top-buffer { margin-top:20px; }
 
+#otb_panel_body {
+    padding: 7px !important;
+}
+
 p#header2-ontheblock-draftplayer {
     margin-bottom: 0px;
 }
@@ -81,6 +85,10 @@ div#playertable-row {
     margin-left: 0px !important;
 }
 
+.form-grp-draft-filter {
+    margin-bottom: 7px;
+}
+
 div#livestandings-row {
     margin-right: 0px !important;
     margin-left: 0px !important;
@@ -89,7 +97,7 @@ div#livestandings-row {
 .btn-group-xs>.btn, .btn-xs {
     padding: 0px 5px;
     font-size: 11px;
-    line-height: 1.5;
+    line-height: 1.3;
     border-radius: 3px;
 }
 
@@ -142,6 +150,14 @@ div#livestandings-row {
 	vertical-align: middle !important;
 	padding-top: 6px !important;
 	padding-bottom: 6px !important;
+}
+
+#playergrid_table>tfoot>tr>td,
+#playergrid_table>tfoot>tr>th,
+#playergrid_table>thead>tr>td,
+#playergrid_table>thead>tr>th{
+	padding-top: 2px !important;
+	padding-bottom: 2px !important;
 }
 
 th { font-size: 12px; }
@@ -357,11 +373,11 @@ td { font-size: 12px; }
 		<div class="row"> 
 			<div class="col-md-9">
 				<div class="row"> 
-					 <div class="panel panel-default">
+					 <div class="panel panel-default" id="otb_panel">
 					    <div class="panel-heading" id="otb_heading">
 						    <h3 class="panel-title">On the Block</h3>
 						  </div>
-					  <div class="panel-body">
+					  <div class="panel-body" id="otb_panel_body">
 				  		<div class="col-md-4">
 				  			<h4 class="modal-title" id="header-ontheblock-draftplayer">Select a Player to Draft</h4>
 				  			<p id="header2-ontheblock-draftplayer"></p>
@@ -414,11 +430,11 @@ td { font-size: 12px; }
 						<div class="tab-content">
 						  <div id="maintab1" class="tab-pane fade in active">
 							<div class="row" id="playertable-row">
-							  	<div style="margin-top:15px"></div>
+							  	<div style="margin-top:10px"></div>
 				
 								  <div class="row">
 									  <div class="col-sm-7">
-										  <div class="form-group">
+										  <div class="form-group form-grp-draft-filter">
 											  <div class="btn-toolbar" role="toolbar" aria-label="...">
 												  <div class="btn-group btn-group-sm" role="group" id="btn-grp1" aria-label="...">
 												    <button type="button" class="btn btn-default active" id="btn-allplayers">All</button>
@@ -444,7 +460,7 @@ td { font-size: 12px; }
 										  </div>
 									  </div>
 									  <div class="col-sm-3">
-										  <div class="form-group" id="formgroup-drafttoggle">
+										  <div class="form-group form-grp-draft-filter" id="formgroup-drafttoggle">
 											<select style="width:auto;" class="form-control input-sm" id="select-draftedplayerfilter">
 												  <option value="-1">All Players</option>
 												  <option value="0">Undrafted Players</option>
@@ -452,7 +468,7 @@ td { font-size: 12px; }
 										  </div>
 									  </div>
 									  <div class="col-sm-2">
-										  <div class="form-group" style="float:right;">
+										  <div class="form-group form-grp-draft-filter" style="float:right;">
 											<div class="btn-group btn-group-sm" role="group" id="btn-grp-gridview" aria-label="...">
 											  <button type="button" class="btn btn-default active" id="btn-gridviewstats">Stats</button>
 											  <button type="button" class="btn btn-default" id="btn-gridviewz">Z-score</button>

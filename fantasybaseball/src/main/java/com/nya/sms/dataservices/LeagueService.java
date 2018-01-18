@@ -467,6 +467,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		}
 		
 		long time4 = System.currentTimeMillis();
+		log.log( Level.FINE, "Get Player Output Data: Step 4, {0} MS elapsed", time4 - time3);
 
 		System.out.println("Get Player Output Data: Calculating Z Scores Pass 1, league means and std deviations...");
 		
