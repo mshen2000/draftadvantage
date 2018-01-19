@@ -2974,7 +2974,7 @@ function loadPlayerGridTable(data, isInitialLoad)
      // $("#header-draftplayer").val(data.id);
      // $("#lbl-draftprevplayer").text(data.full_name + " (" + data.team + ")");
         
-        $("#header-ontheblock-draftplayer").text(data.full_name + ", " + data.team + " " + data.custom_position);
+        $("#header-ontheblock-draftplayer").text(data.full_name + ", " + data.team + " " + data.custom_position + " - $" + data.live_auction_value);
         $("#header-ontheblock-draftplayer").val(data.id);
         $("#header2-ontheblock-draftplayer").text("Auction Value: $" + data.live_auction_value);
 
