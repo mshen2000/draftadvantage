@@ -2648,7 +2648,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         rowId: 'id',
         "paging": true,
         "order": [[ 30, "desc" ]],
-        "iDisplayLength": 15,
+        "iDisplayLength": 12,
         "language": {
             "lengthMenu": "Display <select  style='width:auto;' class='form-control'><option value='10'>10</option>" +
             		"<option value='15'>15</option>" +
