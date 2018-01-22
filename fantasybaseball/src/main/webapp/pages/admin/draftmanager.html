@@ -58,7 +58,7 @@ body {
 
 .top-buffer { margin-top:20px; }
 
-#otb_panel_body {
+#otb_panel_body, #player_detail_panel_body {
     padding: 7px !important;
 }
 
@@ -136,7 +136,7 @@ div#livestandings-row {
     content: "" !important;
 }
 
-#otb_heading { 
+#otb_heading, #player_detail_heading { 
 	padding-top: 3px !important;
 	padding-bottom: 3px !important;
 }
@@ -144,6 +144,27 @@ div#livestandings-row {
 #otb_panel_body h4 {
     font-size: 16px !important;
 /*     font-weight: bold !important; */
+}
+
+#player_detail_row {
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+#header-playerinfoname {
+	margin-top: 4px;
+}
+
+#form-group-playernote {
+	margin-bottom: 6px;
+}
+
+#btn-playerinfosavenote {
+	padding: 2px 12px;
+}
+
+#col-textarea-playernote{
+	padding-top: 6px;
 }
 
 #playergrid_table thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
@@ -512,6 +533,41 @@ td { font-size: 12px; }
 								  </div>
 								  <div style="margin-top:3px"></div>
 								  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+								<div class="row" id="player_detail_row"> 
+									<div class="panel panel-default" id="player_detail_panel">
+										<div class="panel-heading" id="player_detail_heading">
+											<h3 class="panel-title">Player Detail</h3>
+										</div>
+										<div class="panel-body" id="player_detail_panel_body">
+											<div class="col-sm-4">
+											    <h4 id="header-playerinfoname"><span id="lbl-playerinfoname">Player Name</span> 
+											    	<small class="favorite">
+											    		<i id="fav-icon" class="fa fa-star-o"></i>
+											    	</small>
+											    </h4>
+											    <ul class="list-unstyled">
+												  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
+												  <li><b>Age:</b> <span id="lbl-playerinfoage">99</span></li>
+												  <li><b>Eligibility:</b> <span id="lbl-playerinfoelig">XX</span></li>
+												  <li><b>Owner:</b> <span id="lbl-playerinfoowner">[available]</span></li>
+												</ul>											
+											</div>
+											<div class="col-sm-8">
+												<form class="form-horizontal">
+													<div class="form-group" id="form-group-playernote">
+													    <label for="textarea-playernote" class="col-sm-4 control-label">Player Notes</label>
+													    <div class="col-sm-8" id="col-textarea-playernote">
+													    	<textarea class="form-control vresize" rows="4" id="textarea-playernote"></textarea>
+													    </div>
+													</div>
+													<div class="col-sm-offset-4 col-sm-8">
+														<button class="btn btn-primary btn-block" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
+													</div>
+												</form>												
+											</div>
+										</div>
+									</div>				
+								</div>
 				
 							</div>
 						  </div>
@@ -622,7 +678,7 @@ td { font-size: 12px; }
 					
 					<div class="tab-content">
 					  <div id="tab-playerinfo" class="tab-pane fade">
-					    <h3><span id="lbl-playerinfoname">Player Name</span> 
+<!-- 					    <h3><span id="lbl-playerinfoname">Player Name</span> 
 					    	<small class="favorite">
 					    		<i id="fav-icon" class="fa fa-star-o"></i>
 					    	</small>
@@ -639,7 +695,7 @@ td { font-size: 12px; }
 							    <textarea class="form-control vresize" rows="10" id="textarea-playernote"></textarea>
 							</div>
 							<button class="btn btn-primary btn-block" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
-						</form>
+						</form> -->
 					  </div>
 					  <div id="tab-teaminfo" class="tab-pane fade in active">
 					  	<div id="section-teaminfo">
