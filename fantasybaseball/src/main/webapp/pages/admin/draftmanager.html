@@ -136,7 +136,8 @@ div#livestandings-row {
     content: "" !important;
 }
 
-#otb_heading, #player_detail_heading { 
+#otb_heading, #player_detail_heading,
+#team_ovw_heading { 
 	padding-top: 3px !important;
 	padding-bottom: 3px !important;
 }
@@ -533,6 +534,7 @@ td { font-size: 12px; }
 								  </div>
 								  <div style="margin-top:3px"></div>
 								  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+								  <div style="margin-top:10px"></div>
 								<div class="row" id="player_detail_row"> 
 									<div class="panel panel-default" id="player_detail_panel">
 										<div class="panel-heading" id="player_detail_heading">
@@ -665,74 +667,41 @@ td { font-size: 12px; }
 				</div>
 			</div>
 			  <div class="col-md-3">
-			  	<div style="margin-top:15px"></div>
 			  	<div class="panel panel-default">
-<!-- 				  <div class="panel-heading"> -->
-<!-- 				    <h3 class="panel-title">Panel title</h3> -->
-<!-- 				  </div> -->
+				  <div class="panel-heading" id="team_ovw_heading">
+				    <h3 class="panel-title">Team Overview</h3>
+				  </div>
 				  <div class="panel-body" id="side-panel">
-				    <ul class="nav nav-tabs" id="info-tabs">
-					  <li class="active"><a data-toggle="tab" href="#tab-teaminfo">Team Info</a></li>
-					  <li><a data-toggle="tab" href="#tab-playerinfo">Player Info</a></li>
-					</ul>
-					
-					<div class="tab-content">
-					  <div id="tab-playerinfo" class="tab-pane fade">
-<!-- 					    <h3><span id="lbl-playerinfoname">Player Name</span> 
-					    	<small class="favorite">
-					    		<i id="fav-icon" class="fa fa-star-o"></i>
-					    	</small>
-					    </h3>
-					    <ul class="list-unstyled">
-						  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
-						  <li><b>Age:</b> <span id="lbl-playerinfoage">99</span></li>
-						  <li><b>Eligibility:</b> <span id="lbl-playerinfoelig">XX</span></li>
-						  <li><b>Owner:</b> <span id="lbl-playerinfoowner">[available]</span></li>
+				  	<div id="section-teaminfo">
+						<select style="width:auto;" class="form-control" id="team-select">
+						</select>
+					    <h4><font color="green" id="lbl-teambalance">Balance: $0  </font><small id="lbl-teamstarting">Starting: 0$</small></h4>
+					    <div class="row">
+					    	<div class="col-md-10" style="padding-right:5px;">
+					    		<table id="teamroster_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+					    	</div>
+					    	<div class="col-md-2" style="padding-left:5px;">
+					    		<div style="margin-top:20px"></div>
+					    		<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Edit Draft Info" disabled="disabled" id="btn-editdraftplayer"><i class="fa fa-pencil"></i></button>
+					    		<div style="margin-top:10px"></div>
+					    		<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Undraft Player" disabled="disabled" id="btn-undraftplayer"><i class="fa fa-times"></i></button>
+					    	</div>
+					    </div>
+					    
+					    <ul class="list-unstyled" id="list-teamrosteroverview">
+						  <li><b>Roster Overview</b></li>
+						  <li id="lbl-teamspots">Remaining Spots: 0</li>
+						  <li id="lbl-teamperplayer">Per Player Amount: $0</li>
 						</ul>
-						<form>
-							<div class="form-group">
-							    <label for="textarea-playernote">Player Notes</label>
-							    <textarea class="form-control vresize" rows="10" id="textarea-playernote"></textarea>
-							</div>
-							<button class="btn btn-primary btn-block" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
-						</form> -->
-					  </div>
-					  <div id="tab-teaminfo" class="tab-pane fade in active">
-					  	<div id="section-teaminfo">
-							<select style="width:auto;margin-top:10px;" class="form-control" id="team-select">
-							</select>
-						    <h4><font color="green" id="lbl-teambalance">Balance: $0  </font><small id="lbl-teamstarting">Starting: 0$</small></h4>
-						    <div class="row">
-						    	<div class="col-md-10" style="padding-right:5px;">
-						    		<table id="teamroster_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-						    	</div>
-						    	<div class="col-md-2" style="padding-left:5px;">
-						    		<div style="margin-top:20px"></div>
-						    		<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Edit Draft Info" disabled="disabled" id="btn-editdraftplayer"><i class="fa fa-pencil"></i></button>
-						    		<div style="margin-top:10px"></div>
-						    		<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Undraft Player" disabled="disabled" id="btn-undraftplayer"><i class="fa fa-times"></i></button>
-						    	</div>
-						    </div>
-						    
-						    <ul class="list-unstyled" id="list-teamrosteroverview">
-							  <li><b>Roster Overview</b></li>
-							  <li id="lbl-teamspots">Remaining Spots: 0</li>
-							  <li id="lbl-teamperplayer">Per Player Amount: $0</li>
-							</ul>
-						</div>
-					  </div>
 					</div>
 				  </div>
 				</div>
 			  </div>
 		</div>
-			
-			
 
 	</div>
-	
 
-	
+
 		<!-- Draft Player Modal -->
 		<div id="draftplayer-modal" class="modal fade" role="dialog">
 			<div class="modal-dialog">

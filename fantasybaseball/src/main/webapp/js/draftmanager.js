@@ -2182,9 +2182,9 @@ function loadTeamRosterTable(data, isInitialLoad)
         "columns": [
             { "visible": false, "title": "index", "mData": "index" },
             { "visible": false, "title": "ID", "mData": "playerid", "sDefaultContent": "" },
-            { "title": "Pos", "mData": "position" },
+            { "title": "Pos", "mData": "position","width": 20 },
             { "title": "Player", "mData": "name", "sDefaultContent": ""},
-            { "title": "$", "mData": "salary", "sDefaultContent": "", "render": function ( data, type, row ) {
+            { "title": "$", "mData": "salary", "sDefaultContent": "", "width": 20, "render": function ( data, type, row ) {
             	if ((row.name == null)||(row.name == "")) return "";
             	return "$" + data;
             }},
@@ -3036,10 +3036,10 @@ function loadPlayerGridTable(data, isInitialLoad)
 	select_data_table
     .on( 'select', function ( e, dt, type, indexes ) {
     	
-    	$('#section-teaminfo').hide();
+    	// $('#section-teaminfo').hide();
     	
         // Show the player info tab
-		$('#info-tabs a[href="#tab-playerinfo"]').tab('show');
+		// $('#info-tabs a[href="#tab-playerinfo"]').tab('show');
     	
     	var select_data_table_b = $('#playergrid_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
@@ -3064,7 +3064,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 			} else $("#textarea-playernote").val("");
 		}else $("#textarea-playernote").val("");
 		
-		$('#section-teaminfo').hide();
+		// $('#section-teaminfo').hide();
 		
 		if (row.favorite_flag) {
 			$("#fav-icon").removeClass("fa-star-o");
@@ -3076,7 +3076,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 			
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
-    	$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
+    	// $('#info-tabs a[href="#tab-teaminfo"]').tab('show');
     	// clearPlayerInfoTab();
     } );
 
