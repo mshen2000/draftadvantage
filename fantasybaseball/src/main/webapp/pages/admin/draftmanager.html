@@ -110,7 +110,7 @@ div#livestandings-row {
 .btn-group-draft>.btn, 
 .btn-group-draft>.btn-sm,
 .dt-buttons>.btn, .dt-buttons>.btn-sm {
-    padding: 2px 10px !important;
+    padding: 2px 8px !important;
     line-height: 1.5;
 }
 
@@ -160,10 +160,11 @@ div#livestandings-row {
 /*     font-weight: bold !important; */
 }
 
-/* #player_detail_row {
+#player_detail_row1,
+#player_detail_row2 {
 	margin-right: 0px;
 	margin-left: 0px;
-} */
+} 
 
 #header-playerinfoname {
 	margin-top: 4px;
@@ -178,7 +179,17 @@ div#livestandings-row {
 }
 
 #col-textarea-playernote{
-	padding-top: 6px;
+	padding: 4px 4px;
+}
+
+#main_tabs_col {
+	padding-left: 1px;
+	padding-right: 1px;	
+}
+
+#player_queue_col {
+	padding-left: 25px;
+	padding-right: 15px;	
 }
 
 #playergrid_table thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting,
@@ -488,6 +499,7 @@ td { font-size: 12px; }
 				</div>
 				
 				<div class="row"> 
+					<div class="col-sm-10" id="main_tabs_col">
 						<ul class="nav nav-tabs">
 						  <li class="active"><a data-toggle="tab" href="#maintab1">Draft Analysis</a></li>
 						  <li><a data-toggle="tab" href="#maintab2">Position Availability</a></li>
@@ -501,7 +513,7 @@ td { font-size: 12px; }
 							  	<div style="margin-top:10px"></div>
 				
 								  <div class="row">
-									  <div class="col-sm-7">
+									  <div class="col-sm-7" style="padding-right: 0px;">
 										  <div class="form-group form-grp-draft-filter">
 											  <div class="btn-toolbar" role="toolbar" aria-label="...">
 												  <div class="btn-group btn-group-sm btn-group-draft" role="group" id="btn-grp1" aria-label="...">
@@ -547,55 +559,7 @@ td { font-size: 12px; }
 								  </div>
 								  <div style="margin-top:3px"></div>
 								  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-								  <div style="margin-top:10px"></div>
-								<div class="row" id="player_detail_row"> 
-									<div class="col-sm-9">									
-										<div class="panel panel-default" id="player_detail_panel">
-											<div class="panel-heading" id="player_detail_heading">
-												<h3 class="panel-title">Player Detail</h3>
-											</div>
-											<div class="panel-body" id="player_detail_panel_body">
-												<div class="col-sm-4">
-												    <h4 id="header-playerinfoname"><span id="lbl-playerinfoname">Player Name</span> 
-												    	<small class="favorite">
-												    		<i id="fav-icon" class="fa fa-star-o"></i>
-												    	</small>
-												    </h4>
-												    <ul class="list-unstyled">
-													  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
-													  <li><b>Age:</b> <span id="lbl-playerinfoage">99</span></li>
-													  <li><b>Eligibility:</b> <span id="lbl-playerinfoelig">XX</span></li>
-													  <li><b>Owner:</b> <span id="lbl-playerinfoowner">[available]</span></li>
-													</ul>											
-												</div>
-												<div class="col-sm-8">
-													<form class="form-horizontal">
-														<div class="form-group" id="form-group-playernote">
-														    <label for="textarea-playernote" class="col-sm-4 control-label">Player Notes:</label>
-														    <div class="col-sm-8" id="col-textarea-playernote">
-														    	<textarea class="form-control vresize" rows="4" style="font-size:12px" id="textarea-playernote"></textarea>
-														    </div>
-														</div>
-														<div class="col-sm-offset-4 col-sm-8">
-															<button class="btn btn-primary btn-block" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
-														</div>
-													</form>												
-												</div>
-											</div>
-										</div>																		
-									</div>
-									<div class="col-sm-3">
-										<div class="panel panel-default" id="player_queue_panel">
-											<div class="panel-heading" id="player_queue_heading">
-												<h3 class="panel-title">Player Queue</h3>
-											</div>	
-											<div class="panel-body" id="player_queue_panel_body" style="min-height: 137px; max-height: 137px;">
-											</div>							
-										</div>
-									</div>
-									
-				
-								</div>
+
 				
 							</div>
 						  </div>
@@ -690,6 +654,53 @@ td { font-size: 12px; }
 						</div>
 			
 				
+					</div>
+					<div class="col-sm-2" id="player_queue_col">
+						<div class="row">
+							<div class="panel panel-default" id="player_queue_panel">
+								<div class="panel-heading" id="player_queue_heading">
+									<h3 class="panel-title">Player Queue</h3>
+								</div>	
+								<div class="panel-body" id="player_queue_panel_body" style="min-height: 137px; max-height: 137px;">
+								</div>							
+							</div>
+						</div>
+
+						<div class="row" id="player_detail_row"> 
+									
+							<div class="panel panel-default" id="player_detail_panel">
+								<div class="panel-heading" id="player_detail_heading">
+									<h3 class="panel-title">Player Detail</h3>
+								</div>
+								<div class="panel-body" id="player_detail_panel_body">
+									<div class="row" id="player_detail_row1">
+									    <h4 id="header-playerinfoname"style="font-size: 16px;"><span id="lbl-playerinfoname">Player Name</span> 
+									    	<small class="favorite">
+									    		<i id="fav-icon" class="fa fa-star-o"></i>
+									    	</small>
+									    </h4>
+									    <ul class="list-unstyled" style="font-size:12px">
+										  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
+										  <li><b>Age:</b> <span id="lbl-playerinfoage">99</span></li>
+										  <li><b>Eligibility:</b> <span id="lbl-playerinfoelig">XX</span></li>
+										  <li><b>Owner:</b> <span id="lbl-playerinfoowner">[available]</span></li>
+										</ul>											
+									</div>
+									<div class="row" id="player_detail_row2">
+										<form class="form">
+											<div class="form-group" id="form-group-playernote">
+											    <label for="textarea-playernote" class="control-label" style="font-size:12px">Player Notes:</label>
+											    <textarea class="form-control vresize" rows="6" style="font-size:12px" id="textarea-playernote"></textarea>
+											</div>
+											<button class="btn btn-primary btn-block" id="btn-playerinfosavenote" disabled="disabled">Save Note</button>
+										</form>												
+									</div>
+								</div>
+							</div>																		
+							
+						</div>						
+					
+					</div>
 				</div>
 			</div>
 			  <div class="col-md-2">
