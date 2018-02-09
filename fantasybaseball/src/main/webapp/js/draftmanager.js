@@ -157,6 +157,9 @@ $(function() {
 	  $('#team-select').on('change', function(){
 	    var selected = $(this).find("option:selected").text();
 	  });
+	  
+	    $( "#sortable" ).sortable();
+	    $( "#sortable" ).disableSelection();
 });
 
 
