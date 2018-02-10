@@ -152,9 +152,9 @@ div#livestandings-row {
 	width: 80%; 
 }
 #sortable li { 
-	margin: 3px 3px 3px 3px;
-    padding: 1px;
-    padding-left: 20px;
+	margin: 0px 0px 0px 0px;
+    padding: 0px;
+    padding-left: 10px;
     font-size: 12px;
     height: 18px;
 }
@@ -182,10 +182,23 @@ div#livestandings-row {
 }
 
 #player_detail_row1,
-#player_detail_row2 {
+#player_detail_row2,
+#player_detail_row2b,
+#player_detail_row3,
+#player_detail_row4 {
 	margin-right: 0px;
 	margin-left: 0px;
 } 
+
+#player_detail_row2,
+#player_detail_row2b {
+	margin-bottom: 10px;
+} 
+
+#btn-detaildraftplayer,
+#btn-detailqueue {
+	width: 77px;
+}
 
 #header-playerinfoname {
 	margin-top: 4px;
@@ -682,15 +695,11 @@ td { font-size: 12px; }
 								<div class="panel-heading" id="player_queue_heading">
 									<h3 class="panel-title">Player Queue</h3>
 								</div>	
-								<div class="panel-body" id="player_queue_panel_body" style="min-height: 137px; max-height: 137px; overflow-y: scroll;">
+								<div class="panel-body" id="player_queue_panel_body" style="min-height: 150px; max-height: 150px; overflow-y: scroll;">
 									<ul id="sortable">
-									  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
-									  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
-									  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
-									  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
-									  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
-									  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
-									  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li>
+										<li class="ui-state-default">Item 1</li>
+										<li class="ui-state-default">Item 2</li>
+										<li class="ui-state-default">Item 3</li>
 									</ul>
 								</div>							
 							</div>
@@ -702,13 +711,24 @@ td { font-size: 12px; }
 								<div class="panel-heading" id="player_detail_heading">
 									<h3 class="panel-title">Player Detail</h3>
 								</div>
-								<div class="panel-body" id="player_detail_panel_body">
-									<div class="row" id="player_detail_row1">
+								<div class="panel-body" id="player_detail_panel_body" style="min-height: 340px; max-height: 340px;">
+									<p id="player_detail_paragraph">Select a player in the Draft Analysis tab to get player detail here.
+									</p>
+									<div hidden class="row" id="player_detail_row1">
 									    <h4 id="header-playerinfoname"style="font-size: 16px;"><span id="lbl-playerinfoname">Player Name</span> 
 									    	<small class="favorite">
 									    		<i id="fav-icon" class="fa fa-star-o"></i>
 									    	</small>
 									    </h4>
+									</div>
+									<div hidden class="row" id="player_detail_row2">
+										<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Send Player to the Block" id="btn-detaildraftplayer">To Block</button>
+				    					<button type="button" class="btn btn-sm" data-toggle="tooltip" title="Add Player to Queue" id="btn-detailqueue">To Queue</button>
+									</div>
+									<div hidden class="row" id="player_detail_row2b">
+										<button type="button" class="btn btn-sm btn-block" disabled="disabled" id="btn-detailownedplayer">Player is owned</button>
+									</div>									
+									<div hidden class="row" id="player_detail_row3">
 									    <ul class="list-unstyled" style="font-size:12px">
 										  <li><b>Team:</b> <span id="lbl-playerinfoteam">Fake Team</span></li>
 										  <li><b>Age:</b> <span id="lbl-playerinfoage">99</span></li>
@@ -716,7 +736,7 @@ td { font-size: 12px; }
 										  <li><b>Owner:</b> <span id="lbl-playerinfoowner">[available]</span></li>
 										</ul>											
 									</div>
-									<div class="row" id="player_detail_row2">
+									<div hidden class="row" id="player_detail_row4">
 										<form class="form">
 											<div class="form-group" id="form-group-playernote">
 											    <label for="textarea-playernote" class="control-label" style="font-size:12px">Player Notes:</label>

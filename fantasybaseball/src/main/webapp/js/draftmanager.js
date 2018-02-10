@@ -1607,6 +1607,32 @@ function updateTeamInfoTab(){
 	playertable = null;
 }
 
+// Load Player Queue
+function updatePlayerQueue(){
+	
+	$("#player_queue_panel_body ul").empty();
+	var playertable = $('#playergrid_table').DataTable();
+
+	// Get players from table that have been drafted by selected team
+	var favplayers = playertable.rows( function ( idx, data, node ) {
+        return data.favorite_flag == true ?
+            true : false;
+    } )
+    .data();
+
+	// For each drafted player on a team, fill them into the team roster grid
+	$.each( favplayers, function( key, value ) {
+		// console.log("Each teamplayer: " + value.full_name);
+		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + value.id + '>' + value.full_name + '</li>');
+		// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
+		// teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
+		
+	});
+		
+	playertable = null;
+}
+
+
 
 function loadDraftPlayerAmtSelector(){
 	
@@ -3056,9 +3082,16 @@ function loadPlayerGridTable(data, isInitialLoad)
 		$("#lbl-playerinfoage").text(row.age);
 		$("#lbl-playerinfoelig").text(row.custom_position);
 		
-		if ((row.leagueteam_name == null)||(row.leagueteam_name == ""))
+		if ((row.leagueteam_name == null)||(row.leagueteam_name == "")) {
 			$("#lbl-playerinfoowner").text("[available]");
-		else $("#lbl-playerinfoowner").text(row.leagueteam_name);
+			$('#player_detail_row2').show();
+			$('#player_detail_row2b').hide();
+		}
+		else {
+			$("#lbl-playerinfoowner").text(row.leagueteam_name);
+			$('#player_detail_row2b').show();
+			$('#player_detail_row2').hide();
+		}
 		
 		$("#textarea-playernote").removeAttr("disabled");
 		if (row.team_player_note != null){
@@ -3076,7 +3109,12 @@ function loadPlayerGridTable(data, isInitialLoad)
 			$("#fav-icon").removeClass("fa-star");
 			$("#fav-icon").addClass("fa-star-o");
 		}
-			
+		
+		$('#player_detail_paragraph').hide();
+		$('#player_detail_row1').show();
+		$('#player_detail_row3').show();
+		$('#player_detail_row4').show();
+		
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
     	// $('#info-tabs a[href="#tab-teaminfo"]').tab('show');
@@ -4123,6 +4161,8 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
 			// Calc and load team overview list
 			// Also calculates team open roster slots
 			calcTeamOvwList();
+			
+			updatePlayerQueue();
 			
         }
         else {
