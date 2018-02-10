@@ -376,7 +376,11 @@ $(document).ready(function()
 
 	});
 	
-	$("#fav-icon").click(function(ev){
+	$("#btn-detailqueue").click(function(ev){
+		
+		updatePlayerQueue();
+		
+		/*
 		var playertable = $('#playergrid_table').DataTable();
 		// console.log("Player: " + playernoterow.full_name);
 		// console.log("Player ID: " + playernoterow.id);
@@ -394,6 +398,9 @@ $(document).ready(function()
 		
 		playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
 		mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
+		
+		playertable = null;
+		*/
 	})
 	
 	//  Part of original draft player modal
@@ -1608,7 +1615,7 @@ function updateTeamInfoTab(){
 }
 
 // Load Player Queue
-function updatePlayerQueue(){
+function loadPlayerQueue(){
 	
 	$("#player_queue_panel_body ul").empty();
 	var playertable = $('#playergrid_table').DataTable();
@@ -1620,19 +1627,38 @@ function updatePlayerQueue(){
     } )
     .data();
 
-	// For each drafted player on a team, fill them into the team roster grid
+	// For each favorite player, add to player queue
 	$.each( favplayers, function( key, value ) {
-		// console.log("Each teamplayer: " + value.full_name);
 		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + value.id + '>' + value.full_name + '</li>');
-		// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
-		// teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
-		
 	});
 		
 	playertable = null;
 }
 
-
+//Update Player Queue
+function updatePlayerQueue(){
+	var playertable = $('#playergrid_table').DataTable();
+	// console.log("Player: " + playernoterow.full_name);
+	// console.log("Player ID: " + playernoterow.id);
+	  
+	if ($("#fav-icon").hasClass("fa-star-o")){
+		playernoterow.favorite_flag = true;
+		$("#fav-icon").removeClass("fa-star-o");
+		$("#fav-icon").addClass("fa-star");
+		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + playernoterow.id + '>' + playernoterow.full_name + '</li>');
+	}
+	else if ($("#fav-icon").hasClass("fa-star")){
+		playernoterow.favorite_flag = false;
+		$("#fav-icon").removeClass("fa-star");
+		$("#fav-icon").addClass("fa-star-o");
+		$("#player_queue_panel_body ul #" + playernoterow.id).remove();
+	}
+	
+	playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
+	mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
+	
+	playertable = null;
+}
 
 function loadDraftPlayerAmtSelector(){
 	
@@ -3064,12 +3090,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 	var select_data_table = $('#playergrid_table').DataTable();
 	select_data_table
     .on( 'select', function ( e, dt, type, indexes ) {
-    	
-    	// $('#section-teaminfo').hide();
-    	
-        // Show the player info tab
-		// $('#info-tabs a[href="#tab-playerinfo"]').tab('show');
-    	
+
     	var select_data_table_b = $('#playergrid_table').DataTable();
         var row = select_data_table_b.rows( indexes ).data()[0];
         
@@ -3091,6 +3112,8 @@ function loadPlayerGridTable(data, isInitialLoad)
 			$("#lbl-playerinfoowner").text(row.leagueteam_name);
 			$('#player_detail_row2b').show();
 			$('#player_detail_row2').hide();
+			$('#btn-detailownedplayer').text('Owned by ' + row.leagueteam_name);
+			
 		}
 		
 		$("#textarea-playernote").removeAttr("disabled");
@@ -4162,7 +4185,7 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
 			// Also calculates team open roster slots
 			calcTeamOvwList();
 			
-			updatePlayerQueue();
+			loadPlayerQueue();
 			
         }
         else {
