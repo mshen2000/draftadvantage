@@ -36,7 +36,7 @@ var timerLoadPlayerGridStart;
 var playerdraftrow;
 
 //Saves the selected player from the player grid for update
-var playernoterow;
+var playerselectedrow;
 
 //Saves the selected player from the player custom position grid
 var playercustomposrow;
@@ -681,16 +681,16 @@ $(document).ready(function()
 		
 		// console.log("player note textarea: " + playernote);
 
-		playernoterow.team_player_note = playernote;
+		playerselectedrow.team_player_note = playernote;
 		
-		// console.log("Note Player: " + playernoterow.full_name);
-		// console.log("Note Player ID: " + playernoterow.id);
-		// console.log("Note Player team_player_note: " + playernoterow.team_player_note);
+		// console.log("Note Player: " + playerselectedrow.full_name);
+		// console.log("Note Player ID: " + playerselectedrow.id);
+		// console.log("Note Player team_player_note: " + playerselectedrow.team_player_note);
 		
-		playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
+		playertable.row('#' + playerselectedrow.id + '').data(playerselectedrow).draw();
 		
 		// mssolutions.fbapp.draftmanager.updatePlayerNote(league_id, playerid, playernote);
-		mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
+		mssolutions.fbapp.draftmanager.updatePlayerInfo(playerselectedrow);
 	});
 
 	// Button to save custom position for a player
@@ -858,7 +858,10 @@ $(document).ready(function()
 		var playertable = $('#playergrid_table').DataTable();
 		var playerid = $("#header-ontheblock-draftplayer").val();
 		var teamid = $("#select-ontheblock-draftteam").find("option:selected").val();
-		var teamname = $("#select-ontheblock-draftteam").find("option:selected").text();
+		// var teamname = $("#select-ontheblock-draftteam").find("option:selected").text();
+		console.log("Check getLeagueTeamName: " + getLeagueTeamName(teamid));
+		var teamname = getLeagueTeamName(teamid);
+		console.log("Check teamname: " + teamname);
 		var position = $("#select-ontheblock-draftposition").find("option:selected").val();
 		// var position = selectedposrows[0].position
 		var amount = $("#select-ontheblock-draftamt").val();
@@ -870,6 +873,7 @@ $(document).ready(function()
 		// playerdraftrow.id = playerid;
 		playerdraftrow.leagueteam_id = teamid;
 		playerdraftrow.leagueteam_name = teamname;
+		console.log("Check playerdraftrow.leagueteam_name: " + playerdraftrow.leagueteam_name);
 		playerdraftrow.team_roster_position = position;
 		playerdraftrow.team_player_salary = amount;
 		
@@ -878,6 +882,7 @@ $(document).ready(function()
 		 console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
 		 console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
 		 console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
+		 console.log("Draft Player league team: " + playerdraftrow.leagueteam_name);
 		
 		if (playerdraftrow.favorite_flag == true) {
 			playerdraftrow.favorite_flag = false;
@@ -900,8 +905,10 @@ $(document).ready(function()
 		// Set the team select to the drafting team
 		$("#team-select").val(teamid);
 		updateTeamInfoTab();
-		
 		calcLiveAuctionValue();
+		// If the drafted player is still in the player info panel,
+		// update the panel with latest information (ie drafted status)
+		updatePlayerInfoPanel(playerselectedrow);
 
 	});
 	
@@ -911,7 +918,8 @@ $(document).ready(function()
 		var playertable = $('#playergrid_table').DataTable();
 		var playerid = $("#header-draftplayer").val();
 		var teamid = $("#select-draftteam").find("option:selected").val();
-		var teamname = $("#select-draftteam").find("option:selected").text();
+		// var teamname = $("#select-draftteam").find("option:selected").text();
+		var teamname = getLeagueTeamName(teamid);
 		var position = $("#select-draftposition").find("option:selected").val();
 		// var position = selectedposrows[0].position
 		var amount = $("#select-draftamt").find("option:selected").val();
@@ -960,7 +968,8 @@ $(document).ready(function()
 		var playertable = $('#playergrid_table').DataTable();
 		// var playerid = $("#header-draftplayer").val();
 		var teamid = $("#select-draftteamunk").find("option:selected").val();
-		var teamname = $("#select-draftteamunk").find("option:selected").text();
+		// var teamname = $("#select-draftteamunk").find("option:selected").text();
+		var teamname = getLeagueTeamName(teamid);
 		var position = $("#select-draftpositionunk").find("option:selected").val();
 		var amount = $("#select-draftamtunk").find("option:selected").val();
 		
@@ -1613,24 +1622,24 @@ function loadPlayerQueue(){
 //Update Player Queue
 function updatePlayerQueue(){
 	var playertable = $('#playergrid_table').DataTable();
-	// console.log("Player: " + playernoterow.full_name);
-	// console.log("Player ID: " + playernoterow.id);
+	// console.log("Player: " + playerselectedrow.full_name);
+	// console.log("Player ID: " + playerselectedrow.id);
 	  
 	if ($("#fav-icon").hasClass("fa-star-o")){
-		playernoterow.favorite_flag = true;
+		playerselectedrow.favorite_flag = true;
 		$("#fav-icon").removeClass("fa-star-o");
 		$("#fav-icon").addClass("fa-star");
-		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + playernoterow.id + '>' + playernoterow.full_name + '</li>');
+		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + playerselectedrow.id + '>' + playerselectedrow.full_name + '</li>');
 	}
 	else if ($("#fav-icon").hasClass("fa-star")){
-		playernoterow.favorite_flag = false;
+		playerselectedrow.favorite_flag = false;
 		$("#fav-icon").removeClass("fa-star");
 		$("#fav-icon").addClass("fa-star-o");
-		$("#player_queue_panel_body ul #" + playernoterow.id).remove();
+		$("#player_queue_panel_body ul #" + playerselectedrow.id).remove();
 	}
 	
-	playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
-	mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
+	playertable.row('#' + playerselectedrow.id + '').data(playerselectedrow).draw();
+	mssolutions.fbapp.draftmanager.updatePlayerInfo(playerselectedrow);
 	
 	playertable = null;
 }
@@ -3117,8 +3126,11 @@ function loadPlayerGridTable(data, isInitialLoad)
         var row = select_data_table_b.rows( indexes ).data()[0];
         
         // Set global variable for player row
-        playernoterow = row;
+        playerselectedrow = row;
+        
+        updatePlayerInfoPanel(row);
 		
+        /*
 		$("#lbl-playerinfoname").val(row.id);
 		$("#lbl-playerinfoname").text(row.full_name);
 		$("#lbl-playerinfoteam").text(row.team);
@@ -3135,7 +3147,6 @@ function loadPlayerGridTable(data, isInitialLoad)
 			$('#player_detail_row2b').show();
 			$('#player_detail_row2').hide();
 			$('#btn-detailownedplayer').text('Owned by ' + row.leagueteam_name);
-			
 		}
 		
 		$("#textarea-playernote").removeAttr("disabled");
@@ -3159,6 +3170,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 		$('#player_detail_row1').show();
 		$('#player_detail_row3').show();
 		$('#player_detail_row4').show();
+		*/
 		
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
@@ -3630,6 +3642,51 @@ function clearPlayerInfoTab(){
 	$("#textarea-playernote").attr("disabled","disabled"); 
 }
 
+// Update player info panel with input playerrow data
+function updatePlayerInfoPanel(playerrow){
+	var row = playerrow;
+	
+	$("#lbl-playerinfoname").val(row.id);
+	$("#lbl-playerinfoname").text(row.full_name);
+	$("#lbl-playerinfoteam").text(row.team);
+	$("#lbl-playerinfoage").text(row.age);
+	$("#lbl-playerinfoelig").text(row.custom_position);
+	
+	if ((row.leagueteam_name == null)||(row.leagueteam_name == "")) {
+		$("#lbl-playerinfoowner").text("[available]");
+		$('#player_detail_row2').show();
+		$('#player_detail_row2b').hide();
+	}
+	else {
+		$("#lbl-playerinfoowner").text(row.leagueteam_name);
+		$('#player_detail_row2b').show();
+		$('#player_detail_row2').hide();
+		$('#btn-detailownedplayer').text('Owned by ' + row.leagueteam_name);
+	}
+	
+	$("#textarea-playernote").removeAttr("disabled");
+	if (row.team_player_note != null){
+		if (row.team_player_note.trim() != ""){
+			$("#textarea-playernote").val(row.team_player_note);
+		} else $("#textarea-playernote").val("");
+	}else $("#textarea-playernote").val("");
+	
+	// $('#section-teaminfo').hide();
+	
+	if (row.favorite_flag) {
+		$("#fav-icon").removeClass("fa-star-o");
+		$("#fav-icon").addClass("fa-star");
+	} else {
+		$("#fav-icon").removeClass("fa-star");
+		$("#fav-icon").addClass("fa-star-o");
+	}
+	
+	$('#player_detail_paragraph').hide();
+	$('#player_detail_row1').show();
+	$('#player_detail_row3').show();
+	$('#player_detail_row4').show();
+}
+
 function showUndraftPlayerDialog(playergridundraftrow){
 	var data_table = $('#playergrid_table').DataTable();
     var league_id = $("#league-select").find("option:selected").val();
@@ -3846,6 +3903,16 @@ function loadLeagueSelector(data){
 	}
 
 	options.append($("<option value='newleague'/>").text("Add New League..."));
+}
+
+// Get the name of a league team with the team ID
+function getLeagueTeamName(teamid){
+	var teamlist = dm_globalteamlist
+	var teamname = "";
+	$.each(teamlist, function(index, value) {
+		if (value.id == teamid){ return teamname = value.team_name; }
+	});
+	return teamname;
 }
 
 function updateTeamList(data){
