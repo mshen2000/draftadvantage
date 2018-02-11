@@ -364,44 +364,13 @@ $(document).ready(function()
 	});
 	
 	// Tab change event
-	$("a[href='#tab-teaminfo']").on('shown.bs.tab', function (e) {
-
-		$('#section-teaminfo').show();
-
-	});
+	$("a[href='#tab-teaminfo']").on('shown.bs.tab', function (e) { $('#section-teaminfo').show(); });
 	
-	$("a[href='#tab-playerinfo']").on('shown.bs.tab', function (e) {
-
-		$('#section-teaminfo').hide();
-
-	});
+	$("a[href='#tab-playerinfo']").on('shown.bs.tab', function (e) { $('#section-teaminfo').hide(); });
 	
-	$("#btn-detailqueue").click(function(ev){
-		
-		updatePlayerQueue();
-		
-		/*
-		var playertable = $('#playergrid_table').DataTable();
-		// console.log("Player: " + playernoterow.full_name);
-		// console.log("Player ID: " + playernoterow.id);
-		  
-		if ($("#fav-icon").hasClass("fa-star-o")){
-			playernoterow.favorite_flag = true;
-			$("#fav-icon").removeClass("fa-star-o");
-			$("#fav-icon").addClass("fa-star");
-		}
-		else if ($("#fav-icon").hasClass("fa-star")){
-			playernoterow.favorite_flag = false;
-			$("#fav-icon").removeClass("fa-star");
-			$("#fav-icon").addClass("fa-star-o");
-		}
-		
-		playertable.row('#' + playernoterow.id + '').data(playernoterow).draw();
-		mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
-		
-		playertable = null;
-		*/
-	})
+	$("#btn-detailqueue").click(function(ev){  updatePlayerQueue(); })
+	
+	$("#btn-detaildraftplayer").click(function(ev){ sendPlayerToBlock(); })
 	
 	//  Part of original draft player modal
     $("#select-draftteam").change(function(e){
@@ -910,8 +879,14 @@ $(document).ready(function()
 		 console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
 		 console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
 		
-		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
+		if (playerdraftrow.favorite_flag == true) {
+			playerdraftrow.favorite_flag = false;
+			$("#player_queue_panel_body ul #" + playerdraftrow.id).remove();
+			mssolutions.fbapp.draftmanager.updatePlayerInfo(playerdraftrow);
+		}
 		
+		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
+
 		// Draft player
 		mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
 				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
@@ -1658,6 +1633,53 @@ function updatePlayerQueue(){
 	mssolutions.fbapp.draftmanager.updatePlayerInfo(playernoterow);
 	
 	playertable = null;
+}
+
+//Send player to block
+function sendPlayerToBlock(){
+	
+	var playerid = $("#lbl-playerinfoname").val();
+	var playertable = $('#playergrid_table').DataTable();
+	playerdraftrow = playertable.row('#' + playerid).data();
+
+	// New, may want to remove later
+	loadTeamSelect(dm_globalteamlist);
+	
+	$("#select-ontheblock-draftteam").removeAttr("disabled");
+	$("#select-ontheblock-draftamt").removeAttr("disabled");
+	$("#select-ontheblock-draftposition").attr("disabled","disabled");
+
+    var data = playerdraftrow;
+    
+    resetDraftPlayerModal();
+    $("#btn-draftplayer").attr("disabled","disabled");
+    
+    $("#header-ontheblock-draftplayer").text(data.full_name + ", " + data.team + " - " + data.custom_position + " - $" + data.live_auction_value);
+    $("#header-ontheblock-draftplayer").val(data.id);
+    
+    var proj_string = "";
+    if (data.pitcher_hitter == "P"){
+    	console.log(dm_leagueinfo.cat_pitcher_w + ", " + dm_leagueinfo.cat_pitcher_sv)
+    	if (dm_leagueinfo.cat_pitcher_wins) proj_string = proj_string + round(data.pitcher_w,0) + " W, ";
+    	if (dm_leagueinfo.cat_pitcher_saves) proj_string = proj_string + round(data.pitcher_sv,0) + " SV, ";
+    	if (dm_leagueinfo.cat_pitcher_holds) proj_string = proj_string + round(data.pitcher_hld,0) + " HOLDS, ";
+    	if (dm_leagueinfo.cat_pitcher_so) proj_string = proj_string + round(data.pitcher_k,0) + " K, ";
+    	if (dm_leagueinfo.cat_pitcher_era) proj_string = proj_string + round(data.pitcher_era,2) + " ERA, ";
+    	if (dm_leagueinfo.cat_pitcher_whip) proj_string = proj_string + round(data.pitcher_whip,2) + " WHIP, ";
+    	$("#header2-ontheblock-draftplayer").html(dm_leagueinfo.league_year + " Projection:<br>" + proj_string.slice(0,-2));
+    }
+    else {
+    	if (dm_leagueinfo.cat_hitter_avg) proj_string = proj_string + data.hitter_avg.toString().substr(1) + " AVG, ";
+    	if (dm_leagueinfo.cat_hitter_hr) proj_string = proj_string + round(data.hitter_hr,0) + " HR, ";
+    	if (dm_leagueinfo.cat_hitter_r) proj_string = proj_string + round(data.hitter_runs,0) + " R, ";
+    	if (dm_leagueinfo.cat_hitter_sb) proj_string = proj_string + round(data.hitter_sb,0) + " SB, ";
+    	if (dm_leagueinfo.cat_hitter_rbi) proj_string = proj_string + round(data.hitter_rbi,0) + " RBI, ";
+    	if (dm_leagueinfo.cat_hitter_obp) proj_string = proj_string + data.hitter_obp.toString().substr(1) + " OBP, ";
+    	$("#header2-ontheblock-draftplayer").html(dm_leagueinfo.league_year + " Projection:<br>" + proj_string.slice(0,-2));
+    }
+
+    $("#btn-draftamt-plus").removeAttr("disabled");
+    $("#btn-draftamt-minus").removeAttr("disabled");
 }
 
 function loadDraftPlayerAmtSelector(){
