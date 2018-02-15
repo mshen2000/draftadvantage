@@ -158,7 +158,7 @@ $(function() {
 	    var selected = $(this).find("option:selected").text();
 	  });
 	  
-	    $( "#sortable" ).sortable();
+	    $( "#sortable" ).sortable({ handle: ".handle" });
 	    $( "#sortable" ).disableSelection();
 });
 
@@ -1613,7 +1613,8 @@ function loadPlayerQueue(){
 
 	// For each favorite player, add to player queue
 	$.each( favplayers, function( key, value ) {
-		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + value.id + '>' + value.full_name + '</li>');
+		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + value.id 
+				+ '><i class="fa fa-bars handle" aria-hidden="true"></i>  ' + value.full_name + '</li>');
 	});
 		
 	playertable = null;
@@ -1629,7 +1630,8 @@ function updatePlayerQueue(){
 		playerselectedrow.favorite_flag = true;
 		$("#fav-icon").removeClass("fa-star-o");
 		$("#fav-icon").addClass("fa-star");
-		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + playerselectedrow.id + '>' + playerselectedrow.full_name + '</li>');
+		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + playerselectedrow.id 
+				+ '><i class="fa fa-bars handle" aria-hidden="true"></i>  ' + playerselectedrow.full_name + '</li>');
 	}
 	else if ($("#fav-icon").hasClass("fa-star")){
 		playerselectedrow.favorite_flag = false;
