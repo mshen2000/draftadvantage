@@ -158,13 +158,25 @@ $(function() {
 	    var selected = $(this).find("option:selected").text();
 	  });
 	  
-	    $( "#sortable" ).sortable({ handle: ".handle" });
+	    $( "#sortable" )
+	    	.sortable({ handle: ".handle" })
+	    	.selectable({ 
+	    		filter: "li"
+	    		,cancel: ".handle" 
+	    		,selected: function(event, ui) { 
+	    	        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");    
+	    	        console.log("playerid: " + ui.selected.id);
+	    	        selectPlayerInPlayerGridTable(ui.selected.id);
+	    	    }  
+	    	});
 	    $( "#sortable" ).disableSelection();
+
 });
 
 
 $(document).ready(function()
 {
+
 	// Tab change event
 	$("a[href='#maintab2']").on('hidden.bs.tab', function (e) {
 
@@ -3180,6 +3192,23 @@ function loadPlayerGridTable(data, isInitialLoad)
     	// clearPlayerInfoTab();
     } );
 
+}
+
+// For a given player ID, select the player in the player grid table
+// and go to the page that the player is on.
+function selectPlayerInPlayerGridTable (playerid) {
+    var playertable = $('#playergrid_table').DataTable();
+    var playerrow = playertable.row('#' + playerid + '');
+    playerrow.select();
+    
+    var displayIndex = playertable.rows( { order: 'applied', search: 'applied' } )
+    	.indexes().indexOf( playerrow.index() ); 
+    var pageSize = playertable.page.len();
+     
+    playertable.page( parseInt( displayIndex / pageSize, 10 ) ).draw( false );
+    
+	playertable = null;
+	playerrow = null;
 }
 
 function loadPositionalAnlaysisTable(data, isInitialLoad)
