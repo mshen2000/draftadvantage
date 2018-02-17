@@ -1653,6 +1653,7 @@ function updatePlayerQueue(){
 	}
 	
 	playertable.row('#' + playerselectedrow.id + '').data(playerselectedrow).draw();
+	selectPlayerInPlayerGridTable(playerselectedrow.id);
 	mssolutions.fbapp.draftmanager.updatePlayerInfo(playerselectedrow);
 	
 	playertable = null;
