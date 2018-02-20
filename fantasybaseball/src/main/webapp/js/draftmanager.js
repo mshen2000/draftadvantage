@@ -1032,7 +1032,12 @@ $(document).ready(function()
 		calcLiveAuctionValue();
 
 	});
-	
+
+	// Undraft button in player detail panel
+	$('#btn-detailownedplayer').click(function () {
+        showUndraftPlayerDialog(playerselectedrow);
+       
+    } );
 	
 	$('#btn-undraftplayer').click(function () {
 		var roster_table = $('#teamroster_table').DataTable();
@@ -1062,7 +1067,6 @@ $(document).ready(function()
             showUndraftPlayerDialog(data1);
     	}
     	
-
     } );
 	
 	$('#btn-editdraftplayer').click(function () {
@@ -2995,7 +2999,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             { "title": "<i class='fa fa-bolt'></i>-$", className: "dm_export", "mData": "live_auction_value", "render": function ( data, type, row ) {
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
-            { "title": "Action", "mData": "leagueteam_id","width": 56, "render": function ( data, type, row ) {			
+            { "visible": false, "title": "Action", "mData": "leagueteam_id","width": 56, "render": function ( data, type, row ) {			
             	var buttons;
             	if (data == 0)
             		buttons = "<button type='button' class='btn btn-primary btn-xs btn-draft' data-toggle='tooltip' title='Draft Player'><i class='fa fa-user-plus'></i></button>";
@@ -3684,11 +3688,13 @@ function updatePlayerInfoPanel(playerrow){
 	$("#lbl-playerinfoage").text(row.age);
 	$("#lbl-playerinfoelig").text(row.custom_position);
 	
+	// if player is not owned
 	if ((row.leagueteam_name == null)||(row.leagueteam_name == "")) {
 		$("#lbl-playerinfoowner").text("[available]");
 		$('#player_detail_row2').show();
 		$('#player_detail_row2b').hide();
 	}
+	// else if player is owned
 	else {
 		$("#lbl-playerinfoowner").text(row.leagueteam_name);
 		$('#player_detail_row2b').show();
@@ -3753,6 +3759,9 @@ function showUndraftPlayerDialog(playergridundraftrow){
             		data_table.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
             		
             		mssolutions.fbapp.draftmanager.undraftPlayer(league_id, playerdraftrow.id);
+            		
+            		// If a player is selected in the grid, then update the player info panel
+            		if (playerselectedrow) updatePlayerInfoPanel(playerselectedrow);
             		
             	} else {
 
