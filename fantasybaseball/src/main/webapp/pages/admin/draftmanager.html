@@ -55,6 +55,18 @@ body {
     padding-top: 60px !important;
 }
 
+.col-sm-1-5 { width: 12.5%; } /* = 8,3333 + 4,16667  */
+.col-sm-2-5 { width: 20.83333%; } /* = 16,6666 + 4,16667	*/
+.col-sm-3-5 { width: 29.16667%; } /* = 25 + 4,16667	*/
+.col-sm-4-5 { width: 37.5%; } /* = 33,3333 + 4,16667	*/
+.col-sm-5-5 { width: 45.83333%; } /* = 41,6667 + 4,16667	*/
+.col-sm-6-5 { width: 54.16667%; } /* = 50 + 4,16667	*/
+.col-sm-7-5 { width: 62.5%; } /* = 58,3333 + 4,16667	*/
+.col-sm-8-5 { width: 70.83333%; } /* = 66,6666 + 4,16667	*/
+.col-sm-9-5 { width: 79.16667%; } /* = 75 + 4,16667	*/
+.col-sm-10-5 { width: 87.5%; } /* = 83,3333 + 4,16667	*/
+.col-sm-11-5 { width: 95.8333%; } /* = 91,6666 + 4,16667	*/
+
 #pagetitle {
 	margin-top: 10px !important;
 }
@@ -202,7 +214,7 @@ div#livestandings-row {
 
 #btn-detaildraftplayer,
 #btn-detailqueue {
-	width: 77px;
+	width: 101px;
 }
 
 #header-playerinfoname {
@@ -538,7 +550,7 @@ td { font-size: 12px; }
 				</div>
 				
 				<div class="row"> 
-					<div class="col-sm-9" id="main_tabs_col">
+					<div class="col-sm-9 col-sm-9-5" id="main_tabs_col">
 						<ul class="nav nav-tabs">
 						  <li class="active"><a data-toggle="tab" href="#maintab1">Draft Analysis</a></li>
 						  <li><a data-toggle="tab" href="#maintab2">Position Availability</a></li>
@@ -691,16 +703,15 @@ td { font-size: 12px; }
 							</div>
 						  </div>
 						</div>
-			
-				
+
 					</div>
-					<div class="col-sm-3" id="player_queue_col">
+					<div class="col-sm-2 col-sm-2-5" id="player_queue_col">
 						<div class="row">
 							<div class="panel panel-default" id="player_queue_panel">
 								<div class="panel-heading" id="player_queue_heading">
 									<h3 class="panel-title">Player Queue</h3>
 								</div>	
-								<div class="panel-body" id="player_queue_panel_body" style="min-height: 150px; max-height: 150px; overflow-y: scroll;">
+								<div class="panel-body" id="player_queue_panel_body" style="min-height: 180px; max-height: 180px; overflow-y: scroll;">
 									<ul id="sortable">
 										<li class="ui-state-default">Item 1</li>
 										<li class="ui-state-default">Item 2</li>

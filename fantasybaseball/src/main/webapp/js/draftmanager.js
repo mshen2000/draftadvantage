@@ -2822,7 +2822,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             	}	
             	return text;
                 }},
-            { "title": "Age", className: "dm_export", "mData": "age", "sDefaultContent": "", 
+            { "title": "Age", className: "dm_export","width": 20, "mData": "age", "sDefaultContent": "", 
                 	"createdCell": function (td, cellData, rowData, row, col) {setAgeCellColor(td, cellData)} 
                 },
             { "visible": false, "title": "Team", "mData": "team", "sDefaultContent": ""},
@@ -2834,7 +2834,7 @@ function loadPlayerGridTable(data, isInitialLoad)
                 "sDefaultContent": ""}, */
 	        { "title": "Pos", className: "dm_export", "mData": "custom_position", "sDefaultContent": ""},
             { "title": "St", className: "dm_export", "mData": "dc_status", "sDefaultContent": ""},				// Column 5
-            { "title": "Avg", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_avg, "mData": "hitter_avg", "render": function ( data, type, row ) {
+            { "title": "Avg", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_avg,"width": "25px", "mData": "hitter_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ 
             		var obpnum = data.toFixed(3);
                     return obpnum.toString().substr(obpnum.length - 4);
@@ -2844,31 +2844,31 @@ function loadPlayerGridTable(data, isInitialLoad)
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_avg, 1)}
                 },
                 "sDefaultContent": ""},
-            { "title": "HR", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_hr, "mData": "hitter_hr", "render": function ( data, type, row ) {		// Column 7
+            { "title": "HR", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_hr,"width": 16, "mData": "hitter_hr", "render": function ( data, type, row ) {		// Column 7
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0); } else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_hr, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "SB", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_sb, "mData": "hitter_sb", "render": function ( data, type, row ) {
+            { "title": "SB", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_sb,"width": 16, "mData": "hitter_sb", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0); } else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_sb, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "R", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_r, "mData": "hitter_runs", "render": function ( data, type, row ) {
+            { "title": "R", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_r,"width": 22, "mData": "hitter_runs", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0); } else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_runs, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "RBI", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_rbi, "mData": "hitter_rbi", "render": function ( data, type, row ) {		// Column 10
+            { "title": "RBI", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_rbi,"width": 22, "mData": "hitter_rbi", "render": function ( data, type, row ) {		// Column 10
             	if (row.pitcher_hitter == "H"){ return data.toFixed(0) } else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "OBP", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_obp, "mData": "hitter_obp", "render": function ( data, type, row ) {		// Column 11
+            { "title": "OBP", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_obp,"width": 25, "mData": "hitter_obp", "render": function ( data, type, row ) {		// Column 11
             	if (row.pitcher_hitter == "H"){ 
             		var avgnum = data.toFixed(3);
                     return avgnum.toString().substr(avgnum.length - 4);
@@ -2877,126 +2877,124 @@ function loadPlayerGridTable(data, isInitialLoad)
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_obp, 1)}
                 }, "sDefaultContent": ""},             
-            { "title": "W", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_wins, "mData": "pitcher_w", "render": function ( data, type, row ) {
+            { "title": "W", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_wins, "mData": "pitcher_w", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_wins, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "SV", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_saves, "mData": "pitcher_sv", "render": function ( data, type, row ) {
+            { "title": "SV", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_saves, "mData": "pitcher_sv", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_saves, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "HLD", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_holds, "mData": "pitcher_hld", "render": function ( data, type, row ) {
+            { "title": "HLD", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_holds, "mData": "pitcher_hld", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_holds, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "SO", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_so, "mData": "pitcher_k", "render": function ( data, type, row ) {
+            { "title": "SO", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_so, "mData": "pitcher_k", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(0) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_so, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "ERA", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_era, "mData": "pitcher_era", "render": function ( data, type, row ) {
+            { "title": "ERA", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_era, "mData": "pitcher_era", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){ return data.toFixed(2) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_era, 1)}
                 }, "sDefaultContent": ""},
-            { "title": "WHIP", className: "dm_stat dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_whip, "mData": "pitcher_whip", "render": function ( data, type, row ) {		// Column 17
+            { "title": "WHIP", className: "dm_stat text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_whip, "mData": "pitcher_whip", "render": function ( data, type, row ) {		// Column 17
             	if (row.pitcher_hitter == "P"){ return data.toFixed(2) } else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_whip, 1)}
                 }, "sDefaultContent": ""},
                 
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_avg, "title": "zAVG", "mData": "hitter_z_avg", "render": function ( data, type, row ) {
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_avg, "title": "zAVG", "mData": "hitter_z_avg", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_avg, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_hr, "title": "zHR", "mData": "hitter_z_hr", "render": function ( data, type, row ) {
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_hr, "title": "zHR", "mData": "hitter_z_hr", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_hr, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_sb, "title": "zSB", "mData": "hitter_z_sb", "render": function ( data, type, row ) {
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_sb, "title": "zSB", "mData": "hitter_z_sb", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
                 },"createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_sb, 1)}
                 },  "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_r, "title": "zR", "mData": "hitter_z_runs", "render": function ( data, type, row ) {	
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_r, "title": "zR", "mData": "hitter_z_runs", "render": function ( data, type, row ) {	
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_runs, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_rbi, "title": "zRBI", "mData": "hitter_z_rbi", "render": function ( data, type, row ) {	// Column 22
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_rbi, "title": "zRBI", "mData": "hitter_z_rbi", "render": function ( data, type, row ) {	// Column 22
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_rbi, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_obp, "title": "zOBP", "mData": "hitter_z_obp", "render": function ( data, type, row ) {	// Column 23
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_hitter_obp, "title": "zOBP", "mData": "hitter_z_obp", "render": function ( data, type, row ) {	// Column 23
             	if (row.pitcher_hitter == "H"){return data.toFixed(2);} else if (row.pitcher_hitter == "P"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "H"){ setStatCellColor(td, rowData.hitter_z_obp, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_w, "title": "zW", "mData": "pitcher_z_wins", "render": function ( data, type, row ) {
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_w, "title": "zW", "mData": "pitcher_z_wins", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 },
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_wins, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_saves, "title": "zSV", "mData": "pitcher_z_saves", "render": function ( data, type, row ) {
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_saves, "title": "zSV", "mData": "pitcher_z_saves", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_saves, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_holds, "title": "zHLD", "mData": "pitcher_z_holds", "render": function ( data, type, row ) {
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_holds, "title": "zHLD", "mData": "pitcher_z_holds", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_holds, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_so, "title": "zSO", "mData": "pitcher_z_so", "render": function ( data, type, row ) {
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_so, "title": "zSO", "mData": "pitcher_z_so", "render": function ( data, type, row ) {
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_so, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_whip, "title": "zWHIP", "mData": "pitcher_z_whip", "render": function ( data, type, row ) {		
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_whip, "title": "zWHIP", "mData": "pitcher_z_whip", "render": function ( data, type, row ) {		
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_whip, 1)}
                 }, "sDefaultContent": "0" },
-            { "visible": false, className: "dm_zscore dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_era, "title": "zERA", "mData": "pitcher_z_era", "render": function ( data, type, row ) {	// Column 29
+            { "visible": false, className: "dm_zscore text-right dm_export" + " dm_league_cat_" + dm_leagueinfo.cat_pitcher_era, "title": "zERA", "mData": "pitcher_z_era", "render": function ( data, type, row ) {	// Column 29
             	if (row.pitcher_hitter == "P"){return data.toFixed(2);} else if (row.pitcher_hitter == "H"){return "";}
                 }, 
                 "createdCell": function (td, cellData, rowData, row, col) {
                 	if (rowData.pitcher_hitter == "P"){ setStatCellColor(td, rowData.pitcher_z_era, 1)}
                 }, "sDefaultContent": "0" },
                 
-            { "title": "NPV", className: "dm_export", "mData": "total_z", "render": function ( data, type, row ) {
+            { "title": "NPV", className: "dm_export text-right", "mData": "total_z", "render": function ( data, type, row ) {
             		if (data == null) return 0;
             		else return data.toFixed(1);
             	},
             	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},    
-//            { "title": "NPV", className: "dm_export", "mData": "total_z", render: $.fn.dataTable.render.number( ',', '.', 1 ),
-//            	"createdCell": function (td, cellData, rowData, row, col) { setStatCellColor(td, cellData, 5)}, "sDefaultContent": "0"},
-            { "title": "$", className: "dm_export", "mData": "init_auction_value", "render": function ( data, type, row ) {
+            { "title": "$", className: "dm_export text-right", "mData": "init_auction_value", "render": function ( data, type, row ) {
             		return "$" + data.toFixed(0);
                 }, "sDefaultContent": "0"},
-            { "title": "<i class='fa fa-bolt'></i>-$", className: "dm_export", "mData": "live_auction_value", "render": function ( data, type, row ) {
+            { "title": "<i class='fa fa-bolt'></i>-$", className: "dm_export text-right", "mData": "live_auction_value", "render": function ( data, type, row ) {
         		return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
             { "visible": false, "title": "Action", "mData": "leagueteam_id","width": 56, "render": function ( data, type, row ) {			
