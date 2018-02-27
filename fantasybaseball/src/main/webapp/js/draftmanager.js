@@ -911,7 +911,7 @@ $(document).ready(function()
 		resetDraftPanel();
 		
 		// $('#draftplayer-modal').modal('hide');
-	
+
 		// Show the team info tab
 		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
 		// Set the team select to the drafting team
@@ -1616,7 +1616,7 @@ function updateTeamInfoTab(){
 
 // Load Player Queue
 function loadPlayerQueue(){
-	
+
 	$("#player_queue_panel_body ul").empty();
 	var playertable = $('#playergrid_table').DataTable();
 
@@ -1630,7 +1630,8 @@ function loadPlayerQueue(){
 	// For each favorite player, add to player queue
 	$.each( favplayers, function( key, value ) {
 		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + value.id 
-				+ '><i class="fa fa-bars handle" aria-hidden="true"></i>  ' + value.full_name + '</li>');
+				+ '><i class="fa fa-bars handle" aria-hidden="true"></i>  ' + value.full_name + ', ' 
+				+ value.team + ' ' + value.custom_position + '</li>');
 	});
 		
 	playertable = null;
@@ -1647,7 +1648,8 @@ function updatePlayerQueue(){
 		$("#fav-icon").removeClass("fa-star-o");
 		$("#fav-icon").addClass("fa-star");
 		$("#player_queue_panel_body ul").append('<li class="ui-state-default" id=' + playerselectedrow.id 
-				+ '><i class="fa fa-bars handle" aria-hidden="true"></i>  ' + playerselectedrow.full_name + '</li>');
+				+ '><i class="fa fa-bars handle" aria-hidden="true"></i>  ' + playerselectedrow.full_name + ', ' 
+				+ playerselectedrow.team + ' ' + playerselectedrow.custom_position + '</li>');
 	}
 	else if ($("#fav-icon").hasClass("fa-star")){
 		playerselectedrow.favorite_flag = false;
@@ -3144,50 +3146,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         
         // Set global variable for player row
         playerselectedrow = row;
-        
         updatePlayerInfoPanel(row);
-		
-        /*
-		$("#lbl-playerinfoname").val(row.id);
-		$("#lbl-playerinfoname").text(row.full_name);
-		$("#lbl-playerinfoteam").text(row.team);
-		$("#lbl-playerinfoage").text(row.age);
-		$("#lbl-playerinfoelig").text(row.custom_position);
-		
-		if ((row.leagueteam_name == null)||(row.leagueteam_name == "")) {
-			$("#lbl-playerinfoowner").text("[available]");
-			$('#player_detail_row2').show();
-			$('#player_detail_row2b').hide();
-		}
-		else {
-			$("#lbl-playerinfoowner").text(row.leagueteam_name);
-			$('#player_detail_row2b').show();
-			$('#player_detail_row2').hide();
-			$('#btn-detailownedplayer').text('Owned by ' + row.leagueteam_name);
-		}
-		
-		$("#textarea-playernote").removeAttr("disabled");
-		if (row.team_player_note != null){
-			if (row.team_player_note.trim() != ""){
-				$("#textarea-playernote").val(row.team_player_note);
-			} else $("#textarea-playernote").val("");
-		}else $("#textarea-playernote").val("");
-		
-		// $('#section-teaminfo').hide();
-		
-		if (row.favorite_flag) {
-			$("#fav-icon").removeClass("fa-star-o");
-			$("#fav-icon").addClass("fa-star");
-		} else {
-			$("#fav-icon").removeClass("fa-star");
-			$("#fav-icon").addClass("fa-star-o");
-		}
-		
-		$('#player_detail_paragraph').hide();
-		$('#player_detail_row1').show();
-		$('#player_detail_row3').show();
-		$('#player_detail_row4').show();
-		*/
 		
     } )
     .on( 'deselect', function ( e, dt, type, indexes ) {
@@ -3712,9 +3671,11 @@ function updatePlayerInfoPanel(playerrow){
 	if (row.favorite_flag) {
 		$("#fav-icon").removeClass("fa-star-o");
 		$("#fav-icon").addClass("fa-star");
+		$("#btn-detailqueue").text("Remove Player From Queue");
 	} else {
 		$("#fav-icon").removeClass("fa-star");
 		$("#fav-icon").addClass("fa-star-o");
+		$("#btn-detailqueue").text("Add Player to Queue");
 	}
 	
 	$('#player_detail_paragraph').hide();
