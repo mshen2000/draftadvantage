@@ -911,7 +911,7 @@ $(document).ready(function()
 		resetDraftPanel();
 		
 		// $('#draftplayer-modal').modal('hide');
-   
+     
 		// Show the team info tab
 		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
 		// Set the team select to the drafting team
