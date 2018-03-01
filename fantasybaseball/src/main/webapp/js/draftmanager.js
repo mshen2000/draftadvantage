@@ -907,7 +907,7 @@ $(document).ready(function()
 		// Draft player
 		mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
 				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
-		
+		 
 		resetDraftPanel();
 		
 		// $('#draftplayer-modal').modal('hide');
