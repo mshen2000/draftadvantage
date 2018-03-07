@@ -344,7 +344,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			j++;
 		}
 		for (int i = 1; i <= league.getNum_res(); i++){
-			items.add(new LeagueRosterItem(j, "RES"));
+			items.add(new LeagueRosterItem(j, "Res"));
 			j++;
 		}
 		

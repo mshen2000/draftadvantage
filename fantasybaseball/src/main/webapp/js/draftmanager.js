@@ -196,6 +196,16 @@ $(document).ready(function()
 
 	});
 	
+	// Tab change event for team overview
+	$("a[href='#maintab4']").on('shown.bs.tab', function (e) {	
+		
+		// Calc and load team overview list
+		// Also calculates team open roster slots
+		calcTeamOvwList();
+		
+	});
+
+	
 	// Tab change event for positional analysis
 	$("a[href='#maintab2']").on('shown.bs.tab', function (e) {
 		
@@ -1605,7 +1615,7 @@ function updateTeamInfoTab(){
 		$('#lbl-teambalance').text("Balance: $" + balance + "  ");
 		$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
 		$('#lbl-teamspots').text("Remaining Spots: " + spots);
-		$('#lbl-teamperplayer').text("Per Player Amount: $" + perplayer.toFixed(2));
+		$('#lbl-teamperplayer').text("Avg Player Amt: $" + perplayer.toFixed(2));
 		
         $("#btn-editdraftplayer").attr("disabled", "disabled");
         $("#btn-undraftplayer").attr("disabled", "disabled");
@@ -2284,6 +2294,8 @@ function loadTeamRosterTable(data, isInitialLoad)
         "info": false,
     	select: 'single',
         data: data,
+        "scrollY": "450px",
+        "scrollCollapse": true,
         "paging": false,
         "order": [[ 0, "asc" ]],
         "columns": [
@@ -4195,7 +4207,7 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         	
         	$.each( resp.items, function( key, value ) {
       		  
-        		if (value.position == "P" || value.position == "RES"){
+        		if (value.position == "P" || value.position == "Res"){
         			dm_teamrostertemplate_2.push(value);
         		} else {
         			dm_teamrostertemplate_1.push(value);
@@ -4217,7 +4229,7 @@ mssolutions.fbapp.draftmanager.getLeagueRoster = function(leagueid) {
         	}
         	
         	dm_teamrostercounts = counts;
-        	dm_rescount = counts["RES"];
+        	dm_rescount = counts["Res"];
         	// console.log("Roster Counts: " + JSON.stringify(dm_teamrostercounts));
         	// console.log("RES Count: " + dm_rescount);
         	

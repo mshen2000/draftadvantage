@@ -292,25 +292,15 @@ public class PlayerProjectedService implements Serializable {
 	 * @return Integer representing the number of saved elements
 	 */
 	public Integer updatePlayerProjections(List<PlayerProjected> playerlist, ProjectionProfile profile, String uname) {
-
-		// final String iproj_service = proj_service;
-		// final String iproj_period = proj_period;
-		// final Date iproj_date = proj_date;
-		// final Integer iyear = year;
-
+		
 		final String iuname = uname;
 
 		// Update playerlist with proj_service, proj_period, proj_date, year,
 		// and created/modified by uname
 		for (PlayerProjected element : playerlist) {
-			// element.setProjection_service(iproj_service);
-			// element.setProjection_period(iproj_period);
-			// element.setProjection_date(iproj_date);
-			// element.setProjected_year(iyear);
 			element.setProjection_profile(profile);
 			element.setCreatedby(iuname);
 			element.setModifiedby(iuname);
-			
 			element.pitcher_whip = (element.getPitcher_bb() + element.getPitcher_hits())/element.pitcher_ip;
 		}
 

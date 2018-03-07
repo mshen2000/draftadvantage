@@ -286,6 +286,26 @@ div#livestandings-row {
 	padding-bottom: 6px !important;
 }
 
+#pos_analysis_table>tbody>tr>th,
+#pos_analysis_table>tbody>tr>td{
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+	vertical-align: middle !important;
+	padding-top: 1px !important;
+	padding-bottom: 1px !important;
+}
+
+#pos_analysis_table>tfoot>tr>td,
+#pos_analysis_table>tfoot>tr>th,
+#pos_analysis_table>thead>tr>td,
+#pos_analysis_table>thead>tr>th{
+	padding-left: 6px !important;
+	padding-right: 6px !important;
+	vertical-align: middle !important;
+	padding-top: 2px !important;
+	padding-bottom: 2px !important;
+}
+
 #playergrid_table>tfoot>tr>td,
 #playergrid_table>tfoot>tr>th,
 #playergrid_table>thead>tr>td,
@@ -327,12 +347,6 @@ td { font-size: 12px; }
 #team_ovw_roster_table_2>tfoot>tr>th,
 #team_ovw_roster_table_2>thead>tr>td,
 #team_ovw_roster_table_2>thead>tr>th,
-#teamroster_table>tbody>tr>th,
-#teamroster_table>tbody>tr>td,
-#teamroster_table>tfoot>tr>td,
-#teamroster_table>tfoot>tr>th,
-#teamroster_table>thead>tr>td,
-#teamroster_table>thead>tr>th,
 #table-selectdraftposition>tbody>tr>th,
 #table-selectdraftposition>tbody>tr>td,
 #table-selectdraftposition>tfoot>tr>td,
@@ -342,6 +356,19 @@ td { font-size: 12px; }
 {
 	padding-left: 6px !important;
 	padding-right: 6px !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+.teamroster_table_class>tbody>tr>th,
+.teamroster_table_class>tbody>tr>td,
+.teamroster_table_class>tfoot>tr>td,
+.teamroster_table_class>tfoot>tr>th,
+.teamroster_table_class>thead>tr>td,
+.teamroster_table_class>thead>tr>th
+{
+	padding-left: 2px !important;
+	padding-right: 1px !important;
 	padding-top: 0px !important;
 	padding-bottom: 0px !important;
 }
@@ -375,7 +402,7 @@ td { font-size: 12px; }
 	padding-left: 2px !important;
 	padding-right: 2px !important;
 	padding-top: 2px !important;
-	padding-bottom: 1px !important;
+	padding-bottom: 2px !important;
 }
 
 @media (min-width: 1000px) {
@@ -559,6 +586,7 @@ td { font-size: 12px; }
 						  <li class="active"><a data-toggle="tab" href="#maintab1">Draft Analysis</a></li>
 						  <li><a data-toggle="tab" href="#maintab2">Position Availability</a></li>
 						  <li><a data-toggle="tab" href="#maintab3">Standings</a></li>
+						  <li><a data-toggle="tab" href="#maintab4">Team Overview</a></li>
 						  <li><a data-toggle="tab" href="#maintablast">League Details</a></li>
 						</ul>
 						
@@ -614,58 +642,24 @@ td { font-size: 12px; }
 								  </div>
 								  <div style="margin-top:3px"></div>
 								  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-
-				
 							</div>
 						  </div>
 						  <div id="maintab2" class="tab-pane fade">
-						  	<div class="row top-buffer">
-						    	<div class="col-md-4">
-						    		<div class="panel panel-default">
-									  <div class="panel-heading">
-									    <h3 class="panel-title">Team Overview</h3>
-									  </div>
-									  <div class="panel-body">
-									  	<div class="row">
-									  		<div class="col-md-12">
-												<table id="team_ovw_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-6">
-												<table id="team_ovw_roster_table_1" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-											</div>
-											<div class="col-md-6">
-												<table id="team_ovw_roster_table_2" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-											</div>
-										</div>
-									  </div>
-									</div>
-						    	</div>	
-						    	<div class="col-md-8">
-						    		<div class="panel panel-default">
-									  <div class="panel-heading">
-									    <h3 class="panel-title">Position Breakdown</h3>
-									  </div>
-									  <div class="panel-body">
-							    		<div class="row">
-							    			<div class="col-md-12">
-							    				<table id="pos_analysis_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
-							    			</div>
-							    		</div>
-							    		<div class="row">
-							    			<div class="col-md-6">
-						    					<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-c"></div>
-						    				</div>
-						    				<div class="col-md-6">
-							    				<table id="pos_c_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
-											</div>
-							    		</div>
+						    	<div class="col-md-12">
+						    		<div class="row">
+						    			<div class="col-md-12">
+						    				<table id="pos_analysis_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+						    			</div>
 						    		</div>
-				 					</div>
+						    		<div class="row">
+						    			<div class="col-md-6">
+					    					<div class="ct-chart ct-perfect-fifth dm_poschart" id="chart-c"></div>
+					    				</div>
+					    				<div class="col-md-6">
+						    				<table id="pos_c_table" class="table table-bordered table-striped dm_pos_table" cellspacing="0" width="100%"></table>
+										</div>
+						    		</div>
 								</div>
-						  	</div>
-				
 						  </div>
 						  <div id="maintab3" class="tab-pane fade">
 						    <h3>Live Estimated Standings</h3>
@@ -673,6 +667,19 @@ td { font-size: 12px; }
 						    		<table id="league_standings_table" class="table table-striped dm_standings_table" cellspacing="0" width="100%"></table>
 						    </div>
 						    
+						  </div>
+						  <div id="maintab4" class="tab-pane fade">
+							  	<div class="row">
+							  		<div class="col-md-6">
+										<table id="team_ovw_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+									</div>
+									<div class="col-md-3">
+										<table id="team_ovw_roster_table_1" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+									</div>
+									<div class="col-md-3">
+										<table id="team_ovw_roster_table_2" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+									</div>
+								</div>
 						  </div>
 						  <div id="maintablast" class="tab-pane fade">
 						    <h3>League Details Page</h3>
@@ -725,8 +732,7 @@ td { font-size: 12px; }
 							</div>
 						</div>
 
-						<div class="row" id="player_detail_row"> 
-									
+						<div class="row" id="player_detail_row"> 		
 							<div class="panel panel-default" id="player_detail_panel">
 								<div class="panel-heading" id="player_detail_heading">
 									<h3 class="panel-title">Player Detail</h3>
@@ -782,7 +788,11 @@ td { font-size: 12px; }
 				  	<div id="section-teaminfo">
 						<select style="width:auto;" class="form-control" id="team-select">
 						</select>
-					    <h4><font color="green" id="lbl-teambalance">Balance: $0  </font><br><small id="lbl-teamstarting">Starting: 0$</small></h4>
+					    <h4><font color="green" id="lbl-teambalance">Balance: $0  </font>
+<!-- 					    	<br><small id="lbl-teamstarting">Starting: 0$</small> -->
+					    	<br><small id="lbl-teamspots">Remaining Spots: 0</small>
+						  	<br><small id="lbl-teamperplayer">Avg Player Amt: $0</small>
+					    </h4>
 					    <div class="row">
 					    	<div style="margin-left:10px">
 				    			<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Edit Draft Info" disabled="disabled" id="btn-editdraftplayer">Edit</button>
@@ -790,20 +800,13 @@ td { font-size: 12px; }
 					   		</div>
 					    </div>
 					    <div class="row">
-					    	<table id="teamroster_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+					    	<table id="teamroster_table" class="table table-bordered table-striped teamroster_table_class" cellspacing="0" width="100%"></table>
 					    </div>
-					    
-					    <ul class="list-unstyled" id="list-teamrosteroverview">
-						  <li><b>Roster Overview</b></li>
-						  <li id="lbl-teamspots">Remaining Spots: 0</li>
-						  <li id="lbl-teamperplayer">Per Player Amount: $0</li>
-						</ul>
 					</div>
 				  </div>
 				</div>
 			  </div>
 		</div>
-
 	</div>
 
 
