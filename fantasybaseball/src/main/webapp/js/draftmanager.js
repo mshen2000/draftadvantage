@@ -1573,19 +1573,22 @@ function updateTeamInfoTab(){
 	            true : false;
 	    } )
 	    .data();
+		
+		var drafted_res = 0;
 
 		// For each drafted player on a team, fill them into the team roster grid
 		$.each( teamplayers, function( key, value ) {
 			// console.log("Each teamplayer: " + value.full_name);
 			$.each( liveteamrostertemplate, function( rkey, rvalue ) {
 				// console.log("Each teamrostertemplate: " + rvalue.position);
-				if ((value.team_roster_position == rvalue.position)&&
+				if ((value.team_roster_position.toLowerCase() == rvalue.position.toLowerCase())&&
 						((rvalue.name == null)||(rvalue.name == ""))){
 					rvalue.name = value.full_name;
 					rvalue.salary = value.team_player_salary;
 					rvalue.playerid = value.id;
 					// console.log("Updating teamrostertemplate: " + rvalue.name + ", " + rvalue.salary + ", " + rvalue.position  + ", " + rvalue.index);
 					teamrostertable.row('#' + rvalue.index + '').data(rvalue).draw();
+					if (value.team_roster_position.toLowerCase() == "res") drafted_res++;
 					return false;
 				}
 
@@ -1604,9 +1607,14 @@ function updateTeamInfoTab(){
 			}
 		});
 		
+		console.log("liveteamrostertemplate.length: " + liveteamrostertemplate.length);
+		console.log("teamplayers.length: " + teamplayers.length);
+		console.log("dm_rescount: " + dm_rescount);
+		console.log("drafted_res: " + drafted_res);
+		
 		var teamstartingsalary = team.adj_starting_salary;
 		var balance = teamstartingsalary - teamrostertable.column( 4 ).data().sum();
-		var spots = liveteamrostertemplate.length - teamplayers.length - dm_rescount;
+		var spots = (liveteamrostertemplate.length - dm_rescount) - (teamplayers.length - drafted_res);
 		var perplayer = balance / spots;
 		
 		// console.log("Team salary: " + teamstartingsalary);
@@ -1834,7 +1842,6 @@ function checkAmtSelector(){
 function loadDraftPlayerPosSelector(updateplayerposition){
 	
 	// console.log("In loadDraftPlayerPosSelector");
-	
 	var teamid;
 	var teamname;
 	var posselector;
@@ -1903,7 +1910,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 	var countof = dm_teamrostercounts["OF"];
 	var countutil = dm_teamrostercounts["UT"];
 	var countp = dm_teamrostercounts["P"];
-	var countres = dm_teamrostercounts["RES"];
+	var countres = dm_teamrostercounts["Res"];
 	
 	// Update counts by subtracting current team roster counts
 	// Determine if roster position is available based on count
@@ -1919,7 +1926,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		if (lkey == "OF")  countof = dm_teamrostercounts["OF"] - lvalue;
 		if (lkey == "UT")  countutil = dm_teamrostercounts["UT"] - lvalue;
 		if (lkey == "P")  countp = dm_teamrostercounts["P"] - lvalue;
-		if (lkey == "RES")  countres = dm_teamrostercounts["RES"] - lvalue;
+		if (lkey == "Res")  countres = dm_teamrostercounts["Res"] - lvalue;
 
 		if ((lkey == "C")&&(dm_teamrostercounts["C"] <= lvalue)) selc = false;
 		if ((lkey == "1B")&&(dm_teamrostercounts["1B"] <= lvalue)) sel1b = false;
@@ -1931,7 +1938,7 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		if ((lkey == "OF")&&(dm_teamrostercounts["OF"] <= lvalue)) selof = false;
 		if ((lkey == "UT")&&(dm_teamrostercounts["UT"] <= lvalue)) selutil = false;
 		if ((lkey == "P")&&(dm_teamrostercounts["P"] <= lvalue)) selp = false;
-		if ((lkey == "RES")&&(dm_teamrostercounts["RES"] <= lvalue)) selres = false;
+		if ((lkey == "Res")&&(dm_teamrostercounts["Res"] <= lvalue)) selres = false;
 			
 	});
 	
@@ -1947,29 +1954,9 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		if ((updateplayerposition == "OF")) selof = true;
 		if ((updateplayerposition == "UT")) selutil = true;
 		if ((updateplayerposition == "P")) selp = true;
-		if ((updateplayerposition == "RES")) selres = true;
+		if ((updateplayerposition == "Res")) selres = true;
 	}
 
-	/*
-	if (playerdraftrow != null){
-		if (playerdraftrow.pitcher_hitter == "H"){
-			if (selc) posselector.append($("<option value='C'/>").text("C (" + countc + ")"));
-			if (sel1b) posselector.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
-			if (sel2b) posselector.append($("<option value='2B'/>").text("2B (" + count2b + ")"));
-			if (selss) posselector.append($("<option value='SS'/>").text("SS (" + countss + ")"));
-			if (sel3b) posselector.append($("<option value='3B'/>").text("3B (" + count3b + ")"));
-			if (selmi) posselector.append($("<option value='MI'/>").text("MI (" + countmi + ")"));
-			if (selci) posselector.append($("<option value='CI'/>").text("CI (" + countci + ")"));
-			if (selof) posselector.append($("<option value='OF'/>").text("OF (" + countof + ")"));
-			if (selutil) posselector.append($("<option value='UT'/>").text("Util (" + countutil + ")"));
-			if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
-		} else if (playerdraftrow.pitcher_hitter == "P"){
-			if (selp) posselector.append($("<option value='P'/>").text("P (" + countp + ")"));
-			if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
-		}
-	}
-	*/
-	
 	if (playerdraftrow != null){
 		// if initial draft, add this to the 1st position of selector dropdown
 		if (updateplayerposition == null) $("#select-ontheblock-draftposition").append($("<option value='0'/>").text("-- Position --"));
@@ -1995,32 +1982,8 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		if (selp && playerdraftrow.pitcher_hitter == "P") posselector.append($("<option value='P'/>").text("P (" + countp + ")"));
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='P'/>").text("P (" + countp + ")"));
 		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
-		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='RES'/>").text("Res (" + countres + ")"));
-		
-		/*
-		if (selc && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='C'/>").text("C (" + countc + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='C'/>").text("C (" + countc + ")"));
-		if (sel1b && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='1B'/>").text("1B (" + count1b + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='1B'/>").text("1B (" + count1b + ")"));
-		if (sel2b && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='2B'/>").text("2B (" + count2b + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='2B'/>").text("2B (" + count2b + ")"));
-		if (selss && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='SS'/>").text("SS (" + countss + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='SS'/>").text("SS (" + countss + ")"));
-		if (sel3b && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='3B'/>").text("3B (" + count3b + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='3B'/>").text("3B (" + count3b + ")"));
-		if (selmi && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='MI'/>").text("MI (" + countmi + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='MI'/>").text("MI (" + countmi + ")"));
-		if (selci && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='CI'/>").text("CI (" + countci + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='CI'/>").text("CI (" + countci + ")"));
-		if (selof && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='OF'/>").text("OF (" + countof + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='OF'/>").text("OF (" + countof + ")"));
-		if (selutil && playerdraftrow.pitcher_hitter == "H") posselector_otb.append($("<option value='UT'/>").text("Util (" + countutil + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='UT'/>").text("Util (" + countutil + ")"));
-		if (selp && playerdraftrow.pitcher_hitter == "P") posselector_otb.append($("<option value='P'/>").text("P (" + countp + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='P'/>").text("P (" + countp + ")"));
-		if (selres) posselector_otb.append($("<option value='RES'/>").text("Res (" + countres + ")"));
-		else posselector_otb.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='RES'/>").text("Res (" + countres + ")"));
-		*/
+		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='Res'/>").text("Res (" + countres + ")"));
+
 	}
 	
 }
@@ -3009,7 +2972,8 @@ function loadPlayerGridTable(data, isInitialLoad)
             		return "$" + data.toFixed(0);
                 }, "sDefaultContent": "0"},
             { "title": "<i class='fa fa-bolt'></i>-$", className: "dm_export text-right", "mData": "live_auction_value", "width": 22, "render": function ( data, type, row ) {
-        		return "$" + data.toFixed(0);
+            	if (data == "") return data;
+            	else return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
             { "visible": false, "title": "Action", "mData": "leagueteam_id","width": 56, "render": function ( data, type, row ) {			
             	var buttons;
@@ -3019,7 +2983,7 @@ function loadPlayerGridTable(data, isInitialLoad)
             	buttons = buttons + "&nbsp;<button type='button' class='btn btn-success btn-xs btn-playerinfo' data-toggle='tooltip' title='Player Info Page'><i class='fa fa-external-link'></i></button>";
             	return buttons;
             }}, 
-            { "title": "Team", className: "dm_export", "mData": "leagueteam_name","width": 56, "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 9 )}, 	// Column 34
+            { "title": "Team", className: "dm_export", "mData": "leagueteam_name","width": 68, "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 9 )}, 	// Column 34
             { "visible": false, "title": "id", "mData": "id", "sDefaultContent": "" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
             { "visible": false, "title": "Team Salary", "mData": "team_player_salary", "sDefaultContent": "" },
@@ -3984,8 +3948,14 @@ function loadTeamSelect(data){
 	if (undefined !== data){
 		$.each(data, function() {
 			// console.log("Loading team selector: ID-" + this.id + " VAL-" + this.team_name);
-			teamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
-			teamfilterselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+			if (this.team_name.length >= 20) {
+				teamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name.substring(0, 20) + "..."));
+				teamfilterselect.append($("<option value='"+ this.id +"'/>").text(this.team_name.substring(0, 20) + "..."));
+			} else {
+				teamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+				teamfilterselect.append($("<option value='"+ this.id +"'/>").text(this.team_name));
+			}
+
 		});
 	} else {
 		// console.log("League data is null");

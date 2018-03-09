@@ -507,8 +507,13 @@ function calcLiveAuctionValue(){
 	
 	// Update auction value
 	$.each( data_rows, function( index, value ){
-
-		if (value.unknownplayer == false){
+		
+		if (!(value.leagueteam_name == null)&&!(value.leagueteam_name == "")){
+			value.live_auction_value = "";
+			data_table = $('#playergrid_table').DataTable();
+			data_table.row('#' + this.id + '').data(this);
+		}
+		else if (value.unknownplayer == false){
 			
 			// if (value.custom_position_flag) calculatedpos = value.custom_position;
 			// else calculatedpos = value.player_position;
