@@ -131,6 +131,7 @@ div#livestandings-row {
 
 #btn-editdraftplayer,
 #btn-undraftplayer {
+	width: 83px !important;
     padding: 2px 10px !important;
     line-height: 1.5;
 }
@@ -792,11 +793,14 @@ td { font-size: 12px; }
 <!-- 					    	<br><small id="lbl-teamstarting">Starting: 0$</small> -->
 					    	<br><small id="lbl-teamspots">Remaining Spots: 0</small>
 						  	<br><small id="lbl-teamperplayer">Avg Player Amt: $0</small>
+						  	<br><small id="lbl-teammaxbid">Max Bid: $0</small>
 					    </h4>
 					    <div class="row">
 					    	<div style="margin-left:10px">
-				    			<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Edit Draft Info" disabled="disabled" id="btn-editdraftplayer">Edit</button>
-				    			<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Undraft Player" disabled="disabled" id="btn-undraftplayer">Undraft</button>
+				    			<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Edit Draft Info" disabled="disabled" id="btn-editdraftplayer">
+				    				<i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+				    			<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" title="Undraft Player" disabled="disabled" id="btn-undraftplayer">
+				    				<i class="fa fa-minus-square-o" aria-hidden="true"></i> Undraft</button>
 					   		</div>
 					    </div>
 					    <div class="row">

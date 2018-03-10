@@ -50,16 +50,10 @@ var dm_teamrostertemplate_2;
 // The teamrostertemplate converted into just a list of roster positions and counts.
 var dm_teamrostercounts;
 
+// Current team max bid
+var dm_teammaxbid = 0;
+
 // List of team roster positions and counts of open slots:
-//		dm_teamrostercounts_live.open_slots_c
-//		dm_teamrostercounts_live.open_slots_1b 
-//		dm_teamrostercounts_live.open_slots_2b 
-//		dm_teamrostercounts_live.open_slots_ss 
-//		dm_teamrostercounts_live.open_slots_mi 
-//		dm_teamrostercounts_live.open_slots_3b 
-//		dm_teamrostercounts_live.open_slots_ci 
-//		dm_teamrostercounts_live.open_slots_of 
-//		dm_teamrostercounts_live.open_slots_ut 
 var dm_teamrostercounts_live = [];
 
 // Count of RES spots in teamrostercounts
@@ -431,12 +425,12 @@ $(document).ready(function()
     	
     	if (($(this).val() != null) && ($(this).val() != 0)) teamselected = true;
     	
-    	// console.log("teamselected = " + teamselected);
-    	// console.log("team value = " + $(this).val());
+		var text = $(this).find("option:selected").text();
+		var pos1 = text.lastIndexOf("(");
+		var pos2 = text.lastIndexOf(")");
+		dm_teammaxbid = parseInt(text.substring(pos1 + 2,pos2));
     	
     	if (teamselected){
-    		var text = $(this).find("option:selected").text();
-    		var pos = text.lastIndexOf("(");
         	loadDraftPlayerPosSelector();
     	} else {
     		posselector.find('option').remove().end();
@@ -609,7 +603,7 @@ $(document).ready(function()
     });
 
     $("#select-ontheblock-draftamt").keyup(function(e){
-    	var amtval = $(this).val();
+    	var amtval = parseInt($(this).val());
     	var isNum = false;
     	
     	if (Number.isInteger(Number(amtval))) {
@@ -617,6 +611,12 @@ $(document).ready(function()
     	}
     	
     	if (!isNum) $(this).val("");
+    	
+    	console.log("amt value = " + amtval);
+    	console.log("dm_teammaxbid = " + dm_teammaxbid);
+    	
+    	if (amtval > dm_teammaxbid) $(this).css({'background-color' : '#ffe6e6'});
+    	else $(this).css({'background-color' : '#ffffff'});
     	
     	checkAmtSelector();
     });
@@ -1591,9 +1591,7 @@ function updateTeamInfoTab(){
 					if (value.team_roster_position.toLowerCase() == "res") drafted_res++;
 					return false;
 				}
-
 			});
-			
 		});
 		
 		// Find team in global team list
@@ -1616,6 +1614,7 @@ function updateTeamInfoTab(){
 		var balance = teamstartingsalary - teamrostertable.column( 4 ).data().sum();
 		var spots = (liveteamrostertemplate.length - dm_rescount) - (teamplayers.length - drafted_res);
 		var perplayer = balance / spots;
+		var maxbid = balance - (spots - 1);
 		
 		// console.log("Team salary: " + teamstartingsalary);
 		// console.log("Sum of salaries: " + teamrostertable.column( 4 ).data().sum());
@@ -1624,6 +1623,7 @@ function updateTeamInfoTab(){
 		$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
 		$('#lbl-teamspots').text("Remaining Spots: " + spots);
 		$('#lbl-teamperplayer').text("Avg Player Amt: $" + perplayer.toFixed(2));
+		$('#lbl-teammaxbid').text("Max Bid: $" + maxbid);
 		
         $("#btn-editdraftplayer").attr("disabled", "disabled");
         $("#btn-undraftplayer").attr("disabled", "disabled");
