@@ -603,7 +603,8 @@ $(document).ready(function()
     });
 
     $("#select-ontheblock-draftamt").keyup(function(e){
-    	var amtval = parseInt($(this).val());
+    	var amtval = $(this).val();
+    	var amtval2 = parseInt($(this).val());
     	var isNum = false;
     	
     	if (Number.isInteger(Number(amtval))) {
@@ -612,11 +613,17 @@ $(document).ready(function()
     	
     	if (!isNum) $(this).val("");
     	
-    	console.log("amt value = " + amtval);
-    	console.log("dm_teammaxbid = " + dm_teammaxbid);
+    	// console.log("amt value = " + amtval);
+    	// console.log("dm_teammaxbid = " + dm_teammaxbid);
     	
-    	if (amtval > dm_teammaxbid) $(this).css({'background-color' : '#ffe6e6'});
-    	else $(this).css({'background-color' : '#ffffff'});
+    	if (amtval2 > dm_teammaxbid) {
+    		$(this).css({'background-color' : '#ffe6e6'});
+    		$("#text-draft-amt-warning").show();
+    	}
+    	else {
+    		$(this).css({'background-color' : '#ffffff'});
+    		$("#text-draft-amt-warning").hide();
+    	}
     	
     	checkAmtSelector();
     });
@@ -1812,9 +1819,22 @@ function checkAmtSelector(){
 	var posselected = false;
 	var amtselected = false;
 	
+	var amtval2 = parseInt(amtselector.val());
+
 	if (amtselector.val() != "") amtselected = true;
 	if ((teamselector.val() != null) && (teamselector.val() != 0)) teamselected = true;
 	if ((posselector.val() != null) && (posselector.val() != 0)) posselected = true;
+	
+	if (amtval2 > dm_teammaxbid) {
+		amtselector.css({'background-color' : '#ffe6e6'});
+		$("#text-draft-amt-warning").show();
+		amtselected = false;
+	}
+	else {
+		amtselector.css({'background-color' : '#ffffff'});
+		$("#text-draft-amt-warning").hide();
+		amtselected = true;
+	}	
 	
 	// console.log("teamselected = " + teamselected);
 	// console.log("team value = " + teamselector.val())
@@ -3249,7 +3269,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 			  reverseData: true,
 			  horizontalBars: true,
 			  axisY: {
-			    offset: 70,
+			    offset: 100,
 			}};
 		} else {
 			options = {
@@ -3258,7 +3278,7 @@ function loadPositionalTable(data, table_element, isInitialLoad, isHitter, chart
 			  reverseData: true,
 			  horizontalBars: true,
 			  axisY: {
-			    offset: 70,
+			    offset: 100,
 			}};
 		}
 		
