@@ -459,7 +459,7 @@ $(document).ready(function()
         $('select[id=team-select]').val($(this).val());
         // $('#team-select').selectpicker('refresh');
         updateTeamInfoTab();
-
+        checkAmtSelector();
     });
     $("#select-draftteamunk").change(function(e){
     	// console.log("in select-draftteamunk change");
@@ -616,14 +616,14 @@ $(document).ready(function()
     	// console.log("amt value = " + amtval);
     	// console.log("dm_teammaxbid = " + dm_teammaxbid);
     	
-    	if (amtval2 > dm_teammaxbid) {
-    		$(this).css({'background-color' : '#ffe6e6'});
-    		$("#text-draft-amt-warning").show();
-    	}
-    	else {
-    		$(this).css({'background-color' : '#ffffff'});
-    		$("#text-draft-amt-warning").hide();
-    	}
+//    	if (amtval2 > dm_teammaxbid) {
+//    		$(this).css({'background-color' : '#ffe6e6'});
+//    		$("#text-draft-amt-warning").show();
+//    	}
+//    	else {
+//    		$(this).css({'background-color' : '#ffffff'});
+//    		$("#text-draft-amt-warning").hide();
+//    	}
     	
     	checkAmtSelector();
     });
@@ -3637,7 +3637,7 @@ function updatePlayerInfoPanel(playerrow){
 	var btn_teamname;
 	
 	$("#lbl-playerinfoname").val(row.id);
-	$("#lbl-playerinfoname").text(row.full_name);
+	$("#lbl-playerinfoname").html(row.full_name + "<a href='http://www.fangraphs.com/players.aspx?lastname=" + row.full_name + "' target='_blank'><i class='fa fa-external-link' aria-hidden='true'></i>");
 	$("#lbl-playerinfoteam").text(row.team);
 	$("#lbl-playerinfoage").text(row.age);
 	$("#lbl-playerinfoelig").text(row.custom_position);
