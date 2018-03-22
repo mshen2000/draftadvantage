@@ -3637,7 +3637,7 @@ function updatePlayerInfoPanel(playerrow){
 	var btn_teamname;
 	
 	$("#lbl-playerinfoname").val(row.id);
-	$("#lbl-playerinfoname").html(row.full_name + "<a href='http://www.fangraphs.com/players.aspx?lastname=" + row.full_name + "' target='_blank'><i class='fa fa-external-link' aria-hidden='true'></i>");
+	$("#lbl-playerinfoname").html(row.full_name + "&nbsp;<small><a href='http://www.fangraphs.com/players.aspx?lastname=" + row.full_name + "' target='_blank'><i class='fa fa-external-link' aria-hidden='true'></i></a></small>");
 	$("#lbl-playerinfoteam").text(row.team);
 	$("#lbl-playerinfoage").text(row.age);
 	$("#lbl-playerinfoelig").text(row.custom_position);
