@@ -4380,7 +4380,7 @@ mssolutions.fbapp.draftmanager.loadLeagueModal = function() {
         	
         	var salaryselect = $("#select-teamsalary");
         	salaryselect.find('option').remove().end();
-        	for (i = 100; i <= 300; i=i+10) { 
+        	for (i = 100; i <= 300; i=i+1) { 
         		salaryselect.append($('<option>', { value : i }).text("$"+i)); 
         	}
 
