@@ -4301,6 +4301,7 @@ mssolutions.fbapp.draftmanager.getLeagueInfo = function(leagueid) {
         	console.log("League info get complete.");
         	// console.log("League Info: " + JSON.stringify(resp));
         	dm_leagueinfo = resp;
+        	console.log("League Info: " + dm_leagueinfo.position_priority_list);
         }
         else {
         	console.log("Failed to get league info: ", resp.code + " : " + resp.message);

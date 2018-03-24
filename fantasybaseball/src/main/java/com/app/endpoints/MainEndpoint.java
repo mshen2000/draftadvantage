@@ -176,7 +176,11 @@ public class MainEndpoint {
 		System.out.println("In getLeagueInfo, id: " + id);
 		validateUserToken(req);
 
-		return new League(getLeagueService().get(id));
+		League l = getLeagueService().get(id);
+		l = getLeagueService().updatePosPriorityList(l);
+		log.log( Level.FINE, "League position priority list: {0}", l.getPosition_priority_list() );
+		// return new League(getLeagueService().get(id));
+		return l;
 
 	}
 	

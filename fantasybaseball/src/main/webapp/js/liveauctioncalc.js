@@ -27,7 +27,7 @@ function calcTeamOvwList(){
 	$.each( liveteamrostertemplate, function( rkey, rvalue ) {
 		// console.log("Each teamrostertemplate: " + rvalue.position);
 		if (rvalue.position == "P"){pitchercount++;}
-		else if (rvalue.position == "RES"){reservecount++;}
+		else if (rvalue.position == "Res"){reservecount++;}
 		else {
 			hittercount++;
 
@@ -95,7 +95,7 @@ function calcTeamOvwList(){
 		$.each( teamplayers, function( key, value ) {
 			totalsalary = totalsalary + parseInt(value.team_player_salary);
 			if (value.team_roster_position == "P"){teampitchers++;}
-			else if (value.team_roster_position == "RES"){teamreserves++;}
+			else if (value.team_roster_position == "Res"){teamreserves++;}
 			else {
 				teamhitters++;
 			
@@ -421,7 +421,7 @@ function calcLiveAuctionValue(){
 	var teamlist = dm_globalteamlist;
 	var position_priority_list = dm_leagueinfo.position_priority_list;
 	
-	// console.log("-- Position priority list: " + position_priority_list);
+	console.log("-- Position priority list: " + position_priority_list);
 	
 	var roster_c = num_teams * rostercounts["C"];
 	var roster_1b = num_teams * (rostercounts["1B"] + rostercounts["CI"]/2.0 + rostercounts["UT"]/5.0);
@@ -431,13 +431,16 @@ function calcLiveAuctionValue(){
 	var roster_of = num_teams * (rostercounts["OF"] + rostercounts["UT"]/5.0);
 	var roster_p = num_teams * rostercounts["P"];
 	
+	console.log("Rosercounts RES:" + rostercounts["RES"]);
+	console.log("Rosercounts Res:" + rostercounts["Res"]);
+	
 	var roster_c_wRes = roster_c;
-	var roster_1b_wRes = roster_1b + (num_teams * rostercounts["RES"]/12.0);
-	var roster_2b_wRes = roster_2b + (num_teams * rostercounts["RES"]/12.0);
-	var roster_3b_wRes = roster_3b + (num_teams * rostercounts["RES"]/12.0);
-	var roster_ss_wRes = roster_ss + (num_teams * rostercounts["RES"]/12.0);
-	var roster_of_wRes = roster_of + (num_teams * rostercounts["RES"]/3.0);
-	var roster_p_wRes = roster_p + (num_teams * rostercounts["RES"]/3.0);
+	var roster_1b_wRes = roster_1b + (num_teams * rostercounts["Res"]/12.0);
+	var roster_2b_wRes = roster_2b + (num_teams * rostercounts["Res"]/12.0);
+	var roster_3b_wRes = roster_3b + (num_teams * rostercounts["Res"]/12.0);
+	var roster_ss_wRes = roster_ss + (num_teams * rostercounts["Res"]/12.0);
+	var roster_of_wRes = roster_of + (num_teams * rostercounts["Res"]/3.0);
+	var roster_p_wRes = roster_p + (num_teams * rostercounts["Res"]/3.0);
 	
 	var iroster_c =  Math.round(roster_c);
 	var iroster_1b =  Math.round(roster_1b);
@@ -629,7 +632,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				// Add Z value only if player is undrafted
 				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
 					totalz = totalz + value.total_z;
-					// if (position == "C")  console.log("C- Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+					if (position == "3B")  console.log("3B- Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
 				} else {
 					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
 					
@@ -661,7 +664,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 
 	});
 	
-	// console.log(position + "-GROSS TOTAL Z: " + totalz);
+	console.log(position + "-GROSS TOTAL Z: " + totalz);
 	avgz = avgz/2;
 	totalz = totalz - remaining_num*avgz;
 	
@@ -669,10 +672,10 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 	PositionalZOutput["totalz"] = totalz;
 	PositionalZOutput["avgreplz"] = avgz
 	
-	// console.log(position + "-NET TOTAL Z: " + totalz);
-	// console.log(position + "-AVG REPL Z: " + avgz);
-	// console.log(position + "-Position Num: " + position_num);
-	// console.log(position + "-Remaining Num: " + remaining_num);
+	console.log(position + "-NET TOTAL Z: " + totalz);
+	console.log(position + "-AVG REPL Z: " + avgz);
+	console.log(position + "-Position Num: " + position_num);
+	console.log(position + "-Remaining Num: " + remaining_num);
 	
 	return PositionalZOutput;
 	
@@ -714,8 +717,6 @@ function isPlayerPositionPriority(position, playerposition, priority){
 			
 		} else return true;
 
-		
-		
 	} 
 	else {
 		// System.out.println("-- Player with position elig '" + playerposition + "' DOES NOT HAVE position '" + position + "'");

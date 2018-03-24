@@ -189,6 +189,33 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 	}
 	
+	// Update league with current position priority list
+	public League updatePosPriorityList(League league) {
+		
+		ProjectionProfile p = getProjectionProfileService().get(league.getProjection_profile().getProjection_service(),
+				league.getProjection_profile().getProjection_period(), league.getProjection_profile().getProjected_year());
+		
+		System.out.println("updatePosPriorityList - Profile Service: " + league.getProjection_profile().getProjection_service());
+		System.out.println("updatePosPriorityList - Profile Period: " + league.getProjection_profile().getProjection_period());
+		System.out.println("updatePosPriorityList - Profile Year: " + league.getProjection_profile().getProjected_year());
+		
+		League update = new League(league);
+		update.setId(new Long(1));
+		update.setProjection_profile(p);
+		update.setUser(league.getUser());
+		List<PlayerProjected> playeroutput = getLeaguePlayerOutput(p, update);
+		// calcPlayerZScores(playeroutput, update, true);
+		// calcPositionCounts(update);
+		
+		calcPositionCounts(league);
+		calcPlayerZScores(playeroutput, league, true);
+		calcPlayerZScores(playeroutput, league, false);		
+		
+		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
+		league.setPosition_priority_list(priority.getPos_priority());
+		return league;
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see com.nya.sms.dataservices.AbstractDataServiceImpl#delete(java.lang.Long)
@@ -487,6 +514,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		// Determine position priority list
 		//  TODO:  Don't need to calculate it anymore, just pull it from league
 		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
+		// log.log( Level.FINE, "Calc Static Auct Value: Pos Priority list: {0}", priority.getPos_priority());
+		System.out.println("Calc Static Auct Value: Pos Priority list: " + priority.getPos_priority());
 
 		// Calculate total z and replacement z for each position
 		PositionalZContainer posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
@@ -1288,6 +1317,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	}
 	
 	private PositionZPriorityContainer getPositionPriorityList(List<PlayerProjected> playeroutput){
+		
+
 
 		PositionalZContainer posz_c = getPositionalZpass1(playeroutput, "C", iroster_c);
 		PositionalZContainer posz_1b = getPositionalZpass1(playeroutput, "1B", iroster_1b);
@@ -1308,6 +1339,20 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				);
 		
 		// for (String p: priority.getPos_priority())  System.out.println(p);
+		System.out.println("getPositionPriorityList- iroster_c: " + iroster_c);
+		System.out.println("getPositionPriorityList- posz_c: " + posz_c.getReplacementvalue());
+		System.out.println("getPositionPriorityList- iroster_1b: " + iroster_1b);
+		System.out.println("getPositionPriorityList- posz_1b: " + posz_1b.getReplacementvalue());
+		System.out.println("getPositionPriorityList- iroster_2b: " + iroster_2b);
+		System.out.println("getPositionPriorityList- posz_2b: " + posz_2b.getReplacementvalue());
+		System.out.println("getPositionPriorityList- iroster_3b: " + iroster_3b);
+		System.out.println("getPositionPriorityList- posz_3b: " + posz_3b.getReplacementvalue());
+		System.out.println("getPositionPriorityList- iroster_ss: " + iroster_ss);
+		System.out.println("getPositionPriorityList- posz_ss: " + posz_ss.getReplacementvalue());
+		System.out.println("getPositionPriorityList- iroster_of: " + iroster_of);
+		System.out.println("getPositionPriorityList- posz_of: " + posz_of.getReplacementvalue());
+		System.out.println("getPositionPriorityList- iroster_p: " + iroster_p);
+		System.out.println("getPositionPriorityList- posz_p: " + posz_p.getReplacementvalue());
 		
 		return priority;
 		
