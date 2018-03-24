@@ -883,14 +883,17 @@ $(document).ready(function()
       
 	$('#btn-ontheblock-draftplayer').click(function() 
 	{
+		
+    	var t0 = performance.now();
+		
 		var league_id = $("#league-select").find("option:selected").val();
 		var playertable = $('#playergrid_table').DataTable();
 		var playerid = $("#header-ontheblock-draftplayer").val();
 		var teamid = $("#select-ontheblock-draftteam").find("option:selected").val();
 		// var teamname = $("#select-ontheblock-draftteam").find("option:selected").text();
-		console.log("Check getLeagueTeamName: " + getLeagueTeamName(teamid));
+		// console.log("Check getLeagueTeamName: " + getLeagueTeamName(teamid));
 		var teamname = getLeagueTeamName(teamid);
-		console.log("Check teamname: " + teamname);
+		// console.log("Check teamname: " + teamname);
 		var position = $("#select-ontheblock-draftposition").find("option:selected").val();
 		// var position = selectedposrows[0].position
 		var amount = $("#select-ontheblock-draftamt").val();
@@ -902,16 +905,16 @@ $(document).ready(function()
 		// playerdraftrow.id = playerid;
 		playerdraftrow.leagueteam_id = teamid;
 		playerdraftrow.leagueteam_name = teamname;
-		console.log("Check playerdraftrow.leagueteam_name: " + playerdraftrow.leagueteam_name);
+		// console.log("Check playerdraftrow.leagueteam_name: " + playerdraftrow.leagueteam_name);
 		playerdraftrow.team_roster_position = position;
 		playerdraftrow.team_player_salary = amount;
 		
-		 console.log("Draft Player: " + playerdraftrow.full_name);
-		 console.log("Draft Player ID: " + playerdraftrow.id);
-		 console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
-		 console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
-		 console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
-		 console.log("Draft Player league team: " + playerdraftrow.leagueteam_name);
+//		 console.log("Draft Player: " + playerdraftrow.full_name);
+//		 console.log("Draft Player ID: " + playerdraftrow.id);
+//		 console.log("Draft Player leagueteam_id: " + playerdraftrow.leagueteam_id);
+//		 console.log("Draft Player roster_position: " + playerdraftrow.team_roster_position);
+//		 console.log("Draft Player salary: " + playerdraftrow.team_player_salary);
+//		 console.log("Draft Player league team: " + playerdraftrow.leagueteam_name);
 		
 		if (playerdraftrow.favorite_flag == true) {
 			playerdraftrow.favorite_flag = false;
@@ -920,24 +923,37 @@ $(document).ready(function()
 		}
 		
 		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
+		
+		var t1 = performance.now();
 
 		// Draft player
 		mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
 				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
+		
+		var t2 = performance.now();
 		 
 		resetDraftPanel();
-		
-		// $('#draftplayer-modal').modal('hide');
        
-		// Show the team info tab
-		$('#info-tabs a[href="#tab-teaminfo"]').tab('show');
 		// Set the team select to the drafting team
 		$("#team-select").val(teamid);
 		updateTeamInfoTab();
-		calcLiveAuctionValue();
+
+		// calcLiveAuctionValue();
+		
 		// If the drafted player is still in the player info panel,
 		// update the panel with latest information (ie drafted status)
 		updatePlayerInfoPanel(playerselectedrow);
+		
+		// Update team information in team overview list
+		// calcTeamOvwList();
+		
+//    	console.log("Total Draft Time: " + (t6 - t0)/1000 + " seconds.");
+//    	console.log("	1. Pre Draft: " + (t1 - t0)/1000 + " seconds.");
+//    	console.log("	2. Draft API Call: " + (t2 - t1)/1000 + " seconds.");
+//    	console.log("	3. resetDraftPanel & updateTeamInfoTab: " + (t3 - t2)/1000 + " seconds.");
+//    	console.log("	4. calcLiveAuctionValue: " + (t4 - t3)/1000 + " seconds.");
+//    	console.log("	5. updatePlayerInfoPanel: " + (t5 - t4)/1000 + " seconds.");
+//    	console.log("	6. calcTeamOvwList: " + (t6 - t5)/1000 + " seconds.");
 
 	});
 	
@@ -1612,10 +1628,10 @@ function updateTeamInfoTab(){
 			}
 		});
 		
-		console.log("liveteamrostertemplate.length: " + liveteamrostertemplate.length);
-		console.log("teamplayers.length: " + teamplayers.length);
-		console.log("dm_rescount: " + dm_rescount);
-		console.log("drafted_res: " + drafted_res);
+//		console.log("liveteamrostertemplate.length: " + liveteamrostertemplate.length);
+//		console.log("teamplayers.length: " + teamplayers.length);
+//		console.log("dm_rescount: " + dm_rescount);
+//		console.log("drafted_res: " + drafted_res);
 		
 		var teamstartingsalary = team.adj_starting_salary;
 		var balance = teamstartingsalary - teamrostertable.column( 4 ).data().sum();
@@ -1627,7 +1643,7 @@ function updateTeamInfoTab(){
 		// console.log("Sum of salaries: " + teamrostertable.column( 4 ).data().sum());
 		
 		$('#lbl-teambalance').text("Balance: $" + balance + "  ");
-		$('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
+		// $('#lbl-teamstarting').text("Starting: $" + teamstartingsalary);
 		$('#lbl-teamspots').text("Remaining Spots: " + spots);
 		$('#lbl-teamperplayer').text("Avg Player Amt: $" + perplayer.toFixed(2));
 		$('#lbl-teammaxbid').text("Max Bid: $" + maxbid);
@@ -3893,9 +3909,18 @@ function loadLeagueSelector(data){
 	options.append($("<option value='0'/>").text("--- Select League ---"));
 	
 	if (undefined !== data){
+		// Sort list by year then league name
+		data.sort(function(a, b){
+		    var x = (a.league_year + a.league_name).toLowerCase();
+		    var y = (b.league_year + b.league_name).toLowerCase();
+		    if (x < y) {return -1;}
+		    if (x > y) {return 1;}
+		    return 0;
+		});
+		
 		$.each(data, function() {
 			// console.log("Loading league selector: ID-" + this.id + " VAL-" + this.league_name);
-			options.append($("<option value='"+ this.id +"'/>").text(this.league_name + "(" + this.league_year + ")"));
+			options.append($("<option value='"+ this.id +"'/>").text("[" + this.league_year + "] " + this.league_name));
 		});
 	} else {
 		// console.log("League data is null");
@@ -4072,6 +4097,11 @@ mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id,
         	// Indicator whether the tab should be updated on select
         	update_positional_tab = true;
         	update_standings_tab = true;
+        	
+        	calcLiveAuctionValue();
+        	
+    		// Update team information in team overview list
+    		calcTeamOvwList();
         }
         else {
         	bootstrap_alert.lostconnection();
@@ -4301,7 +4331,7 @@ mssolutions.fbapp.draftmanager.getLeagueInfo = function(leagueid) {
         	console.log("League info get complete.");
         	// console.log("League Info: " + JSON.stringify(resp));
         	dm_leagueinfo = resp;
-        	console.log("League Info: " + dm_leagueinfo.position_priority_list);
+        	// console.log("League Info: " + dm_leagueinfo.position_priority_list);
         }
         else {
         	console.log("Failed to get league info: ", resp.code + " : " + resp.message);

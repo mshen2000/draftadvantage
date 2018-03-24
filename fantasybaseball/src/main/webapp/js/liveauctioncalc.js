@@ -413,7 +413,7 @@ function calcLiveAuctionValue(){
 	
 	// console.log("Calc Live Auction Values: BEGIN");
 
-	var t1 = new Date().getTime();
+	// var t1 = new Date().getTime();
 	
 	// Calculate LIVE auction value
 	var num_teams = dm_globalteamlist.length;
@@ -421,7 +421,7 @@ function calcLiveAuctionValue(){
 	var teamlist = dm_globalteamlist;
 	var position_priority_list = dm_leagueinfo.position_priority_list;
 	
-	console.log("-- Position priority list: " + position_priority_list);
+	// console.log("-- Position priority list: " + position_priority_list);
 	
 	var roster_c = num_teams * rostercounts["C"];
 	var roster_1b = num_teams * (rostercounts["1B"] + rostercounts["CI"]/2.0 + rostercounts["UT"]/5.0);
@@ -430,10 +430,7 @@ function calcLiveAuctionValue(){
 	var roster_ss = num_teams * (rostercounts["SS"] + rostercounts["MI"]/2.0 + rostercounts["UT"]/5.0);
 	var roster_of = num_teams * (rostercounts["OF"] + rostercounts["UT"]/5.0);
 	var roster_p = num_teams * rostercounts["P"];
-	
-	console.log("Rosercounts RES:" + rostercounts["RES"]);
-	console.log("Rosercounts Res:" + rostercounts["Res"]);
-	
+
 	var roster_c_wRes = roster_c;
 	var roster_1b_wRes = roster_1b + (num_teams * rostercounts["Res"]/12.0);
 	var roster_2b_wRes = roster_2b + (num_teams * rostercounts["Res"]/12.0);
@@ -474,7 +471,7 @@ function calcLiveAuctionValue(){
 	    return parseFloat(b.total_z) - parseFloat(a.total_z);
 	});
 	
-	var t2 = new Date().getTime();
+	// var t2 = new Date().getTime();
 
 	// Get total z values
 	var posz_c = getPositionalZ(data_rows, "C", iroster_c, position_priority_list);
@@ -505,7 +502,7 @@ function calcLiveAuctionValue(){
 	
 	// console.log("Coeff: " + coef);
 	
-	var t3 = new Date().getTime();
+	// var t3 = new Date().getTime();
 	var calculatedpos = "";
 	
 	// Update auction value
@@ -555,7 +552,7 @@ function calcLiveAuctionValue(){
 
 	});
 	
-	var t4 = new Date().getTime();
+	// var t4 = new Date().getTime();
 
 //	var j=0;
 //	$.each( data_rows, function( index, value ){
@@ -568,7 +565,7 @@ function calcLiveAuctionValue(){
 	
 	// console.log("Calc Live Auction Values: COMPLETE");
 	
-	var t5 = new Date().getTime();
+	// var t5 = new Date().getTime();
 	
 	data_rows = null;
 	data_table = null;
@@ -632,7 +629,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 				// Add Z value only if player is undrafted
 				if ((value.leagueteam_name == null)||(value.leagueteam_name == "")) {
 					totalz = totalz + value.total_z;
-					if (position == "3B")  console.log("3B- Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
+					// if (position == "3B")  console.log("3B- Adding Z for: "+ value.full_name + ", Z: " + value.total_z);
 				} else {
 					// console.log("In getPositionalZ DRAFTED PLAYER: "+ value.full_name + ", Team: " + value.leagueteam_name + ", Z: " + value.total_z);
 					
@@ -664,7 +661,7 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 
 	});
 	
-	console.log(position + "-GROSS TOTAL Z: " + totalz);
+	// console.log(position + "-GROSS TOTAL Z: " + totalz);
 	avgz = avgz/2;
 	totalz = totalz - remaining_num*avgz;
 	
@@ -672,10 +669,10 @@ function getPositionalZ(playertablerows, position, position_num, priority){
 	PositionalZOutput["totalz"] = totalz;
 	PositionalZOutput["avgreplz"] = avgz
 	
-	console.log(position + "-NET TOTAL Z: " + totalz);
-	console.log(position + "-AVG REPL Z: " + avgz);
-	console.log(position + "-Position Num: " + position_num);
-	console.log(position + "-Remaining Num: " + remaining_num);
+//	console.log(position + "-NET TOTAL Z: " + totalz);
+//	console.log(position + "-AVG REPL Z: " + avgz);
+//	console.log(position + "-Position Num: " + position_num);
+//	console.log(position + "-Remaining Num: " + remaining_num);
 	
 	return PositionalZOutput;
 	

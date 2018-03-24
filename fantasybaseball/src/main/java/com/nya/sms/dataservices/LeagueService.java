@@ -137,16 +137,16 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		Map<Key<LeagueTeam>, LeagueTeam>  map = getLeagueTeamService().save(container.getLeague_teams(), username);
 		List<LeagueTeam> teamlist = new ArrayList<LeagueTeam>(map.values());
 
-		System.out.println("saveNewLeague - League Name: " + league.getLeague_name());
-		System.out.println("saveNewLeague - Size of Teamlist: " + teamlist.size());
+//		System.out.println("saveNewLeague - League Name: " + league.getLeague_name());
+//		System.out.println("saveNewLeague - Size of Teamlist: " + teamlist.size());
 		
 		league.setLeague_teams(teamlist);
 		
 		league.setUser(getIdentityService().getUser(username));
 		
-		System.out.println("saveNewLeague - Profile Service: " + container.getProfile().getProjection_service());
-		System.out.println("saveNewLeague - Profile Period: " + container.getProfile().getProjection_period());
-		System.out.println("saveNewLeague - Profile Year: " + container.getProfile().getProjected_year());
+//		System.out.println("saveNewLeague - Profile Service: " + container.getProfile().getProjection_service());
+//		System.out.println("saveNewLeague - Profile Period: " + container.getProfile().getProjection_period());
+//		System.out.println("saveNewLeague - Profile Year: " + container.getProfile().getProjected_year());
 		
 		ProjectionProfile p = getProjectionProfileService().get(container.getProfile().getProjection_service(),
 				container.getProfile().getProjection_period(), container.getProfile().getProjected_year());
@@ -166,8 +166,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		update.setProjection_profile(league.getProjection_profile());
 		update.setUser(league.getUser());
 		List<PlayerProjected> playeroutput = getLeaguePlayerOutput(p, update);
-		calcPlayerZScores(playeroutput, update, true);
+		// calcPlayerZScores(playeroutput, update, true);
+		// calcPositionCounts(update);
+
 		calcPositionCounts(update);
+		calcPlayerZScores(playeroutput, update, true);
+		calcPlayerZScores(playeroutput, update, false);
+		
 		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
 		league.setPosition_priority_list(priority.getPos_priority());
 		// ***********************************************************************************
@@ -195,9 +200,9 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		ProjectionProfile p = getProjectionProfileService().get(league.getProjection_profile().getProjection_service(),
 				league.getProjection_profile().getProjection_period(), league.getProjection_profile().getProjected_year());
 		
-		System.out.println("updatePosPriorityList - Profile Service: " + league.getProjection_profile().getProjection_service());
-		System.out.println("updatePosPriorityList - Profile Period: " + league.getProjection_profile().getProjection_period());
-		System.out.println("updatePosPriorityList - Profile Year: " + league.getProjection_profile().getProjected_year());
+		// System.out.println("updatePosPriorityList - Profile Service: " + league.getProjection_profile().getProjection_service());
+		// System.out.println("updatePosPriorityList - Profile Period: " + league.getProjection_profile().getProjection_period());
+		// System.out.println("updatePosPriorityList - Profile Year: " + league.getProjection_profile().getProjected_year());
 		
 		League update = new League(league);
 		update.setId(new Long(1));
@@ -515,7 +520,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		//  TODO:  Don't need to calculate it anymore, just pull it from league
 		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
 		// log.log( Level.FINE, "Calc Static Auct Value: Pos Priority list: {0}", priority.getPos_priority());
-		System.out.println("Calc Static Auct Value: Pos Priority list: " + priority.getPos_priority());
+		// System.out.println("Calc Static Auct Value: Pos Priority list: " + priority.getPos_priority());
 
 		// Calculate total z and replacement z for each position
 		PositionalZContainer posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
@@ -533,8 +538,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		double coef = (league.getTeam_salary()*league.getNum_of_teams())/posz_total;
 		
-		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
-		System.out.println("Coef: " + coef);
+//		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
+//		System.out.println("Coef: " + coef);
 		
 		String calculated_position;
 		
@@ -630,15 +635,15 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		long end = System.currentTimeMillis();
 		long dt = end - begin;
 		// System.out.println("Get Player Output Data: COMPLETE");
-		log.log( Level.FINE, "Get Player Output Data: Step 1, {0} MS elapsed", time1 - begin);
-		log.log( Level.FINE, "Get Player Output Data: Step 2, {0} MS elapsed", time2 - time1);
-		log.log( Level.FINE, "Get Player Output Data: Step 3, {0} MS elapsed", time3 - time2);
-		log.log( Level.FINE, "Get Player Output Data: Step 4, {0} MS elapsed", time4 - time3);
-		log.log( Level.FINE, "Get Player Output Data: Step 5, {0} MS elapsed", time5 - time4);
-		log.log( Level.FINE, "Get Player Output Data: Step 6, {0} MS elapsed", time6 - time5);
-		log.log( Level.FINE, "Get Player Output Data: Step 7, {0} MS elapsed", time7 - time6);
-		log.log( Level.FINE, "Get Player Output Data: Step 8, {0} MS elapsed", end - time7);
-		log.log( Level.FINE, "Get Player Output Data: COMPLETE, {0} MS elapsed", dt);
+//		log.log( Level.FINE, "Get Player Output Data: Step 1, {0} MS elapsed", time1 - begin);
+//		log.log( Level.FINE, "Get Player Output Data: Step 2, {0} MS elapsed", time2 - time1);
+//		log.log( Level.FINE, "Get Player Output Data: Step 3, {0} MS elapsed", time3 - time2);
+//		log.log( Level.FINE, "Get Player Output Data: Step 4, {0} MS elapsed", time4 - time3);
+//		log.log( Level.FINE, "Get Player Output Data: Step 5, {0} MS elapsed", time5 - time4);
+//		log.log( Level.FINE, "Get Player Output Data: Step 6, {0} MS elapsed", time6 - time5);
+//		log.log( Level.FINE, "Get Player Output Data: Step 7, {0} MS elapsed", time7 - time6);
+//		log.log( Level.FINE, "Get Player Output Data: Step 8, {0} MS elapsed", end - time7);
+//		log.log( Level.FINE, "Get Player Output Data: COMPLETE, {0} MS elapsed", dt);
 		
 		return playeroutput;
 		
@@ -889,8 +894,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 
 		long time4 = System.currentTimeMillis();
 		
-		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2a, {0} MS elapsed", time3 - time1);
-		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2b, {0} MS elapsed", time4 - time3);
+//		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2a, {0} MS elapsed", time3 - time1);
+//		log.log( Level.FINE, "getLeaguePlayerOutput: Step 2b, {0} MS elapsed", time4 - time3);
 
 		// System.out.println("Get Player Output Data: " + i + " PlayerProjected converted.");
 		
@@ -1339,6 +1344,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				);
 		
 		// for (String p: priority.getPos_priority())  System.out.println(p);
+		/*
 		System.out.println("getPositionPriorityList- iroster_c: " + iroster_c);
 		System.out.println("getPositionPriorityList- posz_c: " + posz_c.getReplacementvalue());
 		System.out.println("getPositionPriorityList- iroster_1b: " + iroster_1b);
@@ -1353,7 +1359,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		System.out.println("getPositionPriorityList- posz_of: " + posz_of.getReplacementvalue());
 		System.out.println("getPositionPriorityList- iroster_p: " + iroster_p);
 		System.out.println("getPositionPriorityList- posz_p: " + posz_p.getReplacementvalue());
-		
+		*/
 		return priority;
 		
 	}
