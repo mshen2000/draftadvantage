@@ -19,8 +19,6 @@ public class PositionZPriorityContainer {
 	int priority_dh;
 	
 	List<String> pos_priority;
-	
-
 
 	public PositionZPriorityContainer() {
 		

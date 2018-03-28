@@ -1322,8 +1322,6 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	}
 	
 	private PositionZPriorityContainer getPositionPriorityList(List<PlayerProjected> playeroutput){
-		
-
 
 		PositionalZContainer posz_c = getPositionalZpass1(playeroutput, "C", iroster_c);
 		PositionalZContainer posz_1b = getPositionalZpass1(playeroutput, "1B", iroster_1b);
