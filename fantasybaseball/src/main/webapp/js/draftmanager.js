@@ -2661,7 +2661,7 @@ function loadLeagueStandingsTable(data, isInitialLoad)
         "searching": false,
         "paging": false,
         "info": false,
-        "order": [[ 23, "desc" ]],
+        "order": [[ 27, "desc" ]],
 		responsive: true,
     	"processing": true,
         data: data,
