@@ -885,6 +885,9 @@ $(document).ready(function()
 	{
 		
     	var t0 = performance.now();
+    	
+    	$("#btn-otb-text-spinner").show();
+    	$("#btn-otb-text").hide();
 		
 		var league_id = $("#league-select").find("option:selected").val();
 		var playertable = $('#playergrid_table').DataTable();
@@ -954,6 +957,9 @@ $(document).ready(function()
 //    	console.log("	4. calcLiveAuctionValue: " + (t4 - t3)/1000 + " seconds.");
 //    	console.log("	5. updatePlayerInfoPanel: " + (t5 - t4)/1000 + " seconds.");
 //    	console.log("	6. calcTeamOvwList: " + (t6 - t5)/1000 + " seconds.");
+		
+    	$("#btn-otb-text-spinner").hide();
+    	$("#btn-otb-text").show();
 
 	});
 	
@@ -2770,7 +2776,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
 		responsive: true,
     	"processing": true,
-    	"deferRender": true,
+    	"deferRender": false,
         data: data,
         select: {
             style:    'single',
