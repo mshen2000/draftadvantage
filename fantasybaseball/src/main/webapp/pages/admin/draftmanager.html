@@ -213,17 +213,17 @@ div#livestandings-row {
 }
 
 .spinner {
-  margin: 2px auto;
-  width: 50px;
-  height: 14px;
+  margin: 10px auto;
+  width: 100px;
+  height: 50px;
   text-align: center;
-  font-size: 14px;
+  font-size: 24px;
 }
 
 .spinner > div {
-  background-color: #fff;
+  background-color: #797979;
   height: 100%;
-  width: 3px;
+  width: 6px;
   display: inline-block;
   
   -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
@@ -248,6 +248,16 @@ div#livestandings-row {
 .spinner .rect5 {
   -webkit-animation-delay: -0.8s;
   animation-delay: -0.8s;
+}
+
+.spinner .rect6 {
+  -webkit-animation-delay: -0.7s;
+  animation-delay: -0.7s;
+}
+
+.spinner .rect7 {
+  -webkit-animation-delay: -0.6s;
+  animation-delay: -0.6s;
 }
 
 @-webkit-keyframes sk-stretchdelay {
@@ -721,7 +731,21 @@ td { font-size: 12px; }
 				
 								  </div>
 								  <div style="margin-top:3px"></div>
-								  <table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+									<div class="text-center" id="playertable-load-spinner" hidden>
+										<div class="spinner" style="margin-top:70px">
+											<div class="rect1"></div>
+											<div class="rect2"></div>
+											<div class="rect3"></div>
+											<div class="rect4"></div>
+											<div class="rect5"></div>
+											<div class="rect6"></div>
+											<div class="rect7"></div>
+										</div>
+										<p style="font-size: 20px;">Retrieving Player Data...</p>
+									</div>
+									<div id="playergrid_container">
+								  		<table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+								  	</div>
 							</div>
 						  </div>
 						  <div id="maintab2" class="tab-pane fade">

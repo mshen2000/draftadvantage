@@ -1,12 +1,15 @@
-var loadspinner;
-loadspinner = loadspinner || (function () {
-    var loaderDiv = $('<div class="text-center"><i class="fa fa-refresh fa-spin fa-5x" id="projections-spinner"></i><p>Retrieving Data...</p></div>');
-
+var loadspinner2;
+loadspinner2 = loadspinner2 || (function () {
+	console.log("In loadspinner");
+    var loaderDiv = $('#profile-text-spinner');
+    console.log("In loadspinner2");
     return {
         showLoader: function(element) {
+        	console.log("In loadspinner3");
         	$(element).hide();
-        	$(element).before(loaderDiv);
+        	// $(element).before(loaderDiv);
         	loaderDiv.show();
+        	console.log("In loadspinner4");
         },
         hideLoader: function (element) {
         	loaderDiv.hide();

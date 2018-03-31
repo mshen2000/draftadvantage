@@ -886,8 +886,8 @@ $(document).ready(function()
 		
     	var t0 = performance.now();
     	
-    	$("#btn-otb-text-spinner").show();
-    	$("#btn-otb-text").hide();
+    	// $("#btn-otb-text-spinner").show();
+    	// $("#btn-otb-text").hide();
 		
 		var league_id = $("#league-select").find("option:selected").val();
 		var playertable = $('#playergrid_table').DataTable();
@@ -958,8 +958,8 @@ $(document).ready(function()
 //    	console.log("	5. updatePlayerInfoPanel: " + (t5 - t4)/1000 + " seconds.");
 //    	console.log("	6. calcTeamOvwList: " + (t6 - t5)/1000 + " seconds.");
 		
-    	$("#btn-otb-text-spinner").hide();
-    	$("#btn-otb-text").show();
+    	// $("#btn-otb-text-spinner").hide();
+    	// $("#btn-otb-text").show();
 
 	});
 	
@@ -3887,6 +3887,9 @@ function loadTeamPreviewTable(data, isInitialLoad)
 
 function loadLeagueContent(leagueid){
 	
+	$("#playergrid_container").hide();
+	$("#playertable-load-spinner").show();
+	
 	$("#intro-container").hide();
 	$("#league-container").show();
 	$("#league-top-container").show();
@@ -4305,6 +4308,10 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
         	console.log("Get player data took " + (t0 - timerLoadPlayerGridStart) + " milliseconds.")
         	// Load player data into main player grid
         	loadPlayerGridTable(resp.items, false);
+        	
+        	$("#playergrid_container").show();
+        	$("#playertable-load-spinner").hide();
+        	
         	var t1 = performance.now();
         	console.log("Call to loadPlayerGridTable took " + (t1 - t0) + " milliseconds.")
         	
@@ -4371,12 +4378,15 @@ mssolutions.fbapp.draftmanager.deleteLeague = function(leagueid) {
  * load List of leagues via the API.
  */
 mssolutions.fbapp.draftmanager.loadLeagueList = function(leagueid) {
+	
+	$('#league-select').prop( "disabled", true );
 
 	gapi.client.draftapp.league.getuserleagues().execute(
       function(resp) {
         if (!resp.code) { 
         	loadLeagueSelector(resp.items);
         	if (leagueid != null) $('#league-select').val(leagueid);
+        	$('#league-select').prop( "disabled", false );
         }
         else {
         	bootstrap_alert.lostconnection();

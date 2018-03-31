@@ -630,7 +630,8 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
 
 	var profile_table_b = $('#profile_table').DataTable();
     profile_table_b.button( 2 ).disable();
-	loadspinner.showLoader('#hitter-projections-table-div');
+    console.log("Before load spinner... ");
+	loadspinner2.showLoader('#hitter-projections-table-div');
 	gapi.client.draftapp.playerprojections.get({
 		'msg' : id}).execute(
       function(resp) {
@@ -639,7 +640,7 @@ mssolutions.fbapp.loadprojections.loadProjections = function(id) {
         	
         	loadProjectionTable(resp.items, false);
         	
-    		loadspinner.hideLoader('#hitter-projections-table-div');
+    		loadspinner2.hideLoader('#hitter-projections-table-div');
     		profile_table_b.button( 2 ).enable();
     		$('#btn-load-proj').prop("disabled",false);
     		
