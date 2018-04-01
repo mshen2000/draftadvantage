@@ -1450,7 +1450,7 @@ function getCurrentFilters(){
 	    if ($('#select-draftedplayerfilter').val() == '0') regex_drafted = '(^$)|(\s+$)'; 
 	    else if ($('#select-draftedplayerfilter').val() == '-1') regex_drafted = ''; 
 	    else regex_drafted = $('#select-draftedplayerfilter').find("option:selected").text();
-	    $('#playergrid_table').DataTable().columns( 30 ).search( regex_drafted , true );	
+	    $('#playergrid_table').DataTable().columns( 34 ).search( regex_drafted , true );	// Filter league team name
 	}
 	
 }
