@@ -583,21 +583,51 @@ $(document).ready(function()
     	var amtselected = false;
     	
     	if (($(this).val() != null) && ($(this).val() != 0)) posselected = true;
-    	if (amtselector.val() != "") amtselected = true
+    	if (amtselector.val().length > 0) 
+		{	
+    		console.log("-- Amount length > 0");
+    		console.log("-- amt value = " + amtselector.val());
+    		console.log("-- amt length = " + amtselector.val().length);
+    		amtselected = true;
+		
+		}
     	if ((teamselector.val() != null) && 
     			(teamselector.val() != 0)) teamselected = true;
     	
-//    	console.log("teamselected = " + teamselected);
-//    	console.log("team value = " + teamselector.val())
-//    	console.log("posselected = " + posselected);
-//    	console.log("pos value = " + $(this).val());
-//    	console.log("amtselected = " + amtselected);
-//    	console.log("amt value = " + amtselector.val());
+    	console.log("teamselected = " + teamselected);
+    	console.log("team value = " + teamselector.val())
+    	console.log("posselected = " + posselected);
+    	console.log("pos value = " + $(this).val());
+    	console.log("amtselected = " + amtselected);
+    	console.log("amt value = " + amtselector.val());
         
-        if (!teamselected || !posselected || !amtselected){
+    	// If position selector is set to "RES" then disable the amount selector,
+    	// set it to 0, and enable the draft button.
+    	if ($(this).val().toLowerCase() == "res"){
+    		console.log("CASE 1: Res selected");
+    		$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+    		$("#select-ontheblock-draftamt").val("");
+    		$("#select-ontheblock-draftamt").attr("disabled","disabled");
+    		$('#btn-draftamt-plus').attr("disabled","disabled");
+    		$('#btn-draftamt-minus').attr("disabled","disabled");
+    		$("#select-ontheblock-draftamt").css({'background-color' : '#eaeaea'});
+    		$("#text-draft-amt-warning").hide();
+    	} else if (!teamselected || !posselected || !amtselected){
+    		console.log("CASE 2: Something is false");
         	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
+        	$("#select-ontheblock-draftamt").removeAttr("disabled");
+        	$('#btn-draftamt-plus').removeAttr("disabled");
+        	$('#btn-draftamt-minus').removeAttr("disabled");
+        	$("#select-ontheblock-draftamt").css({'background-color' : '#ffffff'});
+        	checkAmtSelector();
         } else {
+        	console.log("CASE 3: all good");
         	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+        	$("#select-ontheblock-draftamt").removeAttr("disabled");
+        	$('#btn-draftamt-plus').removeAttr("disabled");
+        	$('#btn-draftamt-minus').removeAttr("disabled");
+        	$("#select-ontheblock-draftamt").css({'background-color' : '#ffffff'});
+        	checkAmtSelector();
         }
 
     });
@@ -922,7 +952,7 @@ $(document).ready(function()
 		if (playerdraftrow.favorite_flag == true) {
 			playerdraftrow.favorite_flag = false;
 			$("#player_queue_panel_body ul #" + playerdraftrow.id).remove();
-			mssolutions.fbapp.draftmanager.updatePlayerInfo(playerdraftrow);
+			// mssolutions.fbapp.draftmanager.updatePlayerInfo(playerdraftrow);
 		}
 		
 		playertable.row('#' + playerdraftrow.id + '').data(playerdraftrow).draw();
@@ -931,7 +961,7 @@ $(document).ready(function()
 
 		// Draft player
 		mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
-				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
+				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary, playerdraftrow.favorite_flag);
 		
 		var t2 = performance.now();
 		 
@@ -991,7 +1021,7 @@ $(document).ready(function()
 		
 		// Draft player
 		mssolutions.fbapp.draftmanager.draftPlayer(league_id, teamid, playerdraftrow.id, 
-				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary);
+				playerdraftrow.team_roster_position, playerdraftrow.team_player_salary, playerdraftrow.favorite_flag);
 		
 		// resetDraftPanel();
 		
@@ -1730,6 +1760,7 @@ function sendPlayerToBlock(){
     
     resetDraftPlayerModal();
     $("#btn-draftplayer").attr("disabled","disabled");
+    $("#btn-ontheblock-draftplayer").attr("disabled","disabled");
     
     $("#header-ontheblock-draftplayer").text(data.full_name + ", " + data.team + " - " + data.custom_position + " - $" + data.live_auction_value);
     $("#header-ontheblock-draftplayer").val(data.id);
@@ -1839,7 +1870,7 @@ function checkAmtSelector(){
 	var amtselector = $("#select-ontheblock-draftamt");
 	var teamselected = false;
 	var posselected = false;
-	var amtselected = false;
+	var amtselected = false; 
 	
 	var amtval2 = parseInt(amtselector.val());
 
@@ -1847,9 +1878,14 @@ function checkAmtSelector(){
 	if ((teamselector.val() != null) && (teamselector.val() != 0)) teamselected = true;
 	if ((posselector.val() != null) && (posselector.val() != 0)) posselected = true;
 	
-	if (amtval2 > dm_teammaxbid) {
+	if ((amtval2 > dm_teammaxbid) && (posselector.val().toLowerCase() != "res")) {
 		amtselector.css({'background-color' : '#ffe6e6'});
 		$("#text-draft-amt-warning").show();
+		amtselected = false;
+	}
+	else if (amtselector.val() == ""){
+		amtselector.css({'background-color' : '#ffffff'});
+		$("#text-draft-amt-warning").hide();
 		amtselected = false;
 	}
 	else {
@@ -2776,12 +2812,12 @@ function loadPlayerGridTable(data, isInitialLoad)
 			"<'row'<'col-sm-5'i><'col-sm-7'p>>",
 		responsive: true,
     	"processing": true,
-    	"deferRender": false,
+    	"deferRender": true,
         data: data,
         select: {
             style:    'single',
             // If column with button is selected, it will not register select
-            selector: 'td:not(:nth-last-child(2))'  
+            // selector: 'td:not(:nth-last-child(2))'  
         },
         rowId: 'id',
         "paging": true,
@@ -3017,14 +3053,17 @@ function loadPlayerGridTable(data, isInitialLoad)
             	if (data == "") return data;
             	else return "$" + data.toFixed(0);
             }, "sDefaultContent": ""},
-            { "visible": false, "title": "Action", "mData": "leagueteam_id","width": 56, "render": function ( data, type, row ) {			
-            	var buttons;
-            	if (data == 0)
-            		buttons = "<button type='button' class='btn btn-primary btn-xs btn-draft' data-toggle='tooltip' title='Draft Player'><i class='fa fa-user-plus'></i></button>";
-            	else buttons = "<button type='button' class='btn btn-default btn-xs btn-undraft' data-toggle='tooltip' title='Undraft Player'><i class='fa fa-user-times'></i></button>";
-            	buttons = buttons + "&nbsp;<button type='button' class='btn btn-success btn-xs btn-playerinfo' data-toggle='tooltip' title='Player Info Page'><i class='fa fa-external-link'></i></button>";
-            	return buttons;
-            }}, 
+            { "visible": false, "title": "Action", "mData": "leagueteam_id","width": 56
+            	/*
+            	, "render": function ( data, type, row ) {			
+	            	var buttons;
+	            	if (data == 0)
+	            		buttons = "<button type='button' class='btn btn-primary btn-xs btn-draft' data-toggle='tooltip' title='Draft Player'><i class='fa fa-user-plus'></i></button>";
+	            	else buttons = "<button type='button' class='btn btn-default btn-xs btn-undraft' data-toggle='tooltip' title='Undraft Player'><i class='fa fa-user-times'></i></button>";
+	            	buttons = buttons + "&nbsp;<button type='button' class='btn btn-success btn-xs btn-playerinfo' data-toggle='tooltip' title='Player Info Page'><i class='fa fa-external-link'></i></button>";
+	            	return buttons;
+            	}*/
+            }, 
             { "title": "Team", className: "dm_export", "mData": "leagueteam_name","width": 68, "sDefaultContent": "", render: $.fn.dataTable.render.ellipsis( 9 )}, 	// Column 34
             { "visible": false, "title": "id", "mData": "id", "sDefaultContent": "" },
             { "visible": false, "title": "Roster Position", "mData": "team_roster_position", "sDefaultContent": "" },
@@ -3080,6 +3119,7 @@ function loadPlayerGridTable(data, isInitialLoad)
 		calcLiveAuctionValue();
 	}
 
+	/*
 	// On Click of the Info button in the Player Grid Table
     $('#playergrid_table tbody').on( 'click', '.btn-playerinfo', function () {
 
@@ -3152,7 +3192,7 @@ function loadPlayerGridTable(data, isInitialLoad)
         var data = data_table.row( $(this).parents('tr') ).data();
         showUndraftPlayerDialog(data);
         
-    } );
+    } );   */
     
     // On Select of the Player Grid Table
 	var select_data_table = $('#playergrid_table').DataTable();
@@ -4089,7 +4129,7 @@ mssolutions.fbapp.draftmanager.updatePlayerInfo = function(playerrowdata) {
  * Draft player via the API.
  */
 mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id, 
-		player_projected_id, team_roster_position, team_player_salary) {
+		player_projected_id, team_roster_position, team_player_salary, favorite_flag) {
 	
 	// console.log("In draftPlayer...");
 	
@@ -4098,7 +4138,8 @@ mssolutions.fbapp.draftmanager.draftPlayer = function(league_id, league_team_id,
 		'league_team_id' : league_team_id,
 		'player_projected_id' : player_projected_id,
 		'team_roster_position' : team_roster_position,
-		'team_player_salary' : team_player_salary}).execute(
+		'team_player_salary' : team_player_salary,
+		'player_favorite_flag': favorite_flag}).execute(
       function(resp) {
         if (!resp.code) { 
         	console.log("Draft player complete. League Player ID: " + resp.longdescription);

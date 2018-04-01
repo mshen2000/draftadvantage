@@ -8,6 +8,8 @@ public class LeaguePlayerInputDraftContainer {
 	
 	long player_projected_id;
 	
+	boolean player_favorite_flag;
+	
 	long league_player_id;
 	
 	String team_roster_position;
@@ -48,6 +50,14 @@ public class LeaguePlayerInputDraftContainer {
 
 	public void setPlayer_projected_id(long player_projected_id) {
 		this.player_projected_id = player_projected_id;
+	}
+
+	public boolean isPlayer_favorite_flag() {
+		return player_favorite_flag;
+	}
+
+	public void setPlayer_favorite_flag(boolean player_favorite_flag) {
+		this.player_favorite_flag = player_favorite_flag;
 	}
 
 	public long getLeague_player_id() {

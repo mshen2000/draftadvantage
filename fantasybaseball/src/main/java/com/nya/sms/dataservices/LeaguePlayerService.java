@@ -122,8 +122,8 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		
 		LeaguePlayer lp = new LeaguePlayer();
 		
-		System.out.println("draftLeaguePlayer: unknown_player_name: " + container.getUnknown_player_name());
-		System.out.println("draftLeaguePlayer: unknownplayer: " + container.isUnknownplayer());
+		// System.out.println("draftLeaguePlayer: unknown_player_name: " + container.getUnknown_player_name());
+		// System.out.println("draftLeaguePlayer: unknownplayer: " + container.isUnknownplayer());
 		
 		if (container.isUnknownplayer()){
 			
@@ -156,7 +156,7 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 			return this.save(lp, uname);
 			
 		} else {
-			System.out.println("draftLeaguePlayer: IN ELSE STATEMENT");
+			// System.out.println("draftLeaguePlayer: IN ELSE STATEMENT");
 			Key<PlayerProjected> playerprojectedkey = Key.create(PlayerProjected.class, container.getPlayer_projected_id());
 			
 			// Check to see if LeaguePlayer already exists
@@ -176,6 +176,7 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		lp.setLeague_team(Ref.create(teamkey));
 		lp.setTeam_player_salary(container.getTeam_player_salary());
 		lp.setTeam_roster_position(container.getTeam_roster_position());
+		lp.setFavorite_flag(container.isPlayer_favorite_flag());
 		
 		System.out.println("draftLeaguePlayer: Right before save 2: " + lp.getUnknown_player_name());
 		
