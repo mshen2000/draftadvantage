@@ -461,6 +461,7 @@ $(document).ready(function()
         updateTeamInfoTab();
         checkAmtSelector();
     });
+    
     $("#select-draftteamunk").change(function(e){
     	// console.log("in select-draftteamunk change");
     	if ($(this).val() != "0"){
@@ -593,17 +594,14 @@ $(document).ready(function()
 //    	console.log("pos value = " + $(this).val());
 //    	console.log("amtselected = " + amtselected);
 //    	console.log("amt value = " + amtselector.val());
+    	
+    	checkAmtSelector();
         
     	// If position selector is set to "RES" then disable the amount selector,
     	// set it to 0, and enable the draft button.
+    	/*
     	if ($(this).val().toLowerCase() == "res"){
-    		$("#btn-ontheblock-draftplayer").removeAttr("disabled");
-    		$("#select-ontheblock-draftamt").val("");
-    		$("#select-ontheblock-draftamt").attr("disabled","disabled");
-    		$('#btn-draftamt-plus').attr("disabled","disabled");
-    		$('#btn-draftamt-minus').attr("disabled","disabled");
-    		$("#select-ontheblock-draftamt").css({'background-color' : '#eaeaea'});
-    		$("#text-draft-amt-warning").hide();
+    		updateOTBforResPosSelect();
     	} else if (!teamselected || !posselected || !amtselected){
         	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
         	$("#select-ontheblock-draftamt").removeAttr("disabled");
@@ -619,7 +617,7 @@ $(document).ready(function()
         	$("#select-ontheblock-draftamt").css({'background-color' : '#ffffff'});
         	checkAmtSelector();
         }
-
+		*/
     });
 
     $("#select-ontheblock-draftamt").keyup(function(e){
@@ -1890,10 +1888,38 @@ function checkAmtSelector(){
 	// console.log("pos value = " + posselector.val());
 	// console.log("amt value = " + amtselector.val());
     
+	/*
     if (!teamselected || !posselected || !amtselected){
     	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
     } else {
     	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+    }
+    */
+    
+	// If position selector is set to "RES" then disable the amount selector,
+	// set it to 0, and enable the draft button.
+	if (posselector.val().toLowerCase() == "res"){
+		$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+		$("#select-ontheblock-draftamt").val("");
+		$("#select-ontheblock-draftamt").attr("disabled","disabled");
+		$('#btn-draftamt-plus').attr("disabled","disabled");
+		$('#btn-draftamt-minus').attr("disabled","disabled");
+		$("#select-ontheblock-draftamt").css({'background-color' : '#eaeaea'});
+		$("#text-draft-amt-warning").hide();
+	} else if (!teamselected || !posselected || !amtselected){
+    	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
+    	$("#select-ontheblock-draftamt").removeAttr("disabled");
+    	$('#btn-draftamt-plus').removeAttr("disabled");
+    	$('#btn-draftamt-minus').removeAttr("disabled");
+    	$("#select-ontheblock-draftamt").css({'background-color' : '#ffffff'});
+    	// checkAmtSelector();
+    } else {
+    	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+    	$("#select-ontheblock-draftamt").removeAttr("disabled");
+    	$('#btn-draftamt-plus').removeAttr("disabled");
+    	$('#btn-draftamt-minus').removeAttr("disabled");
+    	$("#select-ontheblock-draftamt").css({'background-color' : '#ffffff'});
+    	// checkAmtSelector();
     }
 }
 
@@ -2052,9 +2078,32 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='Res'/>").text("Res (" + countres + ")"));
 
+		if ((playerdraftrow.pitcher_hitter == "P") && (selp)) $('select[id=select-ontheblock-draftposition]').val("P");
+		else if (!selp && !selc && !sel1b && !sel2b && !selss && !sel3b && !selmi && !selci && !selof && !selutil && selres){
+			console.log("In sel reserve if statement");
+			$('select[id=select-ontheblock-draftposition]').val("RES");
+		}
 	}
 	
 }
+
+/**
+ * Description: Updates the OTB panel Amt Selector and Draft Button for when
+ * the Position selector is set to "RES".  When this happens, no amt is needed
+ * in the amt selector (it is disabled) and the draft button is enabled.
+ */
+/*
+function updateOTBforResPosSelect(){
+	console.log("In updateOTBforResPosSelect");
+	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
+	$("#select-ontheblock-draftamt").val("");
+	$("#select-ontheblock-draftamt").attr("disabled","disabled");
+	$('#btn-draftamt-plus').attr("disabled","disabled");
+	$('#btn-draftamt-minus').attr("disabled","disabled");
+	$("#select-ontheblock-draftamt").css({'background-color' : '#eaeaea'});
+	$("#text-draft-amt-warning").hide();
+}
+*/
 
 /**
  * Description: Loads selections for the position selector in the draft unknown
