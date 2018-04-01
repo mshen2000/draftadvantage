@@ -583,28 +583,20 @@ $(document).ready(function()
     	var amtselected = false;
     	
     	if (($(this).val() != null) && ($(this).val() != 0)) posselected = true;
-    	if (amtselector.val().length > 0) 
-		{	
-    		console.log("-- Amount length > 0");
-    		console.log("-- amt value = " + amtselector.val());
-    		console.log("-- amt length = " + amtselector.val().length);
-    		amtselected = true;
-		
-		}
+    	if (amtselector.val().length > 0) {	amtselected = true;}
     	if ((teamselector.val() != null) && 
     			(teamselector.val() != 0)) teamselected = true;
     	
-    	console.log("teamselected = " + teamselected);
-    	console.log("team value = " + teamselector.val())
-    	console.log("posselected = " + posselected);
-    	console.log("pos value = " + $(this).val());
-    	console.log("amtselected = " + amtselected);
-    	console.log("amt value = " + amtselector.val());
+//    	console.log("teamselected = " + teamselected);
+//    	console.log("team value = " + teamselector.val())
+//    	console.log("posselected = " + posselected);
+//    	console.log("pos value = " + $(this).val());
+//    	console.log("amtselected = " + amtselected);
+//    	console.log("amt value = " + amtselector.val());
         
     	// If position selector is set to "RES" then disable the amount selector,
     	// set it to 0, and enable the draft button.
     	if ($(this).val().toLowerCase() == "res"){
-    		console.log("CASE 1: Res selected");
     		$("#btn-ontheblock-draftplayer").removeAttr("disabled");
     		$("#select-ontheblock-draftamt").val("");
     		$("#select-ontheblock-draftamt").attr("disabled","disabled");
@@ -613,7 +605,6 @@ $(document).ready(function()
     		$("#select-ontheblock-draftamt").css({'background-color' : '#eaeaea'});
     		$("#text-draft-amt-warning").hide();
     	} else if (!teamselected || !posselected || !amtselected){
-    		console.log("CASE 2: Something is false");
         	$("#btn-ontheblock-draftplayer").attr("disabled","disabled");
         	$("#select-ontheblock-draftamt").removeAttr("disabled");
         	$('#btn-draftamt-plus').removeAttr("disabled");
@@ -621,7 +612,6 @@ $(document).ready(function()
         	$("#select-ontheblock-draftamt").css({'background-color' : '#ffffff'});
         	checkAmtSelector();
         } else {
-        	console.log("CASE 3: all good");
         	$("#btn-ontheblock-draftplayer").removeAttr("disabled");
         	$("#select-ontheblock-draftamt").removeAttr("disabled");
         	$('#btn-draftamt-plus').removeAttr("disabled");
@@ -1518,7 +1508,7 @@ function updateTeamOvwRosterTable(teamrow){
 			// console.log("Each teamplayer: " + value.full_name);
 			$.each( liveteamrostertemplate_1, function( rkey, rvalue ) {
 				// console.log("Each teamrostertemplate: " + rvalue.position);
-				if ((value.team_roster_position == rvalue.position)&&
+				if ((value.team_roster_position.toLowerCase() == rvalue.position.toLowerCase())&&
 						((rvalue.name == null)||(rvalue.name == ""))){
 					rvalue.name = value.full_name;
 					rvalue.salary = value.team_player_salary;
@@ -1530,7 +1520,7 @@ function updateTeamOvwRosterTable(teamrow){
 			});	
 			$.each( liveteamrostertemplate_2, function( rkey, rvalue ) {
 				// console.log("Each teamrostertemplate: " + rvalue.position);
-				if ((value.team_roster_position == rvalue.position)&&
+				if ((value.team_roster_position.toLowerCase() == rvalue.position.toLowerCase())&&
 						((rvalue.name == null)||(rvalue.name == ""))){
 					rvalue.name = value.full_name;
 					rvalue.salary = value.team_player_salary;

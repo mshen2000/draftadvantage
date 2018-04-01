@@ -93,12 +93,15 @@ function calcTeamOvwList(){
 	
 		// Add up salary and counts for all players on the team
 		$.each( teamplayers, function( key, value ) {
-			totalsalary = totalsalary + parseInt(value.team_player_salary);
-			if (value.team_roster_position == "P"){teampitchers++;}
-			else if (value.team_roster_position == "Res"){teamreserves++;}
+			// totalsalary = totalsalary + parseInt(value.team_player_salary);
+			if (value.team_roster_position == "P"){
+				totalsalary = totalsalary + parseInt(value.team_player_salary);
+				teampitchers++;
+			}
+			else if (value.team_roster_position.toLowerCase() == "res"){teamreserves++;}
 			else {
+				totalsalary = totalsalary + parseInt(value.team_player_salary);
 				teamhitters++;
-			
 				if (value.team_roster_position == "C"){team_c++;}
 				else if (value.team_roster_position == "1B"){team_1b++;}
 				else if (value.team_roster_position == "2B"){team_2b++;}
@@ -111,17 +114,20 @@ function calcTeamOvwList(){
 			}
 		});
 		
-		// console.log("Team pitcher count: " + teamovw.team_name + " - "+ teampitchers);
-		// console.log("Team reserve count: " + teamovw.team_name + " - "+ teamreserves);
-		// console.log("Team hitter count: " + teamovw.team_name + " - "+ teamhitters);
+//		 console.log("liveteamrostertemplate.length: " + liveteamrostertemplate.length);
+//		 console.log("teamplayers.length: " + teamplayers.length);
+//		 console.log("dm_rescount: " + dm_rescount);
+//		 console.log("teamreserves: " + teamreserves);
 		
 		var teamstartingsalary = teamvalue.adj_starting_salary;
 		var balance = teamstartingsalary - totalsalary;
-		var spots = liveteamrostertemplate.length - teamplayers.length - dm_rescount;
+		var spots = (liveteamrostertemplate.length - dm_rescount) - (teamplayers.length - teamreserves);
 		var pitcherspots = pitchercount - teampitchers;
 		var hitterspots = hittercount - teamhitters;
 		var reservespots = reservecount - teamreserves;
-		var perplayer = balance / spots;
+		var perplayer = 0;
+		
+		if (spots > 0) perplayer = balance / spots;
 		
 		teamovw.currentsalary = totalsalary;
 		teamovw.adj_starting_salary = teamstartingsalary;
