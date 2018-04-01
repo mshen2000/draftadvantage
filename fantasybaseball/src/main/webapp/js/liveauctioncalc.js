@@ -730,6 +730,7 @@ function getReplPitcher(){
 	LeaguePlayerOutput["pitcher_era_eff"] = 0;
 	LeaguePlayerOutput["pitcher_w"] = 0;
 	LeaguePlayerOutput["pitcher_sv"] = 0;
+	LeaguePlayerOutput["pitcher_hld"] = 0;
 	LeaguePlayerOutput["pitcher_whip"] = 0;
 	LeaguePlayerOutput["pitcher_whip_eff"] = 0;
 	LeaguePlayerOutput["pitcher_k"] = 0;
@@ -737,6 +738,7 @@ function getReplPitcher(){
 	
 	LeaguePlayerOutput["pitcher_z_wins"] = 0;
 	LeaguePlayerOutput["pitcher_z_saves"] = 0;
+	LeaguePlayerOutput["pitcher_z_holds"] = 0;
 	LeaguePlayerOutput["pitcher_z_so"] = 0;
 	LeaguePlayerOutput["pitcher_z_era"] = 0;
 	LeaguePlayerOutput["pitcher_z_whip"] = 0;
@@ -754,6 +756,8 @@ function getReplHitter(){
 	
 	LeaguePlayerOutput["hitter_avg"] = 0;
 	LeaguePlayerOutput["hitter_avg_eff"] = 0;
+	LeaguePlayerOutput["hitter_obp"] = 0;
+	LeaguePlayerOutput["hitter_obp_eff"] = 0;
 	LeaguePlayerOutput["hitter_rbi"] = 0;
 	LeaguePlayerOutput["hitter_runs"] = 0;
 	LeaguePlayerOutput["hitter_sb"] = 0;
@@ -761,6 +765,7 @@ function getReplHitter(){
 	LeaguePlayerOutput["pitcher_hitter"] = "H";
 	
 	LeaguePlayerOutput["hitter_z_avg"] = 0;
+	LeaguePlayerOutput["hitter_z_obp"] = 0;
 	LeaguePlayerOutput["hitter_z_hr"] = 0;
 	LeaguePlayerOutput["hitter_z_sb"] = 0;
 	LeaguePlayerOutput["hitter_z_runs"] = 0;
