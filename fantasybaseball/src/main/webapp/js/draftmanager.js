@@ -1738,7 +1738,7 @@ function sendPlayerToBlock(){
 	playerdraftrow = playertable.row('#' + playerid).data();
 
 	// New, may want to remove later
-	loadTeamSelect(dm_globalteamlist);
+	loadOTBTeamSelect(dm_globalteamlist);
 	
 	$("#select-ontheblock-draftteam").removeAttr("disabled");
 	$("#select-ontheblock-draftamt").removeAttr("disabled");
@@ -3966,8 +3966,8 @@ function loadTeamPreviewTable(data, isInitialLoad)
 
 function loadLeagueContent(leagueid){
 	
-	$("#playergrid_container").hide();
-	$("#playertable-load-spinner").show();
+	$("#league-top-row").hide();
+	$("#league-top-spinner-row").show();
 	
 	$("#intro-container").hide();
 	$("#league-container").show();
@@ -4067,6 +4067,30 @@ function loadEditPlayerTeamSelect(data){
 	
 }
 
+function loadOTBTeamSelect(data){
+
+	var data = updateTeamList(data);
+	
+	var draftteamselect = $("#select-ontheblock-draftteam");
+	draftteamselect.find('option').remove().end();
+	
+	if (undefined !== data){
+		draftteamselect.append($("<option value='0'/>").text("--- Select Team ---"));
+		$.each(data, function() {
+			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name + "  ($" + this.maxbid + ")"));
+		});
+	} else {}
+	
+	var draftteamselectunk = $("#select-draftteamunk");
+	draftteamselectunk.find('option').remove().end();
+	draftteamselectunk.append($("<option value='0'/>").text("--- Select Team ---"));
+	if (undefined !== data){
+		$.each(data, function() {
+			draftteamselectunk.append($("<option value='"+ this.id +"'/>").text(this.team_name + " ($" + this.maxbid + ")"));
+		});
+	} else {}
+}
+
 function loadTeamSelect(data){
 
 	var data = updateTeamList(data);
@@ -4094,26 +4118,6 @@ function loadTeamSelect(data){
 		// console.log("League data is null");
 	}
 
-	/*
-	var draftteamselect = $("#select-draftteam");
-	draftteamselect.find('option').remove().end();
-	if (undefined !== data){
-		$.each(data, function() {
-			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name + "  ($" + this.maxbid + ")"));
-		});
-	} else {}
-	*/
-	
-	var draftteamselect = $("#select-ontheblock-draftteam");
-	draftteamselect.find('option').remove().end();
-	
-	if (undefined !== data){
-		draftteamselect.append($("<option value='0'/>").text("--- Select Team ---"));
-		$.each(data, function() {
-			draftteamselect.append($("<option value='"+ this.id +"'/>").text(this.team_name + "  ($" + this.maxbid + ")"));
-		});
-	} else {}
-	
 	var draftteamselectunk = $("#select-draftteamunk");
 	draftteamselectunk.find('option').remove().end();
 	draftteamselectunk.append($("<option value='0'/>").text("--- Select Team ---"));
@@ -4122,7 +4126,6 @@ function loadTeamSelect(data){
 			draftteamselectunk.append($("<option value='"+ this.id +"'/>").text(this.team_name + " ($" + this.maxbid + ")"));
 		});
 	} else {}
-
 }
 
 
@@ -4389,8 +4392,8 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
         	// Load player data into main player grid
         	loadPlayerGridTable(resp.items, false);
         	
-        	$("#playergrid_container").show();
-        	$("#playertable-load-spinner").hide();
+        	$("#league-top-row").show();
+        	$("#league-top-spinner-row").hide();
         	
         	var t1 = performance.now();
         	console.log("Call to loadPlayerGridTable took " + (t1 - t0) + " milliseconds.")

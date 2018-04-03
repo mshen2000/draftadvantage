@@ -127,6 +127,11 @@ div#livestandings-row {
     padding: 5px 15px;
 }
 
+#league-top-spinner-row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
 .btn-group-draft>.btn, 
 .btn-group-draft>.btn-sm,
 .dt-buttons>.btn, .dt-buttons>.btn-sm {
@@ -617,7 +622,24 @@ td { font-size: 12px; }
 	</div>
 	
 	<div class="container" id="league-top-container" hidden>
-		<div class="row"> 
+		<div class="row" id="league-top-spinner-row" hidden> 
+			<div class="panel panel-default">
+	  			<div class="text-center" id="league-load-spinner" >
+					<div class="spinner" style="margin-top:70px;">
+						<div class="rect1"></div>
+						<div class="rect2"></div>
+						<div class="rect3"></div>
+						<div class="rect4"></div>
+						<div class="rect5"></div>
+						<div class="rect6"></div>
+						<div class="rect7"></div>
+					</div>
+					<p style="font-size: 20px; margin-bottom:70px;">Retrieving League Data...</p>
+				</div>
+			</div>
+
+		</div>
+		<div class="row" id="league-top-row"> 
 			<div class="col-md-10">
 				<div class="row"> 
 					 <div class="panel panel-default" id="otb_panel">
@@ -736,18 +758,18 @@ td { font-size: 12px; }
 				
 								  </div>
 								  <div style="margin-top:3px"></div>
-									<div class="text-center" id="playertable-load-spinner" hidden>
-										<div class="spinner" style="margin-top:70px">
-											<div class="rect1"></div>
-											<div class="rect2"></div>
-											<div class="rect3"></div>
-											<div class="rect4"></div>
-											<div class="rect5"></div>
-											<div class="rect6"></div>
-											<div class="rect7"></div>
-										</div>
-										<p style="font-size: 20px;">Retrieving Player Data...</p>
-									</div>
+<!-- 									<div class="text-center" id="playertable-load-spinner" hidden> -->
+<!-- 										<div class="spinner" style="margin-top:70px"> -->
+<!-- 											<div class="rect1"></div> -->
+<!-- 											<div class="rect2"></div> -->
+<!-- 											<div class="rect3"></div> -->
+<!-- 											<div class="rect4"></div> -->
+<!-- 											<div class="rect5"></div> -->
+<!-- 											<div class="rect6"></div> -->
+<!-- 											<div class="rect7"></div> -->
+<!-- 										</div> -->
+<!-- 										<p style="font-size: 20px;">Retrieving Player Data...</p> -->
+<!-- 									</div> -->
 									<div id="playergrid_container">
 								  		<table id="playergrid_table" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
 								  	</div>
