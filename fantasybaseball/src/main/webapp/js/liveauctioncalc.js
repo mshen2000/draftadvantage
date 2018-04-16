@@ -592,8 +592,14 @@ function getTotalDraftedSalary(playertablerows){
 		
 		// Sum salaries of all drafted players
 		if ((value.leagueteam_name != null)&&(value.leagueteam_name != "")) {
-			draftedplayersalary =  parseInt(draftedplayersalary) + parseInt(value.team_player_salary);
-			// console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
+			if (value.team_roster_position.toLowerCase() != "res") {
+				draftedplayersalary =  parseInt(draftedplayersalary) + parseInt(value.team_player_salary);
+				// console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
+			}
+			else {
+				// console.log("NOT Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
+			}
+			
 		}
 
 	});

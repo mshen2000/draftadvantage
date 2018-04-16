@@ -635,15 +635,15 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		long end = System.currentTimeMillis();
 		long dt = end - begin;
 		// System.out.println("Get Player Output Data: COMPLETE");
-//		log.log( Level.FINE, "Get Player Output Data: Step 1, {0} MS elapsed", time1 - begin);
-//		log.log( Level.FINE, "Get Player Output Data: Step 2, {0} MS elapsed", time2 - time1);
-//		log.log( Level.FINE, "Get Player Output Data: Step 3, {0} MS elapsed", time3 - time2);
-//		log.log( Level.FINE, "Get Player Output Data: Step 4, {0} MS elapsed", time4 - time3);
-//		log.log( Level.FINE, "Get Player Output Data: Step 5, {0} MS elapsed", time5 - time4);
-//		log.log( Level.FINE, "Get Player Output Data: Step 6, {0} MS elapsed", time6 - time5);
-//		log.log( Level.FINE, "Get Player Output Data: Step 7, {0} MS elapsed", time7 - time6);
-//		log.log( Level.FINE, "Get Player Output Data: Step 8, {0} MS elapsed", end - time7);
-//		log.log( Level.FINE, "Get Player Output Data: COMPLETE, {0} MS elapsed", dt);
+		log.log( Level.FINE, "Get Player Output Data: Step 1, {0} MS elapsed", time1 - begin);
+		log.log( Level.FINE, "Get Player Output Data: Step 2, {0} MS elapsed", time2 - time1);
+		log.log( Level.FINE, "Get Player Output Data: Step 3, {0} MS elapsed", time3 - time2);
+		log.log( Level.FINE, "Get Player Output Data: Step 4, {0} MS elapsed", time4 - time3);
+		log.log( Level.FINE, "Get Player Output Data: Step 5, {0} MS elapsed", time5 - time4);
+		log.log( Level.FINE, "Get Player Output Data: Step 6, {0} MS elapsed", time6 - time5);
+		log.log( Level.FINE, "Get Player Output Data: Step 7, {0} MS elapsed", time7 - time6);
+		log.log( Level.FINE, "Get Player Output Data: Step 8, {0} MS elapsed", end - time7);
+		log.log( Level.FINE, "Get Player Output Data: COMPLETE, {0} MS elapsed", dt);
 		
 		return playeroutput;
 		
