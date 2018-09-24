@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+
+
     <servlet>
-        <servlet-name>SystemServiceServlet</servlet-name>
-        <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+        <servlet-name>EndpointsServlet</servlet-name>
+        <servlet-class>com.google.api.server.spi.EndpointsServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>com.app.endpoints.Greetings,com.app.endpoints.Main</param-value>
+<!--             <param-value>com.app.endpoints.Greetings,com.app.endpoints.Main</param-value>  -->
+			<param-value>com.app.endpoints.LogonEndpoint,com.app.endpoints.MainEndpoint</param-value> 
         </init-param>
     </servlet>
     <servlet-mapping>
-        <servlet-name>SystemServiceServlet</servlet-name>
-        <url-pattern>/_ah/spi/*</url-pattern>
+        <servlet-name>EndpointsServlet</servlet-name>
+        <url-pattern>/_ah/api/*</url-pattern>
     </servlet-mapping>
-    
-<!--     <security-constraint>
-       <web-resource-collection>
-          <web-resource-name>profile</web-resource-name>
-           <url-pattern>/*</url-pattern>
-       </web-resource-collection>
-       <auth-constraint>
-           <role-name>*</role-name>
-       </auth-constraint>
-   </security-constraint>
 
-   <security-constraint>
-       <web-resource-collection>
-          <web-resource-name>admin</web-resource-name>
-           <url-pattern>/admin/*</url-pattern>
-       </web-resource-collection>
-       <auth-constraint>
-           <role-name>admin</role-name>
-       </auth-constraint>
-   </security-constraint> -->
-    
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+	<listener>
+	  <listener-class>com.app.endpoints.OfyHelper</listener-class>
+	</listener>
+	
     <filter>
 	  <filter-name>ObjectifyFilter</filter-name>
 	  <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
 	</filter>
+	
 	<filter-mapping>
 	  <filter-name>ObjectifyFilter</filter-name>
 	  <url-pattern>/*</url-pattern>
+        <!-- Next three lines are for request dispatcher actions -->
+<!--         <dispatcher>REQUEST</dispatcher> -->
+<!--         <dispatcher>INCLUDE</dispatcher> -->
+<!--         <dispatcher>FORWARD</dispatcher> -->
 	</filter-mapping>
-	<listener>
-	  <listener-class>com.app.endpoints.OfyHelper</listener-class>
-	</listener>
+
+    
+<!--      <security-constraint> -->
+<!--        <web-resource-collection> -->
+<!--           <web-resource-name>profile</web-resource-name> -->
+<!--            <url-pattern>/*</url-pattern> -->
+<!--        </web-resource-collection> -->
+<!--        <auth-constraint> -->
+<!--            <role-name>*</role-name> -->
+<!--        </auth-constraint> -->
+<!--    </security-constraint> -->
+
+<!--    <security-constraint> -->
+<!--        <web-resource-collection> -->
+<!--           <web-resource-name>admin</web-resource-name> -->
+<!--            <url-pattern>/admin/*</url-pattern> -->
+<!--        </web-resource-collection> -->
+<!--        <auth-constraint> -->
+<!--            <role-name>admin</role-name> -->
+<!--        </auth-constraint> -->
+<!--    </security-constraint>  -->
+    
+
 
 </web-app>

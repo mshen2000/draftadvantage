@@ -1,7 +1,5 @@
 package com.app.endpoints;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,16 +8,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.cmd.Query;
 import com.nya.sms.dataservices.CustomTestService;
 import com.nya.sms.dataservices.IdentityService;
 import com.nya.sms.dataservices.ProjectionProfileService;
 import com.nya.sms.dataservices.SiteService;
-import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.BaseFieldAbstract;
 import com.nya.sms.entities.BaseFieldDate;
 import com.nya.sms.entities.BaseFieldFloat;
@@ -74,8 +68,11 @@ public class OfyHelper implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent event) {
 		// This will be invoked as part of a warmup request, or the first user
 		// request if no warmup request was invoked.
+		
+		// ObjectifyService.begin();
+		ObjectifyService.init();
+		
 		log.info("Registering data objects...");
-
 		// ObjectifyService.register(BaseEntity.class);
 		ObjectifyService.register(JKey.class);
 
@@ -111,11 +108,11 @@ public class OfyHelper implements ServletContextListener {
 		ObjectifyService.register(ProjectionProfile.class);
 		ObjectifyService.register(League.class);
 		ObjectifyService.register(LeaguePlayer.class);
-		ObjectifyService.register(LeagueTeam.class);
-		
+		ObjectifyService.register(LeagueTeam.class);	
 
 		ObjectifyService.run(new VoidWork() {
-			public void vrun() {
+			public void vrun() {				
+				
 				log.info("Deleting objects (if necessary)...");
 				// deleteAllIfPresent();
 

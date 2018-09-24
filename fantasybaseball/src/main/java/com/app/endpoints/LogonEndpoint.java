@@ -27,23 +27,15 @@ import javax.servlet.http.HttpSession;
 )
 public class LogonEndpoint {
 
+/*
   public static ArrayList<HelloGreeting> greetings = new ArrayList<HelloGreeting>();
 
   public com.nya.sms.entities.User usr1_r = getIdentityService().getUser("admin");
-  
-  
   {
     greetings.add(new HelloGreeting("hello world!"));
     greetings.add(new HelloGreeting("goodbye world!"));
     greetings.add(new HelloGreeting(usr1_r.getFirstname()));
   }
-  
-  
-	 private IdentityService getIdentityService() {
-		 
-		 return new IdentityService();
-	 
-	 }
 
   public HelloGreeting getGreeting(@Named("id") Integer id) throws NotFoundException {
     try {
@@ -56,6 +48,9 @@ public class LogonEndpoint {
   public ArrayList<HelloGreeting> listGreeting() {
     return greetings;
   }
+*/
+
+	private IdentityService getIdentityService() {return new IdentityService();}
 
   @ApiMethod(name = "greetings.multiply", httpMethod = "post")
   public HelloGreeting insertGreeting(@Named("times") Integer times, HelloGreeting greeting) {

@@ -64,17 +64,31 @@ public class PlayerProjectedService implements Serializable {
 		
 		Key<ProjectionProfile> profileKey = Key.create(ProjectionProfile.class, profile.getId());
 		List<PlayerProjected> players = new ArrayList<PlayerProjected>();
+		List<PlayerProjected> players1 = new ArrayList<PlayerProjected>();
+		List<PlayerProjected> players2 = new ArrayList<PlayerProjected>();
 		
 		if (mlb_leagues.equals(LeagueService.MLB_LEAGUES_BOTH)) {
 			players = ofy().load().type(PlayerProjected.class).filter("projection_profile", profileKey).list();
-		} else {
+		} 
+		else {  // this means league is either AL or NL
+			players1 = ofy().load().type(PlayerProjected.class).filter("projection_profile", profileKey)
+					.filter("al_nl =", mlb_leagues).list();	
+			players2 = ofy().load().type(PlayerProjected.class).filter("projection_profile", profileKey)
+					.filter("al_nl =", "FA").list();	
+			players.addAll(players1);
+			players.addAll(players2);
+		} 
+
+		
+		/*  ORIGINAL CODE: Google SDK doesn't allow "IN" filters anymore
+		else {
 			List<String> league_list = new ArrayList<String>();
 			league_list.add("FA");
 			league_list.add(mlb_leagues);
 
 			players = ofy().load().type(PlayerProjected.class).filter("projection_profile", profileKey)
 					.filter("al_nl in", league_list).list();
-		}
+		}  */
 
 		double estimatedTime1 = System.currentTimeMillis() - startTime;
 		
