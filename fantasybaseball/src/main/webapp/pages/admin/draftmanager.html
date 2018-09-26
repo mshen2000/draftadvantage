@@ -821,7 +821,16 @@ td { font-size: 12px; }
 							    <h3 class="panel-title">League Management</h3>
 							  </div>
 							  <div class="panel-body">
-							    <button type="button" class="btn btn-default" id="btn-deleteleague">Delete League</button>
+							  	<div class="row">
+							    	<div class="col-md-8">
+							    		<table id="league_team_mgmt_table" class="table table-bordered" cellspacing="0" width="100%"></table>
+							    	</div>
+							    	<div class="col-md-4">
+							    	</div>
+							    </div>							  
+							  	<div class="row">
+							    	<button type="button" class="btn btn-default" id="btn-deleteleague">Delete League</button>
+							    </div>
 							  </div>
 							</div>		    
 						    <div class="panel panel-default">
@@ -982,16 +991,6 @@ td { font-size: 12px; }
 							</div>
 						</form>
 					  </div>
-<!-- 					  <div class="col-md-4" style="padding-right:5px;"> -->
-<!--     					<label>Position 2</label> -->
-<!-- 					  	<table id="table-selectdraftposition" class="table table-bordered" cellspacing="0" width="100%"></table> -->
-<!-- 					  </div> -->
-<!-- 					  <div class="col-md-1" style="padding-left:5px;"> -->
-<!-- 		  				<div style="margin-top:60px"></div> -->
-<!-- 			    		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Move Up" id="btn-draftposmoveup"><i class="fa fa-arrow-up"></i></button> -->
-<!-- 			    		<div style="margin-top:10px"></div> -->
-<!-- 			    		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Move Down" id="btn-draftposmovedown"><i class="fa fa-arrow-down"></i></button> -->
-<!-- 					  </div> -->
 					</div>
 					<div class="row">
 						<div class="col-md-4">
@@ -1609,6 +1608,7 @@ td { font-size: 12px; }
 	<script src="../../js/progress-spinner.js"></script>
 	
 	<script async src="../../js/draftmanager.js"></script>
+	<script async src="../../js/draftmanagertables.js"></script>
 	<script async src="../../js/liveauctioncalc.js"></script>
 	<script async src="../../js/base.js"></script>
 

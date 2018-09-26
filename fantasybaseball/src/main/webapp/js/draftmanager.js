@@ -1412,6 +1412,7 @@ $(document).ready(function()
 	loadDraftPlayerAmtSelector();
 	
 	loadTeamOvwTable(null, true);
+	loadLeagueTeamMgmtTable(null, true);
 	
 	// loadPositionalTable(null, $("#pos_c_table"), true, true);
 	

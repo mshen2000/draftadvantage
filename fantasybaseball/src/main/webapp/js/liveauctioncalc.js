@@ -69,6 +69,7 @@ function calcTeamOvwList(){
 		
 		teamovw.id = teamid;
 		teamovw.team_name = teamvalue.team_name;
+		teamovw.owner_name = teamvalue.owner_name;
 		teamovw.isuserowner = teamvalue.isuserowner;
 
 		// Get players from table that have been drafted by selected team
@@ -160,6 +161,7 @@ function calcTeamOvwList(){
 	});
 	
 	loadTeamOvwTable(teamovwlist, false);
+	loadLeagueTeamMgmtTable(teamovwlist, false);
 	
 	// Update global array with league count of open slots per position
 	dm_teamrostercounts_live.open_slots_c = roster_c;
