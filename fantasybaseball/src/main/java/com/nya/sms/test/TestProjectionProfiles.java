@@ -45,6 +45,8 @@ public class TestProjectionProfiles {
 	public void setUp() throws Exception {
 
 		helper.setUp();
+		
+		ObjectifyService.init();
 
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(ProjectionProfile.class);
@@ -64,6 +66,8 @@ public class TestProjectionProfiles {
 				currentlocal);
 
 		closeable = ObjectifyService.begin();
+		
+		this.deleteTestItems();
 	}
 
 	/**
@@ -71,6 +75,7 @@ public class TestProjectionProfiles {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		this.deleteTestItems();
 		closeable.close();
 		helper.tearDown();
 
@@ -96,14 +101,17 @@ public class TestProjectionProfiles {
 
 	@Test
 	public void testProjectionProfiles() {
-
+		
+		System.out.println("In testProjectionProfiles...");
+		System.out.println("Number of projection profiles (pre-test): " + getProjectionProfileService().getAll().size());
 		User usr1 = new User("test1", "test1");
 		usr1.setFirstname("Test");
 		usr1.setLastname("One");
 
 		getIdentityService().saveUser(usr1, usr1.getUsername());
-		getProjectionProfileService();
-
+		
+		System.out.println("Number of projection profiles (after delete): " + getProjectionProfileService().getAll().size());
+		
 		ProjectionProfile p1 = new ProjectionProfile();
 		p1.setProjected_year(2016);
 		p1.setProjection_date(yesterday);
@@ -120,6 +128,7 @@ public class TestProjectionProfiles {
 		Long p2_id = getProjectionProfileService().save(p2, usr1.getUsername());
 
 		// Test get all profiles
+		System.out.println("Number of projection profiles (post-test): " + getProjectionProfileService().getAll().size());
 		Assert.assertTrue(getProjectionProfileService().getAll().size() == 2);
 
 		ProjectionProfile p1_out = new ProjectionProfile();
@@ -161,6 +170,25 @@ public class TestProjectionProfiles {
 						ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
 						ProjectionProfileService.PROJECTION_PERIOD_ROS, 2015));
 
+	}
+	
+	private void deleteTestItems() {
+		// Delete projection profiles if they exist
+		if (getProjectionProfileService().isProjectionProfilePresent(
+				ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+				ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016)) {
+			getProjectionProfileService().delete(getProjectionProfileService().get(
+					ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+					ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016).getId());			
+		}
+
+		if (getProjectionProfileService().isProjectionProfilePresent(
+				ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+				ProjectionProfileService.PROJECTION_PERIOD_ROS, 2015)) {
+			getProjectionProfileService().delete(getProjectionProfileService().get(
+					ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+					ProjectionProfileService.PROJECTION_PERIOD_ROS, 2015).getId());
+		}
 	}
 
 	private IdentityService getIdentityService() {

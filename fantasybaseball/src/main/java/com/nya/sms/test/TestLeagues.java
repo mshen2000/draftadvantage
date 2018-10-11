@@ -73,6 +73,8 @@ public class TestLeagues {
 	public void setUp() throws Exception {
 
 		helper.setUp();
+		
+		ObjectifyService.init();
 
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(League.class);
@@ -95,6 +97,8 @@ public class TestLeagues {
 				currentlocal);
 
 		closeable = ObjectifyService.begin();
+		
+		this.deleteTestItems();
 		
 		// Create user
 		User usr1 = new User("test1", "test1");
@@ -130,6 +134,7 @@ public class TestLeagues {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		this.deleteTestItems();
 		closeable.close();
 		helper.tearDown();
 
@@ -139,6 +144,8 @@ public class TestLeagues {
 	@Test
 	public void testLeagues() {
 		
+		System.out.println("In testLeagues...");
+
 		User usr1 = getIdentityService().getUser("test1");
 		User usr2 = getIdentityService().getUser("test2");
 		
@@ -183,10 +190,10 @@ public class TestLeagues {
 		Assert.assertTrue(lt2_r.getOwner_name() == lt2.getOwner_name());
 		Assert.assertTrue(lt2_r.getSalary_adjustment() == lt2.getSalary_adjustment());
 		Assert.assertTrue(lt2_r.isIsuserowner() == lt2.isIsuserowner());
-		
-		// Test League Team count
-		Assert.assertTrue(getLeagueTeamService().getAll().size() == 4);
 
+		// Test League Team count
+		System.out.println("--Number of League Teams: " + getLeagueTeamService().getAll().size());
+		Assert.assertTrue(getLeagueTeamService().getAll().size() == 4);
 		
 		getLeagueTeamService().delete(lt3_id);
 		
@@ -1413,6 +1420,40 @@ public class TestLeagues {
 		
 		return pplist;
 		
+	}
+	
+	private void deleteTestItems(){
+		// Delete projection profiles if they exist
+		
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteUser("test2");
+		
+		if (getProjectionProfileService().isProjectionProfilePresent(
+				ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+				ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016)) {
+			getProjectionProfileService().delete(getProjectionProfileService().get(
+					ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+					ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016).getId());			
+		}
+		
+		// Delete leagues
+		List<League> leagues = getLeagueService().getAll();
+		for (League l : leagues) {
+			if (l.getLeague_name().equals("League 1") ) {
+				getLeagueService().delete(l.getId());
+			}
+		}
+		
+		// Delete league teams
+		List<LeagueTeam> leagueteams = getLeagueTeamService().getAll();
+		for (LeagueTeam l : leagueteams) {
+			if (l.getTeam_name().equals("Team1") || l.getTeam_name().equals("Team2")
+					|| l.getTeam_name().equals("Team3") || l.getTeam_name().equals("Team4")) {
+				getLeagueTeamService().delete(l.getId());
+			}
+		}
+		
+
 	}
 
 	private IdentityService getIdentityService() {

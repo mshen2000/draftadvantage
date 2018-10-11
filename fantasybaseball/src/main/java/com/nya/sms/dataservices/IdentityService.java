@@ -262,8 +262,14 @@ public class IdentityService implements Serializable {
 
 	
 	public boolean isUserPresent(String username) {
+		
+		int usernum = ObjectifyService.ofy().load().type(User.class).filter("username", username).count();
 
-		if (ObjectifyService.ofy().load().type(User.class).filter("username", username).count() > 0) return true;
+		if (usernum > 0) 
+		{
+			// System.out.println("Number of users found: " + usernum);
+			return true;
+		}
 
 		return false;
 	}
@@ -352,17 +358,28 @@ public class IdentityService implements Serializable {
 	
 	public void deleteRole(String rolename){
 		
-		Role r = getRole(rolename);
-		
-		// remove site relationship
-		if (r.getSite() != null){
-			
-			getSiteService().removeRoleFromSite(r.getSite(), rolename);
-			
-		}
+		// Role r = getRole(rolename);
 		
 		// delete the role
-		ObjectifyService.ofy().delete().entity(r).now(); 
+		// ObjectifyService.ofy().delete().entity(r).now(); 
+
+		// System.out.println("Deleting role: " + rolename + ", Key: " + r.getId());
+		
+		// You can query for just keys, which will return Key objects much more efficiently than fetching whole objects
+		Iterable<Key<Role>> allKeys = ofy().load().type(Role.class).filter("name =", rolename).keys();
+		ofy().delete().keys(allKeys);
+		
+		while (isRolePresent(rolename)){
+			
+			try {
+				Thread.sleep(200);
+				System.out.println("delete waiting...");
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		
 	}
 	
@@ -403,14 +420,20 @@ public class IdentityService implements Serializable {
 	
 	public void deleteUser(String username){
 		
-		User usr = getUser(username);
+		// User usr = getUser(username);
 		
-		ObjectifyService.ofy().delete().entity(usr).now(); 
+		// System.out.println("Deleting user: " + usr.getUsername() + ", Key: " + usr.getId());
+		// ObjectifyService.ofy().delete().entity(usr).now(); 
 		
+		// You can query for just keys, which will return Key objects much more efficiently than fetching whole objects
+		Iterable<Key<User>> allKeys = ofy().load().type(User.class).filter("username =", username).keys();
+		ofy().delete().keys(allKeys);
+	
 		while (isUserPresent(username)){
 			
 			try {
 				Thread.sleep(200);
+				// System.out.println("delete waiting...");
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -429,6 +452,7 @@ public class IdentityService implements Serializable {
 
 	}
 	
+	/*
 	public List<User> getSGLeaderAvailableUsers(){
 
 		List<User> allusers = getAllUsers();
@@ -453,6 +477,7 @@ public class IdentityService implements Serializable {
 		return usersWithSGLeaderAuth;
 
 	}
+
 	
 	private List<User> removeSGLeadersfromUserlist (List<User> userlist){
 		
@@ -480,6 +505,7 @@ public class IdentityService implements Serializable {
 		return userlist;
 
 	}
+	*/
 	
 	public List<Role> getAllRoles(){
 		

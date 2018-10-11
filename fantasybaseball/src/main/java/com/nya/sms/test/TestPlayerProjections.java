@@ -47,7 +47,9 @@ public class TestPlayerProjections {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
-
+		
+		ObjectifyService.init();
+		
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(PlayerProjected.class);
 		ObjectifyService.register(ProjectionProfile.class);
@@ -65,6 +67,8 @@ public class TestPlayerProjections {
 		dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, currentlocal);
 	
 		closeable = ObjectifyService.begin();
+		
+		this.deleteTestItems();
 	}
 
 	/**
@@ -72,6 +76,7 @@ public class TestPlayerProjections {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		this.deleteTestItems();
 		closeable.close();
 		helper.tearDown();
 		
@@ -100,7 +105,7 @@ public class TestPlayerProjections {
 		usr1.setLastname("One");
 		
 		getIdentityService().saveUser(usr1,usr1.getUsername());
-		
+
 		ProjectionProfile p1 = new ProjectionProfile();
 		p1.setProjected_year(2016);
 		p1.setProjection_date(yesterday);
@@ -218,7 +223,7 @@ public class TestPlayerProjections {
 		
 		// Test there are a total of 6 projections
 		// Tests method getAllPlayerProjected
-		// System.out.println("Count of all player projections: " + getPlayerProjectedService().getAllPlayerProjected().size());
+		System.out.println("Count of all player projections: " + getPlayerProjectedService().getAllPlayerProjected().size());
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 6);
 		
 		// Count pitchers and hitters
@@ -283,6 +288,36 @@ public class TestPlayerProjections {
 		getPlayerProjectedService().deleteAllPlayerProjections();
 		Assert.assertTrue(getPlayerProjectedService().getAllPlayerProjected().size() == 0);
 		
+	}
+	
+	private void deleteTestItems(){
+		// Delete projection profiles if they exist
+		
+		getIdentityService().deleteUser("test1");
+		
+		if (getProjectionProfileService().isProjectionProfilePresent(
+				ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+				ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016)) {
+			getProjectionProfileService().delete(getProjectionProfileService().get(
+					ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+					ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2016).getId());			
+		}
+
+		if (getProjectionProfileService().isProjectionProfilePresent(
+				ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+				ProjectionProfileService.PROJECTION_PERIOD_ROS, 2015)) {
+			getProjectionProfileService().delete(getProjectionProfileService().get(
+					ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+					ProjectionProfileService.PROJECTION_PERIOD_ROS, 2015).getId());
+		}
+		
+		if (getProjectionProfileService().isProjectionProfilePresent(
+				ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+				ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2015)) {
+			getProjectionProfileService().delete(getProjectionProfileService().get(
+					ProjectionProfileService.PROJECTION_SERVICE_STEAMER,
+					ProjectionProfileService.PROJECTION_PERIOD_PRESEASON, 2015).getId());
+		}
 	}
 	
 	

@@ -4,7 +4,6 @@
 package com.nya.sms.test;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import static org.junit.Assert.*;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -12,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.jose4j.lang.JoseException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,14 +23,8 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Ref;
-import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.cmd.Query;
 import com.googlecode.objectify.util.Closeable;
 import com.nya.sms.dataservices.IdentityService;
-import com.nya.sms.dataservices.SiteService;
-import com.nya.sms.dataservices.StudentService;
-import com.nya.sms.entities.BaseEntity;
 import com.nya.sms.entities.JKey;
 import com.nya.sms.entities.Role;
 import com.nya.sms.entities.Site;
@@ -62,6 +54,8 @@ public class TestEntityUserRole {
 	public void setUp() throws Exception {
 		
 		helper.setUp();
+		
+		ObjectifyService.init();
 
 		ObjectifyService.register(JKey.class);
 		ObjectifyService.register(User.class);
@@ -96,6 +90,11 @@ public class TestEntityUserRole {
 
 	@Test
 	public void testCreateUser() {
+		System.out.println("In testCreateUser...");
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteUser("test2");
 		
 		// also test getallusers, getuser, saveuser
 
@@ -124,10 +123,20 @@ public class TestEntityUserRole {
 		
 		Assert.assertEquals(2, getIdentityService().getAllUsers().size());
 
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteUser("test2");
+		
+		System.out.println("End testCreateUser...");
 	}
 	
 	@Test
 	public void testUserModifiedBy() {
+		System.out.println("In testUserModifiedBy...");
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteUser("test2");
 		
 		User usr1 = new User("test1","test1");
 		usr1.setFirstname("Test");
@@ -149,71 +158,20 @@ public class TestEntityUserRole {
 		Assert.assertTrue(getIdentityService().getUser("test2").getCreatedon().after(yesterday));
 		Assert.assertTrue(getIdentityService().getUser("test2").getCreatedon().before(tomorrow));
 
-	}
-	
-	@Test
-	public void testSGLeaderAvailableUsers() {
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteUser("test2");
 		
-		List<String> levels = getIdentityService().getAccessLevels();
-		
-		User usr1 = new User("test1","test1");
-		usr1.setFirstname("Test");
-		usr1.setLastname("One");
-		
-		User usr2 = new User("test2","test2");
-		usr2.setFirstname("Test");
-		usr2.setLastname("Two");
-		
-		User usr3 = new User("test3","test3");
-		usr3.setFirstname("Test");
-		usr3.setLastname("three");
-		
-		getIdentityService().saveUser(usr1,usr1.getUsername());
-		getIdentityService().saveUser(usr2,usr1.getUsername());
-		getIdentityService().saveUser(usr3,usr1.getUsername());
-		
-		Role r1 = new Role("test1","test1");
-		Role r2 = new Role("test2","test2");
-		
-		r1.setAccess_grades(levels.get(2));
-		r1.setAccess_points(levels.get(2));
-		r1.setAccess_program(levels.get(2));
-		r1.setAccess_schedule(levels.get(2));
-		r1.setAccess_test(levels.get(2));
-		r1.setAccess_notes(levels.get(2));
-		
-		r2.setAccess_grades(levels.get(1));
-		r2.setAccess_points(levels.get(2));
-		r2.setAccess_program(levels.get(0));
-		r2.setAccess_schedule(levels.get(2));
-		r2.setAccess_test(levels.get(1));
-		r1.setAccess_notes(levels.get(2));
-		
-		getIdentityService().saveRole(r1,usr1.getUsername());
-		getIdentityService().saveRole(r2,usr1.getUsername());
-		
-		getIdentityService().createMembership(usr1.getUsername(), r1.getName());
-		getIdentityService().createMembership(usr2.getUsername(), r2.getName());
-		getIdentityService().createMembership(usr3.getUsername(), r1.getName());
-		getIdentityService().createMembership(usr3.getUsername(), r2.getName());
-		
-		User user1_ret = getIdentityService().getUser("test1");
-		User user2_ret = getIdentityService().getUser("test2");
-		
-		StudentGroup sg = new StudentGroup("testsg");
-		sg.setLeader(Ref.create(user1_ret));
-		getStudentService().saveGroup(sg, "test1");
-		
-		List<User> leaderusers = getIdentityService().getSGLeaderAvailableUsers();
-
-		Assert.assertEquals(1,leaderusers.size());
-		Assert.assertEquals(leaderusers.get(0).getUsername(),"test3");
-
+		System.out.println("End testUserModifiedBy...");
 	}
 
 	
 	@Test
 	public void testCheckPassword() {
+		System.out.println("In testCheckPassword...");
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
 		
 		User usr1 = new User("test1","test1");
 		usr1.setFirstname("Test");
@@ -225,10 +183,20 @@ public class TestEntityUserRole {
 		Assert.assertTrue(getIdentityService().checkPassword("test1@test.com", "test1"));
 		Assert.assertFalse(getIdentityService().checkPassword("test1@test.com", "aaaa"));
 
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+
+		System.out.println("End testCheckPassword...");
 	}
 	
 	@Test 
 	public void testJWT(){
+		System.out.println("In testJWT...");
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteRole("user");
+		getIdentityService().deleteRole("admin");
 		
 		// Test create web key
 		getIdentityService().createWebKey();
@@ -277,12 +245,23 @@ public class TestEntityUserRole {
 		User usrout = getIdentityService().getUserfromToken(jwt2);
 		Assert.assertTrue(usrout.getUsername().equals("test1"));
 		Assert.assertTrue(usrout.getEmail().equals("test1@test.com"));
+
+		// delete users and roles after test
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteRole("user");
+		getIdentityService().deleteRole("admin");
+		
+		System.out.println("End testJWT...");
 	}
 	
 	@Test
 	public void testIsUserPresent() {
 		
 		// also test deleteUser
+		System.out.println("In testIsUserPresent..");
+		
+		//  make sure there are now test1 users to start
+		getIdentityService().deleteUser("test1");
 		
 		User usr1 = new User("test1","test1");
 		usr1.setFirstname("Test");
@@ -294,7 +273,6 @@ public class TestEntityUserRole {
 
 		Assert.assertTrue(getIdentityService().isUserPresent("test1"));
 		Assert.assertTrue(getIdentityService().isUserExtIDPresent("aaaa"));
-		
 		getIdentityService().deleteUser("test1");
 		
 		Assert.assertFalse(getIdentityService().isUserPresent("test1"));
@@ -304,6 +282,12 @@ public class TestEntityUserRole {
 	
 	@Test
 	public void testCreateRole() {
+		System.out.println("In testCreateRole...");
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteRole("test1");
+		getIdentityService().deleteRole("test2");
 		
 		// also test getallroles, getrole, saverole
 		
@@ -313,36 +297,40 @@ public class TestEntityUserRole {
 
 		getIdentityService().saveUser(usr1,usr1.getUsername());
 
-		Site site1 = new Site("testsite");
-		site1.setDescription("site description");
-		Long saveditemid1 = getSiteService().save(site1, usr1.getUsername());
+		// Site site1 = new Site("testsite");
+		// site1.setDescription("site description");
+		// Long saveditemid1 = getSiteService().save(site1, usr1.getUsername());
 
 		Role r1 = new Role("test1","test1");
 		Role r2 = new Role("test2","test2");
 		
-		r1.setSite(site1.getName());
+		// r1.setSite(site1.getName());
 		
 		getIdentityService().saveRole(r1,usr1.getUsername());
 		getIdentityService().saveRole(r2,usr1.getUsername());
 
 		Assert.assertEquals(getIdentityService().getRole("test1").getName(), r1.getName());
-		
-		Assert.assertEquals(1, getSiteService().getSiteRoles(site1.getName()).size());
-		Assert.assertEquals(r1.getName(), getSiteService().getSiteRoles(site1.getName()).get(0).getName());
-		
-		List<Role> roles = getIdentityService().getAllRoles();
-		
-		Assert.assertEquals(2, getIdentityService().getAllRoles().size());
+		Assert.assertEquals(getIdentityService().getRole("test2").getName(), r2.getName());
 		
 		getIdentityService().deleteRole(r1.getName());
 		
-		Assert.assertEquals(1, getIdentityService().getAllRoles().size());
-		Assert.assertEquals(0, getSiteService().getSiteRoles(site1.getName()).size());
+		Assert.assertFalse(getIdentityService().isRolePresent(r1.getName()));
 
+		// delete users and roles after test 
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteRole("test1");
+		getIdentityService().deleteRole("test2");
+		
+		System.out.println("End testCreateRole...");
 	}
 	
 	@Test
 	public void testIsRolePresent() {
+		System.out.println("In testIsRolePresent...");
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteRole("test1");
 		
 		// also test deleteRole
 		User usr1 = new User("test1","test1");
@@ -360,10 +348,15 @@ public class TestEntityUserRole {
 		getIdentityService().deleteRole("test1");
 		
 		Assert.assertFalse(getIdentityService().isRolePresent("test1"));
-
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteRole("test1");
+		
+		System.out.println("In testIsRolePresent...");
 	}
 	
-	
+
 	@Test
 	public void testGetAccessLevels() {
 
@@ -377,6 +370,12 @@ public class TestEntityUserRole {
 	
 	@Test
 	public void testTestMembership() {
+		System.out.println("In testTestMembership...");
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteUser("test2");
+		getIdentityService().deleteRole("role1");
 		
 		User usr1 = new User("test1","test1");
 		usr1.setFirstname("Test");
@@ -402,7 +401,30 @@ public class TestEntityUserRole {
 		getIdentityService().deleteMembership("test1", "role1");
 		
 		Assert.assertTrue(getIdentityService().getUserRoles("test1").size() == 0);
-
+		
+		// delete users and roles before test start
+		getIdentityService().deleteUser("test1");
+		getIdentityService().deleteUser("test2");
+		getIdentityService().deleteRole("role1");
+		
+		System.out.println("End testTestMembership...");
+	}
+	
+	private void deleteAllUsersRoles() throws InterruptedException {
+		
+		// System.out.println("Deleting Users and Roles");
+		// System.out.println("-- Users: " + ObjectifyService.ofy().load().type(User.class).count());
+		// System.out.println("-- Roles: " + ObjectifyService.ofy().load().type(Role.class).count());
+		// System.out.println("Deleting...");
+		List<Key<Role>> rolekeys = ofy().load().type(Role.class).keys().list();
+		ofy().delete().keys(rolekeys).now();
+		
+		List<Key<User>> userkeys = ofy().load().type(User.class).keys().list();
+		ofy().delete().keys(userkeys).now();
+		Thread.sleep(400);
+		// System.out.println("-- Users: " + ObjectifyService.ofy().load().type(User.class).count());
+		// System.out.println("-- Roles: " + ObjectifyService.ofy().load().type(Role.class).count());
+		
 	}
 	
 	
@@ -412,17 +434,6 @@ public class TestEntityUserRole {
 	 
 	 }
 	 
-	 private StudentService getStudentService() {
-		 
-		 return new StudentService();
-	 
-	 }
-	 
-	 private SiteService getSiteService() {
-		 
-		 return new SiteService(Site.class);
-	 
-	 }
 
 
 }

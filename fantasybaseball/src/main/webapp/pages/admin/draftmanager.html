@@ -826,11 +826,18 @@ td { font-size: 12px; }
 							    		<table id="league_team_mgmt_table" class="table table-bordered" cellspacing="0" width="100%"></table>
 							    	</div>
 							    	<div class="col-md-4">
+									  	<div class="row">
+									    	<button type="button" class="btn btn-success" id="btn-addTeamToLeague" style="margin-top: 8px; width: 130px;">Add a Team</button>
+									    </div>			
+									  	<div class="row">
+									    	<button type="button" class="btn btn-danger" disabled="disabled" id="btn-deleteTeamFromLeague" style="margin-top: 8px; width: 130px;">Delete Team</button>
+									    </div>		
+									  	<div class="row">
+									    	<button type="button" class="btn btn-default" id="btn-deleteleague" style="margin-top: 8px; width: 130px;">Delete League</button>
+									    </div>											    									    				    	
 							    	</div>
 							    </div>							  
-							  	<div class="row">
-							    	<button type="button" class="btn btn-default" id="btn-deleteleague">Delete League</button>
-							    </div>
+
 							  </div>
 							</div>		    
 						    <div class="panel panel-default">
@@ -1607,10 +1614,10 @@ td { font-size: 12px; }
 	<!-- PROGRESS SPINNER -->
 	<script src="../../js/progress-spinner.js"></script>
 	
-	<script async src="../../js/draftmanager.js"></script>
-	<script async src="../../js/draftmanagertables.js"></script>
-	<script async src="../../js/liveauctioncalc.js"></script>
-	<script async src="../../js/base.js"></script>
+	<script src="../../js/draftmanager.js"></script>
+	<script src="../../js/draftmanagertables.js"></script>
+	<script src="../../js/liveauctioncalc.js"></script>
+	<script src="../../js/base.js"></script>
 
 	<script>
 		function init() {

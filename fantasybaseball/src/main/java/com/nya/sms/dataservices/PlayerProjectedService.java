@@ -7,9 +7,11 @@ import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.Query;
@@ -187,8 +189,17 @@ public class PlayerProjectedService implements Serializable {
 		Query<PlayerProjected> q = ofy().load().type(PlayerProjected.class).filter("projection_profile", profile);
 		List<PlayerProjected> slist = q.list();
 
-		if (slist.size() > 0)
-			ObjectifyService.ofy().delete().entities(slist).now();
+		if (slist.size() > 0) {
+			
+			// Partition list by 500, can't delete more than 500 at a time
+			List<List<PlayerProjected>> master_slist = Lists.partition(slist, 500);
+			
+			for (List<PlayerProjected> p: master_slist) {
+				ObjectifyService.ofy().delete().entities(p).now();
+			}
+			
+			// ObjectifyService.ofy().delete().entities(slist).now();
+		}
 
 		int i = 0;
 
@@ -384,13 +395,27 @@ public class PlayerProjectedService implements Serializable {
 		// });
 
 		// Without transaction, delete happens independently
-		Map<Key<PlayerProjected>, PlayerProjected> keylist = null;
-		ObjectifyService.ofy().delete().entities(playerlistdelete).now();
+		// Map<Key<PlayerProjected>, PlayerProjected> keylist = null;
+		Map<Key<PlayerProjected>, PlayerProjected> keylist = new HashMap<Key<PlayerProjected>, PlayerProjected>();
+		
+		List<List<PlayerProjected>> master_playerlistdelete = Lists.partition(playerlistdelete, 500);
+		
+		for (List<PlayerProjected> p: master_playerlistdelete) {
+			ObjectifyService.ofy().delete().entities(p).now();
+		}
 
 		if (updateplayerlist.size() > 0) {
-			// System.out.println("Updating player projections: " +
-			// iproj_service);
-			keylist = ObjectifyService.ofy().save().entities(updateplayerlist).now();
+			System.out.println("Updating player projections (count): " + updateplayerlist.size());
+			// keylist = ObjectifyService.ofy().save().entities(updateplayerlist).now();
+			// Partition list by 500, can't save more than 500 at a time
+			List<List<PlayerProjected>> master_updateplayerlist = Lists.partition(updateplayerlist, 500);
+			
+			for (List<PlayerProjected> p: master_updateplayerlist) {
+				// System.out.println("saving partition size: " + p.size());
+				keylist.putAll(ObjectifyService.ofy().save().entities(p).now()); 
+				// System.out.println("keylist size: " + keylist.size());
+			}
+			
 		} else {
 			// System.out.println("Delete cancelled - player list was empty);
 		}
