@@ -266,8 +266,8 @@ public class TestLeagues {
 
 		getLeagueService().deleteLeagueTeam(l1_id, lt2_id, usr1.getUsername());
 		
-		// Test league team max check method (false)
-		Assert.assertTrue(!getLeagueService().isLeagueTeamsMaxed(l1_r.getId()));
+		// Test league team max check method (true)
+		Assert.assertTrue(getLeagueService().isLeagueTeamsMaxed(l1_r.getId()));
 		
 		// Test count of league teams and total teams after delete Team from League
 		Assert.assertTrue(l1_r.getLeague_teams().size() == 1);
@@ -278,6 +278,10 @@ public class TestLeagues {
 		// Test count of Leagues and Teams after deleting the League
 		Assert.assertTrue(getLeagueTeamService().getAll().size() == 1);
 		Assert.assertTrue(getLeagueService().getAll().size() == 0);
+		
+		// Delete last unlinked league team
+		getLeagueTeamService().delete(lt4_id);
+		Assert.assertTrue(getLeagueTeamService().getAll().size() == 0);
 
 	}
 	
@@ -766,6 +770,8 @@ public class TestLeagues {
 		cont_unknown_h.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_3B);
 		unknown_h_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_h, uname);
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 2);
+
+		
 		unknown_h  = getLeaguePlayerService().get(unknown_h_id);
 		Assert.assertTrue(unknown_h.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_3B));
 		Assert.assertTrue(unknown_h.getTeam_player_salary() == 8);
@@ -862,6 +868,17 @@ public class TestLeagues {
 		Assert.assertTrue(po_chapman.getTeam_player_note().equals(player_note));
 		Assert.assertTrue(po_unknown_h.getTeam_player_salary() == 8);
 		Assert.assertTrue(po_unknown_p2.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_P));
+		
+		// Test Delete a team
+		System.out.println("In delete team test, PRE - # of teams: " + getLeagueService().getLeagueTeams(l1_id, uname).size());
+		System.out.println("In delete team test, PRE - # of players on team: " + getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size());
+		getLeagueService().deleteLeagueTeam(l1_id, lt2_id, uname);
+		System.out.println("In delete team test, POST - # of teams: " + getLeagueService().getLeagueTeams(l1_id, uname).size());
+		System.out.println("In delete team test, POST - # of players on team: " + getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size());
+		System.out.println("In delete team test, POST - getting league team: " + getLeagueTeamService().get(lt2_id));
+		Assert.assertTrue(getLeagueService().getLeagueTeams(l1_id, uname).size() == 2);
+		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 0);
+		Assert.assertNull(getLeagueTeamService().get(lt2_id)); 
 		
 		// Test Delete league
 		getLeagueService().deleteLeagueFull(l1_id, uname);
@@ -1203,6 +1220,7 @@ public class TestLeagues {
 		cont_unknown_h.setLeague_team_id(lt2_id);
 		cont_unknown_h.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_3B);
 		unknown_h_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_h, uname);
+		System.out.println("In Test, size of lt2: " + getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size());
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 2);
 		unknown_h  = getLeaguePlayerService().get(unknown_h_id);
 		Assert.assertTrue(unknown_h.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_3B));

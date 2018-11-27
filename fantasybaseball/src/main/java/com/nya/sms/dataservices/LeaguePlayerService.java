@@ -152,8 +152,16 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 			lp.setTeam_roster_position(container.getTeam_roster_position());
 			
 			System.out.println("draftLeaguePlayer: Right before save 1: " + lp.getUnknown_player_name());
+			System.out.println("draftLeaguePlayer: Right before save 1 (team): " + lp.getLeague_team().getTeam_name());
 			
-			return this.save(lp, uname);
+			long tempid = this.save(lp, uname);
+			
+			System.out.println("draftLeaguePlayer: Right after save 1: " + this.get(tempid).getUnknown_player_name());
+			System.out.println("draftLeaguePlayer: Right after save 1 (team): " + this.get(tempid).getLeague_team().getTeam_name());
+			
+			return tempid;
+			
+			// return this.save(lp, uname);
 			
 		} else {
 			// System.out.println("draftLeaguePlayer: IN ELSE STATEMENT");
@@ -178,9 +186,19 @@ public class LeaguePlayerService extends AbstractDataServiceImpl<LeaguePlayer>{
 		lp.setTeam_roster_position(container.getTeam_roster_position());
 		lp.setFavorite_flag(container.isPlayer_favorite_flag());
 		
-		System.out.println("draftLeaguePlayer: Right before save 2: " + lp.getUnknown_player_name());
+		System.out.println("draftLeaguePlayer: Right before save 2 - unknown player name: " + lp.getUnknown_player_name());
+		System.out.println("draftLeaguePlayer: Right before save 2 - proj player name: " + lp.getPlayer_projected().getFull_name());
+		System.out.println("draftLeaguePlayer: Right before save 2 - league team: " + lp.getLeague_team().getTeam_name());
 		
-		return this.save(lp, uname);
+		long tempid = this.save(lp, uname);
+		
+		System.out.println("draftLeaguePlayer: Right after save 2 - unknown player name: " + this.get(tempid).getUnknown_player_name());
+		System.out.println("draftLeaguePlayer: Right after save 2 - proj player name: " + this.get(tempid).getPlayer_projected().getFull_name());
+		System.out.println("draftLeaguePlayer: Right after save 2 - league team: " + this.get(tempid).getLeague_team().getTeam_name());
+		
+		return tempid;
+		
+		// return this.save(lp, uname);
 		
 	}
 	

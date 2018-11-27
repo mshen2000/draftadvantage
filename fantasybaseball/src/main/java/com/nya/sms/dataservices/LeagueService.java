@@ -189,7 +189,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 //		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
 //		league.setPosition_priority_list(priority.getPos_priority());
 		// ***********************************************************************************
-		
+		// this.
 		return this.save(league, username);
 		
 	}
@@ -394,6 +394,9 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	public void deleteLeagueTeam(Long league_id, Long team_id, String uname) throws IndexOutOfBoundsException{
 
 		League league = this.get(league_id);
+		
+		// Undraft all players on the team
+		getLeaguePlayerService().undraftAllLeaguePlayersInTeam(team_id, uname);
 
 		List<LeagueTeam> lg = league.getLeague_teams();
 		
@@ -405,6 +408,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		Iterator<LeagueTeam> iter;
 		List<LeagueTeam> teams = new ArrayList<LeagueTeam>();
 
+		// Find the team in list of league teams to delete
 		for (iter = lg.listIterator(); iter.hasNext(); ) {
 			LeagueTeam a = iter.next();
 			// System.out.println("Delete check: " + a.getId() + ", " + team_id);
@@ -422,8 +426,12 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 			throw new IndexOutOfBoundsException("Team does not exist in league");
 		}
 		
-        // List<LeagueTeam> teams = Lists.newArrayList(iter);
+        // Update league teams with new list of teams (sans removed team)
         league.setLeague_teams(teams);
+        
+        // Update league size to new number
+        league.setNum_of_teams(teams.size());
+        
         // System.out.println("In deleteLeagueTeam: Number of league teams after update = " + teams.size());
         this.save(league, uname);
         getLeagueTeamService().delete(delete_team_id);
