@@ -40,6 +40,10 @@ import com.nya.sms.entities.User;
  * @author Michael
  *
  */
+/**
+ * @author Michael
+ *
+ */
 public class LeagueService extends AbstractDataServiceImpl<League>{
 	private static final Logger log =Logger.getLogger(LeagueService.class.getName());
 	private static final Mapper mapper = new DozerBeanMapper();
@@ -296,6 +300,34 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 	}
 	
+	
+	public void addNewLeagueTeam(Long league_id, String team_name, String owner_name, String uname) {
+		
+		LeagueTeam lt = new LeagueTeam();
+		lt.setTeam_name(team_name);
+		lt.setOwner_name(owner_name);
+		
+		long lt_id = getLeagueTeamService().save(lt, uname);
+
+		// Increase league number of teams by 1
+		League l = this.get(league_id);
+		int numteams = l.getNum_of_teams() + 1;
+		l.setNum_of_teams(numteams);
+		this.save(l, uname);
+		
+		// Add team to league
+		this.addLeagueTeam(league_id, lt_id, uname);
+		
+	}
+	
+	
+	/**
+	 * Description:	Add existing team to league, for internal use
+	 * @param league_id
+	 * @param team_id
+	 * @param uname
+	 * @throws IndexOutOfBoundsException 
+	 */
 	public void addLeagueTeam(Long league_id, Long team_id, String uname) throws IndexOutOfBoundsException {
 
 		League league = this.get(league_id);

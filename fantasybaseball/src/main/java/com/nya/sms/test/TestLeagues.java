@@ -272,6 +272,15 @@ public class TestLeagues {
 		// Test count of league teams and total teams after delete Team from League
 		Assert.assertTrue(l1_r.getLeague_teams().size() == 1);
 		Assert.assertTrue(getLeagueTeamService().getAll().size() == 2);
+		Assert.assertTrue(l1_r.getNum_of_teams() == 1);
+		
+		// Add a team to the league
+		getLeagueService().addNewLeagueTeam(l1_id, "team_add", "team_add_owner", usr1.getUsername());
+		
+		// Test count of league teams and total teams after add Team to League
+		Assert.assertTrue(l1_r.getLeague_teams().size() == 2);
+		Assert.assertTrue(getLeagueTeamService().getAll().size() == 3);
+		Assert.assertTrue(l1_r.getNum_of_teams() == 2);
 		
 		getLeagueService().deleteLeagueFull(l1_id,usr1.getUsername());
 		
@@ -593,7 +602,7 @@ public class TestLeagues {
 		LeagueTeam lt3 = new LeagueTeam();
 		lt3.setTeam_name("Team3");
 		lt3.setOwner_name("Owner3");
-
+		
 		long lt1_id = getLeagueTeamService().save(lt1, usr1.getUsername());
 		long lt2_id = getLeagueTeamService().save(lt2, usr1.getUsername());
 		long lt3_id = getLeagueTeamService().save(lt3, usr1.getUsername());
