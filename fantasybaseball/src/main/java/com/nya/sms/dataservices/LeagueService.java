@@ -301,6 +301,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	}
 	
 	
+	/**
+	 * Description:	Add team to league, for external use
+	 * @param league_id
+	 * @param team_name
+	 * @param owner_name
+	 * @param uname 
+	 */
 	public void addNewLeagueTeam(Long league_id, String team_name, String owner_name, String uname) {
 		
 		LeagueTeam lt = new LeagueTeam();
@@ -317,6 +324,10 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		// Add team to league
 		this.addLeagueTeam(league_id, lt_id, uname);
+		
+		// Update position priority
+		l = this.get(league_id);
+		this.updatePosPriorityList(l);
 		
 	}
 	
@@ -464,8 +475,13 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
         // Update league size to new number
         league.setNum_of_teams(teams.size());
         
+        // Update priority list for league
+        this.updatePosPriorityList(league);
+        
         // System.out.println("In deleteLeagueTeam: Number of league teams after update = " + teams.size());
         this.save(league, uname);
+        
+        // Delete the team
         getLeagueTeamService().delete(delete_team_id);
 	}
 	
@@ -480,7 +496,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		log.setLevel(Level.FINE);
 		// log.addHandler(new ConsoleHandler());
 		log.log( Level.FINE, "Get Player Output Data: BEGIN");
-		// System.out.println("Get Player Output Data: BEGIN");
+		System.out.println("Get Player Output Data: BEGIN");
 		League league = this.get(league_id);
 		ProjectionProfile profile = league.getProjection_profile();
 		
@@ -560,7 +576,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		//  TODO:  Don't need to calculate it anymore, just pull it from league
 		PositionZPriorityContainer priority = getPositionPriorityList(playeroutput);
 		// log.log( Level.FINE, "Calc Static Auct Value: Pos Priority list: {0}", priority.getPos_priority());
-		// System.out.println("Calc Static Auct Value: Pos Priority list: " + priority.getPos_priority());
+		System.out.println("Calc Static Auct Value: Pos Priority list: " + priority.getPos_priority());
 
 		// Calculate total z and replacement z for each position
 		PositionalZContainer posz_c = getPositionalZpass2(playeroutput, "C", iroster_c, priority);
@@ -578,8 +594,17 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		
 		double coef = (league.getTeam_salary()*league.getNum_of_teams())/posz_total;
 		
-//		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
-//		System.out.println("Coef: " + coef);
+		System.out.println("Total CZ: " + posz_c.getTotalvalue());
+		System.out.println("Total 1BZ: " + posz_1b.getTotalvalue());
+		System.out.println("Total 2BZ: " + posz_2b.getTotalvalue());
+		System.out.println("Total 3BZ: " + posz_3b.getTotalvalue());
+		System.out.println("Total SSZ: " + posz_ss.getTotalvalue());
+		System.out.println("Total OFZ: " + posz_of.getTotalvalue());
+		System.out.println("Total PZ: " + posz_p.getTotalvalue());
+		
+		System.out.println("Total Z: " + posz_total);
+		System.out.println("League Salary: " + league.getTeam_salary()*league.getNum_of_teams());
+		System.out.println("Coef: " + coef);
 		
 		String calculated_position;
 		
@@ -684,6 +709,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		log.log( Level.FINE, "Get Player Output Data: Step 7, {0} MS elapsed", time7 - time6);
 		log.log( Level.FINE, "Get Player Output Data: Step 8, {0} MS elapsed", end - time7);
 		log.log( Level.FINE, "Get Player Output Data: COMPLETE, {0} MS elapsed", dt);
+		
+		System.out.println("Get Player Output Data: END");
 		
 		return playeroutput;
 		
@@ -1351,13 +1378,14 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		iroster_of_wRes = (int) Math.round(roster_of_wRes);
 		iroster_p_wRes = (int) Math.round(roster_p_wRes);
 		
-//		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
-//		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
-//		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
-//		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
-//		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
-//		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
-//		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
+		System.out.println("Number of Teams: " + num_teams);
+		System.out.println("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
+		System.out.println("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
+		System.out.println("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
+		System.out.println("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
+		System.out.println("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
+		System.out.println("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
+		System.out.println("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
 		
 	}
 	
@@ -1382,7 +1410,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 				);
 		
 		// for (String p: priority.getPos_priority())  System.out.println(p);
-		/*
+		
 		System.out.println("getPositionPriorityList- iroster_c: " + iroster_c);
 		System.out.println("getPositionPriorityList- posz_c: " + posz_c.getReplacementvalue());
 		System.out.println("getPositionPriorityList- iroster_1b: " + iroster_1b);
@@ -1397,7 +1425,7 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 		System.out.println("getPositionPriorityList- posz_of: " + posz_of.getReplacementvalue());
 		System.out.println("getPositionPriorityList- iroster_p: " + iroster_p);
 		System.out.println("getPositionPriorityList- posz_p: " + posz_p.getReplacementvalue());
-		*/
+		
 		return priority;
 		
 	}

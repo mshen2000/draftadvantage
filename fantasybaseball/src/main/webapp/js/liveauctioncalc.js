@@ -419,7 +419,7 @@ function addRankScore(teamstandingslist, statcategory, isAscending){
 
 function calcLiveAuctionValue(){
 	
-	// console.log("Calc Live Auction Values: BEGIN");
+	console.log("Calc Live Auction Values: BEGIN");
 
 	// var t1 = new Date().getTime();
 	
@@ -429,7 +429,9 @@ function calcLiveAuctionValue(){
 	var teamlist = dm_globalteamlist;
 	var position_priority_list = dm_leagueinfo.position_priority_list;
 	
-	// console.log("-- Position priority list: " + position_priority_list);
+	console.log("-- Number of League Teams: " + num_teams);
+	console.log("-- Roster Counts: " + rostercounts);
+	console.log("-- Position priority list: " + position_priority_list);
 	
 	var roster_c = num_teams * rostercounts["C"];
 	var roster_1b = num_teams * (rostercounts["1B"] + rostercounts["CI"]/2.0 + rostercounts["UT"]/5.0);
@@ -463,13 +465,13 @@ function calcLiveAuctionValue(){
 	var iroster_of_wRes =  Math.round(roster_of_wRes);
 	var iroster_p_wRes =  Math.round(roster_p_wRes);
 	
-	// console.log("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
-	// console.log("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
-	// console.log("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
-	// console.log("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
-	// console.log("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
-	// console.log("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
-	// console.log("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
+	 console.log("Catcher Players, No Reserve: " + iroster_c + " With Reserve: " + iroster_c_wRes);
+	 console.log("1B Players, No Reserve: " + iroster_1b + " With Reserve: " + iroster_1b_wRes);
+	 console.log("2B Players, No Reserve: " + iroster_2b + " With Reserve: " + iroster_2b_wRes);
+	 console.log("3B Players, No Reserve: " + iroster_3b + " With Reserve: " + iroster_3b_wRes);
+	 console.log("SS Players, No Reserve: " + iroster_ss + " With Reserve: " + iroster_ss_wRes);
+	 console.log("OF Players, No Reserve: " + iroster_of + " With Reserve: " + iroster_of_wRes);
+	 console.log("P Players, No Reserve: " + iroster_p + " With Reserve: " + iroster_p_wRes);
 	
 	// Sort players by descending Z
 	var data_table = $('#playergrid_table').DataTable();
@@ -503,12 +505,21 @@ function calcLiveAuctionValue(){
 	
 	var total_draftedplayersalary = getTotalDraftedSalary(data_rows);
 	
-	// console.log("Total adj Salary: " + total_league_salary);
+	console.log("Total CZ: " + posz_c["totalz"]);
+	console.log("Total 1BZ: " + posz_1b["totalz"]);
+	console.log("Total 2BZ: " + posz_2b["totalz"]);
+	console.log("Total 3BZ: " + posz_3b["totalz"]);
+	console.log("Total SSZ: " + posz_ss["totalz"]);
+	console.log("Total OFZ: " + posz_of["totalz"]);
+	console.log("Total PZ: " + posz_p["totalz"]);
+	
+	console.log("Total Z: " + posz_total);
+	console.log("Total adj Salary: " + total_league_salary);
 	// console.log("Total drafted player Salary: " + total_draftedplayersalary);
 	
 	var coef = (total_league_salary-total_draftedplayersalary)/posz_total;
 	
-	// console.log("Coeff: " + coef);
+	console.log("Coeff: " + coef);
 	
 	// var t3 = new Date().getTime();
 	var calculatedpos = "";
@@ -571,7 +582,7 @@ function calcLiveAuctionValue(){
 	
 	data_table.draw( 'page' );
 	
-	// console.log("Calc Live Auction Values: COMPLETE");
+	console.log("Calc Live Auction Values: COMPLETE");
 	
 	// var t5 = new Date().getTime();
 	

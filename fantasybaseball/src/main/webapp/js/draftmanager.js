@@ -38,6 +38,9 @@ var playerdraftrow;
 //Saves the selected player from the player grid for update
 var playerselectedrow;
 
+// Saves the selected league team from the league management section
+var leagueteamselectedrow
+
 //Saves the selected player from the player custom position grid
 var playercustomposrow;
 
@@ -805,6 +808,38 @@ $(document).ready(function()
           });
 	    	
 		});
+	
+	$('#btn-deleteTeamFromLeague').click(function() 
+			{
+			var selectedtext = leagueteamselectedrow.team_name;
+			
+	        BootstrapDialog.show({
+	          	type: 'type-default',
+	              title: 'Confirm Delete Team From League',
+	              message: 'Are you sure you want to delete team ' + selectedtext + '?',
+	              spinicon: 'fa fa-refresh',
+	              buttons: [{
+	                  id: 'btn-confirm-delete-team',   
+	                  icon: 'fa fa-trash',       
+	                  cssClass: 'btn-danger', 
+	                  autospin: true,
+	                  label: 'Delete',
+	                  action: function(dialog) {
+	                	  $("#btn-confirm-delete-team").prop("disabled",true);
+	                	var teamid = leagueteamselectedrow.id;
+	                	var leagueid = $("#league-select").find("option:selected").val();
+	                	console.log("Selected team id: " + teamid);
+	                	mssolutions.fbapp.draftmanager.deleteTeamFromLeague(teamid, leagueid);
+	                  }
+	              }, {
+	                  label: 'Cancel',
+	                  action: function(dialog) {
+	                  	dialog.close();
+	                  }
+	              }]
+	          });
+		    	
+			});
 	
 	$('#btn-grp1 button').click(function() {
 	    $(this).addClass('active');
@@ -4453,6 +4488,28 @@ mssolutions.fbapp.draftmanager.deleteLeague = function(leagueid) {
         }
         else {
         	console.log("Failed to delete league: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * Delete a team from a league via the API.
+ */
+mssolutions.fbapp.draftmanager.deleteTeamFromLeague = function(teamid, leagueid) {
+	console.log("Deleting Team id..." + teamid);
+	gapi.client.draftapp.league.deleteteamfromleague({
+		'teamid' : teamid,
+		'leagueid' : leagueid }).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("Team delete complete.");
+        	// mssolutions.fbapp.draftmanager.loadLeagueList();
+        	// loadLeagueIntro();
+        	BootstrapDialog.closeAll();
+        	loadLeagueContent(leagueid);
+        }
+        else {
+        	console.log("Failed to delete team: ", resp.code + " : " + resp.message);
         }
       });
 };

@@ -5,6 +5,7 @@ import com.app.endpoints.entities.LeagueModalFields;
 import com.app.endpoints.entities.LeaguePlayerInputDraftContainer;
 import com.app.endpoints.entities.LeaguePlayerInputInfoContainer;
 import com.app.endpoints.entities.LeagueRosterItem;
+import com.app.endpoints.entities.LeagueTeamContainer;
 import com.app.endpoints.entities.ProjectionContainer;
 import com.app.endpoints.entities.ProjectionAttributeMap;
 import com.app.endpoints.entities.ProjectionPeriod;
@@ -217,6 +218,19 @@ public class MainEndpoint {
 
 	}
 	
+	@ApiMethod(name = "league.deleteteamfromleague", httpMethod = HttpMethod.DELETE)
+	public APIGeneralResult deleteTeamFromLeague(LeagueTeamContainer cont, HttpServletRequest req) throws UnauthorizedException {
+		
+		System.out.println("Team id: " + cont.getTeamid());
+		
+		// getLeagueService().deleteLeagueFull(id, validateUserToken(req).getUsername());
+		getLeagueService().deleteLeagueTeam(cont.getLeagueid(), cont.getTeamid(), validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", "Team delete successful.");
+		
+		return result;
+
+	}
 
 	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
 	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req)
