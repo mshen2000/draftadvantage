@@ -499,7 +499,7 @@ function calcLiveAuctionValue(){
 	var total_league_salary = 0;
 	
 	$.each( teamlist, function( index, value ){
-		// console.log("Team: " + value.team_name + ", adj_sal: " + value.adj_starting_salary);
+		console.log("Team: " + value.team_name + ", adj_sal: " + value.adj_starting_salary);
 		total_league_salary += value.adj_starting_salary;
 	});
 	

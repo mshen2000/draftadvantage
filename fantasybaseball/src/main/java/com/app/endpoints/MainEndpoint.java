@@ -231,6 +231,22 @@ public class MainEndpoint {
 		return result;
 
 	}
+	
+	@ApiMethod(name = "league.addteamtoleague", httpMethod = HttpMethod.PUT)
+	public APIGeneralResult addTeamToLeague(LeagueTeamContainer cont, HttpServletRequest req) throws UnauthorizedException {
+		
+		System.out.println("Team name: " + cont.getTeamname());
+		System.out.println("Team owner: " + cont.getTeamowner());
+		
+		// getLeagueService().deleteLeagueFull(id, validateUserToken(req).getUsername());
+		// getLeagueService().deleteLeagueTeam(cont.getLeagueid(), cont.getTeamid(), validateUserToken(req).getUsername());
+		getLeagueService().addNewLeagueTeam(cont.getLeagueid(), cont.getTeamname(), cont.getTeamowner(), validateUserToken(req).getUsername());
+		
+		APIGeneralResult result = new APIGeneralResult("OK", "Team add successful.");
+		
+		return result;
+
+	}
 
 	@ApiMethod(name = "playerprojections.get", httpMethod = "post")
 	public List<PlayerProjected> getProjections(APIGeneralMessage m, HttpServletRequest req)

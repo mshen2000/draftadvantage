@@ -841,6 +841,41 @@ $(document).ready(function()
 		    	
 			});
 	
+	$('#btn-addTeamToLeague').click(function() 
+			{
+			// var selectedtext = leagueteamselectedrow.team_name;
+			
+	        BootstrapDialog.show({
+	          	type: 'type-default',
+	              title: 'Add a Team to League',
+	              message: $('<label>Team Name: </label><input class="form-control" id="input-teamname" placeholder="Team Name">' +
+	            		  '<label>Team Owner: </label><input class="form-control" id="input-teamowner" placeholder="Team Owner">'),
+	              spinicon: 'fa fa-refresh',
+	              buttons: [{
+	                  id: 'btn-confirm-add-team',   
+	                  icon: 'fa fa-trash',       
+	                  cssClass: 'btn-danger', 
+	                  autospin: true,
+	                  label: 'Add Team',
+	                  action: function(dialog) {
+	                	  $("#btn-confirm-add-team").prop("disabled",true);
+	                	var teamname = $("#input-teamname").val();
+	                	var teamowner = $("#input-teamowner").val();
+	                	var leagueid = $("#league-select").find("option:selected").val();
+	                	console.log("Entered team name: " + teamname);
+	                	console.log("Entered team owner: " + teamowner);
+	                	mssolutions.fbapp.draftmanager.addTeamToLeague(teamname, teamowner, leagueid);
+	                  }
+	              }, {
+	                  label: 'Cancel',
+	                  action: function(dialog) {
+	                  	dialog.close();
+	                  }
+	              }]
+	          });
+		    	
+			});
+	
 	$('#btn-grp1 button').click(function() {
 	    $(this).addClass('active');
 	    $(this).siblings().removeClass('active');
@@ -4510,6 +4545,29 @@ mssolutions.fbapp.draftmanager.deleteTeamFromLeague = function(teamid, leagueid)
         }
         else {
         	console.log("Failed to delete team: ", resp.code + " : " + resp.message);
+        }
+      });
+};
+
+/**
+ * Add a team to a league via the API.
+ */
+mssolutions.fbapp.draftmanager.addTeamToLeague = function(teamname, teamowner, leagueid) {
+	console.log("Adding Team name..." + teamname);
+	gapi.client.draftapp.league.addteamtoleague({
+		'teamname' : teamname,
+		'teamowner' : teamowner,
+		'leagueid' : leagueid }).execute(
+      function(resp) {
+        if (!resp.code) { 
+        	console.log("Team add complete.");
+        	// mssolutions.fbapp.draftmanager.loadLeagueList();
+        	// loadLeagueIntro();
+        	BootstrapDialog.closeAll();
+        	loadLeagueContent(leagueid);
+        }
+        else {
+        	console.log("Failed to add team: ", resp.code + " : " + resp.message);
         }
       });
 };

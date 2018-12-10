@@ -310,18 +310,19 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 	 */
 	public void addNewLeagueTeam(Long league_id, String team_name, String owner_name, String uname) {
 		
-		LeagueTeam lt = new LeagueTeam();
-		lt.setTeam_name(team_name);
-		lt.setOwner_name(owner_name);
-		
-		long lt_id = getLeagueTeamService().save(lt, uname);
-
 		// Increase league number of teams by 1
 		League l = this.get(league_id);
 		int numteams = l.getNum_of_teams() + 1;
 		l.setNum_of_teams(numteams);
 		this.save(l, uname);
 		
+		// Create and save new team
+		LeagueTeam lt = new LeagueTeam();
+		lt.setTeam_name(team_name);
+		lt.setOwner_name(owner_name);
+		lt.setAdj_starting_salary(l.getTeam_salary());
+		long lt_id = getLeagueTeamService().save(lt, uname);
+
 		// Add team to league
 		this.addLeagueTeam(league_id, lt_id, uname);
 		
