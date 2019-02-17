@@ -69,6 +69,9 @@ public class PlayerProjectedService implements Serializable {
 		List<PlayerProjected> players1 = new ArrayList<PlayerProjected>();
 		List<PlayerProjected> players2 = new ArrayList<PlayerProjected>();
 		
+		System.out.println("*********Checking mlb_leagues: " + mlb_leagues);
+		System.out.println("*********Checking LeagueService.MLB_LEAGUES_BOTH: " + LeagueService.MLB_LEAGUES_BOTH);
+		
 		if (mlb_leagues.equals(LeagueService.MLB_LEAGUES_BOTH)) {
 			players = ofy().load().type(PlayerProjected.class).filter("projection_profile", profileKey).list();
 		} 
