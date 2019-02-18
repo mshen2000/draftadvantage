@@ -1191,12 +1191,13 @@ public class TestLeagues {
 		long castro_id = getLeaguePlayerService().draftLeaguePlayer(cont_castro, uname);
 		long chapman_id = getLeaguePlayerService().updateLeaguePlayerInfo(pcont_chapman, uname);
 		// chapman_id = getLeaguePlayerService().updateLeaguePlayerInfo(ncont_chapman, uname);
-		chapman_id = getLeaguePlayerService().draftLeaguePlayer(cont_chapman, uname);
+		
 		long trout_id = getLeaguePlayerService().updateLeaguePlayerInfo(ncont_trout, uname);
 		long unknown_h_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_h, uname);
 		long unknown_p1_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_p1, uname);
 		long unknown_p2_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_p2, uname);
 		trout_id = getLeaguePlayerService().updateLeaguePlayerInfo(pcont_trout, uname);
+		chapman_id = getLeaguePlayerService().draftLeaguePlayer(cont_chapman, uname);
 		
 		
 		// Test updated auction values due to custom position change
@@ -1212,6 +1213,12 @@ public class TestLeagues {
 		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isFavorite_flag());
 		
 		// Test getLeaguePlayersbyLeague
+		System.out.println("***** Number of players by leaque L1 (9): " + getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size());
+		List<LeaguePlayer> TestList = getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname);
+		for (LeaguePlayer p : TestList) {
+			if (p.isUnknownplayer()) System.out.println("       -- " + p.getUnknown_player_name());
+			else System.out.println("       -- " + p.getPlayer_projected().getFull_name());
+		}
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size() == 9);
 		
 		// Test getLeaguePlayersbyTeam
@@ -1245,6 +1252,11 @@ public class TestLeagues {
 		cont_unknown_h.setTeam_roster_position(LeaguePlayerService.TEAM_ROSTER_POSITION_3B);
 		unknown_h_id = getLeaguePlayerService().draftLeaguePlayer(cont_unknown_h, uname);
 		System.out.println("In Test, size of lt2: " + getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size());
+		List<LeaguePlayer> TestList2 = getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname);
+		for (LeaguePlayer p : TestList2) {
+			if (p.isUnknownplayer()) System.out.println("       -- " + p.getUnknown_player_name());
+			else System.out.println("       -- " + p.getPlayer_projected().getFull_name());
+		}
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 2);
 		unknown_h  = getLeaguePlayerService().get(unknown_h_id);
 		Assert.assertTrue(unknown_h.getTeam_roster_position().equals(LeaguePlayerService.TEAM_ROSTER_POSITION_3B));
