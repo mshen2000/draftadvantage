@@ -1212,6 +1212,10 @@ public class TestLeagues {
 		// Test player favorite capability
 		Assert.assertTrue(this.findPlayerByName(playeroutput2, "Mike Trout").get(0).isFavorite_flag());
 		
+		
+		
+
+		
 		// Test getLeaguePlayersbyLeague
 		System.out.println("***** Number of players by leaque L1 (9): " + getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname).size());
 		List<LeaguePlayer> TestList = getLeaguePlayerService().getLeaguePlayersByLeague(l1_id, uname);
@@ -1309,8 +1313,16 @@ public class TestLeagues {
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt2_id, uname).size() == 1);
 		Assert.assertTrue(getLeaguePlayerService().getLeaguePlayersByTeam(lt1_id, uname).size() == 5);
 		
+		// Remove favorite from trout
+		pcont_trout.setFavorite_flag(false);
+		trout_id = getLeaguePlayerService().updateLeaguePlayerInfo(pcont_trout, uname);
+		
 		// Get updated playeroutput after draft
 		playeroutput = getLeagueService().getLeaguePlayerData(l1_id, usr1.getUsername());
+		
+		// Test player favorite capability (remove favorite)
+		System.out.println("*** Testing Mike Trout Favorite (False): " + this.findPlayerByName(playeroutput, "Mike Trout").get(0).isFavorite_flag());
+		Assert.assertFalse(this.findPlayerByName(playeroutput, "Mike Trout").get(0).isFavorite_flag());
 		
 		List<PlayerProjected> po_drafted = new ArrayList<PlayerProjected>();
 		

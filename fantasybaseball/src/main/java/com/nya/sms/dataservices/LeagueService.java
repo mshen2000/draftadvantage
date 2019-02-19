@@ -540,7 +540,8 @@ public class LeagueService extends AbstractDataServiceImpl<League>{
 							po.setLeague_player_id(lp.getId());
 							po.setCustom_position_flag(lp.isCustom_position_flag());
 							
-							if (lp.isFavorite_flag()) po.setFavorite_flag(true);;
+							if (lp.isFavorite_flag()) po.setFavorite_flag(true);
+							else if (!lp.isFavorite_flag()) po.setFavorite_flag(false);
 							// po.setCustom_position(lp.getCustom_position());
 							
 							// Calculate player position
