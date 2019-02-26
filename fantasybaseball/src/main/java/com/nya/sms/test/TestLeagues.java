@@ -61,8 +61,8 @@ public class TestLeagues {
 	private Date tenyearsago;
 	private DateFormat dateFormatter;
 	
-	private String testfile1 = "D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/AppTest/Source Data - 20160210-TESTa.csv";
-	private String testfile2 = "D:/AllData/Dropbox/Fantasy Sports/2016 - MLB/AppTest/Source Data - 20160210-TESTb.csv";
+	private String testfile1 = "D:/AllData/Dropbox/Fantasy Sports/DraftAdvantage/AppTest/Source Data - 20160210-TESTa.csv";
+	private String testfile2 = "D:/AllData/Dropbox/Fantasy Sports/DraftAdvantage/AppTest/Source Data - 20160210-TESTb.csv";
 
 	private Closeable closeable;
 

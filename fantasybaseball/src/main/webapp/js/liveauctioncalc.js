@@ -605,7 +605,7 @@ function getTotalDraftedSalary(playertablerows){
 		
 		// Sum salaries of all drafted players
 		if ((value.leagueteam_name != null)&&(value.leagueteam_name != "")) {
-			if (value.team_roster_position.toLowerCase() != "res") {
+			if (value.team_roster_position.toLowerCase() != "res" && value.team_roster_position.toLowerCase() != "ml") {
 				draftedplayersalary =  parseInt(draftedplayersalary) + parseInt(value.team_player_salary);
 				// console.log("Adding drafted salary for: "+ value.full_name + ", Z: " + value.team_player_salary + ", running: " + draftedplayersalary);
 			}

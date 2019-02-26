@@ -1710,6 +1710,16 @@ function updateTeamInfoTab(){
 					return false;
 				}
 			});
+			if (value.team_roster_position.toLowerCase() == "ml") {
+				// add ML row to table
+				teamrostertable.row.add( {
+					"index": 100,
+			        "playerid":       value.id,
+			        "name":   value.full_name,
+			        "position":     "ML",
+			        "salary": "0"
+			    } ).draw();
+			}
 		});
 		
 		// Find team in global team list
@@ -1967,9 +1977,9 @@ function checkAmtSelector(){
     }
     */
     
-	// If position selector is set to "RES" then disable the amount selector,
+	// If position selector is set to "RES" or "ML" then disable the amount selector,
 	// set it to 0, and enable the draft button.
-	if (posselector.val().toLowerCase() == "res"){
+	if (posselector.val().toLowerCase() == "res" || posselector.val().toLowerCase() == "ml"){
 		$("#btn-ontheblock-draftplayer").removeAttr("disabled");
 		$("#select-ontheblock-draftamt").val("");
 		$("#select-ontheblock-draftamt").attr("disabled","disabled");
@@ -2148,6 +2158,8 @@ function loadDraftPlayerPosSelector(updateplayerposition){
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='P'/>").text("P (" + countp + ")"));
 		if (selres) posselector.append($("<option value='RES'/>").text("Res (" + countres + ")"));
 		else posselector.append($("<option style='background-color:rgb(240,240,240);color:rgb(150,150,150)' disabled='disabled' value='Res'/>").text("Res (" + countres + ")"));
+		
+		posselector.append($("<option value='ML'/>").text("ML"));
 
 		if ((playerdraftrow.pitcher_hitter == "P") && (selp)) $('select[id=select-ontheblock-draftposition]').val("P");
 		else if (!selp && !selc && !sel1b && !sel2b && !selss && !sel3b && !selmi && !selci && !selof && !selutil && selres){
