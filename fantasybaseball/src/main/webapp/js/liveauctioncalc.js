@@ -99,7 +99,7 @@ function calcTeamOvwList(){
 				totalsalary = totalsalary + parseInt(value.team_player_salary);
 				teampitchers++;
 			}
-			else if (value.team_roster_position.toLowerCase() == "res"){teamreserves++;}
+			else if (value.team_roster_position.toLowerCase() == "res" || value.team_roster_position.toLowerCase() == "ml"){teamreserves++;}
 			else {
 				totalsalary = totalsalary + parseInt(value.team_player_salary);
 				teamhitters++;

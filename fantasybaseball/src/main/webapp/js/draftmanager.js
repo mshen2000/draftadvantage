@@ -3924,6 +3924,7 @@ function showUndraftPlayerDialog(playergridundraftrow){
         		updateTeamInfoTab();
         		dialogItself.close();
         		calcLiveAuctionValue();
+        		
             }
         }, {
             label: 'Cancel',
@@ -4329,6 +4330,11 @@ mssolutions.fbapp.draftmanager.undraftPlayer = function(league_id, player_projec
         	// Indicator whether the tab should be updated on select
         	update_positional_tab = true;
         	update_standings_tab = true;
+        	
+        	calcLiveAuctionValue();
+        	
+    		// Update team information in team overview list
+    		calcTeamOvwList();
         }
         else {
         	bootstrap_alert.lostconnection();
