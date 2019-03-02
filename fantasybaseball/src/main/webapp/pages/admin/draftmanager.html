@@ -796,7 +796,26 @@ td { font-size: 12px; }
 						  <div id="maintab3" class="tab-pane fade">
 						    <h3>Live Estimated Standings</h3>
 						    <div class="row" id="livestandings-row">
-						    		<table id="league_standings_table" class="table table-striped dm_standings_table" cellspacing="0" width="100%"></table>
+						    		
+							  		<div class="col-md-4">
+										<table id="league_standings_table" class="table table-striped dm_standings_table" cellspacing="0" width="100%"></table>
+									</div>
+									<div class="col-md-4">
+										<table id="league_standings_table_avg" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_hr" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_sb" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_r" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_rbi" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_obp" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+									</div>
+									<div class="col-md-4">
+										<table id="league_standings_table_w" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_sv" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_holds" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_so" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_era" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+										<table id="league_standings_table_whip" class="table dm_pos_table" cellspacing="0" width="100%"></table>
+									</div>			
 						    </div>
 						    
 						  </div>
@@ -1617,6 +1636,7 @@ td { font-size: 12px; }
 	<script src="../../js/draftmanager.js"></script>
 	<script src="../../js/draftmanagertables.js"></script>
 	<script src="../../js/liveauctioncalc.js"></script>
+	<script src="../../js/standings.js"></script>
 	<script src="../../js/base.js"></script>
 
 	<script>

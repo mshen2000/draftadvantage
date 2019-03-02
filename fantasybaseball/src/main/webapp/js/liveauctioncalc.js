@@ -363,22 +363,26 @@ function calcStandings(){
 	// For each team, calculate total scoring
 	$.each( teamstandingslist, function( index, value ){
 		var total_score = 0;
+		var pitching_score = 0;
+		var hitting_score = 0;
 		
-		if (dm_leagueinfo.cat_hitter_hr) total_score = total_score + value.team_hitter_hr_score;
-		if (dm_leagueinfo.cat_hitter_sb) total_score = total_score + value.team_hitter_sb_score;
-		if (dm_leagueinfo.cat_hitter_rbi) total_score = total_score + value.team_hitter_rbi_score;
-		if (dm_leagueinfo.cat_hitter_r) total_score = total_score + value.team_hitter_runs_score;
-		if (dm_leagueinfo.cat_hitter_avg) total_score = total_score + value.team_hitter_avg_score;
-		if (dm_leagueinfo.cat_hitter_obp) total_score = total_score + value.team_hitter_obp_score;
+		if (dm_leagueinfo.cat_hitter_hr) hitting_score = hitting_score + value.team_hitter_hr_score;
+		if (dm_leagueinfo.cat_hitter_sb) hitting_score = hitting_score + value.team_hitter_sb_score;
+		if (dm_leagueinfo.cat_hitter_rbi) hitting_score = hitting_score + value.team_hitter_rbi_score;
+		if (dm_leagueinfo.cat_hitter_r) hitting_score = hitting_score + value.team_hitter_runs_score;
+		if (dm_leagueinfo.cat_hitter_avg) hitting_score = hitting_score + value.team_hitter_avg_score;
+		if (dm_leagueinfo.cat_hitter_obp) hitting_score = hitting_score + value.team_hitter_obp_score;
 			
-		if (dm_leagueinfo.cat_pitcher_wins) total_score = total_score + value.team_pitcher_w_score;
-		if (dm_leagueinfo.cat_pitcher_saves) total_score = total_score + value.team_pitcher_sv_score;
-		if (dm_leagueinfo.cat_pitcher_so) total_score = total_score + value.team_pitcher_k_score;
-		if (dm_leagueinfo.cat_pitcher_era) total_score = total_score + value.team_pitcher_era_score;
-		if (dm_leagueinfo.cat_pitcher_whip) total_score = total_score + value.team_pitcher_whip_score;
-		if (dm_leagueinfo.cat_pitcher_holds) total_score = total_score + value.team_pitcher_holds_score;
+		if (dm_leagueinfo.cat_pitcher_wins) pitching_score = pitching_score + value.team_pitcher_w_score;
+		if (dm_leagueinfo.cat_pitcher_saves) pitching_score = pitching_score + value.team_pitcher_sv_score;
+		if (dm_leagueinfo.cat_pitcher_so) pitching_score = pitching_score + value.team_pitcher_k_score;
+		if (dm_leagueinfo.cat_pitcher_era) pitching_score = pitching_score + value.team_pitcher_era_score;
+		if (dm_leagueinfo.cat_pitcher_whip) pitching_score = pitching_score + value.team_pitcher_whip_score;
+		if (dm_leagueinfo.cat_pitcher_holds) pitching_score = pitching_score + value.team_pitcher_holds_score;
 		
-		value['total_score'] = total_score;
+		value['total_score'] = pitching_score + hitting_score;
+		value['pitching_score'] = pitching_score;
+		value['hitting_score'] = hitting_score;
 	});
 	
 	// console.log("calcStandings teamlist: " + JSON.stringify(teamstandingslist));
@@ -386,7 +390,19 @@ function calcStandings(){
 	dm_teamstandings = teamstandingslist;
 	
 	loadLeagueStandingsTable(dm_teamstandings, false);
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_avg","AVG","team_hitter_avg");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_hr","HR","team_hitter_hr");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_sb","SB","team_hitter_sb");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_r","Runs","team_hitter_runs");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_rbi","RBI","team_hitter_rbi");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_obp","OBP","team_hitter_obp");
 	
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_w","Wins","team_pitcher_w");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_sv","Saves","team_pitcher_sv");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_holds","Holds","team_pitcher_holds");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_so","SO","team_pitcher_k");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_era","ERA","team_pitcher_era");
+	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_whip","WHIP","team_pitcher_whip");
 }
 
 function addRankScore(teamstandingslist, statcategory, isAscending){
