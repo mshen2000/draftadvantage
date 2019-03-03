@@ -1484,6 +1484,24 @@ $(document).ready(function()
 	loadTeamOvwTable(null, true);
 	loadLeagueTeamMgmtTable(null, true);
 	
+	loadLeagueStandingsTable(null, true);
+
+	/*
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_avg","AVG","team_hitter_avg");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_hr","HR","team_hitter_hr");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_sb","SB","team_hitter_sb");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_r","Runs","team_hitter_runs");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_rbi","RBI","team_hitter_rbi");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_obp","OBP","team_hitter_obp");
+	
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_w","Wins","team_pitcher_w");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_sv","Saves","team_pitcher_sv");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_holds","Holds","team_pitcher_holds");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_so","SO","team_pitcher_k");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_era","ERA","team_pitcher_era");
+	loadLeagueStandingsCatTable(null, true, "#league_standings_table_whip","WHIP","team_pitcher_whip");
+	*/
+	
 	// loadPositionalTable(null, $("#pos_c_table"), true, true);
 	
 	/*
@@ -3960,9 +3978,11 @@ function loadLeagueContent(leagueid){
 	mssolutions.fbapp.draftmanager.getLeagueTeams(leagueid);
 	mssolutions.fbapp.draftmanager.getLeagueRoster(leagueid);
 	updateTeamInfoTab();
+	
 	clearPlayerInfoTab();
 	
 	mssolutions.fbapp.draftmanager.getLeagueInfo(leagueid);
+	
 }
 
 function loadLeagueIntro(){
@@ -4390,6 +4410,9 @@ mssolutions.fbapp.draftmanager.getLeaguePlayerData = function(leagueid) {
 			// Calc and load team overview list
 			// Also calculates team open roster slots
 			calcTeamOvwList();
+			
+			// Calculate team estimated standings
+			calcStandings();
 			
 			loadPlayerQueue();
 			

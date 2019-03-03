@@ -46,9 +46,9 @@ function loadLeagueStandingsTable(data, isInitialLoad)
 	if (isInitialLoad) 	{
 		data_table = table_element.dataTable(config);
 	} else {
-		// data_table = table_element.DataTable();
-		// data_table.destroy();
-		// table_element.empty();
+		data_table = table_element.DataTable();
+		data_table.destroy();
+		table_element.empty();
 		data_table = table_element.dataTable(config);
 		data_table = table_element.DataTable();
 		
@@ -67,12 +67,11 @@ function loadLeagueStandingsTable(data, isInitialLoad)
  * @param isInitialLoad
  * @returns
  */
-function loadLeagueStandingsCatTable(data, isInitialLoad, element, cat_title, cat_name)
+function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, element_id, cat_title, cat_name)
 {
 	var data_table;
-	var table_element = $(element);
 	var config = {
-        // "bSort" : true,
+        "bSort" : true,
         "searching": false,
         "paging": false,
         "info": false,
@@ -80,9 +79,7 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, element, cat_title, ca
 		responsive: true,
     	"processing": true,
         data: data,
-        select: {
-            style:    'single'
-        },
+        // select: {style:    'single'},
         rowId: 'id',
         "createdRow": function ( row, data, index ) {
         	// console.log("data.isMyTeam: " + data.isMyTeam)
@@ -94,14 +91,40 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, element, cat_title, ca
                 $('td', row).css("font-weight", "bold");
             }
         },
+        columnDefs: [
+            { orderable: false, targets: '_all' }
+        ],
         "columns": [
             { "visible": false, "title": "Team ID", "mData": "team_id", "sDefaultContent": ""},	
             { "visible": false, "title": "isMyTeam", "mData": "isMyTeam", "sDefaultContent": ""},	
             { "title": "Team", "mData": "team_name", "sDefaultContent": ""},	
-            { "title": cat_title, "mData": cat_name, "sDefaultContent": ""},
+            { "title": cat_title, "mData": cat_name,"render": function ( data, type, row ) {
+                if(cat_title == 'AVG'){
+                	var avgnum = data.toFixed(3);
+                	if (data > 0) return avgnum.toString().substr(avgnum.length - 4);
+                	else return '.000' ;
+                } else if (cat_title == 'ERA' || cat_title == 'WHIP'){
+                	return data.toFixed(2);
+                } else {
+                    return data.toFixed(0);
+                }
+            }, "sDefaultContent": ""}
 
         ]
         };
+	
+	//  <table id="league_standings_table_avg" class="table dm_pos_table" cellspacing="0" width="100%" style="margin-bottom:0px;"></table>
+	
+	var element = document.createElement('table');
+	element.id = element_id;
+	element.className = 'table dm_pos_table'
+	element.setAttribute("cellspacing", "0");
+	element.setAttribute("width", "100%");
+
+	var parent = document.getElementById(parent_element_id);
+	parent.appendChild(element);
+	
+	var table_element = $("#" + element_id);
 	
 	if (isInitialLoad) 	{
 		data_table = table_element.dataTable(config);
@@ -114,10 +137,7 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, element, cat_title, ca
 		
 		// Show category columns  used by league
 	    var table = table_element.DataTable();
-	    // var columns_in = table.columns('.dm_league_cat_true .dm_stat');
-	    var columns_out = table.columns('.dm_league_cat_false');
-	    // columns_in.visible(true);
-	    columns_out.visible(false);
+  
 	}
 }
 

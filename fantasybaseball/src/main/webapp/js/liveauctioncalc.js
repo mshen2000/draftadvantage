@@ -388,22 +388,84 @@ function calcStandings(){
 	// console.log("calcStandings teamlist: " + JSON.stringify(teamstandingslist));
 	
 	dm_teamstandings = teamstandingslist;
+
+	clearCatStandingsTables("league_cat_standings_hit_col1");
+	clearCatStandingsTables("league_cat_standings_hit_col2");
+	clearCatStandingsTables("league_cat_standings_hit_col3");
+	clearCatStandingsTables("league_cat_standings_hit_col4");
+	clearCatStandingsTables("league_cat_standings_hit_col5");
+	clearCatStandingsTables("league_cat_standings_hit_col6");
+	clearCatStandingsTables("league_cat_standings_pitch_col1");
+	clearCatStandingsTables("league_cat_standings_pitch_col2");
+	clearCatStandingsTables("league_cat_standings_pitch_col3");
+	clearCatStandingsTables("league_cat_standings_pitch_col4");
+	clearCatStandingsTables("league_cat_standings_pitch_col5");
+	clearCatStandingsTables("league_cat_standings_pitch_col6");
 	
 	loadLeagueStandingsTable(dm_teamstandings, false);
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_avg","AVG","team_hitter_avg");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_hr","HR","team_hitter_hr");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_sb","SB","team_hitter_sb");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_r","Runs","team_hitter_runs");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_rbi","RBI","team_hitter_rbi");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_obp","OBP","team_hitter_obp");
 	
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_w","Wins","team_pitcher_w");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_sv","Saves","team_pitcher_sv");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_holds","Holds","team_pitcher_holds");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_so","SO","team_pitcher_k");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_era","ERA","team_pitcher_era");
-	loadLeagueStandingsCatTable(dm_teamstandings, false, "#league_standings_table_whip","WHIP","team_pitcher_whip");
+	var i = 1;
+	
+	if (dm_leagueinfo.cat_hitter_avg) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_hit_col" + i, "league_standings_table_avg","AVG","team_hitter_avg");
+		i++;
+	}
+	if (dm_leagueinfo.cat_hitter_hr) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_hit_col" + i, "league_standings_table_hr","HR","team_hitter_hr");
+		i++;
+	}
+	if (dm_leagueinfo.cat_hitter_sb) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_hit_col" + i, "league_standings_table_sb","SB","team_hitter_sb");
+		i++
+	}
+	if (dm_leagueinfo.cat_hitter_r) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_hit_col" + i, "league_standings_table_r","Runs","team_hitter_runs");
+		i++;
+	}
+	if (dm_leagueinfo.cat_hitter_rbi) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_hit_col" + i, "league_standings_table_rbi","RBI","team_hitter_rbi");
+		i++;
+	}
+	if (dm_leagueinfo.cat_hitter_obp) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_hit_col" + i, "league_standings_table_obp","OBP","team_hitter_obp");
+		i++;
+	}
+	
+	i = 1;
+	
+	if (dm_leagueinfo.cat_pitcher_wins) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_pitch_col" + i, "league_standings_table_w","Wins","team_pitcher_w");
+		i++;
+	}
+	if (dm_leagueinfo.cat_pitcher_saves) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_pitch_col" + i, "league_standings_table_sv","Saves","team_pitcher_sv");
+		i++;
+	}
+	if (dm_leagueinfo.cat_pitcher_holds) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_pitch_col" + i, "league_standings_table_holds","Holds","team_pitcher_holds");
+		i++;
+	}
+	if (dm_leagueinfo.cat_pitcher_so) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_pitch_col" + i, "league_standings_table_so","SO","team_pitcher_k");
+		i++;
+	}
+	if (dm_leagueinfo.cat_pitcher_era) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_pitch_col" + i, "league_standings_table_era","ERA","team_pitcher_era");
+		i++;
+	}
+	if (dm_leagueinfo.cat_pitcher_whip) {
+		loadLeagueStandingsCatTable(dm_teamstandings, false, "league_cat_standings_pitch_col" + i, "league_standings_table_whip","WHIP","team_pitcher_whip");
+		i++;
+	}
+	
+	update_standings_tab = false;
 }
+
+function clearCatStandingsTables(elementid){
+	var myNode = document.getElementById(elementid);
+	while (myNode.firstChild) { myNode.removeChild(myNode.firstChild); }
+}
+
 
 function addRankScore(teamstandingslist, statcategory, isAscending){
 	
