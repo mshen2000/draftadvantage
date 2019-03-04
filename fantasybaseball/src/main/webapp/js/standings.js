@@ -91,6 +91,9 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, ele
                 $('td', row).css("font-weight", "bold");
             }
         },
+        fnDrawCallback: function() {
+            $("#" + element_id + " thead").remove();
+          },
         columnDefs: [
             { orderable: false, targets: '_all' }
         ],
