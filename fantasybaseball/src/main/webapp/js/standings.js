@@ -8,15 +8,46 @@ function loadLeagueStandingsTable(data, isInitialLoad)
 {
 	var data_table;
 	var table_element = $('#league_standings_table');
+	var config_init = {
+	        "bSort" : true,
+	        "searching": false,
+	        "paging": false,
+	        "info": false,
+	        "order": [[ 5, "desc" ]],
+			responsive: true,
+	    	"processing": true,
+	        data: data,
+	        select: {
+	            style:    'single'
+	        },
+	        rowId: 'id',
+	        "createdRow": function ( row, data, index ) {
+	            if ( data.isMyTeam ) {
+	                $('td', row).css("font-weight", "bold");
+	            }
+	        },
+	        "columns": [
+	            { "visible": false, "title": "Team ID", "mData": "team_id", "sDefaultContent": ""},	
+	            { "visible": false, "title": "isMyTeam", "mData": "isMyTeam", "sDefaultContent": ""},	
+	            { "title": "Team", "mData": "team_name", "sDefaultContent": ""},	
+	           
+	            { "title": "Hitting", "mData": "hitting_score", "sDefaultContent": ""},
+	            { "title": "Pitching", "mData": "pitching_score", "sDefaultContent": ""},
+	            { "title": "Total", "mData": "total_score", "sDefaultContent": ""}
+	        ]
+	        };
 	var config = {
         "bSort" : true,
         "searching": false,
         "paging": false,
         "info": false,
-        "order": [[ 5, "desc" ]],
+        "order": [[ 3, "desc" ]],
 		responsive: true,
     	"processing": true,
         data: data,
+        fnDrawCallback: function() {
+            $("#league_standings_table thead").remove();
+          },
         select: {
             style:    'single'
         },
@@ -34,17 +65,30 @@ function loadLeagueStandingsTable(data, isInitialLoad)
         "columns": [
             { "visible": false, "title": "Team ID", "mData": "team_id", "sDefaultContent": ""},	
             { "visible": false, "title": "isMyTeam", "mData": "isMyTeam", "sDefaultContent": ""},	
-            { "title": "Team", "mData": "team_name", "sDefaultContent": ""},	
+            { "title": "Team", "mData": "team_name", "width": "20%","sDefaultContent": ""},	
            
-            { "title": "Hitting", "mData": "hitting_score", "sDefaultContent": ""},
-            { "title": "Pitching", "mData": "pitching_score", "sDefaultContent": ""},
+            // { "title": "Hitting", "mData": "hitting_score", "sDefaultContent": ""},
+            // { "title": "Pitching", "mData": "pitching_score", "sDefaultContent": ""},
             { "title": "Total", "mData": "total_score", "sDefaultContent": ""},
-
+            {
+                "title": "Total Score",
+                "width": "50%",
+                "sortable":false,
+                "render": function(data, type, row, meta){
+                    return $("<div></div>", {
+                        "class": "bar-chart-bar"
+                    }).append(function(){
+                        var bars = [];
+                        bars.push($("<div></div>",{"class": "bar bar1"}).css({"width": row.total_score + "%"}));
+                        return bars;
+                    }).prop("outerHTML")
+                }
+            }
         ]
         };
 	
 	if (isInitialLoad) 	{
-		data_table = table_element.dataTable(config);
+		data_table = table_element.dataTable(config_init);
 	} else {
 		data_table = table_element.DataTable();
 		data_table.destroy();
@@ -120,11 +164,20 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, ele
 	
 	var element = document.createElement('table');
 	element.id = element_id;
-	element.className = 'table dm_pos_table'
+	element.className = 'table dm_cat_standings_table';
+	// element.style.marginTop = '0px';
+	element.setAttribute('style', 'margin-top:0px !important');
 	element.setAttribute("cellspacing", "0");
 	element.setAttribute("width", "100%");
+	
+	var header_element = document.createElement('h5');
+	header_element.style.marginBottom = '0px';
+	header_element.style.fontWeight = 'bold';
+	var t = document.createTextNode(cat_title);      
+	header_element.appendChild(t);
 
 	var parent = document.getElementById(parent_element_id);
+	parent.appendChild(header_element);
 	parent.appendChild(element);
 	
 	var table_element = $("#" + element_id);
