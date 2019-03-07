@@ -4,10 +4,23 @@
  * @param isInitialLoad
  * @returns
  */
-function loadLeagueStandingsTable(data, isInitialLoad)
+function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, element_id, cat_title, cat_name)
 {
+	var max_total_score = 0;
+	// var max_pitching_score = 0;
+	// var max_hitting_score = 0;	
+	
+	if (!isInitialLoad){
+		// Get the max scores for total, pitching and hitting
+		$.each( data, function( index, value ){	
+			max_total_score = Math.max(value[cat_name], max_total_score);
+			// max_pitching_score = Math.max(value['pitching_score'], max_pitching_score);
+			// max_hitting_score = Math.max(value['hitting_score'], max_hitting_score);
+		});	
+	}
+	
 	var data_table;
-	var table_element = $('#league_standings_table');
+	var table_element = $('#' + element_id);
 	var config_init = {
 	        "bSort" : true,
 	        "searching": false,
@@ -17,6 +30,11 @@ function loadLeagueStandingsTable(data, isInitialLoad)
 			responsive: true,
 	    	"processing": true,
 	        data: data,
+	        columnDefs: [    
+		        { "width": "40%", "targets": [0] },
+		        { "width": "10%", "targets": [1] },
+		        { "width": "50%", "targets": [2] }
+		    ],
 	        select: {
 	            style:    'single'
 	        },
@@ -44,9 +62,10 @@ function loadLeagueStandingsTable(data, isInitialLoad)
         "order": [[ 3, "desc" ]],
 		responsive: true,
     	"processing": true,
-        data: data,
+        data: data,     
+        // autoWidth:  false, 
         fnDrawCallback: function() {
-            $("#league_standings_table thead").remove();
+            $("#" + element_id + " thead").remove();
           },
         select: {
             style:    'single'
@@ -65,21 +84,29 @@ function loadLeagueStandingsTable(data, isInitialLoad)
         "columns": [
             { "visible": false, "title": "Team ID", "mData": "team_id", "sDefaultContent": ""},	
             { "visible": false, "title": "isMyTeam", "mData": "isMyTeam", "sDefaultContent": ""},	
-            { "title": "Team", "mData": "team_name", "width": "20%","sDefaultContent": ""},	
-           
+            { "title": "Team", "mData": "team_name","sDefaultContent": ""},	    
             // { "title": "Hitting", "mData": "hitting_score", "sDefaultContent": ""},
             // { "title": "Pitching", "mData": "pitching_score", "sDefaultContent": ""},
-            { "title": "Total", "mData": "total_score", "sDefaultContent": ""},
+            { "title": "Total", "mData": cat_name, "sDefaultContent": ""},
             {
-                "title": "Total Score",
-                "width": "50%",
+                "title": cat_title,
                 "sortable":false,
+                "width": "120px",
                 "render": function(data, type, row, meta){
                     return $("<div></div>", {
                         "class": "bar-chart-bar"
                     }).append(function(){
                         var bars = [];
-                        bars.push($("<div></div>",{"class": "bar bar1"}).css({"width": row.total_score + "%"}));
+                        var score = 0;
+                        if (cat_name == "total_score") { score = row.total_score; }
+                        else if (cat_name == "pitching_score") { score = row.pitching_score; }
+                        else if (cat_name == "hitting_score") { score = row.hitting_score; }
+                        
+                        console.log('Score: ' + score);
+                        console.log('Max Score: ' + max_total_score);
+                        console.log(' ');
+                        
+                        bars.push($("<div></div>",{"class": "bar bar1"}).css({"width": 100*(score/max_total_score) + "%"}));
                         return bars;
                     }).prop("outerHTML")
                 }
@@ -87,21 +114,31 @@ function loadLeagueStandingsTable(data, isInitialLoad)
         ]
         };
 	
+	var element = document.createElement('table');
+	element.id = element_id;
+	element.className = 'table dm_cat_standings_table';
+	// element.style.marginTop = '0px';
+	element.setAttribute('style', 'margin-top:0px !important');
+	element.setAttribute("cellspacing", "0");
+	element.setAttribute("width", "100%");
+	
+	var header_element = document.createElement('h5');
+	header_element.style.marginBottom = '0px';
+	header_element.style.fontWeight = 'bold';
+	var t = document.createTextNode(cat_title);      
+	header_element.appendChild(t);
+
+	var parent = document.getElementById(parent_element_id);
+	parent.appendChild(header_element);
+	parent.appendChild(element);
+	
+	var table_element = $("#" + element_id);
+	
 	if (isInitialLoad) 	{
 		data_table = table_element.dataTable(config_init);
 	} else {
-		data_table = table_element.DataTable();
-		data_table.destroy();
-		table_element.empty();
 		data_table = table_element.dataTable(config);
 		data_table = table_element.DataTable();
-		
-		// Show category columns  used by league
-	    var table = table_element.DataTable();
-	    // var columns_in = table.columns('.dm_league_cat_true .dm_stat');
-	    var columns_out = table.columns('.dm_league_cat_false');
-	    // columns_in.visible(true);
-	    columns_out.visible(false);
 	}
 }
 

@@ -1484,7 +1484,7 @@ $(document).ready(function()
 	loadTeamOvwTable(null, true);
 	loadLeagueTeamMgmtTable(null, true);
 	
-	loadLeagueStandingsTable(null, true);
+	// loadLeagueStandingsTable(null, true);
 
 	/*
 	loadLeagueStandingsCatTable(null, true, "#league_standings_table_avg","AVG","team_hitter_avg");

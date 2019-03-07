@@ -511,12 +511,27 @@ table.dataTable thead > thead > tr > th.sorting_asc, table.dataTable thead > tr 
 	padding-bottom: 0px !important;
 }
 
+#league_standings_table {
+	table-layout: fixed; 
+  	word-wrap:break-word; 
+}
+
+#league_standings_table_hit > tbody > tr > td:nth-child(2),  
+#league_standings_table_pitch > tbody > tr > td:nth-child(2),  
+#league_standings_table > tbody > tr > td:nth-child(2)  
+{ width: 25px; }
+
+#league_standings_table_hit > tbody > tr > td:nth-child(3),
+#league_standings_table_pitch > tbody > tr > td:nth-child(3), 
+#league_standings_table > tbody > tr > td:nth-child(3) 
+{ width: 120px; }
+
 .bar-chart-bar {
     background-color: #e8e8e8; 
     display: block; 
     position:relative; 
     width: 100%; 
-    height: 20px; 
+    height: 12px; 
 }
 .bar {
     float: left; 
@@ -739,7 +754,6 @@ table.dataTable thead > thead > tr > th.sorting_asc, table.dataTable thead > tr 
 						  <li class="active"><a data-toggle="tab" href="#maintab1">Draft Analysis</a></li>
 						  <li><a data-toggle="tab" href="#maintab2">Position Availability</a></li>
 						  <li><a data-toggle="tab" href="#maintab3">Standings</a></li>
-						  <li><a data-toggle="tab" href="#maintab3b">Standings 2</a></li>
 						  <li><a data-toggle="tab" href="#maintab4">Team Overview</a></li>
 						  <li><a data-toggle="tab" href="#maintablast">League Details</a></li>
 						</ul>
@@ -832,17 +846,10 @@ table.dataTable thead > thead > tr > th.sorting_asc, table.dataTable thead > tr 
 						  </div>
 						  <div id="maintab3" class="tab-pane fade">
 						    <div class="row" id="livestandings-row">  	
-							  		<div class="col-md-4">
-							  			<h5>Total Score</h5>
-										<table id="league_standings_table" class="table table-striped dm_standings_table" cellspacing="0" width="100%"></table>
-									</div>
-									<div class="col-md-4" >
-									</div>
-									<div class="col-md-4" >
-									</div>			
+							  		<div class="col-md-4" id="livestandings1-col1"></div>
+									<div class="col-md-4" id="livestandings1-col2"></div>
+									<div class="col-md-4" id="livestandings1-col3"></div>			
 						    </div>
-						  </div>
-						  <div id="maintab3b" class="tab-pane fade">
 						    <div class="row" id="livestandings2-row1">  	
 									<div class="col-md-2" id="league_cat_standings_hit_col1"></div>
 									<div class="col-md-2" id="league_cat_standings_hit_col2"></div>			

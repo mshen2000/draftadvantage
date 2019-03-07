@@ -402,7 +402,13 @@ function calcStandings(){
 	clearCatStandingsTables("league_cat_standings_pitch_col5");
 	clearCatStandingsTables("league_cat_standings_pitch_col6");
 	
-	loadLeagueStandingsTable(dm_teamstandings, false);
+	clearCatStandingsTables("livestandings1-col1");
+	clearCatStandingsTables("livestandings1-col2");
+	clearCatStandingsTables("livestandings1-col3");
+	
+	loadLeagueStandingsTable(dm_teamstandings, false, "livestandings1-col1", "league_standings_table","Total Score", "total_score");
+	loadLeagueStandingsTable(dm_teamstandings, false, "livestandings1-col2", "league_standings_table_pitch","Pitching", "pitching_score");
+	loadLeagueStandingsTable(dm_teamstandings, false, "livestandings1-col3", "league_standings_table_hit","Hitting", "hitting_score");
 	
 	var i = 1;
 	
