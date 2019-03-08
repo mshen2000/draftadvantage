@@ -467,6 +467,20 @@ function calcStandings(){
 	update_standings_tab = false;
 }
 
+$('#btn-pitchingcategories').click(function() 
+{
+	$("#livestandings2-row2").css("display","");
+	$("#livestandings2-row1").css("display","none");
+	$('#btn-hittingcategories').removeClass("active");
+});
+
+$('#btn-hittingcategories').click(function() 
+{
+	$("#livestandings2-row2").css("display","none");
+	$("#livestandings2-row1").css("display","");
+	$('#btn-pitchingcategories').removeClass("active");
+});
+
 function clearCatStandingsTables(elementid){
 	var myNode = document.getElementById(elementid);
 	while (myNode.firstChild) { myNode.removeChild(myNode.firstChild); }

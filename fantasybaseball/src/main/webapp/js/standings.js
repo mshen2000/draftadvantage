@@ -122,9 +122,10 @@ function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, elemen
 	element.setAttribute("cellspacing", "0");
 	element.setAttribute("width", "100%");
 	
-	var header_element = document.createElement('h5');
+	var header_element = document.createElement('h3');
 	header_element.style.marginBottom = '0px';
-	header_element.style.fontWeight = 'bold';
+	// header_element.style.fontWeight = 'bold';
+	header_element.style.textAlign = 'center';
 	var t = document.createTextNode(cat_title);      
 	header_element.appendChild(t);
 
@@ -207,9 +208,10 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, ele
 	element.setAttribute("cellspacing", "0");
 	element.setAttribute("width", "100%");
 	
-	var header_element = document.createElement('h5');
+	var header_element = document.createElement('h3');
 	header_element.style.marginBottom = '0px';
-	header_element.style.fontWeight = 'bold';
+	// header_element.style.fontWeight = 'bold';
+	header_element.style.textAlign = 'center';
 	var t = document.createTextNode(cat_title);      
 	header_element.appendChild(t);
 
