@@ -7,15 +7,12 @@
 function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, element_id, cat_title, cat_name)
 {
 	var max_total_score = 0;
-	// var max_pitching_score = 0;
-	// var max_hitting_score = 0;	
+	var order;
 	
 	if (!isInitialLoad){
 		// Get the max scores for total, pitching and hitting
 		$.each( data, function( index, value ){	
 			max_total_score = Math.max(value[cat_name], max_total_score);
-			// max_pitching_score = Math.max(value['pitching_score'], max_pitching_score);
-			// max_hitting_score = Math.max(value['hitting_score'], max_hitting_score);
 		});	
 	}
 	
@@ -98,15 +95,14 @@ function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, elemen
                     }).append(function(){
                         var bars = [];
                         var score = 0;
+                        var bar_class = "bar bar1";
+                        if ( row.isMyTeam ) {
+                        	bar_class = "bar bar2";
+                        }
                         if (cat_name == "total_score") { score = row.total_score; }
                         else if (cat_name == "pitching_score") { score = row.pitching_score; }
                         else if (cat_name == "hitting_score") { score = row.hitting_score; }
-                        
-                        console.log('Score: ' + score);
-                        console.log('Max Score: ' + max_total_score);
-                        console.log(' ');
-                        
-                        bars.push($("<div></div>",{"class": "bar bar1"}).css({"width": 100*(score/max_total_score) + "%"}));
+                        bars.push($("<div></div>",{"class": bar_class}).css({"width": 100*(score/max_total_score) + "%"}));
                         return bars;
                     }).prop("outerHTML")
                 }
@@ -151,13 +147,20 @@ function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, elemen
  */
 function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, element_id, cat_title, cat_name)
 {
+	
+	if (cat_name == "team_pitcher_era" || cat_name == "team_pitcher_whip") order = "asc";
+	else order = "desc";
+	
+	console.log('cat_name: ' + cat_name);
+	console.log('order: ' + order);
+	
 	var data_table;
 	var config = {
         "bSort" : true,
         "searching": false,
         "paging": false,
         "info": false,
-        "order": [[ 3, "desc" ]],
+        "order": [[ 3, order ]],
 		responsive: true,
     	"processing": true,
         data: data,
