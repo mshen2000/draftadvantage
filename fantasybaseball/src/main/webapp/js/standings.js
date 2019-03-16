@@ -27,11 +27,6 @@ function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, elemen
 			responsive: true,
 	    	"processing": true,
 	        data: data,
-	        columnDefs: [    
-		        { "width": "40%", "targets": [0] },
-		        { "width": "10%", "targets": [1] },
-		        { "width": "50%", "targets": [2] }
-		    ],
 	        select: {
 	            style:    'single'
 	        },
@@ -60,7 +55,9 @@ function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, elemen
 		responsive: true,
     	"processing": true,
         data: data,     
-        // autoWidth:  false, 
+        columnDefs: [    
+            { targets: 3, className: 'text-right' }
+	    ],
         fnDrawCallback: function() {
             $("#" + element_id + " thead").remove();
           },
@@ -71,10 +68,6 @@ function loadLeagueStandingsTable(data, isInitialLoad, parent_element_id, elemen
         "createdRow": function ( row, data, index ) {
         	// console.log("data.isMyTeam: " + data.isMyTeam)
             if ( data.isMyTeam ) {
-//                $('td', row).eq(2).addClass('highlight');
-//                $('td', row).eq(3).addClass('highlight');
-//                $('td', row).eq(4).addClass('highlight');
-//                $('td', row).addClass('highlight');
                 $('td', row).css("font-weight", "bold");
             }
         },
@@ -151,9 +144,6 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, ele
 	if (cat_name == "team_pitcher_era" || cat_name == "team_pitcher_whip") order = "asc";
 	else order = "desc";
 	
-	console.log('cat_name: ' + cat_name);
-	console.log('order: ' + order);
-	
 	var data_table;
 	var config = {
         "bSort" : true,
@@ -167,27 +157,24 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, ele
         // select: {style:    'single'},
         rowId: 'id',
         "createdRow": function ( row, data, index ) {
-        	// console.log("data.isMyTeam: " + data.isMyTeam)
             if ( data.isMyTeam ) {
-//                $('td', row).eq(2).addClass('highlight');
-//                $('td', row).eq(3).addClass('highlight');
-//                $('td', row).eq(4).addClass('highlight');
-//                $('td', row).addClass('highlight');
                 $('td', row).css("font-weight", "bold");
+                $('td', row).css("background-color", "Orange");
             }
         },
         fnDrawCallback: function() {
             $("#" + element_id + " thead").remove();
           },
         columnDefs: [
-            { orderable: false, targets: '_all' }
+            { orderable: false, targets: '_all' }, 
+            { targets: -1, className: 'text-right' }
         ],
         "columns": [
             { "visible": false, "title": "Team ID", "mData": "team_id", "sDefaultContent": ""},	
             { "visible": false, "title": "isMyTeam", "mData": "isMyTeam", "sDefaultContent": ""},	
             { "title": "Team", "mData": "team_name", "sDefaultContent": ""},	
             { "title": cat_title, "mData": cat_name,"render": function ( data, type, row ) {
-                if(cat_title == 'AVG'){
+                if(cat_title == 'AVG' || cat_title == 'OBP'){
                 	var avgnum = data.toFixed(3);
                 	if (data > 0) return avgnum.toString().substr(avgnum.length - 4);
                 	else return '.000' ;
@@ -200,13 +187,10 @@ function loadLeagueStandingsCatTable(data, isInitialLoad, parent_element_id, ele
 
         ]
         };
-	
-	//  <table id="league_standings_table_avg" class="table dm_pos_table" cellspacing="0" width="100%" style="margin-bottom:0px;"></table>
-	
+
 	var element = document.createElement('table');
 	element.id = element_id;
 	element.className = 'table dm_cat_standings_table';
-	// element.style.marginTop = '0px';
 	element.setAttribute('style', 'margin-top:0px !important');
 	element.setAttribute("cellspacing", "0");
 	element.setAttribute("width", "100%");
