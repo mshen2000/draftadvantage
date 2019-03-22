@@ -921,18 +921,6 @@ $(document).ready(function()
 	
 	});
     
-    
-    // Standings tab:  Button switches between including reserves or not
-    $('#btn-grp-standingviewno').click(function() {
-	    $(this).addClass('active');
-	    $(this).siblings().removeClass('active');
-	});
-    $('#btn-grp-standingviewyes').click(function() {
-	    $(this).addClass('active');
-	    $(this).siblings().removeClass('active');
-	
-	});
-    
 	
 	$('#btn-allplayers').click(function() 
 	{

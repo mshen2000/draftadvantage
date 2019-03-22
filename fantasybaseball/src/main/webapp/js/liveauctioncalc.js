@@ -187,13 +187,31 @@ function calcStandings(){
 	
 	var teamstandingslist = [];
 	
-	// Filtered for only drafted players
+	var is_reserves_included = false;
+	var button_id = '';
+	
+    $('#btn-grp-standingview .active').each(function(){
+    	button_id = $(this).attr('id');
+        if (button_id == "btn-grp-standingviewyes") is_reserves_included = true;
+    }); 
+    
+    console.log("In calcStandings, active button: " + button_id);
+	
+	// Filtered for only drafted players and non-reserve
 	var filtered_data = $.grep(data_rows, function(v) {
 		var isdrafted;
+		var isreserve;
 		if (v.leagueteam_name == null) isdrafted = false;
 		else if (v.leagueteam_name.trim().length < 1) isdrafted = false;
 		else isdrafted = true;
-	    return v.unknownplayer == false && isdrafted == true;
+		
+		if (v.team_roster_position == null) isreserve = false;
+		else if (v.team_roster_position.toLowerCase() == "res" || v.team_roster_position.toLowerCase() == "ml")
+			isreserve = true;
+		else isreserve = false;
+		
+		if (is_reserves_included == true) return v.unknownplayer == false && isdrafted == true;
+		else return v.unknownplayer == false && isdrafted == true && isreserve == false;
 	});
 	
 	// console.log("filtered_data length: " + filtered_data.length);
@@ -466,6 +484,20 @@ function calcStandings(){
 	
 	update_standings_tab = false;
 }
+
+// Standings tab:  Button switches between including reserves or not
+$('#btn-grp-standingviewno').click(function() {
+    $(this).addClass('active');
+    $(this).siblings().removeClass('active');
+    calcStandings();
+});
+$('#btn-grp-standingviewyes').click(function() {
+    $(this).addClass('active');
+    $(this).siblings().removeClass('active');
+    calcStandings();
+});
+
+
 
 $('#btn-pitchingcategories').click(function() 
 {
