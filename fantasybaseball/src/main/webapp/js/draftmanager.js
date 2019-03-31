@@ -59,8 +59,9 @@ var dm_teammaxbid = 0;
 // List of team roster positions and counts of open slots:
 var dm_teamrostercounts_live = [];
 
-// Count of RES spots in teamrostercounts
+// Count of RES and ML spots in teamrostercounts
 var dm_rescount;
+var dm_mlcount
 
 // List of teams from getleagueteams
 var dm_globalteamlist;
@@ -1712,6 +1713,7 @@ function updateTeamInfoTab(){
 	    .data();
 		
 		var drafted_res = 0;
+		var drafted_ml = 0;
 
 		// For each drafted player on a team, fill them into the team roster grid
 		$.each( teamplayers, function( key, value ) {
@@ -1730,6 +1732,7 @@ function updateTeamInfoTab(){
 				}
 			});
 			if (value.team_roster_position.toLowerCase() == "ml") {
+				drafted_ml++;
 				// add ML row to table
 				teamrostertable.row.add( {
 					"index": 100,
@@ -1759,7 +1762,7 @@ function updateTeamInfoTab(){
 		
 		var teamstartingsalary = team.adj_starting_salary;
 		var balance = teamstartingsalary - teamrostertable.column( 4 ).data().sum();
-		var spots = (liveteamrostertemplate.length - dm_rescount) - (teamplayers.length - drafted_res);
+		var spots = (liveteamrostertemplate.length - dm_rescount) - (teamplayers.length - (drafted_res + drafted_ml));
 		var perplayer = balance / spots;
 		var maxbid = balance - (spots - 1);
 		
